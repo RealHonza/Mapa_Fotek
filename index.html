@@ -132,6 +132,11 @@
         .custom-cluster { background: rgba(255, 255, 255, 0.95); border: 2px solid #1a73e8; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.28); color: #1a73e8; font-weight: 700; font-size: 12px; display: flex !important; align-items: center; justify-content: center; }
         .custom-cluster:hover { transform: scale(1.1); }
         .custom-marker { background: #ea4335; border: 2px solid white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); width: 10px !important; height: 10px !important; margin-left: -5px !important; margin-top: -5px !important; }
+        .cluster-circle { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #ffffff; font-weight: 700; font-size: 11px; box-shadow: 0 3px 8px rgba(0,0,0,0.3); border: 2px solid #ffffff; box-sizing: border-box; }
+        .cluster-s { background: #1a73e8; }
+        .cluster-m { background: #0f9d58; }
+        .cluster-l { background: #f4b400; color: #202124; }
+        .cluster-xl { background: #d93025; }
         
         /* MOBILNÍ & TABLETOVÁ OPTIMALIZACE PRO ANDROID I IOS */
         @media (max-width: 768px) {
@@ -299,16 +304,15 @@
         <!-- 1. Tlačítko: Vše / Rok s počtem fotek -->
         <div style="position: relative;">
             <button class="year-select-btn" onclick="toggleYearDropdown()" id="btnYearSelect">
-                <span id="txtYearLabel">Vše 0 fotek</span>
+                <span id="txtYearLabel">(0)</span>
                 <span class="caret">▼</span>
             </button>
             <div id="yearDropdown" class="dropdown-menu"></div>
         </div>
-
         <!-- 2. Tlačítko: Zdroje + malé plus -->
         <div class="sources-group" style="position: relative;">
             <button class="src-btn" onclick="toggleDatasetPanel()" id="btnSources">
-                <span id="txtBtnSources">Zdroje</span> <span class="src-badge" id="sourceCount">1</span>
+                <span class="src-badge" id="sourceCount">0</span>
             </button>
             <button class="add-btn" onclick="document.getElementById('fileInput').click()" title="Přidat soubor">+</button>
             
@@ -397,31 +401,26 @@
 
             <div class="info-section-title" id="txtGuideTitle">📖 Návod k použití:</div>
             <ol class="info-steps" id="infoStepsList">
-                <li><strong>Datový soubor a jeho aktualizace (ZÁKLAD):</strong> Mapa pro zobrazení bodů načítá datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code> se souřadnicemi. Vytvoří se spuštěním <code>Mapa_Fotek_aktualizace_dat.bat</code>:
-                    <br>• ⚡ <strong>Bleskový sken</strong> – projde celou složku i podsložky bez modifikace fotek.
-                    <br>• 📷 <strong>EXIF GPS & Čas</strong> – automaticky vyčte přesné GPS souřadnice i čas pořízení (YYYYMMDD__HHNNSS).
-                    <br>• ☁️ <strong>Google JSON & Adobe XMP</strong> – načte polohy z Google Takeout i postranních XMP souborů (Lightroom, DigiKam).
-                    <br>• 💾 <strong>Denní datový soubor</strong> – vytvoří datový soubor s dnešním datem (např. <code>Mapa_Fotek_data_20260821.txt</code>) a časovým razítkem v hlavičce.</li>
-                <li><strong>Styly zobrazení (vpravo nahoře):</strong> Můžete si vybrat ze 4 stylů zobrazení:
-                    <br>• 🔥 <strong>Heatmapa</strong> – plynulé rozložení četnosti fotek dle Google Photos.
-                    <br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v zaoblených rámečcích přímo na mapě.
-                    <br>• 📍 <strong>Špendlíky</strong> – klasické klastry s počtem fotek a detailním náhledem.
-                    <br>• 🔴 <strong>Červené tečky</strong> – neshlukované body, kde se hustota sčítá do sytě červené barvy.</li>
-                <li><strong>Filtrování dle let a času (vlevo nahoře):</strong> Tlačítko <em>Vše (rok)</em> otevírá rozbalovací nabídku s počty fotek:
-                    <br>• 📅 <strong>Všechny roky</strong> – zobrazí kompletní archiv všech vašich fotek.
-                    <br>• 🗓️ <strong>Konkrétní rok</strong> – vyfiltruje pouze snímky pořízené v daném roce.
-                    <br>• 🔢 <strong>Počty fotografií</strong> – u každého roku vidíte přesný počet zaznamenaných fotek.</li>
-                <li><strong>Přidání dalších dat, fotek a tras (vlevo nahoře):</strong> Umožňuje pracovat s více datovými soubory i trasami najednou:
-                    <br>• ➕ <strong>Přidat data (+)</strong> – načtení dalších fotek nebo trasových souborů (GPX, KML, KMZ).
-                    <br>• 🥾 <strong>GPS Trasy (GPX / KML / KMZ)</strong> – vykreslí linie tras z hodinek, Garminu, Stravy či Mapy.cz přímo k vašim fotografiím.
-                    <br>• 📂 <strong>Správa zdrojů</strong> – zaškrtáváním můžete jednotlivé datasety i trasy zapínat a vypínat.
-                    <br>• 🖱️ <strong>Drag & Drop</strong> – stačí soubor s fotkami či trasou přetáhnout myší přímo do okna mapy.</li>
-                <li><strong>Podkladové mapy (vpravo nahoře):</strong> Tlačítko s vrstvami nabízí 5 různých mapových stylů:
+                <li><strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong> Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript bleskově projde celou složku i podsložky bez modifikace fotek, vyčte GPS souřadnice z EXIF, Google JSON i Adobe XMP metadat a vytvoří datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, který mapa při otevření automaticky načte.</li>
+                <li><strong>📅 1. tlačítko vlevo: [Vše (počet) ▼] (Filtr roku):</strong> Otevírá rozbalovací nabídku pro filtrování fotografií podle roku pořízení. Můžete vybrat zobrazení kompletního archivu (<em>Vše</em>) nebo zvolit konkrétní rok. U každého roku vidíte přesný počet zaznamenaných fotek.</li>
+                <li><strong>📂 2. tlačítko vlevo: [(počet)] (Seznam a správa zdrojů):</strong> Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zaškrtáváním zapínat/vypínat nebo křížkem odebírat.</li>
+                <li><strong>➕ 3. tlačítko vlevo: [+] (Přidat soubor či trasu):</strong> Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).</li>
+                <li><strong>🌐 4. tlačítko vlevo: [EN / CZ] (Přepínač jazyka):</strong> Jedním kliknutím okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou. Na tlačítku svítí jazyk, do kterého se po kliknutí přepne.</li>
+                <li><strong>ℹ️ 5. tlačítko vlevo: [ℹ] (Informace o aplikaci):</strong> Otevírá toto okno s podrobným návodem k použití, popisem ovládacích prvků a informacemi o verzi a autorovi.</li>
+                <li><strong>🎨 6. tlačítko vpravo: [Styl zobrazení / Režim]:</strong> Přepíná vizuální způsob prezentace vašich fotografií na mapě ze 4 volitelných režimů:
+                    <br>• 🔥 <strong>Heatmapa</strong> – plynulá tepelná mapa hustoty dle Google Photos.
+                    <br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v elegantních rámečcích přímo na mapě.
+                    <br>• 📍 <strong>Špendlíky</strong> – klasické klastrované body s počtem fotek a náhledovou kartou při kliknutí.
+                    <br>• 🔴 <strong>Červené tečky</strong> – neshlukovaný bodový mrak, kde se překrývající se body sčítají do sytě červené barvy.</li>
+                <li><strong>🗺️ 7. tlačítko vpravo: [Mapové podklady / Vrstvy]:</strong> Výběr ze 7 oficiálních mapových vrstev:
                     <br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa.
-                    <br>• ⛰️ <strong>Google Terénní</strong> – plastický reliéf hor, údolí a terénních nerovností.
+                    <br>• ⛰️ <strong>Google Terénní</strong> – plastický 3D reliéf pohoří, údolí a terénních nerovností.
                     <br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky.
-                    <br>• 🌐 <strong>Esri Topo</strong> – detailní celosvětová topografická mapa s vrstevnicemi.
-                    <br>• 🏕️ <strong>Turistické trasy</strong> – značené turistické a cyklistické stezky pro outdoorové výlety.</li>
+                    <br>• 🌲 <strong>Mapy.cz Turistická</strong> – oficiální značené turistické i cyklistické trasy, vrstevnice a outdoorové body.
+                    <br>• 🗺️ <strong>Mapy.cz Základní</strong> – detailní česká kartografická mapa ČR i Evropy.
+                    <br>• 🛰️ <strong>Mapy.cz Letecká</strong> – vysoce detailní ortofotomapa a letecké snímky.
+                    <br>• 🌐 <strong>Esri Topo</strong> – podrobná celosvětová topografická mapa s vrstevnicemi.</li>
+                <li><strong>🔍 8. tlačítko vpravo (dole na mobilu): [+ / −] (Zoom mapy):</strong> Tlačítka pro plynulé přiblížení a oddálení mapového pohledu. Na počítači lze mapu zoomovat také kolečkem myši, na mobilu či tabletu gestem roztažení dvou prstů.</li>
             </ol>
         </div>
     </div>
@@ -478,11 +477,17 @@
                 valUpdated: "Srpen 2026",
                 lblVersion: "Verze:",
                 guideTitle: "📖 Návod k použití:",
-                step1: "<strong>Datový soubor a jeho aktualizace (ZÁKLAD):</strong> Mapa pro zobrazení bodů načítá datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code> se souřadnicemi. Vytvoří se spuštěním <code>Mapa_Fotek_aktualizace_dat.bat</code>:<br>• ⚡ <strong>Bleskový sken</strong> – projde celou složku i podsložky bez modifikace fotek.<br>• 📷 <strong>EXIF GPS & Čas</strong> – automaticky vyčte přesné GPS souřadnice i čas pořízení (YYYYMMDD__HHNNSS).<br>• ☁️ <strong>Google JSON & Adobe XMP</strong> – načte polohy z Google Takeout i postranních XMP souborů (Lightroom, DigiKam).<br>• 💾 <strong>Denní datový soubor</strong> – vytvoří datový soubor s dnešním datem (např. <code>Mapa_Fotek_data_20260821.txt</code>) a časovým razítkem v hlavičce.",
-                step2: "<strong>Styly zobrazení (vpravo nahoře):</strong> Můžete si vybrat ze 4 stylů zobrazení:<br>• 🔥 <strong>Heatmapa</strong> – plynulé rozložení četnosti fotek dle Google Photos.<br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v zaoblených rámečcích přímo na mapě.<br>• 📍 <strong>Špendlíky</strong> – klasické klastry s počtem fotek a detailním náhledem.<br>• 🔴 <strong>Červené tečky</strong> – neshlukované body, kde se hustota sčítá do sytě červené barvy.",
-                step3: "<strong>Filtrování dle let a času (vlevo nahoře):</strong> Tlačítko <em>Vše (rok)</em> otevírá rozbalovací nabídku s počty fotek:<br>• 📅 <strong>Všechny roky</strong> – zobrazí kompletní archiv všech vašich fotek.<br>• 🗓️ <strong>Konkrétní rok</strong> – vyfiltruje pouze snímky pořízené v daném roce.<br>• 🔢 <strong>Počty fotografií</strong> – u každého roku vidíte přesný počet zaznamenaných fotek.",
-                step4: "<strong>Přidání dalších dat, fotek a tras (vlevo nahoře):</strong> Umožňuje pracovat s více datovými soubory i trasami najednou:<br>• ➕ <strong>Přidat data (+)</strong> – načtení dalších fotek nebo trasových souborů (GPX, KML, KMZ).<br>• 🥾 <strong>GPS Trasy (GPX / KML / KMZ)</strong> – vykreslí linie tras z hodinek, Garminu, Stravy či Mapy.cz přímo k vašim fotografiím.<br>• 📂 <strong>Správa zdrojů</strong> – zaškrtáváním můžete jednotlivé datasety i trasy zapínat a vypínat.<br>• 🖱️ <strong>Drag & Drop</strong> – stačí soubor s fotkami či trasou přetáhnout myší přímo do okna mapy.",
-                step5: "<strong>Podkladové mapy (vpravo nahoře):</strong> Tlačítko s vrstvami nabízí 7 oficiálních mapových stylů:<br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa.<br>• ⛰️ <strong>Google Terénní</strong> – plastický reliéf hor, údolí a terénních nerovností.<br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky.<br>• 🌲 <strong>Mapy.cz Turistická</strong> – oficiální značené turistické a cyklistické trasy s vrstevnicemi.<br>• 🗺️ <strong>Mapy.cz Základní</strong> – česká kartografická mapa s detailním vyznačením měst a obcí.<br>• 🛰️ <strong>Mapy.cz Letecká</strong> – detailní letecké a ortofoto snímky ČR i Evropy.<br>• 🌐 <strong>Esri Topo</strong> – detailní celosvětová topografická mapa s vrstevnicemi."
+                steps: [
+                    "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong> Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript bleskově projde celou složku i podsložky bez modifikace fotek, vyčte GPS souřadnice z EXIF, Google JSON i Adobe XMP metadat a vytvoří datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, který mapa při otevření automaticky načte.",
+                    "<strong>📅 1. tlačítko vlevo: [Vše (počet) ▼] (Filtr roku):</strong> Otevírá rozbalovací nabídku pro filtrování fotografií podle roku pořízení. Můžete vybrat zobrazení kompletního archivu (<em>Vše</em>) nebo zvolit konkrétní rok. U každého roku vidíte přesný počet zaznamenaných fotek.",
+                    "<strong>📂 2. tlačítko vlevo: [(počet)] (Seznam a správa zdrojů):</strong> Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zaškrtáváním zapínat/vypínat nebo křížkem odebírat.",
+                    "<strong>➕ 3. tlačítko vlevo: [+] (Přidat soubor či trasu):</strong> Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).",
+                    "<strong>🌐 4. tlačítko vlevo: [EN / CZ] (Přepínač jazyka):</strong> Jedním kliknutím okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou. Na tlačítku svítí jazyk, do kterého se po kliknutí přepne.",
+                    "<strong>ℹ️ 5. tlačítko vlevo: [ℹ] (Informace o aplikaci):</strong> Otevírá toto okno s podrobným návodem k použití, popisem ovládacích prvků a informacemi o verzi a autorovi.",
+                    "<strong>🎨 6. tlačítko vpravo: [Styl zobrazení / Režim]:</strong> Přepíná vizuální způsob prezentace vašich fotografií na mapě ze 4 volitelných režimů:<br>• 🔥 <strong>Heatmapa</strong> – plynulá tepelná mapa hustoty dle Google Photos.<br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v elegantních rámečcích přímo na mapě.<br>• 📍 <strong>Špendlíky</strong> – klasické klastrované body s počtem fotek a náhledovou kartou při kliknutí.<br>• 🔴 <strong>Červené tečky</strong> – neshlukovaný bodový mrak, kde se překrývající se body sčítají do sytě červené barvy.",
+                    "<strong>🗺️ 7. tlačítko vpravo: [Mapové podklady / Vrstvy]:</strong> Výběr ze 7 oficiálních mapových vrstev:<br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa.<br>• ⛰️ <strong>Google Terénní</strong> – plastický 3D reliéf pohoří, údolí a terénních nerovností.<br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky.<br>• 🌲 <strong>Mapy.cz Turistická</strong> – oficiální značené turistické i cyklistické trasy, vrstevnice a outdoorové body.<br>• 🗺️ <strong>Mapy.cz Základní</strong> – detailní česká kartografická mapa ČR i Evropy.<br>• 🛰️ <strong>Mapy.cz Letecká</strong> – vysoce detailní ortofotomapa a letecké snímky.<br>• 🌐 <strong>Esri Topo</strong> – podrobná celosvětová topografická mapa s vrstevnicemi.",
+                    "<strong>🔍 8. tlačítko vpravo (dole na mobilu): [+ / −] (Zoom mapy):</strong> Tlačítka pro plynulé přiblížení a oddálení mapového pohledu. Na počítači lze mapu zoomovat také kolečkem myši, na mobilu či tabletu gestem roztažení dvou prstů."
+                ]
             },
             en: {
                 photosWord: "photos",
@@ -519,11 +524,17 @@
                 valUpdated: "August 2026",
                 lblVersion: "Version:",
                 guideTitle: "📖 User Guide:",
-                step1: "<strong>Data File & Update (ESSENTIAL):</strong> The map loads <code>Mapa_Fotek_data_YYYYMMDD.txt</code>. Updated by running <code>Mapa_Fotek_aktualizace_dat.bat</code>:<br>• ⚡ <strong>Fast scan</strong> – scans folder and subfolders without modifying photos.<br>• 📷 <strong>EXIF GPS & Time</strong> – reads coordinates and timestamps (YYYYMMDD__HHNNSS).<br>• ☁️ <strong>Google JSON & Adobe XMP</strong> – parses locations from Google Takeout and XMP sidecars (Lightroom, DigiKam).<br>• 💾 <strong>Daily data file</strong> – creates dated data file (e.g. <code>Mapa_Fotek_data_20260821.txt</code>) with timestamp in header.",
-                step2: "<strong>Viewing Modes (top right):</strong> Choose from 4 visual modes:<br>• 🔥 <strong>Heatmap</strong> – smooth Google Photos density heatmap.<br>• 🖼️ <strong>Photo Cards</strong> – photo thumbnails with rounded borders directly on map.<br>• 📍 <strong>Pins</strong> – classic number clusters with preview cards.<br>• 🔴 <strong>Red Dots</strong> – unclustered point cloud that accumulates into deep red density.",
-                step3: "<strong>Year and Time Filter (top left):</strong> The <em>All (year)</em> button opens the dropdown menu:<br>• 📅 <strong>All years</strong> – displays complete archive of all photos.<br>• 🗓️ <strong>Specific year</strong> – filters photos taken in selected year.<br>• 🔢 <strong>Photo counts</strong> – shows exact photo count for each year.",
-                step4: "<strong>Adding Data, Photos & GPS Tracks (top left):</strong> Manage multiple photo datasets and GPS routes simultaneously:<br>• ➕ <strong>Add Data (+)</strong> – load more photos or GPS tracks (GPX, KML, KMZ).<br>• 🥾 <strong>GPS Tracks (GPX / KML / KMZ)</strong> – renders colorful routes from Garmin, Strava, or Mapy.cz right along your photos.<br>• 📂 <strong>Source Manager</strong> – toggle individual datasets or tracks on/off.<br>• 🖱️ <strong>Drag & Drop</strong> – simply drop photos or track files directly into the map window.",
-                step5: "<strong>Map Layers (top right):</strong> The layer button provides 7 distinct map styles:<br>• 🗺️ <strong>Google Standard</strong> – clean urban and street map.<br>• ⛰️ <strong>Google Terrain</strong> – elevation relief, mountain ridges and hills.<br>• 🛰️ <strong>Google Satellite</strong> – real aerial and satellite imagery with labels.<br>• 🌲 <strong>Mapy.cz Outdoor</strong> – official marked hiking and cycling trails with contour lines.<br>• 🗺️ <strong>Mapy.cz Basic</strong> – clean European cartography by Seznam.<br>• 🛰️ <strong>Mapy.cz Aerial</strong> – high-resolution aerial imagery.<br>• 🌐 <strong>Esri Topo</strong> – detailed worldwide topographic map with contours."
+                steps: [
+                    "<strong>⚡ Data File – First Run (ESSENTIAL):</strong> Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script quickly scans folders and subfolders without modifying photos, reads GPS coordinates from EXIF, Google JSON and Adobe XMP metadata, and creates <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, which the map loads automatically upon opening.",
+                    "<strong>📅 1st button left: [All (count) ▼] (Year Filter):</strong> Opens a dropdown menu to filter photos by year taken. Choose <em>All</em> to view the complete archive or pick a specific year. Exact photo counts are shown next to each year.",
+                    "<strong>📂 2nd button left: [(count)] (Data Sources Manager):</strong> The number in parentheses shows the count of active loaded files. Click to open the sources panel, where you can toggle individual photo datasets and GPS tracks on/off or remove them.",
+                    "<strong>➕ 3rd button left: [+] (Add File or Track):</strong> Allows you to quickly load additional photo data files (<code>.txt</code>) or GPS tracks & waypoints (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). You can also drag &amp; drop files directly into the map window.",
+                    "<strong>🌐 4th button left: [EN / CZ] (Language Toggle):</strong> Instantly switches the entire user interface, tooltips, and help between Czech and English. The button displays the target language you will switch to.",
+                    "<strong>ℹ️ 5th button left: [ℹ] (About & Help):</strong> Opens this informational window with a detailed user guide, control explanations, and author/version info.",
+                    "<strong>🎨 6th button right: [View Mode / Presentation]:</strong> Toggles between 4 visual photo presentation modes:<br>• 🔥 <strong>Heatmap</strong> – smooth density heatmap styled like Google Photos.<br>• 🖼️ <strong>Photo Cards</strong> – photo thumbnails in rounded cards directly on the map.<br>• 📍 <strong>Pins</strong> – classic clusters with photo count and preview cards upon click.<br>• 🔴 <strong>Red Dots</strong> – unclustered point cloud that accumulates into deep red density.",
+                    "<strong>🗺️ 7th button right: [Map Layers / Base Maps]:</strong> Choose from 7 official map styles:<br>• 🗺️ <strong>Google Standard</strong> – clean urban and street map.<br>• ⛰️ <strong>Google Terrain</strong> – 3D elevation relief and mountain ridges.<br>• 🛰️ <strong>Google Satellite</strong> – real aerial and satellite imagery with labels.<br>• 🌲 <strong>Mapy.cz Outdoor</strong> – official hiking and cycling trails with contour lines.<br>• 🗺️ <strong>Mapy.cz Basic</strong> – clean European cartography by Seznam.<br>• 🛰️ <strong>Mapy.cz Aerial</strong> – high-resolution aerial orthoimagery.<br>• 🌐 <strong>Esri Topo</strong> – worldwide topographic map with contours.",
+                    "<strong>🔍 8th button right (bottom on mobile): [+ / −] (Map Zoom):</strong> Buttons for smooth map zooming. On desktop you can also use the mouse scroll wheel, on touch devices use two-finger pinch gesture."
+                ]
             }
         };
 
@@ -573,7 +584,6 @@
                 btnToggle.title = (l === "cs" ? "Switch to English" : "Přepnout do češtiny");
             }
             var t = i18n[l];
-            document.getElementById("txtBtnSources").textContent = t.btnSources;
             document.getElementById("txtBtnAddMini").textContent = t.btnAddMini;
             document.getElementById("txtSourcesHeader").textContent = t.sourcesHeader;
             document.getElementById("btnLayers").title = t.titleLayers;
@@ -601,13 +611,9 @@
             document.getElementById("lblVersion").textContent = t.lblVersion;
             document.getElementById("txtGuideTitle").textContent = t.guideTitle;
             
-            var steps = document.getElementById("infoStepsList").children;
-            if (steps.length >= 5) {
-                steps[0].innerHTML = t.step1;
-                steps[1].innerHTML = t.step2;
-                steps[2].innerHTML = t.step3;
-                steps[3].innerHTML = t.step4;
-                steps[4].innerHTML = t.step5;
+            var stepsList = document.getElementById("infoStepsList");
+            if (stepsList && t.steps) {
+                stepsList.innerHTML = t.steps.map(function(s) { return "<li>" + s + "</li>"; }).join("");
             }
 
             renderSrc();
@@ -939,7 +945,7 @@
 
             var activeCount = (curYear === "all") ? rawData.length : (yc[curYear] || 0);
             var prefix = (curYear === "all") ? t.allWord : curYear;
-            document.getElementById("txtYearLabel").textContent = prefix + " " + activeCount.toLocaleString(loc) + " " + t.photosWord;
+            document.getElementById("txtYearLabel").textContent = prefix + " (" + activeCount.toLocaleString(loc) + ")";
         }
 
         function selectYear(yr) {
@@ -973,7 +979,7 @@
                 var hp = [];
                 for (var i = 0; i < fi.length; i++) hp.push([fi[i][0], fi[i][1], 0.75]);
                 var h = hpZ(map.getZoom());
-                heatL = L.heatLayer(hp, { radius: h.r, blur: h.b, minOpacity: h.o, maxZoom: 17, gradient: { 0.05: "#3388ff", 0.25: "#00e5ff", 0.45: "#00e676", 0.65: "#ffea00", 0.85: "#ff9100", 1.0: "#ff1744" } });
+                heatL = L.heatLayer(hp, { radius: h.r, blur: h.b, minOpacity: h.o, maxZoom: 17, gradient: gpGrad });
                 map.addLayer(heatL);
             }
             // 2. FOTO-KARTY
@@ -1421,18 +1427,23 @@
         window.addEventListener("dragleave", function(e) { if (e.clientX <= 0 || e.clientY <= 0) dOv.classList.remove("dragover"); });
         window.addEventListener("drop", function(e) { e.preventDefault(); dOv.classList.remove("dragover"); if (e.dataTransfer.files && e.dataTransfer.files.length > 0) handleFileSelect(e.dataTransfer.files); });
 
-        // Automatické načítání všech dostupných datových souborů (Mapa_Fotek_data_*.txt i Mapa_Fotek_data.txt)
+        // Automatické načítání dostupného datového souboru (Mapa_Fotek_data_*.txt)
+        // Sekvenční hledání: testuje kandidáty jeden po druhém a zastaví se při prvním úspěchu.
+        // Tím se eliminují stovky 404 v konzoli prohlížeče.
         function autoLoadData() {
             var overlay = document.getElementById("loading-overlay");
-            
+
             if (window.MAPA_FOTEK_DATA) {
                 addDS(window.MAPA_FOTEK_DATA, "Mapa_Fotek_data");
                 window.MAPA_FOTEK_DATA = null;
+                if (overlay) overlay.style.display = "none";
+                return;
             }
 
             var candidates = [];
             var now = new Date();
-            for (var d = -2; d <= 180; d++) {
+            // Hledáme od zítřka až 180 dní zpět (celkově 183 kandidátů)
+            for (var d = -1; d <= 180; d++) {
                 var target = new Date(now.getTime() - (d * 86400000));
                 var y = target.getFullYear();
                 var m = String(target.getMonth() + 1).padStart(2, '0');
@@ -1441,36 +1452,45 @@
             }
             candidates.push("Mapa_Fotek_data.txt");
 
-            candidates.forEach(function(fname) {
+            var idx = 0;
+            var found = false;
+
+            function tryNext() {
+                if (found || idx >= candidates.length) {
+                    if (overlay) overlay.style.display = "none";
+                    return;
+                }
+                var fname = candidates[idx++];
                 var script = document.createElement("script");
-                script.src = fname + (window.location.protocol === "file:" ? "" : ("?v=" + Date.now()));
-                
+                script.src = fname;
+
                 script.onload = function() {
                     if (window.MAPA_FOTEK_DATA) {
+                        found = true;
                         addDS(window.MAPA_FOTEK_DATA, fname);
                         window.MAPA_FOTEK_DATA = null;
+                        if (overlay) overlay.style.display = "none";
+                    } else {
+                        tryNext();
                     }
                     if (script.parentNode) script.parentNode.removeChild(script);
-                    if (overlay) overlay.style.display = "none";
                 };
 
                 script.onerror = function() {
                     if (script.parentNode) script.parentNode.removeChild(script);
-                    if (window.location.protocol !== "file:") {
-                        fetch(fname)
-                            .then(function(r) { return r.ok ? r.text() : null; })
-                            .then(function(txt) { if (txt) addDS(txt, fname); })
-                            .catch(function() {});
-                    }
+                    // Soubor neexistuje → tiše zkusíme další (bez hlášky v konzoli)
+                    tryNext();
                 };
 
                 document.head.appendChild(script);
-            });
+            }
 
-            // Pojistka: Mapu VŽDY okamžitě zpřístupníme i kdyby žádný soubor neexistoval
+            tryNext();
+
+            // Pojistka: po 3 s zobrazíme mapu i bez dat
             setTimeout(function() {
                 if (overlay) overlay.style.display = "none";
-            }, 600);
+            }, 3000);
         }
 
         autoLoadData();
