@@ -2,21 +2,46 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Fotky na mapě • Photo Map</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Google Sans", "Segoe UI", Roboto, sans-serif; }
+        :root {
+            --sat: env(safe-area-inset-top, 0px);
+            --sar: env(safe-area-inset-right, 0px);
+            --sab: env(safe-area-inset-bottom, 0px);
+            --sal: env(safe-area-inset-left, 0px);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Google Sans", "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { width: 100%; height: 100%; overflow: hidden; background: #202124; color: #3c4043; }
         #map { width: 100%; height: 100%; z-index: 1; background: #e8eaed; }
         
-        /* HORNÍ LIŠTA - JEDNOTNÁ VÝŠKA 32PX, SUBTILNÍ VZHLED */
-        .top-bar-left { position: absolute; top: 12px; left: 12px; z-index: 1000; display: flex; gap: 6px; align-items: center; pointer-events: auto; }
-        .top-bar-right { position: absolute; top: 12px; right: 12px; z-index: 1000; display: flex; gap: 6px; align-items: center; pointer-events: auto; }
+        /* HORNÍ LIŠTY S RESPOZIVNÍM CHOVÁNÍM */
+        .top-bar-left {
+            position: absolute;
+            top: calc(10px + var(--sat));
+            left: calc(10px + var(--sal));
+            z-index: 1000;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            pointer-events: auto;
+        }
+        .top-bar-right {
+            position: absolute;
+            top: calc(10px + var(--sat));
+            right: calc(10px + var(--sar));
+            z-index: 1000;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            pointer-events: auto;
+        }
         
-        .ui-btn { height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.15s; user-select: none; }
+        .ui-btn { height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.15s; user-select: none; }
         .ui-btn:hover { background: #ffffff; color: #1a73e8; transform: translateY(-1px); }
         .ui-btn.active { background: #202124; color: #ffffff; border-color: #202124; }
         .ui-btn svg { width: 17px; height: 17px; fill: currentColor; }
@@ -24,43 +49,41 @@
         .icon-only-btn { width: 34px; padding: 0; }
         
         /* 1. Tlačítko: výběr roku */
-        .year-select-btn { height: 32px; display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); color: #202124; padding: 0 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.12); transition: all 0.15s; user-select: none; }
+        .year-select-btn { height: 32px; display: flex; align-items: center; gap: 5px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); color: #202124; padding: 0 11px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.12); transition: all 0.15s; user-select: none; white-space: nowrap; }
         .year-select-btn:hover { background: #ffffff; color: #1a73e8; transform: translateY(-1px); }
         .year-select-btn.active { background: #202124; color: #ffffff; border-color: #202124; }
-        .caret { font-size: 10px; opacity: 0.6; margin-left: 2px; }
+        .caret { font-size: 9px; opacity: 0.6; margin-left: 2px; }
         
         /* 2. Skupina: Zdroje + malé plus */
         .sources-group { display: flex; align-items: center; }
-        .src-btn { height: 32px; display: flex; align-items: center; gap: 5px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-right: none; color: #3c4043; padding: 0 10px; border-radius: 8px 0 0 8px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.15s; user-select: none; }
+        .src-btn { height: 32px; display: flex; align-items: center; gap: 5px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-right: none; color: #3c4043; padding: 0 9px; border-radius: 8px 0 0 8px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.15s; user-select: none; white-space: nowrap; }
         .src-btn:hover { background: #ffffff; color: #1a73e8; }
         .src-btn.active { background: #1a73e8; color: #ffffff; border-color: #1a73e8; }
-        .src-badge { font-size: 10px; background: #e8f0fe; color: #1a73e8; padding: 1px 6px; border-radius: 4px; font-weight: 700; }
+        .src-badge { font-size: 10px; background: #e8f0fe; color: #1a73e8; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
         .src-btn.active .src-badge { background: rgba(255,255,255,0.25); color: #ffffff; }
         
-        .add-btn { height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); color: #1a73e8; width: 28px; border-radius: 0 8px 8px 0; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.15s; user-select: none; line-height: 1; }
+        .add-btn { height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); color: #1a73e8; width: 28px; border-radius: 0 8px 8px 0; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.15s; user-select: none; line-height: 1; }
         .add-btn:hover { background: #e8f0fe; }
         
-        /* 3. Přepínač jazyků (🇨🇿 / EN) */
-        .lang-switch { height: 32px; display: flex; align-items: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); padding: 2px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.08); gap: 2px; }
-        .lang-btn { height: 26px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; padding: 0 6px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s; line-height: 1; color: #5f6368; }
-        .lang-btn:hover { color: #1a73e8; transform: scale(1.05); }
-        .lang-btn.active { background: #ffffff; color: #202124; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+        /* 3. Kompaktní přepínač jazyků (jedno tlačítko: EN v češtině, CZ v angličtině) */
+        .lang-toggle-btn { height: 32px; width: 34px; padding: 0; font-size: 11.5px; font-weight: 700; color: #1a73e8; letter-spacing: 0.5px; }
+        .lang-toggle-btn:hover { background: #e8f0fe; }
         
         /* 4. Zoom tlačítka */
-        .zoom-group { display: flex; align-items: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; height: 32px; }
+        .zoom-group { display: flex; align-items: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; height: 32px; }
         .zoom-btn { width: 28px; height: 32px; border: none; background: transparent; color: #3c4043; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
         .zoom-btn:first-child { border-right: 1px solid rgba(0,0,0,0.08); }
         .zoom-btn:hover { background: #f1f3f4; color: #1a73e8; }
         
         /* Dropdown panely */
-        .dropdown-menu { display: none; position: absolute; top: 38px; left: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 220px; max-height: 320px; overflow-y: auto; z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
+        .dropdown-menu { display: none; position: absolute; top: 38px; left: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 220px; max-height: 320px; overflow-y: auto; z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
         .dropdown-menu.open { display: block; }
         .dropdown-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; color: #3c4043; cursor: pointer; transition: background 0.15s; }
         .dropdown-item:hover { background: #f1f3f4; color: #1a73e8; }
         .dropdown-item.active { background: #e8f0fe; color: #1a73e8; font-weight: 700; }
         .item-count { font-size: 11px; opacity: 0.7; }
         
-        .sources-dropdown { display: none; position: absolute; top: 38px; left: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 10px; width: 380px; max-width: 90vw; z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
+        .sources-dropdown { display: none; position: absolute; top: 38px; left: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 10px; width: 380px; max-width: calc(100vw - 20px); z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
         .sources-dropdown.open { display: block; }
         .sources-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px; font-weight: 700; color: #202124; padding-bottom: 6px; border-bottom: 1px solid #f1f3f4; }
         .add-mini-btn { background: #e8f0fe; color: #1a73e8; border: none; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; cursor: pointer; }
@@ -75,10 +98,10 @@
         .source-del-btn { border: none; background: transparent; color: #5f6368; cursor: pointer; font-size: 13px; padding: 1px 4px; border-radius: 4px; flex-shrink: 0; }
         .source-del-btn:hover { color: #d93025; background: #fce8e6; }
         
-        .layers-dropdown { display: none; position: absolute; top: 38px; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 210px; z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
+        .layers-dropdown { display: none; position: absolute; top: 38px; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 230px; max-width: calc(100vw - 20px); z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
         .layers-dropdown.open { display: block; }
         
-        .modes-dropdown { display: none; position: absolute; top: 38px; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 210px; z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
+        .modes-dropdown { display: none; position: absolute; top: 38px; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 210px; max-width: calc(100vw - 20px); z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
         .modes-dropdown.open { display: block; }
 
         /* Vzhled foto-karet přímo na mapě */
@@ -89,7 +112,7 @@
         .photo-bubble-single { width: 36px; height: 36px; }
 
         /* Modální okno Informace */
-        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 5000; align-items: center; justify-content: center; }
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 5000; align-items: center; justify-content: center; }
         .modal-backdrop.open { display: flex; }
         .info-modal { background: #ffffff; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); width: 520px; max-width: 94vw; max-height: 90vh; overflow-y: auto; padding: 22px 24px; position: relative; }
         .info-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e8eaed; }
@@ -109,6 +132,122 @@
         .custom-cluster { background: rgba(255, 255, 255, 0.95); border: 2px solid #1a73e8; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.28); color: #1a73e8; font-weight: 700; font-size: 12px; display: flex !important; align-items: center; justify-content: center; }
         .custom-cluster:hover { transform: scale(1.1); }
         .custom-marker { background: #ea4335; border: 2px solid white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); width: 10px !important; height: 10px !important; margin-left: -5px !important; margin-top: -5px !important; }
+        
+        /* MOBILNÍ & TABLETOVÁ OPTIMALIZACE PRO ANDROID I IOS */
+        @media (max-width: 768px) {
+            .top-bar-left {
+                top: calc(8px + var(--sat));
+                left: calc(6px + var(--sal));
+                gap: 4px;
+            }
+            .top-bar-right {
+                top: calc(8px + var(--sat));
+                right: calc(6px + var(--sar));
+                gap: 4px;
+            }
+            .ui-btn, .src-btn, .year-select-btn {
+                height: 32px;
+                padding: 0 8px;
+                font-size: 11.5px;
+                border-radius: 7px;
+            }
+            .icon-only-btn {
+                width: 32px;
+                padding: 0;
+            }
+            .lang-toggle-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 11px;
+            }
+            .add-btn {
+                height: 32px;
+                width: 26px;
+                font-size: 15px;
+            }
+            .src-badge {
+                font-size: 9.5px;
+                padding: 1px 4px;
+            }
+
+            /* Zoom na mobilech v pravém dolním rohu (standardní mobilní UX) */
+            .zoom-group {
+                position: fixed;
+                bottom: calc(20px + var(--sab));
+                right: calc(12px + var(--sar));
+                flex-direction: column;
+                height: auto;
+                border-radius: 8px;
+                box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+                z-index: 1000;
+                background: rgba(255, 255, 255, 0.96);
+            }
+            .zoom-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            .zoom-btn:first-child {
+                border-right: none;
+                border-bottom: 1px solid rgba(0,0,0,0.08);
+            }
+
+            .dropdown-menu {
+                width: 200px;
+                max-width: calc(100vw - 20px);
+                max-height: 280px;
+            }
+            .sources-dropdown {
+                width: 340px;
+                max-width: calc(100vw - 16px);
+                left: 0;
+            }
+            .source-name {
+                max-width: 170px;
+            }
+            .layers-dropdown, .modes-dropdown {
+                width: 195px;
+                max-width: calc(100vw - 16px);
+                right: 0;
+            }
+            .info-modal {
+                padding: 16px 14px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .top-bar-left {
+                gap: 3px;
+                left: calc(4px + var(--sal));
+            }
+            .top-bar-right {
+                gap: 3px;
+                right: calc(4px + var(--sar));
+            }
+            .year-select-btn {
+                padding: 0 6px;
+                font-size: 11px;
+                gap: 3px;
+            }
+            .src-btn {
+                padding: 0 6px;
+                font-size: 11px;
+                gap: 3px;
+            }
+            .ui-btn.icon-only-btn {
+                width: 30px;
+            }
+            .lang-toggle-btn {
+                width: 30px;
+                height: 30px;
+            }
+            .sources-dropdown {
+                max-width: calc(100vw - 10px);
+            }
+            .source-name {
+                max-width: 140px;
+            }
+        }
         
         .leaflet-popup-content-wrapper { border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.28); padding: 0; overflow: hidden; max-width: 290px; }
         .leaflet-popup-content { margin: 0; width: 260px !important; }
@@ -171,7 +310,7 @@
             <button class="src-btn" onclick="toggleDatasetPanel()" id="btnSources">
                 <span id="txtBtnSources">Zdroje</span> <span class="src-badge" id="sourceCount">1</span>
             </button>
-            <button class="add-btn" onclick="document.getElementById('fileInput').click()" title="Přidat datový soubor">+</button>
+            <button class="add-btn" onclick="document.getElementById('fileInput').click()" title="Přidat soubor">+</button>
             
             <div id="sourcesPanel" class="sources-dropdown">
                 <div class="sources-header">
@@ -183,17 +322,14 @@
         </div>
         <input type="file" id="fileInput" accept=".txt,.gpx,.kml,.kmz" multiple style="display:none" onchange="handleFileSelect(this.files)">
 
-        <!-- 3. Tlačítko: Přepínač jazyků (🇨🇿 / EN) -->
-        <div class="lang-switch">
-            <button class="lang-btn active" id="btnLangCs" onclick="setLanguage('cs')" title="Čeština">🇨🇿</button>
-            <button class="lang-btn" id="btnLangEn" onclick="setLanguage('en')" title="English">EN</button>
-        </div>
+        <!-- 3. Tlačítko: Kompaktní přepínač jazyka (jedno tlačítko EN/CZ) -->
+        <button class="ui-btn lang-toggle-btn" id="btnLangToggle" onclick="toggleLanguage()" title="Switch to English">EN</button>
 
         <!-- 4. Tlačítko: Informace (i) -->
-        <button class="ui-btn icon-only-btn" onclick="openInfoModal()" title="Informace o aplikaci" style="font-style:italic;font-family:serif;font-size:14px;">i</button>
+        <button class="ui-btn icon-only-btn" onclick="openInfoModal()" title="Informace o aplikaci" style="font-style:italic;font-family:serif;font-size:15px;font-weight:700;">i</button>
     </div>
 
-    <!-- HORNÍ LIŠTA VPRAVO: VOLBA REŽIMU (MONOCHROMATICKÁ IKONA) + VRSTVY MAPY + ZOOM -->
+    <!-- HORNÍ LIŠTA VPRAVO: REŽIM + VRSTVY MAPY + ZOOM -->
     <div class="top-bar-right">
         <!-- Monochromatické tlačítko režimu prezentace (pouze ikona, 34px) -->
         <div style="position: relative;">
@@ -220,12 +356,14 @@
                 <div class="dropdown-item active" onclick="setBaseLayer('gRoad', this)"><span id="lblGRoad">🗺️ Google (Klasická)</span></div>
                 <div class="dropdown-item" onclick="setBaseLayer('gTerr', this)"><span id="lblGTerr">⛰️ Google (Terénní)</span></div>
                 <div class="dropdown-item" onclick="setBaseLayer('gSat', this)"><span id="lblGSat">🛰️ Google Satelitní</span></div>
+                <div class="dropdown-item" onclick="setBaseLayer('mOutdoor', this)"><span id="lblMOutdoor">🌲 Mapy.cz Turistická</span></div>
+                <div class="dropdown-item" onclick="setBaseLayer('mBasic', this)"><span id="lblMBasic">🗺️ Mapy.cz Základní</span></div>
+                <div class="dropdown-item" onclick="setBaseLayer('mAerial', this)"><span id="lblMAerial">🛰️ Mapy.cz Letecká</span></div>
                 <div class="dropdown-item" onclick="setBaseLayer('eTopo', this)"><span id="lblETopo">🌐 Esri Topo</span></div>
-                <div class="dropdown-item" onclick="setBaseLayer('czOut', this)"><span id="lblCzOut">🏕️ Turistická trasy</span></div>
             </div>
         </div>
 
-        <!-- Zoom +/- -->
+        <!-- Zoom +/- (na mobilu se CSS přemístí do pravého dolního rohu) -->
         <div class="zoom-group">
             <button class="zoom-btn" onclick="map.zoomIn()" title="Přiblížit">+</button>
             <button class="zoom-btn" onclick="map.zoomOut()" title="Oddálit">−</button>
@@ -315,8 +453,10 @@
                 lGoogle: "🗺️ Google (Klasická)",
                 lTerrain: "⛰️ Google (Terénní)",
                 lSat: "🛰️ Google Satelitní",
+                lMOutdoor: "🌲 Mapy.cz Turistická",
+                lMBasic: "🗺️ Mapy.cz Základní",
+                lMAerial: "🛰️ Mapy.cz Letecká",
                 lEsri: "🌐 Esri Topo",
-                lCzech: "🏕️ Turistická trasy",
                 mHeat: "Heatmapa",
                 mCards: "Foto-karty",
                 mClusters: "Špendlíky",
@@ -326,7 +466,7 @@
                 btnFull: "Plná vel. ↗",
                 zoomBadge: "🔍",
                 noThumb: "📷 Náhled nedostupný",
-                dropText: "Přetáhněte soubor se souřadnicemi sem",
+                dropText: "Přetáhněte soubor dat či tras (.txt, .gpx, .kml, .kmz) sem",
                 toastAdded: "✅ Načteno {count} fotek z {name}",
                 toastDup: "⚠️ {name} již načten!",
                 toastDel: "{name} odebrán.",
@@ -342,7 +482,7 @@
                 step2: "<strong>Styly zobrazení (vpravo nahoře):</strong> Můžete si vybrat ze 4 stylů zobrazení:<br>• 🔥 <strong>Heatmapa</strong> – plynulé rozložení četnosti fotek dle Google Photos.<br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v zaoblených rámečcích přímo na mapě.<br>• 📍 <strong>Špendlíky</strong> – klasické klastry s počtem fotek a detailním náhledem.<br>• 🔴 <strong>Červené tečky</strong> – neshlukované body, kde se hustota sčítá do sytě červené barvy.",
                 step3: "<strong>Filtrování dle let a času (vlevo nahoře):</strong> Tlačítko <em>Vše (rok)</em> otevírá rozbalovací nabídku s počty fotek:<br>• 📅 <strong>Všechny roky</strong> – zobrazí kompletní archiv všech vašich fotek.<br>• 🗓️ <strong>Konkrétní rok</strong> – vyfiltruje pouze snímky pořízené v daném roce.<br>• 🔢 <strong>Počty fotografií</strong> – u každého roku vidíte přesný počet zaznamenaných fotek.",
                 step4: "<strong>Přidání dalších dat, fotek a tras (vlevo nahoře):</strong> Umožňuje pracovat s více datovými soubory i trasami najednou:<br>• ➕ <strong>Přidat data (+)</strong> – načtení dalších fotek nebo trasových souborů (GPX, KML, KMZ).<br>• 🥾 <strong>GPS Trasy (GPX / KML / KMZ)</strong> – vykreslí linie tras z hodinek, Garminu, Stravy či Mapy.cz přímo k vašim fotografiím.<br>• 📂 <strong>Správa zdrojů</strong> – zaškrtáváním můžete jednotlivé datasety i trasy zapínat a vypínat.<br>• 🖱️ <strong>Drag & Drop</strong> – stačí soubor s fotkami či trasou přetáhnout myší přímo do okna mapy.",
-                step5: "<strong>Podkladové mapy (vpravo nahoře):</strong> Tlačítko s vrstvami nabízí 5 různých mapových stylů:<br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa.<br>• ⛰️ <strong>Google Terénní</strong> – plastický reliéf hor, údolí a terénních nerovností.<br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky.<br>• 🌐 <strong>Esri Topo</strong> – detailní celosvětová topografická mapa s vrstevnicemi.<br>• 🏕️ <strong>Turistické trasy</strong> – značené turistické a cyklistické stezky pro outdoorové výlety."
+                step5: "<strong>Podkladové mapy (vpravo nahoře):</strong> Tlačítko s vrstvami nabízí 7 oficiálních mapových stylů:<br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa.<br>• ⛰️ <strong>Google Terénní</strong> – plastický reliéf hor, údolí a terénních nerovností.<br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky.<br>• 🌲 <strong>Mapy.cz Turistická</strong> – oficiální značené turistické a cyklistické trasy s vrstevnicemi.<br>• 🗺️ <strong>Mapy.cz Základní</strong> – česká kartografická mapa s detailním vyznačením měst a obcí.<br>• 🛰️ <strong>Mapy.cz Letecká</strong> – detailní letecké a ortofoto snímky ČR i Evropy.<br>• 🌐 <strong>Esri Topo</strong> – detailní celosvětová topografická mapa s vrstevnicemi."
             },
             en: {
                 photosWord: "photos",
@@ -354,8 +494,10 @@
                 lGoogle: "🗺️ Google (Standard)",
                 lTerrain: "⛰️ Google (Terrain)",
                 lSat: "🛰️ Google Satellite",
+                lMOutdoor: "🌲 Mapy.cz Outdoor & Trails",
+                lMBasic: "🗺️ Mapy.cz Basic",
+                lMAerial: "🛰️ Mapy.cz Aerial / Satellite",
                 lEsri: "🌐 Esri Topo",
-                lCzech: "🏕️ Czech Trails",
                 mHeat: "Heatmap",
                 mCards: "Photo Cards",
                 mClusters: "Pins",
@@ -365,7 +507,7 @@
                 btnFull: "Full size ↗",
                 zoomBadge: "🔍",
                 noThumb: "📷 No preview",
-                dropText: "Drop coordinates or GPS track file (TXT, GPX, KML, KMZ) here",
+                dropText: "Drop data or GPS track file (.txt, .gpx, .kml, .kmz) here",
                 toastAdded: "✅ Loaded {count} photos from {name}",
                 toastDup: "⚠️ {name} already loaded!",
                 toastDel: "{name} removed.",
@@ -381,19 +523,24 @@
                 step2: "<strong>Viewing Modes (top right):</strong> Choose from 4 visual modes:<br>• 🔥 <strong>Heatmap</strong> – smooth Google Photos density heatmap.<br>• 🖼️ <strong>Photo Cards</strong> – photo thumbnails with rounded borders directly on map.<br>• 📍 <strong>Pins</strong> – classic number clusters with preview cards.<br>• 🔴 <strong>Red Dots</strong> – unclustered point cloud that accumulates into deep red density.",
                 step3: "<strong>Year and Time Filter (top left):</strong> The <em>All (year)</em> button opens the dropdown menu:<br>• 📅 <strong>All years</strong> – displays complete archive of all photos.<br>• 🗓️ <strong>Specific year</strong> – filters photos taken in selected year.<br>• 🔢 <strong>Photo counts</strong> – shows exact photo count for each year.",
                 step4: "<strong>Adding Data, Photos & GPS Tracks (top left):</strong> Manage multiple photo datasets and GPS routes simultaneously:<br>• ➕ <strong>Add Data (+)</strong> – load more photos or GPS tracks (GPX, KML, KMZ).<br>• 🥾 <strong>GPS Tracks (GPX / KML / KMZ)</strong> – renders colorful routes from Garmin, Strava, or Mapy.cz right along your photos.<br>• 📂 <strong>Source Manager</strong> – toggle individual datasets or tracks on/off.<br>• 🖱️ <strong>Drag & Drop</strong> – simply drop photos or track files directly into the map window.",
-                step5: "<strong>Map Layers (top right):</strong> The layer button provides 5 distinct map styles:<br>• 🗺️ <strong>Google Standard</strong> – clean urban and street map.<br>• ⛰️ <strong>Google Terrain</strong> – elevation relief, mountain ridges and hills.<br>• 🛰️ <strong>Google Satellite</strong> – real aerial and satellite imagery with labels.<br>• 🌐 <strong>Esri Topo</strong> – detailed worldwide topographic map with contours.<br>• 🏕️ <strong>Czech Trails</strong> – marked hiking and cycling routes for outdoor trips."
+                step5: "<strong>Map Layers (top right):</strong> The layer button provides 7 distinct map styles:<br>• 🗺️ <strong>Google Standard</strong> – clean urban and street map.<br>• ⛰️ <strong>Google Terrain</strong> – elevation relief, mountain ridges and hills.<br>• 🛰️ <strong>Google Satellite</strong> – real aerial and satellite imagery with labels.<br>• 🌲 <strong>Mapy.cz Outdoor</strong> – official marked hiking and cycling trails with contour lines.<br>• 🗺️ <strong>Mapy.cz Basic</strong> – clean European cartography by Seznam.<br>• 🛰️ <strong>Mapy.cz Aerial</strong> – high-resolution aerial imagery.<br>• 🌐 <strong>Esri Topo</strong> – detailed worldwide topographic map with contours."
             }
         };
 
         var datasets = {}, rawData = [];
         var map = L.map("map", { center: [50.0878, 14.4204], zoom: 6, zoomControl: false });
 
+        var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
+        var mapyAttr = '&copy; <a href="https://www.seznam.cz" target="_blank">Seznam.cz, a.s.</a>, &copy; OpenStreetMap';
+
         var layersMap = {
-            gRoad: L.tileLayer("https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", { maxZoom: 20, attribution: "© Google" }),
-            gTerr: L.tileLayer("https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}", { maxZoom: 20, attribution: "© Google" }),
-            gSat:  L.tileLayer("https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", { maxZoom: 20, attribution: "© Google" }),
-            eTopo: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "© Esri" }),
-            czOut: L.tileLayer("https://tile.mtbmap.cz/mtbmap_tiles/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OSM, mtbmap.cz" })
+            gRoad:    L.tileLayer("https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", { maxZoom: 20, attribution: "© Google" }),
+            gTerr:    L.tileLayer("https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}", { maxZoom: 20, attribution: "© Google" }),
+            gSat:     L.tileLayer("https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", { maxZoom: 20, attribution: "© Google" }),
+            mOutdoor: L.tileLayer("https://api.mapy.cz/v1/maptiles/outdoor/256/{z}/{x}/{y}?apikey=" + mapyApiKey, { minZoom: 0, maxZoom: 19, attribution: mapyAttr }),
+            mBasic:   L.tileLayer("https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=" + mapyApiKey, { minZoom: 0, maxZoom: 19, attribution: mapyAttr }),
+            mAerial:  L.tileLayer("https://api.mapy.cz/v1/maptiles/aerial/256/{z}/{x}/{y}?apikey=" + mapyApiKey, { minZoom: 0, maxZoom: 20, attribution: '&copy; <a href="https://www.seznam.cz" target="_blank">Seznam.cz, a.s.</a>' }),
+            eTopo:    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "© Esri" })
         };
 
         var currentBaseLayer = layersMap.gRoad;
@@ -414,10 +561,17 @@
         var curYear = "all", heatL = null, cGroup = null, canvasLayerGroup = null;
         var fastCanvasRenderer = L.canvas({ padding: 0.5 });
 
+        function toggleLanguage() {
+            setLanguage(currentLang === "cs" ? "en" : "cs");
+        }
+
         function setLanguage(l) {
             currentLang = l;
-            document.getElementById("btnLangCs").classList.toggle("active", l === "cs");
-            document.getElementById("btnLangEn").classList.toggle("active", l === "en");
+            var btnToggle = document.getElementById("btnLangToggle");
+            if (btnToggle) {
+                btnToggle.textContent = (l === "cs" ? "EN" : "CZ");
+                btnToggle.title = (l === "cs" ? "Switch to English" : "Přepnout do češtiny");
+            }
             var t = i18n[l];
             document.getElementById("txtBtnSources").textContent = t.btnSources;
             document.getElementById("txtBtnAddMini").textContent = t.btnAddMini;
@@ -428,8 +582,10 @@
             document.getElementById("lblGRoad").textContent = t.lGoogle;
             document.getElementById("lblGTerr").textContent = t.lTerrain;
             document.getElementById("lblGSat").textContent = t.lSat;
+            document.getElementById("lblMOutdoor").textContent = t.lMOutdoor;
+            document.getElementById("lblMBasic").textContent = t.lMBasic;
+            document.getElementById("lblMAerial").textContent = t.lMAerial;
             document.getElementById("lblETopo").textContent = t.lEsri;
-            document.getElementById("lblCzOut").textContent = t.lCzech;
 
             document.getElementById("mOptHeat").textContent = t.mHeat;
             document.getElementById("mOptCards").textContent = t.mCards;
@@ -1215,10 +1371,21 @@
 
         function handleFileSelect(f) {
             if (!f || f.length === 0) return;
+            var supportedExts = [".txt", ".gpx", ".kml", ".kmz"];
             for (var i = 0; i < f.length; i++) {
                 (function(file) {
                     var name = file.name;
                     var lower = name.toLowerCase();
+                    
+                    var isSupported = supportedExts.some(function(ext) { return lower.endsWith(ext); });
+                    if (!isSupported) {
+                        var warnMsg = currentLang === 'cs' 
+                            ? "⚠️ Nepodporovaný soubor: " + name + " (povolené: .txt, .gpx, .kml, .kmz)"
+                            : "⚠️ Unsupported file: " + name + " (allowed: .txt, .gpx, .kml, .kmz)";
+                        showToast(warnMsg);
+                        return;
+                    }
+
                     if (lower.endsWith(".kmz")) {
                         var r = new FileReader();
                         r.onload = function(e) { parseKmz(e.target.result, name); };
@@ -1228,7 +1395,7 @@
                         r.onload = function(e) {
                             var trk = parseGpx(e.target.result, name);
                             if (trk) addTrackDS(trk);
-                            else showToast("⚠️ Nepodařilo se načíst trasu z " + name);
+                            else showToast("⚠️ " + (currentLang === 'cs' ? "Nepodařilo se načíst trasu z " : "Failed to parse track from ") + name);
                         };
                         r.readAsText(file, "UTF-8");
                     } else if (lower.endsWith(".kml")) {
@@ -1236,10 +1403,10 @@
                         r.onload = function(e) {
                             var trk = parseKml(e.target.result, name);
                             if (trk) addTrackDS(trk);
-                            else showToast("⚠️ Nepodařilo se načíst trasu z " + name);
+                            else showToast("⚠️ " + (currentLang === 'cs' ? "Nepodařilo se načíst trasu z " : "Failed to parse track from ") + name);
                         };
                         r.readAsText(file, "UTF-8");
-                    } else {
+                    } else if (lower.endsWith(".txt")) {
                         var r = new FileReader();
                         r.onload = function(e) { addDS(e.target.result, name); };
                         r.readAsText(file, "UTF-8");
