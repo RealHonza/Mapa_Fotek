@@ -83,27 +83,55 @@
         .dropdown-item.active { background: #e8f0fe; color: #1a73e8; font-weight: 700; }
         .item-count { font-size: 11px; opacity: 0.7; }
         
-        .sources-dropdown { display: none; position: absolute; top: 38px; left: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 10px; width: 380px; max-width: calc(100vw - 20px); z-index: 1500; border: 1px solid rgba(0,0,0,0.08); box-sizing: border-box; }
+        .sources-dropdown { display: none; position: absolute; top: 38px; left: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.22); padding: 10px; width: 390px; max-width: calc(100vw - 16px); z-index: 1500; border: 1px solid rgba(0,0,0,0.08); box-sizing: border-box; }
         .sources-dropdown.open { display: block; }
-        .sources-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px; font-weight: 700; color: #202124; padding-bottom: 6px; border-bottom: 1px solid #f1f3f4; }
-        .header-action-btn { background: #f1f3f4; color: #3c4043; border: 1px solid #dadce0; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 600; cursor: pointer; touch-action: manipulation; transition: all 0.15s; }
+        .sources-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11.5px; font-weight: 700; color: #202124; padding-bottom: 6px; border-bottom: 1px solid #e8eaed; gap: 4px; flex-wrap: wrap; }
+        .header-actions-group { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+        .header-action-btn { background: #f1f3f4; color: #3c4043; border: 1px solid #dadce0; padding: 2.5px 7px; border-radius: 4px; font-size: 10px; font-weight: 600; cursor: pointer; touch-action: manipulation; transition: all 0.15s; white-space: nowrap; }
         .header-action-btn:hover { background: #e8eaed; color: #202124; }
-        .add-mini-btn { background: #e8f0fe; color: #1a73e8; border: none; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; cursor: pointer; touch-action: manipulation; }
+        .header-action-btn:active { transform: scale(0.96); }
+        .add-mini-btn { background: #e8f0fe; color: #1a73e8; border: 1px solid #d2e3fc; padding: 2.5px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; touch-action: manipulation; white-space: nowrap; }
         .add-mini-btn:hover { background: #d2e3fc; }
-        .sources-list { display: flex; flex-direction: column; gap: 6px; max-height: 240px; overflow-y: auto; overflow-x: hidden; padding-right: 3px; scrollbar-width: thin; scrollbar-color: #bdc1c6 transparent; -webkit-overflow-scrolling: touch; }
+        .sources-list { display: flex; flex-direction: column; gap: 6px; max-height: 52vh; overflow-y: auto; overflow-x: hidden; padding-right: 3px; scrollbar-width: thin; scrollbar-color: #bdc1c6 transparent; -webkit-overflow-scrolling: touch; }
         .sources-list::-webkit-scrollbar { width: 5px; }
         .sources-list::-webkit-scrollbar-track { background: transparent; }
         .sources-list::-webkit-scrollbar-thumb { background: #bdc1c6; border-radius: 4px; }
         .sources-list::-webkit-scrollbar-thumb:hover { background: #9aa0a6; }
-        .source-item { padding: 6px 8px; border-radius: 6px; background: #f8f9fa; border: 1px solid #f1f3f4; display: flex; flex-direction: column; gap: 4px; box-sizing: border-box; width: 100%; min-width: 0; }
-        .source-item:hover { background: #f1f3f4; }
+        
+        .source-item { padding: 6px 8px; border-radius: 8px; background: #f8f9fa; border: 1px solid #e8eaed; display: flex; flex-direction: column; gap: 4px; box-sizing: border-box; width: 100%; min-width: 0; position: relative; transition: background 0.15s, border-color 0.15s; }
+        .source-item:hover { background: #f1f3f4; border-color: #dadce0; }
         .source-item-top { display: flex; align-items: center; justify-content: space-between; width: 100%; min-width: 0; gap: 6px; }
         .source-item-left { display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1 1 auto; min-width: 0; }
         .source-item-left input[type="checkbox"] { width: 15px; height: 15px; accent-color: #1a73e8; cursor: pointer; flex-shrink: 0; }
         .source-name { font-size: 11.5px; font-weight: 600; color: #3c4043; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1 1 auto; min-width: 0; }
-        .source-dots-row { display: flex; align-items: center; gap: 5px; padding-left: 48px; flex-wrap: wrap; }
-        .source-dots-row button { position: relative; touch-action: manipulation; }
-        .source-dots-row button::after { content: ""; position: absolute; top: -6px; bottom: -6px; left: -4px; right: -4px; border-radius: 50%; }
+        
+        .source-controls-row { display: flex; align-items: center; gap: 5px; padding-left: 27px; flex-wrap: wrap; }
+        .color-bubble-btn { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 0 0 1px #dadce0, 0 1px 3px rgba(0,0,0,0.15); cursor: pointer; padding: 0; outline: none; flex-shrink: 0; transition: transform 0.15s, box-shadow 0.15s; touch-action: manipulation; }
+        .color-bubble-btn:hover { transform: scale(1.15); box-shadow: 0 0 0 1.5px #1a73e8, 0 2px 5px rgba(0,0,0,0.25); }
+        .color-bubble-btn.active { transform: scale(1.15); box-shadow: 0 0 0 2px #1a73e8, 0 2px 6px rgba(0,0,0,0.3); }
+        
+        .source-pill-btn { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 12px; background: #ffffff; border: 1px solid #dadce0; font-size: 10px; font-weight: 600; color: #3c4043; cursor: pointer; transition: all 0.15s ease; touch-action: manipulation; box-shadow: 0 1px 2px rgba(0,0,0,0.04); white-space: nowrap; }
+        .source-pill-btn:hover { background: #e8f0fe; border-color: #1a73e8; color: #1a73e8; }
+        .source-pill-btn.active { background: #e8f0fe; border-color: #1a73e8; color: #1a73e8; box-shadow: 0 0 0 1px #1a73e8; }
+        
+        .style-popover { position: absolute; background: #ffffff; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,0.3); border: 1px solid #dadce0; padding: 8px 10px; z-index: 3500; display: flex; flex-direction: column; gap: 6px; min-width: 160px; max-width: calc(100vw - 32px); box-sizing: border-box; animation: popoverFadeIn 0.15s ease; }
+        @keyframes popoverFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        .popover-title { font-size: 10px; font-weight: 700; color: #5f6368; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
+        .color-palette-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .color-palette-grid button { width: 22px; height: 22px; border-radius: 50%; border: 1px solid #dadce0; cursor: pointer; padding: 0; outline: none; box-sizing: border-box; transition: transform 0.15s; }
+        .color-palette-grid button:hover { transform: scale(1.18); border-color: #202124; }
+        .color-palette-grid button.active { border: 2.5px solid #202124; transform: scale(1.18); }
+        
+        .icon-style-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .icon-style-btn { width: 30px; height: 30px; border-radius: 6px; border: 1px solid #dadce0; background: #f8f9fa; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; touch-action: manipulation; padding: 2px; box-sizing: border-box; }
+        .icon-style-btn:hover { background: #e8f0fe; border-color: #1a73e8; transform: scale(1.12); }
+        .icon-style-btn.active { background: #e8f0fe; border-color: #1a73e8; box-shadow: 0 0 0 1.5px #1a73e8; }
+        
+        .slider-input-group { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #3c4043; font-weight: 500; }
+        .slider-input-group input[type="range"] { flex: 1; accent-color: #1a73e8; height: 4px; cursor: pointer; }
+        .slider-input-group input[type="text"], .slider-input-group input[type="number"] { width: 44px; text-align: center; border: 1px solid #dadce0; border-radius: 4px; padding: 2px 4px; font-size: 11px; font-weight: 700; color: #1a73e8; outline: none; }
+        .slider-input-group input[type="text"]:focus, .slider-input-group input[type="number"]:focus { border-color: #1a73e8; }
+        
         .source-item-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; flex-grow: 0; margin-left: auto; }
         .source-count { font-size: 10px; color: #5f6368; background: #e8eaed; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
         .source-del-btn { border: none; background: transparent; color: #70757a; cursor: pointer; font-size: 16px; line-height: 1; width: 22px; height: 22px; padding: 0; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; touch-action: manipulation; transition: all 0.15s; }
@@ -215,12 +243,12 @@
                 max-height: 280px;
             }
             .sources-dropdown {
-                width: 340px;
+                width: 360px;
                 max-width: calc(100vw - 12px);
                 left: 0;
             }
-            .source-dots-row {
-                padding-left: 42px;
+            .source-controls-row {
+                padding-left: 24px;
                 gap: 4px;
             }
             .layers-dropdown, .modes-dropdown {
@@ -267,8 +295,8 @@
             .source-item {
                 padding: 5px 6px;
             }
-            .source-dots-row {
-                padding-left: 36px;
+            .source-controls-row {
+                padding-left: 22px;
                 gap: 3.5px;
             }
         }
@@ -338,8 +366,10 @@
             <div id="sourcesPanel" class="sources-dropdown" onclick="event.stopPropagation()">
                 <div class="sources-header">
                     <span id="txtSourcesHeader">Načtené datové soubory</span>
-                    <div style="display:flex; align-items:center; gap:6px;">
+                    <div class="header-actions-group">
+                        <button class="header-action-btn" onclick="toggleAllSources()" id="btnToggleAll" title="Zapnout / vypnout všechny vrstvy">👁️ Vše</button>
                         <button class="header-action-btn" onclick="unifyAllStyles()" id="btnSyncStyles" title="Sjednotit barvy všech souborů">🎨 Sjednotit</button>
+                        <button class="header-action-btn" onclick="resetAllDatasetStyles()" id="btnResetStyles" title="Obnovit výchozí styly">🔄 Reset</button>
                         <button class="add-mini-btn" onclick="document.getElementById('fileInput').click()" id="txtBtnAddMini">+ Přidat</button>
                     </div>
                 </div>
@@ -487,6 +517,15 @@
                 btnAddMini: "+ Přidat",
                 btnSyncStyles: "🎨 Sjednotit",
                 titleSyncStyles: "Sjednotit barvy všech souborů",
+                btnToggleAll: "👁️ Vše",
+                titleToggleAll: "Zapnout / vypnout všechny vrstvy",
+                btnResetStyles: "🔄 Reset",
+                titleResetStyles: "Obnovit výchozí barvy a průhlednost",
+                lblColor: "Barva / Paleta",
+                lblOpacity: "Průhlednost",
+                lblLineWidth: "Tloušťka čáry",
+                lblPointSize: "Velikost bodů",
+                lblPointIcon: "Ikona bodu",
                 sourcesHeader: "Načtené datové soubory",
                 titleLayers: "Změnit mapový podklad",
                 lGoogle: "🗺️ Google (Klasická)",
@@ -511,6 +550,7 @@
                 toastDup: "⚠️ {name} již načten!",
                 toastDel: "{name} odebrán.",
                 toastSynced: "🎨 Barvy všech zdrojů byly sjednoceny",
+                toastReset: "🔄 Styly byly obnoveny na výchozí",
                 noSources: "Žádné načtené soubory dat",
                 noFile: "Datový soubor Mapa_Fotek_data_*.txt nenalezen.<br>Spusťte Mapa_Fotek_aktualizace_dat.bat nebo přetáhněte data sem.",
                 modalTitle: "Fotky na mapě",
@@ -538,6 +578,15 @@
                 btnAddMini: "+ Add",
                 btnSyncStyles: "🎨 Unify",
                 titleSyncStyles: "Match all files to the same color",
+                btnToggleAll: "👁️ All",
+                titleToggleAll: "Show or hide all datasets",
+                btnResetStyles: "🔄 Reset",
+                titleResetStyles: "Reset colors and styles to default",
+                lblColor: "Color / Palette",
+                lblOpacity: "Opacity",
+                lblLineWidth: "Line width",
+                lblPointSize: "Point size",
+                lblPointIcon: "Waypoint icon",
                 sourcesHeader: "Loaded data files",
                 titleLayers: "Change map layer",
                 lGoogle: "🗺️ Google (Standard)",
@@ -562,6 +611,7 @@
                 toastDup: "⚠️ {name} already loaded!",
                 toastDel: "{name} removed.",
                 toastSynced: "🎨 All source colors unified",
+                toastReset: "🔄 Styles reset to defaults",
                 noSources: "No data sources loaded",
                 noFile: "Data file Mapa_Fotek_data_*.txt not found.<br>Run Mapa_Fotek_aktualizace_dat.bat or drag data here.",
                 modalTitle: "Photo Map",
@@ -645,12 +695,12 @@
 
         map.createPane('zonePane');
         map.getPane('zonePane').style.zIndex = 420;
-        map.getPane('zonePane').style.opacity = '0.5';
+        map.getPane('zonePane').style.opacity = '1';
 
         // Vysoce optimalizovaná vrstva pro bleskové vykreslení Škrabací mapy i pro 50k+ fotek
         L.ZoneCanvasLayer = L.Layer.extend({
             initialize: function(colorGroups, km) {
-                this._colorGroups = colorGroups || {};
+                this._colorGroups = colorGroups || [];
                 this._km = km !== undefined ? km : 10;
             },
             onAdd: function(map) {
@@ -675,7 +725,7 @@
                 this._redraw();
             },
             setColorGroups: function(colorGroups) {
-                this._colorGroups = colorGroups || {};
+                this._colorGroups = colorGroups || [];
                 this._redraw();
             },
             _redraw: function() {
@@ -695,12 +745,13 @@
                 var rPixels = Math.max(1.5, radiusMeters / metersPerPixel);
                 var bounds = this._map.getBounds().pad(0.5);
 
-                var cKeys = Object.keys(this._colorGroups);
-                for (var c = 0; c < cKeys.length; c++) {
-                    var cKey = cKeys[c];
-                    var pts = this._colorGroups[cKey] || [];
+                for (var c = 0; c < this._colorGroups.length; c++) {
+                    var grp = this._colorGroups[c];
+                    var pts = grp.pts || [];
                     if (pts.length === 0) continue;
-                    var colDef = dotColors[cKey] || dotColors.blue;
+                    var colDef = dotColors[grp.colorKey] || dotColors.blue;
+                    var alpha = ((grp.opacity !== undefined ? grp.opacity : 60) / 100) * 0.65;
+                    ctx.globalAlpha = Math.max(0.04, Math.min(1.0, alpha));
                     ctx.fillStyle = colDef.fill;
                     ctx.beginPath();
                     for (var i = 0; i < pts.length; i++) {
@@ -715,6 +766,7 @@
                     }
                     ctx.fill();
                 }
+                ctx.globalAlpha = 1.0;
             }
         });
 
@@ -765,6 +817,16 @@
             if (btnSync) {
                 btnSync.textContent = t.btnSyncStyles;
                 btnSync.title = t.titleSyncStyles;
+            }
+            var btnToggleAll = document.getElementById("btnToggleAll");
+            if (btnToggleAll) {
+                btnToggleAll.textContent = t.btnToggleAll;
+                btnToggleAll.title = t.titleToggleAll;
+            }
+            var btnReset = document.getElementById("btnResetStyles");
+            if (btnReset) {
+                btnReset.textContent = t.btnResetStyles;
+                btnReset.title = t.titleResetStyles;
             }
             document.getElementById("txtSourcesHeader").textContent = t.sourcesHeader;
             document.getElementById("btnLayers").title = t.titleLayers;
@@ -1014,7 +1076,55 @@
             return result;
         }
 
+        function getTrackIconSvg(type, color, size, strokeColor) {
+            var sz = size || 16;
+            var c = color || "#1a73e8";
+            var s = strokeColor !== undefined ? strokeColor : "#ffffff";
+            var strokeAttr = s ? ' stroke="' + s + '" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"' : '';
+
+            var paths = {
+                dot: '<circle cx="12" cy="12" r="8.5" fill="' + c + '"' + strokeAttr + '/>',
+                pin: '<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="' + c + '"' + strokeAttr + '/><circle cx="12" cy="9" r="2.6" fill="#ffffff"/>',
+                flag: '<path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6z" fill="' + c + '"' + strokeAttr + '/>',
+                peak: '<path d="M14 6l-3.75 5 2.85 3.8-1.6 1.2L6 9 2 19h20L14 6z" fill="' + c + '"' + strokeAttr + '/>',
+                camera: '<path d="M9.4 4l-1.8 2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-3.6l-1.8-2H9.4zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="' + c + '"' + strokeAttr + '/>',
+                hike: '<path d="M2 18v2h19v-2l-3-2v-3c0-1.1-.9-2-2-2h-2V7c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v9H4c-1.1 0-2 .9-2 2zm6-11h4v4H8V7zm0 6h4v3H8v-3z" fill="' + c + '"' + strokeAttr + '/>',
+                camp: '<path d="M20.67 18.29L12.7 3.33a.75.75 0 0 0-1.4 0L3.33 18.29a.75.75 0 0 0 .66 1.1h16.02a.75.75 0 0 0 .66-1.1zM12 6.5l4.5 9.5h-9L12 6.5z" fill="' + c + '"' + strokeAttr + '/>',
+                star: '<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="' + c + '"' + strokeAttr + '/>'
+            };
+
+            var inner = paths[type] || paths.dot;
+            return '<svg viewBox="0 0 24 24" width="' + sz + '" height="' + sz + '" style="display:block;vertical-align:middle;flex-shrink:0;">' + inner + '</svg>';
+        }
+
+        function createTrackPointIcon(d) {
+            var sz = d.pointSize || 14;
+            var col = d.color || "#1a73e8";
+            var iconType = d.pointIcon || "dot";
+            var op = (d.trackOpacity !== undefined ? d.trackOpacity : 85) / 100;
+
+            var iconSize = sz + 6;
+            var anchor = [iconSize / 2, iconSize / 2];
+            if (iconType === "pin") {
+                iconSize = sz + 10;
+                anchor = [iconSize / 2, iconSize - 1];
+            }
+
+            var svgHtml = getTrackIconSvg(iconType, col, iconSize, "#ffffff");
+            var html = '<div style="line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));opacity:' + op + ';display:flex;align-items:center;justify-content:center;">' + svgHtml + '</div>';
+
+            return L.divIcon({
+                html: html,
+                className: 'custom-track-point-icon',
+                iconSize: [iconSize, iconSize],
+                iconAnchor: anchor
+            });
+        }
+
         function renderTrackOnMap(d) {
+            var trackOp = (d.trackOpacity !== undefined ? d.trackOpacity : 85) / 100;
+            var lineWeight = d.lineWidth || 4.5;
+
             // 1. Vykreslení linií (tras / úseků)
             if (d.lines && d.lines.length > 0) {
                 for (var l = 0; l < d.lines.length; l++) {
@@ -1023,9 +1133,9 @@
                     // Geodetická interpolace: pro segmenty > 100 km vloží mezilehlé body po 100 km
                     var displayPoints = geodesicPoints(lineObj.points);
                     var poly = L.polyline(displayPoints, {
-                        color: d.color,
-                        weight: 4.5,
-                        opacity: 0.85,
+                        color: d.color || "#1a73e8",
+                        weight: lineWeight,
+                        opacity: trackOp,
                         lineJoin: "round",
                         lineCap: "round"
                     });
@@ -1033,7 +1143,7 @@
                     var titleText = escapeHtml(lineObj.name || d.title || d.name);
                     var popupContent = "<div style='padding:6px 8px;font-size:12px;min-width:180px;'>" +
                         "<div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
-                        "<span style='display:inline-block;width:10px;height:10px;border-radius:50%;background:" + d.color + ";'></span> " +
+                        "<span style='display:inline-block;width:10px;height:10px;border-radius:50%;background:" + (d.color || "#1a73e8") + ";'></span> " +
                         titleText + "</div>" +
                         "<div style='color:#5f6368;font-size:11px;line-height:1.5;margin-bottom:6px;'>" +
                         (distText ? ("📏 " + (currentLang === 'cs' ? "Délka trasy: " : "Length: ") + "<strong>" + distText + "</strong><br>") : "") +
@@ -1048,20 +1158,15 @@
 
             // 2. Vykreslení samostatných bodů zájmu (POIs / Waypoints) jako špendlíky/tečky
             if (d.points && d.points.length > 0) {
+                var pointIcon = createTrackPointIcon(d);
                 for (var p = 0; p < d.points.length; p++) {
                     var pt = d.points[p];
-                    var pointIcon = L.divIcon({
-                        html: '<div style="width:10px;height:10px;border-radius:50%;background:' + d.color + ';border:2px solid #ffffff;box-shadow:0 2px 6px rgba(0,0,0,0.35);"></div>',
-                        className: 'custom-track-point-icon',
-                        iconSize: [14, 14],
-                        iconAnchor: [7, 7]
-                    });
                     var marker = L.marker([pt.lat, pt.lon], { icon: pointIcon });
                     var pTitle = escapeHtml(pt.name || (currentLang === 'cs' ? "Bod zájmu" : "Waypoint"));
                     var pDesc = escapeHtml(pt.desc || "");
                     var ptPop = "<div style='padding:6px 8px;font-size:12px;min-width:140px;'>" +
                         "<div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
-                        "<span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:" + d.color + ";'></span> " +
+                        "<span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:" + (d.color || "#1a73e8") + ";'></span> " +
                         pTitle + "</div>" +
                         (pDesc ? ("<div style='color:#5f6368;font-size:11px;line-height:1.4;margin-bottom:4px;'>" + pDesc + "</div>") : "") +
                         "<div style='color:#80868b;font-size:10px;font-family:monospace;'>" + pt.lat.toFixed(5) + ", " + pt.lon.toFixed(5) + "</div>" +
@@ -1100,9 +1205,16 @@
                     var d = datasets[k];
                     mapStyles[k] = {
                         heatPalette: d.heatPalette,
+                        heatOpacity: d.heatOpacity,
                         dotColor: d.dotColor,
+                        dotOpacity: d.dotOpacity,
                         zoneColor: d.zoneColor,
-                        color: d.color
+                        zoneOpacity: d.zoneOpacity,
+                        color: d.color,
+                        trackOpacity: d.trackOpacity,
+                        lineWidth: d.lineWidth,
+                        pointSize: d.pointSize,
+                        pointIcon: d.pointIcon
                     };
                 });
                 localStorage.setItem("mapa_fotek_dataset_styles", JSON.stringify(mapStyles));
@@ -1118,6 +1230,45 @@
                 }
             } catch(e) { return null; }
             return null;
+        }
+
+        function resetAllDatasetStyles() {
+            var t = i18n[currentLang];
+            var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "magma", "neon", "google"];
+            var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark"];
+            var zoneSequence = ["blue", "green", "teal", "purple", "red", "orange", "yellow", "dark"];
+            var trackColorList = ["#ea4335", "#fb8c00", "#fbbc04", "#34a853", "#00897b", "#1a73e8", "#8e24aa", "#202124"];
+            var photoIdx = 0, trackIdx = 0;
+
+            Object.keys(datasets).forEach(function(k) {
+                var d = datasets[k];
+                if (d.type === "photos") {
+                    d.heatPalette = palSequence[(photoIdx) % palSequence.length];
+                    d.heatOpacity = 75;
+                    d.dotColor = dotSequence[(photoIdx) % dotSequence.length];
+                    d.dotOpacity = 50;
+                    d.zoneColor = zoneSequence[(photoIdx) % zoneSequence.length];
+                    d.zoneOpacity = 60;
+                    photoIdx++;
+                } else if (d.type === "track") {
+                    d.color = trackColorList[(trackIdx++) % trackColorList.length];
+                    d.trackOpacity = 85;
+                    d.lineWidth = 4.5;
+                    d.pointSize = 14;
+                    d.pointIcon = "dot";
+                }
+            });
+            saveDatasetStyles();
+            rebuild();
+            showToast(t.toastReset || "🔄 Styly byly obnoveny na výchozí");
+        }
+
+        function toggleAllSources() {
+            var ks = Object.keys(datasets);
+            if (ks.length === 0) return;
+            var allActive = ks.every(function(k) { return datasets[k].active; });
+            ks.forEach(function(k) { datasets[k].active = !allActive; });
+            rebuild();
         }
 
         var unifyCycleIdx = 0;
@@ -1152,9 +1303,65 @@
             showToast(t.toastSynced || "🎨 Barvy všech zdrojů byly sjednoceny");
         }
 
+        var activePopover = null;
+        function closeAllPopovers() {
+            if (activePopover && activePopover.parentNode) {
+                activePopover.parentNode.removeChild(activePopover);
+            }
+            activePopover = null;
+            document.querySelectorAll(".color-bubble-btn, .source-pill-btn").forEach(function(b) {
+                b.classList.remove("active");
+            });
+        }
+
+        document.addEventListener("click", function(e) {
+            if (!e.target.closest(".style-popover") && !e.target.closest(".color-bubble-btn") && !e.target.closest(".source-pill-btn")) {
+                closeAllPopovers();
+            }
+        });
+
+        function openPopover(anchorBtn, buildFn) {
+            var wasActive = anchorBtn.classList.contains("active");
+            closeAllPopovers();
+            if (wasActive) return;
+
+            anchorBtn.classList.add("active");
+            var popover = document.createElement("div");
+            popover.className = "style-popover";
+            popover.onclick = function(e) { e.stopPropagation(); };
+
+            buildFn(popover);
+
+            var panel = document.getElementById("sourcesPanel");
+            panel.appendChild(popover);
+
+            var panelRect = panel.getBoundingClientRect();
+            var btnRect = anchorBtn.getBoundingClientRect();
+            var topOffset = (btnRect.bottom - panelRect.top) + 4;
+            var leftOffset = (btnRect.left - panelRect.left);
+
+            var popoverWidth = 175;
+            if (leftOffset + popoverWidth > panelRect.width - 8) {
+                leftOffset = Math.max(8, panelRect.width - popoverWidth - 8);
+            }
+            if (leftOffset < 8) leftOffset = 8;
+
+            popover.style.top = topOffset + "px";
+            popover.style.left = leftOffset + "px";
+
+            activePopover = popover;
+        }
+
         function renderSrc() {
             var li = document.getElementById("sourcesList");
             li.innerHTML = "";
+            closeAllPopovers();
+
+            if (li && !li._scrollBound) {
+                li.addEventListener("scroll", closeAllPopovers, { passive: true });
+                li._scrollBound = true;
+            }
+
             var ks = Object.keys(datasets), loc = currentLang === 'cs' ? "cs-CZ" : "en-US", t = i18n[currentLang];
             if (ks.length === 0) {
                 li.innerHTML = "<div style='color:#80868b;font-size:11px;padding:12px 6px;text-align:center;'>" + t.noSources + "</div>";
@@ -1162,23 +1369,54 @@
             }
             
             var pals = [
-                { key: "inferno", grad: "linear-gradient(135deg, #000004, #de4968, #fbf6b2)", title: "Inferno (Červená / Ohnivá)" },
-                { key: "magma", grad: "linear-gradient(135deg, #1b0c41, #9e2f7f, #fcbf84)", title: "Magma (Purpurová / Korálová)" },
-                { key: "sunset", grad: "linear-gradient(135deg, #4a0e4e, #e91e63, #ffeb3b)", title: "Západ slunce (Růžová / Žlutá)" },
-                { key: "google", grad: "linear-gradient(135deg, #24c1e0, #34a853, #ea4335)", title: "Google Photos (Tyrkys / Zelená / Červená)" },
-                { key: "emerald", grad: "linear-gradient(135deg, #004d40, #00f5d4, #ccff33)", title: "Smaragd (Oceán / Limetka)" },
-                { key: "ocean", grad: "linear-gradient(135deg, #03045e, #00b4d8, #ffffff)", title: "Oceán (Modrá / Ledová)" },
-                { key: "classic", grad: "linear-gradient(135deg, #9182f3, #ffd54f, #c2185b)", title: "Klasická (Fialová / Karmínová)" },
-                { key: "neon", grad: "linear-gradient(135deg, #2d00f7, #00f5d4, #70e000)", title: "Cyber Neon (Fialová / Tyrkys)" }
+                { key: "inferno", grad: "linear-gradient(135deg, #000004, #de4968, #fbf6b2)", title: "Inferno" },
+                { key: "magma", grad: "linear-gradient(135deg, #1b0c41, #9e2f7f, #fcbf84)", title: "Magma" },
+                { key: "sunset", grad: "linear-gradient(135deg, #4a0e4e, #e91e63, #ffeb3b)", title: "Sunset" },
+                { key: "google", grad: "linear-gradient(135deg, #24c1e0, #34a853, #ea4335)", title: "Google Photos" },
+                { key: "emerald", grad: "linear-gradient(135deg, #004d40, #00f5d4, #ccff33)", title: "Emerald" },
+                { key: "ocean", grad: "linear-gradient(135deg, #03045e, #00b4d8, #ffffff)", title: "Ocean" },
+                { key: "classic", grad: "linear-gradient(135deg, #9182f3, #ffd54f, #c2185b)", title: "Classic" },
+                { key: "neon", grad: "linear-gradient(135deg, #2d00f7, #00f5d4, #70e000)", title: "Cyber Neon" }
+            ];
+
+            var dotColorOptions = [
+                { key: "red", fill: "#ea4335", title: currentLang === "cs" ? "Červená" : "Red" },
+                { key: "orange", fill: "#fb8c00", title: currentLang === "cs" ? "Oranžová" : "Orange" },
+                { key: "yellow", fill: "#fbbc04", title: currentLang === "cs" ? "Žlutá" : "Yellow" },
+                { key: "green", fill: "#34a853", title: currentLang === "cs" ? "Zelená" : "Green" },
+                { key: "teal", fill: "#00897b", title: currentLang === "cs" ? "Tyrkysová" : "Teal" },
+                { key: "blue", fill: "#1a73e8", title: currentLang === "cs" ? "Modrá" : "Blue" },
+                { key: "purple", fill: "#8e24aa", title: currentLang === "cs" ? "Fialová" : "Purple" },
+                { key: "dark", fill: "#202124", title: currentLang === "cs" ? "Tmavá" : "Dark" }
+            ];
+
+            var trackColorOptions = [
+                { fill: "#ea4335", title: currentLang === "cs" ? "Červená" : "Red" },
+                { fill: "#fb8c00", title: currentLang === "cs" ? "Oranžová" : "Orange" },
+                { fill: "#fbbc04", title: currentLang === "cs" ? "Žlutá" : "Yellow" },
+                { fill: "#34a853", title: currentLang === "cs" ? "Zelená" : "Green" },
+                { fill: "#00897b", title: currentLang === "cs" ? "Tyrkysová" : "Teal" },
+                { fill: "#1a73e8", title: currentLang === "cs" ? "Modrá" : "Blue" },
+                { fill: "#8e24aa", title: currentLang === "cs" ? "Fialová" : "Purple" },
+                { fill: "#202124", title: currentLang === "cs" ? "Tmavá" : "Dark" }
+            ];
+
+            var trackIconOptions = [
+                { key: "dot", title: currentLang === "cs" ? "Kolečko" : "Dot" },
+                { key: "pin", title: currentLang === "cs" ? "Špendlík" : "Pin" },
+                { key: "flag", title: currentLang === "cs" ? "Praporek" : "Flag" },
+                { key: "peak", title: currentLang === "cs" ? "Vrchol" : "Peak" },
+                { key: "camera", title: currentLang === "cs" ? "Fotoaparát" : "Camera" },
+                { key: "hike", title: currentLang === "cs" ? "Výlet" : "Hiking" },
+                { key: "camp", title: currentLang === "cs" ? "Kemp" : "Camp" },
+                { key: "star", title: currentLang === "cs" ? "Oblíbené" : "Star" }
             ];
 
             ks.forEach(function(k) {
                 var d = datasets[k];
                 var it = document.createElement("div");
                 it.className = "source-item";
-                it.onclick = function(e) {
-                    if (e) e.stopPropagation();
-                };
+                it.onclick = function(e) { if (e) e.stopPropagation(); };
                 
                 var le = document.createElement("div");
                 le.className = "source-item-left";
@@ -1268,126 +1506,342 @@
                 topRow.appendChild(ri);
                 it.appendChild(topRow);
 
-                var styleRow = null;
+                // KOMPAKTNÍ OVLÁDACÍ ŘÁDEK
+                var controlsRow = document.createElement("div");
+                controlsRow.className = "source-controls-row";
 
-                // Kontextový volič stylu pro GPS trasu (GPX, KML, KMZ)
-                if (d.type === "track") {
-                    styleRow = document.createElement("div");
-                    styleRow.className = "source-dots-row";
+                // 1. Tlačítko: Barevné kolečko (Color Bubble)
+                var colorBubble = document.createElement("button");
+                colorBubble.className = "color-bubble-btn";
+                colorBubble.title = t.lblColor || "Barva / Paleta";
 
-                    var trackColorOptions = [
-                        { fill: "#ea4335", title: currentLang === "cs" ? "Červená" : "Red" },
-                        { fill: "#fb8c00", title: currentLang === "cs" ? "Oranžová" : "Orange" },
-                        { fill: "#fbbc04", title: currentLang === "cs" ? "Žlutá" : "Yellow" },
-                        { fill: "#34a853", title: currentLang === "cs" ? "Zelená" : "Green" },
-                        { fill: "#00897b", title: currentLang === "cs" ? "Tyrkysová" : "Teal" },
-                        { fill: "#1a73e8", title: currentLang === "cs" ? "Modrá" : "Blue" },
-                        { fill: "#8e24aa", title: currentLang === "cs" ? "Fialová" : "Purple" },
-                        { fill: "#202124", title: currentLang === "cs" ? "Tmavá" : "Dark" }
-                    ];
-
-                    trackColorOptions.forEach(function(c) {
-                        var btn = document.createElement("button");
-                        var isAct = (d.color || "#1a73e8").toLowerCase() === c.fill.toLowerCase();
-                        btn.style.cssText = "width:14px; height:14px; border-radius:50%; border:" + (isAct ? "2px solid #202124; transform:scale(1.18);" : "1px solid #dadce0") + "; background:" + c.fill + "; cursor:pointer; padding:0; outline:none; box-sizing:border-box; transition:transform 0.15s ease;";
-                        btn.title = c.title;
-                        btn.onclick = function(e) {
-                            if (e) {
-                                e.stopPropagation();
-                                e.preventDefault();
-                            }
-                            d.color = c.fill;
-                            saveDatasetStyles();
-                            rebuild();
-                        };
-                        styleRow.appendChild(btn);
-                    });
-                }
-
-                // Kontextový volič stylu pro tento soubor (pouze pro fotografie)
                 if (d.type === "photos") {
                     if (viewMode === "heat") {
-                        styleRow = document.createElement("div");
-                        styleRow.className = "source-dots-row";
-
-                        pals.forEach(function(p) {
-                            var btn = document.createElement("button");
-                            var isAct = (d.heatPalette || "classic") === p.key;
-                            btn.style.cssText = "width:14px; height:14px; border-radius:50%; border:" + (isAct ? "2px solid #1a73e8; transform:scale(1.18);" : "1px solid #dadce0") + "; background:" + p.grad + "; cursor:pointer; padding:0; outline:none; box-sizing:border-box; transition:transform 0.15s ease;";
-                            btn.title = p.title;
-                            btn.onclick = function(e) {
-                                if (e) e.stopPropagation();
-                                d.heatPalette = p.key;
-                                saveDatasetStyles();
-                                updView();
-                                renderSrc();
-                            };
-                            styleRow.appendChild(btn);
-                        });
+                        var pObj = pals.find(function(p){ return p.key === (d.heatPalette || "classic"); });
+                        colorBubble.style.background = pObj ? pObj.grad : "linear-gradient(135deg, #9182f3, #ffd54f, #c2185b)";
+                    } else if (viewMode === "dots") {
+                        var cObj = dotColors[d.dotColor || "red"];
+                        colorBubble.style.background = cObj ? cObj.fill : "#ea4335";
+                    } else if (viewMode === "zone") {
+                        var zObj = dotColors[d.zoneColor || "blue"];
+                        colorBubble.style.background = zObj ? zObj.fill : "#1a73e8";
+                    } else {
+                        colorBubble.style.background = "#1a73e8";
                     }
-                    else if (viewMode === "dots") {
-                        styleRow = document.createElement("div");
-                        styleRow.className = "source-dots-row";
 
-                        var cols = [
-                            { key: "red", fill: "#ea4335", title: currentLang === "cs" ? "Červená" : "Red" },
-                            { key: "orange", fill: "#fb8c00", title: currentLang === "cs" ? "Oranžová" : "Orange" },
-                            { key: "yellow", fill: "#fbbc04", title: currentLang === "cs" ? "Žlutá" : "Yellow" },
-                            { key: "green", fill: "#34a853", title: currentLang === "cs" ? "Zelená" : "Green" },
-                            { key: "teal", fill: "#00897b", title: currentLang === "cs" ? "Tyrkysová" : "Teal" },
-                            { key: "blue", fill: "#1a73e8", title: currentLang === "cs" ? "Modrá" : "Blue" },
-                            { key: "purple", fill: "#8e24aa", title: currentLang === "cs" ? "Fialová" : "Purple" },
-                            { key: "dark", fill: "#202124", title: currentLang === "cs" ? "Tmavá" : "Dark" }
-                        ];
+                    colorBubble.onclick = function(e) {
+                        if (e) e.stopPropagation();
+                        openPopover(colorBubble, function(pop) {
+                            var title = document.createElement("div");
+                            title.className = "popover-title";
+                            title.textContent = t.lblColor || "Barva / Paleta";
+                            pop.appendChild(title);
 
-                        cols.forEach(function(c) {
-                            var btn = document.createElement("button");
-                            var isAct = (d.dotColor || "red") === c.key;
-                            btn.style.cssText = "width:14px; height:14px; border-radius:50%; border:" + (isAct ? "2px solid #202124; transform:scale(1.18);" : "1px solid #dadce0") + "; background:" + c.fill + "; cursor:pointer; padding:0; outline:none; box-sizing:border-box; transition:transform 0.15s ease;";
-                            btn.title = c.title;
-                            btn.onclick = function(e) {
-                                if (e) e.stopPropagation();
-                                d.dotColor = c.key;
+                            var grid = document.createElement("div");
+                            grid.className = "color-palette-grid";
+
+                            if (viewMode === "heat") {
+                                pals.forEach(function(p) {
+                                    var btn = document.createElement("button");
+                                    btn.style.background = p.grad;
+                                    btn.title = p.title;
+                                    if ((d.heatPalette || "classic") === p.key) btn.className = "active";
+                                    btn.onclick = function(ev) {
+                                        if (ev) ev.stopPropagation();
+                                        d.heatPalette = p.key;
+                                        saveDatasetStyles();
+                                        updView();
+                                        renderSrc();
+                                    };
+                                    grid.appendChild(btn);
+                                });
+                            } else {
+                                var curCol = (viewMode === "dots") ? (d.dotColor || "red") : (d.zoneColor || "blue");
+                                dotColorOptions.forEach(function(c) {
+                                    var btn = document.createElement("button");
+                                    btn.style.background = c.fill;
+                                    btn.title = c.title;
+                                    if (curCol === c.key) btn.className = "active";
+                                    btn.onclick = function(ev) {
+                                        if (ev) ev.stopPropagation();
+                                        if (viewMode === "dots") d.dotColor = c.key;
+                                        else if (viewMode === "zone") d.zoneColor = c.key;
+                                        saveDatasetStyles();
+                                        updView();
+                                        renderSrc();
+                                    };
+                                    grid.appendChild(btn);
+                                });
+                            }
+                            pop.appendChild(grid);
+                        });
+                    };
+                } else if (d.type === "track") {
+                    colorBubble.style.background = d.color || "#1a73e8";
+                    colorBubble.onclick = function(e) {
+                        if (e) e.stopPropagation();
+                        openPopover(colorBubble, function(pop) {
+                            var title = document.createElement("div");
+                            title.className = "popover-title";
+                            title.textContent = t.lblColor || "Barva trasy";
+                            pop.appendChild(title);
+
+                            var grid = document.createElement("div");
+                            grid.className = "color-palette-grid";
+
+                            trackColorOptions.forEach(function(c) {
+                                var btn = document.createElement("button");
+                                btn.style.background = c.fill;
+                                btn.title = c.title;
+                                if ((d.color || "#1a73e8").toLowerCase() === c.fill.toLowerCase()) btn.className = "active";
+                                btn.onclick = function(ev) {
+                                    if (ev) ev.stopPropagation();
+                                    d.color = c.fill;
+                                    saveDatasetStyles();
+                                    rebuild();
+                                };
+                                grid.appendChild(btn);
+                            });
+                            pop.appendChild(grid);
+                        });
+                    };
+                }
+                controlsRow.appendChild(colorBubble);
+
+                // 2. Tlačítko: Průhlednost (Opacity Pill)
+                var curOp = 100;
+                if (d.type === "photos") {
+                    if (viewMode === "heat") curOp = d.heatOpacity !== undefined ? d.heatOpacity : 75;
+                    else if (viewMode === "dots") curOp = d.dotOpacity !== undefined ? d.dotOpacity : 50;
+                    else if (viewMode === "zone") curOp = d.zoneOpacity !== undefined ? d.zoneOpacity : 60;
+                } else {
+                    curOp = d.trackOpacity !== undefined ? d.trackOpacity : 85;
+                }
+
+                var opPill = document.createElement("button");
+                opPill.className = "source-pill-btn";
+                opPill.innerHTML = "💧 " + curOp + "%";
+                opPill.title = t.lblOpacity || "Průhlednost (0-100%)";
+                opPill.onclick = function(e) {
+                    if (e) e.stopPropagation();
+                    openPopover(opPill, function(pop) {
+                        var title = document.createElement("div");
+                        title.className = "popover-title";
+                        title.textContent = (t.lblOpacity || "Průhlednost") + " (0–100%)";
+                        pop.appendChild(title);
+
+                        var group = document.createElement("div");
+                        group.className = "slider-input-group";
+
+                        var slider = document.createElement("input");
+                        slider.type = "range";
+                        slider.min = "0";
+                        slider.max = "100";
+                        slider.step = "1";
+                        slider.value = curOp;
+
+                        var numInput = document.createElement("input");
+                        numInput.type = "text";
+                        numInput.inputMode = "numeric";
+                        numInput.maxLength = 3;
+                        numInput.value = curOp;
+
+                        function applyVal(v) {
+                            var n = parseInt(v, 10);
+                            if (isNaN(n)) n = 0;
+                            if (n < 0) n = 0;
+                            if (n > 100) n = 100;
+
+                            if (d.type === "photos") {
+                                if (viewMode === "heat") d.heatOpacity = n;
+                                else if (viewMode === "dots") d.dotOpacity = n;
+                                else if (viewMode === "zone") d.zoneOpacity = n;
                                 saveDatasetStyles();
                                 updView();
-                                renderSrc();
-                            };
-                            styleRow.appendChild(btn);
-                        });
-                    }
-                    else if (viewMode === "zone") {
-                        styleRow = document.createElement("div");
-                        styleRow.className = "source-dots-row";
-
-                        var cols = [
-                            { key: "red", fill: "#ea4335", title: currentLang === "cs" ? "Červená" : "Red" },
-                            { key: "orange", fill: "#fb8c00", title: currentLang === "cs" ? "Oranžová" : "Orange" },
-                            { key: "yellow", fill: "#fbbc04", title: currentLang === "cs" ? "Žlutá" : "Yellow" },
-                            { key: "green", fill: "#34a853", title: currentLang === "cs" ? "Zelená" : "Green" },
-                            { key: "teal", fill: "#00897b", title: currentLang === "cs" ? "Tyrkysová" : "Teal" },
-                            { key: "blue", fill: "#1a73e8", title: currentLang === "cs" ? "Modrá" : "Blue" },
-                            { key: "purple", fill: "#8e24aa", title: currentLang === "cs" ? "Fialová" : "Purple" },
-                            { key: "dark", fill: "#202124", title: currentLang === "cs" ? "Tmavá" : "Dark" }
-                        ];
-
-                        cols.forEach(function(c) {
-                            var btn = document.createElement("button");
-                            var isAct = (d.zoneColor || "blue") === c.key;
-                            btn.style.cssText = "width:14px; height:14px; border-radius:50%; border:" + (isAct ? "2px solid #202124; transform:scale(1.18);" : "1px solid #dadce0") + "; background:" + c.fill + "; cursor:pointer; padding:0; outline:none; box-sizing:border-box; transition:transform 0.15s ease;";
-                            btn.title = c.title;
-                            btn.onclick = function(e) {
-                                if (e) e.stopPropagation();
-                                d.zoneColor = c.key;
+                            } else {
+                                d.trackOpacity = n;
                                 saveDatasetStyles();
-                                updView();
-                                renderSrc();
+                                rebuild();
+                            }
+                            curOp = n;
+                            opPill.innerHTML = "💧 " + n + "%";
+                            slider.value = n;
+                            numInput.value = n;
+                        }
+
+                        slider.oninput = function() { applyVal(this.value); };
+                        numInput.oninput = function() {
+                            var clean = this.value.replace(/[^0-9]/g, '');
+                            if (clean !== "") applyVal(clean);
+                        };
+                        numInput.onblur = function() { this.value = curOp; };
+
+                        group.appendChild(slider);
+                        group.appendChild(numInput);
+                        group.appendChild(document.createTextNode("%"));
+                        pop.appendChild(group);
+                    });
+                };
+                controlsRow.appendChild(opPill);
+
+                // Volby specifické pro GPS Trasy: Tloušťka, Velikost bodů, Typ ikony
+                if (d.type === "track") {
+                    // Tloušťka čáry
+                    var curW = d.lineWidth || 4.5;
+                    var widthPill = document.createElement("button");
+                    widthPill.className = "source-pill-btn";
+                    widthPill.innerHTML = "📏 " + curW + "px";
+                    widthPill.title = t.lblLineWidth || "Tloušťka čáry";
+                    widthPill.onclick = function(e) {
+                        if (e) e.stopPropagation();
+                        openPopover(widthPill, function(pop) {
+                            var title = document.createElement("div");
+                            title.className = "popover-title";
+                            title.textContent = (t.lblLineWidth || "Tloušťka čáry") + " (1–20px)";
+                            pop.appendChild(title);
+
+                            var group = document.createElement("div");
+                            group.className = "slider-input-group";
+
+                            var slider = document.createElement("input");
+                            slider.type = "range";
+                            slider.min = "1";
+                            slider.max = "15";
+                            slider.step = "0.5";
+                            slider.value = curW;
+
+                            var numInput = document.createElement("input");
+                            numInput.type = "text";
+                            numInput.inputMode = "decimal";
+                            numInput.value = curW;
+
+                            function applyW(v) {
+                                var n = parseFloat(v);
+                                if (isNaN(n)) n = 1;
+                                if (n < 0.5) n = 0.5;
+                                if (n > 20) n = 20;
+                                d.lineWidth = n;
+                                curW = n;
+                                saveDatasetStyles();
+                                rebuild();
+                                widthPill.innerHTML = "📏 " + n + "px";
+                                slider.value = n;
+                                numInput.value = n;
+                            }
+
+                            slider.oninput = function() { applyW(this.value); };
+                            numInput.oninput = function() {
+                                var clean = this.value.replace(/[^0-9.]/g, '');
+                                if (clean !== "") applyW(clean);
                             };
-                            styleRow.appendChild(btn);
+                            numInput.onblur = function() { this.value = curW; };
+
+                            group.appendChild(slider);
+                            group.appendChild(numInput);
+                            group.appendChild(document.createTextNode("px"));
+                            pop.appendChild(group);
                         });
+                    };
+                    controlsRow.appendChild(widthPill);
+
+                    // Body zájmu (POIs): Velikost a Styl ikony (pokud trasa obsahuje body)
+                    if (d.points && d.points.length > 0) {
+                        // Velikost bodů
+                        var curPtSz = d.pointSize || 14;
+                        var ptSzPill = document.createElement("button");
+                        ptSzPill.className = "source-pill-btn";
+                        ptSzPill.innerHTML = "🔘 " + curPtSz + "px";
+                        ptSzPill.title = t.lblPointSize || "Velikost bodů";
+                        ptSzPill.onclick = function(e) {
+                            if (e) e.stopPropagation();
+                            openPopover(ptSzPill, function(pop) {
+                                var title = document.createElement("div");
+                                title.className = "popover-title";
+                                title.textContent = (t.lblPointSize || "Velikost bodů") + " (4–30px)";
+                                pop.appendChild(title);
+
+                                var group = document.createElement("div");
+                                group.className = "slider-input-group";
+
+                                var slider = document.createElement("input");
+                                slider.type = "range";
+                                slider.min = "6";
+                                slider.max = "28";
+                                slider.step = "1";
+                                slider.value = curPtSz;
+
+                                var numInput = document.createElement("input");
+                                numInput.type = "text";
+                                numInput.inputMode = "numeric";
+                                numInput.value = curPtSz;
+
+                                function applyPtSz(v) {
+                                    var n = parseInt(v, 10);
+                                    if (isNaN(n)) n = 4;
+                                    if (n < 4) n = 4;
+                                    if (n > 30) n = 30;
+                                    d.pointSize = n;
+                                    curPtSz = n;
+                                    saveDatasetStyles();
+                                    rebuild();
+                                    ptSzPill.innerHTML = "🔘 " + n + "px";
+                                    slider.value = n;
+                                    numInput.value = n;
+                                }
+
+                                slider.oninput = function() { applyPtSz(this.value); };
+                                numInput.oninput = function() {
+                                    var clean = this.value.replace(/[^0-9]/g, '');
+                                    if (clean !== "") applyPtSz(clean);
+                                };
+                                numInput.onblur = function() { this.value = curPtSz; };
+
+                                group.appendChild(slider);
+                                group.appendChild(numInput);
+                                group.appendChild(document.createTextNode("px"));
+                                pop.appendChild(group);
+                            });
+                        };
+                        controlsRow.appendChild(ptSzPill);
+
+                        // Výběr typu ikony z 8 stylů (jednobarevné monochromatické SVG v barvě trasy)
+                        var iconPill = document.createElement("button");
+                        iconPill.className = "source-pill-btn";
+                        iconPill.innerHTML = getTrackIconSvg(d.pointIcon || "dot", d.color || "#1a73e8", 14, "#ffffff");
+                        iconPill.title = t.lblPointIcon || "Styl ikony bodu";
+                        iconPill.onclick = function(e) {
+                            if (e) e.stopPropagation();
+                            openPopover(iconPill, function(pop) {
+                                var title = document.createElement("div");
+                                title.className = "popover-title";
+                                title.textContent = t.lblPointIcon || "Styl ikony bodu (8 stylů)";
+                                pop.appendChild(title);
+
+                                var grid = document.createElement("div");
+                                grid.className = "icon-style-grid";
+
+                                trackIconOptions.forEach(function(io) {
+                                    var btn = document.createElement("button");
+                                    btn.className = "icon-style-btn" + ((d.pointIcon || "dot") === io.key ? " active" : "");
+                                    btn.innerHTML = getTrackIconSvg(io.key, d.color || "#1a73e8", 18, "#ffffff");
+                                    btn.title = io.title;
+                                    btn.onclick = function(ev) {
+                                        if (ev) ev.stopPropagation();
+                                        d.pointIcon = io.key;
+                                        saveDatasetStyles();
+                                        rebuild();
+                                        closeAllPopovers();
+                                    };
+                                    grid.appendChild(btn);
+                                });
+                                pop.appendChild(grid);
+                            });
+                        };
+                        controlsRow.appendChild(iconPill);
                     }
                 }
 
-                if (styleRow) it.appendChild(styleRow);
+                it.appendChild(controlsRow);
                 li.appendChild(it);
             });
         }
@@ -1458,7 +1912,7 @@
 
             var fi = (curYear === "all") ? rawData : rawData.filter(function(p) { return String(p[2]).indexOf(curYear) === 0; });
 
-            // 1. HEATMAPA (každý dataset s vlastní paletou)
+            // 1. HEATMAPA (každý dataset s vlastní paletou a průhledností)
             if (viewMode === "heat") {
                 heatLayers = [];
                 var ks = Object.keys(datasets);
@@ -1467,13 +1921,14 @@
                     if (!d.active || d.type === "track") continue;
                     var pts = (curYear === "all") ? d.items : (d.items || []).filter(function(p) { return String(p[2]).indexOf(curYear) === 0; });
                     if (!pts || pts.length === 0) continue;
+                    var op = (d.heatOpacity !== undefined ? d.heatOpacity : 75) / 100;
                     var hp = [];
-                    for (var i = 0; i < pts.length; i++) hp.push([pts[i][0], pts[i][1], 0.75]);
+                    for (var i = 0; i < pts.length; i++) hp.push([pts[i][0], pts[i][1], 0.75 * op]);
                     var h = hpZ(map.getZoom());
                     var grad = heatPalettes[d.heatPalette || "classic"] || heatPalettes.classic;
-                    var hl = L.heatLayer(hp, { radius: h.r, blur: h.b, minOpacity: h.o, maxZoom: 17, gradient: grad });
+                    var hl = L.heatLayer(hp, { radius: h.r, blur: h.b, minOpacity: h.o * op, maxZoom: 17, gradient: grad });
                     map.addLayer(hl);
-                    heatLayers.push({ layer: hl, palette: d.heatPalette || "classic" });
+                    heatLayers.push({ layer: hl, palette: d.heatPalette || "classic", opacity: op });
                 }
             }
             // 2. FOTO-KARTY
@@ -1548,7 +2003,7 @@
                 cGroup.addLayers(markers);
                 map.addLayer(cGroup);
             }
-            // 4. TEČKY (každý dataset s vlastní barvou)
+            // 4. TEČKY (každý dataset s vlastní barvou a průhledností)
             else if (viewMode === "dots") {
                 canvasLayerGroup = L.layerGroup();
                 var ks = Object.keys(datasets);
@@ -1558,6 +2013,7 @@
                     var pts = (curYear === "all") ? d.items : (d.items || []).filter(function(p) { return String(p[2]).indexOf(curYear) === 0; });
                     if (!pts || pts.length === 0) continue;
                     var col = dotColors[d.dotColor || "red"] || dotColors.red;
+                    var op = (d.dotOpacity !== undefined ? d.dotOpacity : 50) / 100;
                     for (var i = 0; i < pts.length; i++) {
                         var p = pts[i];
                         var cm = L.circleMarker([p[0], p[1]], {
@@ -1566,8 +2022,8 @@
                             fillColor: col.fill,
                             color: col.border,
                             weight: 0.5,
-                            opacity: 0.7,
-                            fillOpacity: 0.5
+                            opacity: Math.min(1.0, op + 0.25),
+                            fillOpacity: op
                         });
                         cm.bindPopup(createPopupContent(p));
                         canvasLayerGroup.addLayer(cm);
@@ -1575,9 +2031,9 @@
                 }
                 map.addLayer(canvasLayerGroup);
             }
-            // 5. ZÓNA VÝSKYTU (každý dataset s vlastní barvou do společného akcelerovaného Canvasu)
+            // 5. ZÓNA VÝSKYTU (každý dataset s vlastní barvou a průhledností)
             else if (viewMode === "zone") {
-                var colorGroups = {};
+                var colorGroups = [];
                 var ks = Object.keys(datasets);
                 for (var k = 0; k < ks.length; k++) {
                     var d = datasets[ks[k]];
@@ -1585,8 +2041,8 @@
                     var pts = (curYear === "all") ? d.items : (d.items || []).filter(function(p) { return String(p[2]).indexOf(curYear) === 0; });
                     if (!pts || pts.length === 0) continue;
                     var cKey = d.zoneColor || "blue";
-                    if (!colorGroups[cKey]) colorGroups[cKey] = [];
-                    for (var i = 0; i < pts.length; i++) colorGroups[cKey].push(pts[i]);
+                    var op = d.zoneOpacity !== undefined ? d.zoneOpacity : 60;
+                    colorGroups.push({ colorKey: cKey, opacity: op, pts: pts });
                 }
                 zoneLayerInstance = new L.ZoneCanvasLayer(colorGroups, currentZoneKm);
                 map.addLayer(zoneLayerInstance);
@@ -1599,7 +2055,8 @@
                 for (var i = 0; i < heatLayers.length; i++) {
                     var item = heatLayers[i];
                     var grad = heatPalettes[item.palette] || heatPalettes.classic;
-                    item.layer.setOptions({ radius: h.r, blur: h.b, minOpacity: h.o, gradient: grad });
+                    var op = item.opacity !== undefined ? item.opacity : 0.75;
+                    item.layer.setOptions({ radius: h.r, blur: h.b, minOpacity: h.o * op, gradient: grad });
                 }
             }
         });
@@ -1858,9 +2315,18 @@
                 return;
             }
             var savedStyle = getSavedDatasetStyle(track.name);
-            if (savedStyle && savedStyle.color) {
-                track.color = savedStyle.color;
+            if (savedStyle) {
+                if (savedStyle.color) track.color = savedStyle.color;
+                if (savedStyle.trackOpacity !== undefined) track.trackOpacity = savedStyle.trackOpacity;
+                if (savedStyle.lineWidth !== undefined) track.lineWidth = savedStyle.lineWidth;
+                if (savedStyle.pointSize !== undefined) track.pointSize = savedStyle.pointSize;
+                if (savedStyle.pointIcon) track.pointIcon = savedStyle.pointIcon;
             }
+            if (track.trackOpacity === undefined) track.trackOpacity = 85;
+            if (track.lineWidth === undefined) track.lineWidth = 4.5;
+            if (track.pointSize === undefined) track.pointSize = 14;
+            if (!track.pointIcon) track.pointIcon = "dot";
+
             datasets[track.name] = track;
             rebuild();
             var ov = document.getElementById("loading-overlay");
@@ -1900,8 +2366,11 @@
 
                 var savedStyle = getSavedDatasetStyle(n);
                 var initialPal = (savedStyle && savedStyle.heatPalette) ? savedStyle.heatPalette : palSequence[numPhotoSets % palSequence.length];
+                var initialHeatOp = (savedStyle && savedStyle.heatOpacity !== undefined) ? savedStyle.heatOpacity : 75;
                 var initialDot = (savedStyle && savedStyle.dotColor) ? savedStyle.dotColor : dotSequence[numPhotoSets % dotSequence.length];
+                var initialDotOp = (savedStyle && savedStyle.dotOpacity !== undefined) ? savedStyle.dotOpacity : 50;
                 var initialZone = (savedStyle && savedStyle.zoneColor) ? savedStyle.zoneColor : zoneSequence[numPhotoSets % zoneSequence.length];
+                var initialZoneOp = (savedStyle && savedStyle.zoneOpacity !== undefined) ? savedStyle.zoneOpacity : 60;
 
                 datasets[n] = {
                     type: "photos",
@@ -1909,8 +2378,11 @@
                     active: true,
                     items: it,
                     heatPalette: initialPal,
+                    heatOpacity: initialHeatOp,
                     dotColor: initialDot,
-                    zoneColor: initialZone
+                    dotOpacity: initialDotOp,
+                    zoneColor: initialZone,
+                    zoneOpacity: initialZoneOp
                 };
                 rebuild();
                 var ov = document.getElementById("loading-overlay");
