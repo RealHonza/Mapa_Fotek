@@ -61,6 +61,7 @@
         .src-btn.active { background: #1a73e8; color: #ffffff; border-color: #1a73e8; }
         .src-badge { font-size: 10px; background: #e8f0fe; color: #1a73e8; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
         .src-btn.active .src-badge { background: rgba(255,255,255,0.25); color: #ffffff; }
+        .src-word { font-size: 12px; letter-spacing: 0.2px; }
         
         .add-btn { height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); color: #1a73e8; width: 28px; border-radius: 0 8px 8px 0; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.15s; user-select: none; line-height: 1; }
         .add-btn:hover { background: #e8f0fe; }
@@ -283,6 +284,9 @@
                 font-size: 11px;
                 gap: 3px;
             }
+            .src-word {
+                display: none;
+            }
             .ui-btn.icon-only-btn {
                 width: 30px;
             }
@@ -365,6 +369,7 @@
         <!-- 1. Tlačítko: Seznam a správa zdrojů + malé plus -->
         <div class="sources-group" style="position: relative;">
             <button class="src-btn" onclick="toggleDatasetPanel()" id="btnSources">
+                <span class="src-word" id="sourcesWord">Zdroje</span>
                 <span class="src-badge" id="sourceCount">0</span>
             </button>
             <button class="add-btn" onclick="document.getElementById('fileInput').click()" title="Přidat soubor">+</button>
@@ -447,7 +452,7 @@
             <ol class="info-steps" id="infoStepsList">
                 <li><details class="step"><summary>⚡ Datový soubor – první spuštění (ZÁKLAD)</summary><div class="step-body">Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript bleskově projde celou složku i podsložky bez modifikace fotek, vyčte GPS souřadnice z EXIF, Google JSON i Adobe XMP metadat a vytvoří datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, který mapa při otevření automaticky načte. Volbou <strong>2</strong> lze navíc zpracovat jen vybranou složku – v interaktivním prohlížeči složek přepínáte klávesami: čísla = vstup do podsložky, <strong>B</strong> = zpět nahoru, <strong>F</strong> / Enter = zpracovat aktuální složku, <strong>P</strong> = listování stránkami, <strong>K</strong> = konec.<br><em>⚠️ Důležité: Soubory <code>Mapa_Fotek.html</code> i <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte umístěné v hlavní kořenové složce s fotografiemi. Pokud HTML soubor přesunete do jiné složky, mapa se zobrazí, ale prohlížeč nenajde lokální miniatury a plnou velikost fotografií.</em></div></details></li>
                 <li><details class="step"><summary>☰ Tlačítko ☰ – menu (úplně vlevo nahoře)</summary><div class="step-body">Otevře nabídku se třemi volbami: 🌐 <strong>přepínač jazyka</strong> okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou, ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod s podrobným popisem ovládacích prvků a informacemi o verzi a autorovi, a 📄 <strong>Uložit mapu jako PDF</strong> vyexportuje aktuální pohled mapy se všemi zobrazenými objekty do PDF souboru – po kliknutí nejprve vyberete umístění a název souboru v klasickém okně „Uložit jako“, poté se PDF vytvoří a uloží.</div></details></li>
-                <li><details class="step"><summary>📂 Tlačítko [(počet)] – seznam a správa zdrojů</summary><div class="step-body">Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zapínat/vypínat, odebírat a u každého souboru přímo volit jeho vlastní styl zobrazení (první volba druhého řádku) i barvy (8 palet heatmapy, 8 barev teček, 8 barev zóny výskytu či 8 barev GPS trasy). Tlačítkem <strong>🎨 Sjednotit</strong> v záhlaví panelu sjednotíte VEŠKERÉ parametry zobrazení (styl, barvy, sytost, velikost teček, poloměr zóny, resp. tloušťku čáry a velikost bodů) podle souboru, který jste naposledy upravovali – u souborů jiného typu se převede vše, co má společný základ (barva a průhlednost). Veškerá nastavení se automaticky trvale ukládají v prohlížeči.</div></details></li>
+                <li><details class="step"><summary>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů</summary><div class="step-body">Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zapínat/vypínat, odebírat a u každého souboru přímo volit jeho vlastní styl zobrazení (první volba druhého řádku) i barvy (8 palet heatmapy, 8 barev teček, 8 barev zóny výskytu či 8 barev GPS trasy). Tlačítkem <strong>🎨 Sjednotit</strong> v záhlaví panelu sjednotíte VEŠKERÉ parametry zobrazení (styl, barvy, sytost, velikost teček, poloměr zóny, resp. tloušťku čáry a velikost bodů) podle souboru, který jste naposledy upravovali – u souborů jiného typu se převede vše, co má společný základ (barva a průhlednost). Veškerá nastavení se automaticky trvale ukládají v prohlížeči.</div></details></li>
                 <li><details class="step"><summary>📅 Tlačítko [Vše (počet) ▼] – filtr roku</summary><div class="step-body">Otevírá rozbalovací nabídku pro filtrování fotografií podle roku pořízení. Můžete vybrat zobrazení kompletního archivu (<em>Vše</em>) nebo zvolit konkrétní rok. U každého roku vidíte přesný počet zaznamenaných fotek.</div></details></li>
                 <li><details class="step"><summary>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť</summary><div class="step-body">V panelu Zdroje je u každého souboru s fotografiemi na druhém řádku jako první volba tlačítko stylu, které nezávisle přepíná způsob jeho prezentace na mapě (5 režimů): <br>• 🔥 <strong>Heatmapa</strong> – plynulá tepelná mapa hustoty s plnou sytostí (100 % průhlednosti lze kdykoli snížit pill 💧), 8 volitelných palet: Fialová, Google Photos, Inferno, Smaragd, Oceán, Západ slunce, Magma, Neon. <br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v elegantních rámečcích přímo na mapě. <br>• 📍 <strong>Špendlíky</strong> – klasické klastrované body s počtem fotek a náhledovou kartou při kliknutí; barva bodu odpovídá barvě teček daného souboru. <br>• 🔴 <strong>Tečky</strong> – neshlukovaný bodový mrak; velikost teček (1–25 px) se nastavuje pilulkou 🔴 u daného souboru a barvy volí každý soubor z 8 odstínů. <br>• ⬤ <strong>Zóna výskytu</strong> – škrabací mapa zobrazující navštívená území jako souvislý okruh; poloměr 0–10 000 km s desetinnými čísly se nastavuje pilulkou ⬤ u daného souboru (0 = 1 m), výchozí sytost je 50 % a maximum 100 % je zcela neprůsvitné.</div></details></li>
                 <li><details class="step"><summary>➕ Tlačítko [+] – přidat soubor či trasu</summary><div class="step-body">Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).</div></details></li>
@@ -494,6 +499,7 @@
                 titleSyncStyles: "Sjednotit všechny parametry podle posledního upravovaného souboru",
                 btnToggleAll: "👁️ Vše",
                 titleToggleAll: "Zapnout / vypnout všechny vrstvy",
+                titleZoneSlider: "Posuvník má zhuštěný chod: 0–1 km | 1–100 km | 100–10000 km",
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Obnovit výchozí barvy a průhlednost",
                 lblColor: "Barva / Paleta",
@@ -543,7 +549,7 @@
                 steps: [
                     "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong> Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript bleskově projde celou složku i podsložky bez modifikace fotek, vyčte GPS souřadnice z EXIF, Google JSON i Adobe XMP metadat a vytvoří datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, který mapa při otevření automaticky načte. Volbou <strong>2</strong> lze navíc zpracovat jen vybranou složku – v interaktivním prohlížeči složek přepínáte klávesami: čísla = vstup do podsložky, <strong>B</strong> = zpět nahoru, <strong>F</strong> / Enter = zpracovat aktuální složku, <strong>P</strong> = listování stránkami, <strong>K</strong> = konec.<br><em>⚠️ Důležité: Soubory <code>Mapa_Fotek.html</code> i <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte umístěné v hlavní kořenové složce s fotografiemi. Pokud HTML soubor přesunete do jiné složky, mapa se zobrazí, ale prohlížeč nenajde lokální miniatury a plnou velikost fotografií.</em>",
                     "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong> Otevře nabídku se třemi volbami: 🌐 <strong>přepínač jazyka</strong> okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou, ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod s podrobným popisem ovládacích prvků a informacemi o verzi a autorovi, a 📄 <strong>Uložit mapu jako PDF</strong> vyexportuje aktuální pohled mapy se všemi zobrazenými objekty do PDF souboru – po kliknutí nejprve vyberete umístění a název souboru v klasickém okně „Uložit jako“, poté se PDF vytvoří a uloží.",
-                    "<strong>📂 Tlačítko [(počet)] – seznam a správa zdrojů:</strong> Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zapínat/vypínat, odebírat a u každého souboru přímo volit jeho vlastní styl zobrazení (první volba druhého řádku) i barvy (8 palet heatmapy, 8 barev teček, 8 barev zóny výskytu či 8 barev GPS trasy). Tlačítkem <strong>🎨 Sjednotit</strong> v záhlaví panelu sjednotíte VEŠKERÉ parametry zobrazení (styl, barvy, sytost, velikost teček, poloměr zóny, resp. tloušťku čáry a velikost bodů) podle souboru, který jste naposledy upravovali – u souborů jiného typu se převede vše, co má společný základ (barva a průhlednost). Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
+                    "<strong>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů:</strong> Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zapínat/vypínat, odebírat a u každého souboru přímo volit jeho vlastní styl zobrazení (první volba druhého řádku) i barvy (8 palet heatmapy, 8 barev teček, 8 barev zóny výskytu či 8 barev GPS trasy). Tlačítkem <strong>🎨 Sjednotit</strong> v záhlaví panelu sjednotíte VEŠKERÉ parametry zobrazení (styl, barvy, sytost, velikost teček, poloměr zóny, resp. tloušťku čáry a velikost bodů) podle souboru, který jste naposledy upravovali – u souborů jiného typu se převede vše, co má společný základ (barva a průhlednost). Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>📅 Tlačítko [Vše (počet) ▼] – filtr roku:</strong> Otevírá rozbalovací nabídku pro filtrování fotografií podle roku pořízení. Můžete vybrat zobrazení kompletního archivu (<em>Vše</em>) nebo zvolit konkrétní rok. U každého roku vidíte přesný počet zaznamenaných fotek.",
                     "<strong>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť:</strong> V panelu Zdroje je u každého souboru s fotografiemi na druhém řádku jako první volba tlačítko stylu, které nezávisle přepíná způsob jeho prezentace na mapě (5 režimů):<br>• 🔥 <strong>Heatmapa</strong> – plynulá tepelná mapa hustoty s plnou sytostí (100 % průhlednosti lze kdykoli snížit pill 💧), 8 volitelných palet: Fialová, Google Photos, Inferno, Smaragd, Oceán, Západ slunce, Magma, Neon.<br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v elegantních rámečcích přímo na mapě.<br>• 📍 <strong>Špendlíky</strong> – klasické klastrované body s počtem fotek a náhledovou kartou při kliknutí; barva bodu odpovídá barvě teček daného souboru.<br>• 🔴 <strong>Tečky</strong> – neshlukovaný bodový mrak; velikost teček (1–25 px) se nastavuje pilulkou 🔴 u daného souboru a barvy volí každý soubor z 8 odstínů.<br>• ⬤ <strong>Zóna výskytu</strong> – škrabací mapa zobrazující navštívená území jako souvislý okruh; poloměr 0–10 000 km s desetinnými čísly se nastavuje pilulkou ⬤ u daného souboru (0 = 1 m), výchozí sytost je 50 % a maximum 100 % je zcela neprůsvitné.",
                     "<strong>➕ Tlačítko [+] – přidat soubor či trasu:</strong> Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).",
@@ -563,6 +569,7 @@
                 titleSyncStyles: "Unify all parameters to match the last edited file",
                 btnToggleAll: "👁️ All",
                 titleToggleAll: "Show or hide all datasets",
+                titleZoneSlider: "Non-uniform scale: 0–1 km | 1–100 km | 100–10000 km",
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Reset colors and styles to default",
                 lblColor: "Color / Palette",
@@ -612,7 +619,7 @@
                 steps: [
                     "<strong>⚡ Data File – First Run (ESSENTIAL):</strong> Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script quickly scans folders and subfolders without modifying photos, reads GPS coordinates from EXIF, Google JSON and Adobe XMP metadata, and creates <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, which the map loads automatically upon opening. Option <strong>2</strong> additionally processes a chosen folder only – in the interactive folder browser: number keys = enter subfolder, <strong>B</strong> = go back up, <strong>F</strong> / Enter = process current folder, <strong>P</strong> = page through results, <strong>K</strong> = quit.<br><em>⚠️ Important: Keep both <code>Mapa_Fotek.html</code> and <code>Mapa_Fotek_aktualizace_dat.bat</code> in the root folder containing your photos. If the HTML file is moved elsewhere, the map will display but local thumbnails and full-size photo viewing will not work.</em>",
                     "<strong>☰ Menu button (top left corner):</strong> Opens a menu with three options: the 🌐 <strong>language switch</strong> instantly toggles the entire user interface, tooltips, and help between Czech and English, ℹ️ <strong>About &amp; Help</strong> opens this guide with detailed control explanations and author/version info, and 📄 <strong>Save map as PDF</strong> exports the current map view with all displayed objects into a PDF file – after clicking, first choose the location and file name in the classic “Save as” dialog, then the PDF is created and saved.",
-                    "<strong>📂 Button [(count)] – data sources manager:</strong> The number in parentheses shows the count of active loaded files. Click to open the sources panel, where you can toggle datasets and GPS tracks on/off, remove them, and customize each file's view style (first option on the second row) and colors (8 heatmap palettes, 8 dot colors, 8 coverage zone colors, or 8 track colors). Use the <strong>🎨 Unify</strong> button in the panel header to unify ALL display parameters (style, colors, intensity, dot size, zone radius, or line width and point size) to match the file you edited last – for files of the other type, everything with a common basis (color and opacity) is converted. All settings are automatically saved in browser storage.",
+                    "<strong>📂 Button [Sources (count)] – data sources manager:</strong> The number in parentheses shows the count of active loaded files. Click to open the sources panel, where you can toggle datasets and GPS tracks on/off, remove them, and customize each file's view style (first option on the second row) and colors (8 heatmap palettes, 8 dot colors, 8 coverage zone colors, or 8 track colors). Use the <strong>🎨 Unify</strong> button in the panel header to unify ALL display parameters (style, colors, intensity, dot size, zone radius, or line width and point size) to match the file you edited last – for files of the other type, everything with a common basis (color and opacity) is converted. All settings are automatically saved in browser storage.",
                     "<strong>📅 Button [All (count) ▼] – year filter:</strong> Opens a dropdown menu to filter photos by year taken. Choose <em>All</em> to view the complete archive or pick a specific year. Exact photo counts are shown next to each year.",
                     "<strong>🎨 View style – selected separately per data file:</strong> In the Sources panel, every photo dataset has a style button as the first option on its second row, independently switching how that file is presented on the map (5 modes):<br>• 🔥 <strong>Heatmap</strong> – smooth density heatmap at full intensity (the 💧 pill can lower the 100% opacity anytime), 8 palettes per dataset: Classic Violet, Google Photos, Inferno, Emerald, Ocean, Sunset, Magma, Neon.<br>• 🖼️ <strong>Photo Cards</strong> – photo thumbnails in rounded cards directly on the map.<br>• 📍 <strong>Pins</strong> – clustered points with photo count and preview cards upon click; the pin color matches the file's dot color.<br>• 🔴 <strong>Dots</strong> – unclustered point cloud; dot size (1–25 px) is set via the file's 🔴 pill and each file picks from 8 colors.<br>• ⬤ <strong>Coverage Zone</strong> – scratch-map style buffer showing visited areas; radius 0–10 000 km with decimals is set via the file's ⬤ pill (0 = 1 m), default intensity is 50% and the maximum of 100% is fully opaque.",
                     "<strong>➕ Button [+] – add file or track:</strong> Allows you to quickly load additional photo data files (<code>.txt</code>) or GPS tracks &amp; waypoints (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). You can also drag &amp; drop files directly into the map window.",
@@ -792,6 +799,23 @@
             return (currentLang === "cs") ? s.replace(".", ",") : s;
         }
 
+        // Kusově lineární posuvník zóny (0–1 | 1–100 | 100–10000 km):
+        // zhuštěný chod v běžně používaném rozsahu 1–100 km, přesné zásahy mezních hodnot.
+        var ZK_SLIDER_MAX = 300;
+        function zoneSliderFromKm(km) {
+            var v = Math.max(0, Math.min(10000, km));
+            if (v <= 1) return Math.round(v * 60);
+            if (v <= 100) return 60 + Math.round((v - 1) / 99 * 150);
+            return 210 + Math.round((v - 100) / 9900 * 90);
+        }
+        function zoneKmFromSlider(s) {
+            s = Math.max(0, Math.min(ZK_SLIDER_MAX, Math.round(s)));
+            if (s <= 60) return Math.round(s / 60 * 100) / 100;
+            if (s <= 210) return Math.round((1 + (s - 60) / 150 * 99) * 10) / 10;
+            // horní pásmo: kroky po ~110 km, zaokrouhleno na hezké násobky 50
+            return Math.round((100 + (s - 210) / 90 * 9900) / 50) * 50;
+        }
+
         // Plynulé slidery: hodnoty se aktualizují okamžitě, náročné překreslení/ukládání se odloží
         var styleApplyTimers = {};
         function scheduleStyleApply(key, fn) {
@@ -856,6 +880,8 @@
                 btnReset.title = t.titleResetStyles;
             }
             document.getElementById("txtSourcesHeader").textContent = t.sourcesHeader;
+            var sourcesWord = document.getElementById("sourcesWord");
+            if (sourcesWord) sourcesWord.textContent = t.btnSources;
             document.getElementById("btnLayers").title = t.titleLayers;
             document.getElementById("dropText").textContent = t.dropText;
             
@@ -2009,9 +2035,10 @@
                                 var slider = document.createElement("input");
                                 slider.type = "range";
                                 slider.min = "0";
-                                slider.max = "10000";
+                                slider.max = String(ZK_SLIDER_MAX);
                                 slider.step = "1";
-                                slider.value = Math.round(curZk);
+                                slider.value = zoneSliderFromKm(curZk);
+                                slider.title = t.titleZoneSlider || "Zhuštěný chod: 0–1 km | 1–100 km | 100–10000 km";
 
                                 var numInput = document.createElement("input");
                                 numInput.type = "text";
@@ -2026,7 +2053,7 @@
                                     lastEditedDataset = k;
                                     curZk = n;
                                     zkPill.innerHTML = "⬤ " + fmtZoneKm(n) + " km";
-                                    slider.value = Math.round(n);
+                                    slider.value = zoneSliderFromKm(n);
                                     if (syncNum !== false) numInput.value = fmtZoneKm(n);
                                     scheduleStyleApply("zk:" + k, function() {
                                         saveDatasetStyles();
@@ -2034,7 +2061,7 @@
                                     });
                                 }
 
-                                slider.oninput = function() { applyZk(this.value); };
+                                slider.oninput = function() { applyZk(zoneKmFromSlider(this.value)); };
                                 numInput.oninput = function() {
                                     var clean = this.value.replace(/[^0-9.,]/g, '').replace(",", ".");
                                     if (clean !== "") applyZk(clean, false);
