@@ -349,7 +349,7 @@
 </head>
 <body>
     <div id="loading-overlay"><div class="spinner"></div><div id="loadingText" style="font-weight:500;color:#202124;font-size:13px;">Načítám data...</div></div>
-    <div id="drop-zone-overlay"><div style="font-size:42px">📂</div><div id="dropText">Přetáhněte soubor se souřadnicemi sem</div></div>
+    <div id="drop-zone-overlay"><div style="font-size:42px">📂</div><div id="dropText">Přetáhněte soubor dat či tras (.txt, .gpx, .kml, .kmz, .geojson) sem</div></div>
     <div id="toast"></div>
     <div id="map"></div>
 
@@ -395,7 +395,7 @@
             </button>
             <div id="yearDropdown" class="dropdown-menu" onclick="event.stopPropagation()"></div>
         </div>
-        <input type="file" id="fileInput" accept=".txt,.gpx,.kml,.kmz" multiple style="display:none" onchange="handleFileSelect(this.files)">
+        <input type="file" id="fileInput" accept=".txt,.gpx,.kml,.kmz,.geojson,.json" multiple style="display:none" onchange="handleFileSelect(this.files)">
     </div>
 
     <!-- HORNÍ LIŠTA VPRAVO: VRSTVY MAPY + ZOOM (velikost teček a poloměr zóny se nastavují u každého souboru v panelu Zdroje) -->
@@ -451,11 +451,11 @@
             <div class="info-section-title" id="txtGuideTitle">📖 Návod k použití:</div>
             <ol class="info-steps" id="infoStepsList">
                 <li><details class="step"><summary>⚡ Datový soubor – první spuštění (ZÁKLAD)</summary><div class="step-body">Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript bleskově projde celou složku i podsložky bez modifikace fotek, vyčte GPS souřadnice z EXIF, Google JSON i Adobe XMP metadat a vytvoří datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, který mapa při otevření automaticky načte. Volbou <strong>2</strong> lze navíc zpracovat jen vybranou složku – v interaktivním prohlížeči složek přepínáte klávesami: čísla = vstup do podsložky, <strong>B</strong> = zpět nahoru, <strong>F</strong> / Enter = zpracovat aktuální složku, <strong>P</strong> = listování stránkami, <strong>K</strong> = konec.<br><em>⚠️ Důležité: Soubory <code>Mapa_Fotek.html</code> i <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte umístěné v hlavní kořenové složce s fotografiemi. Pokud HTML soubor přesunete do jiné složky, mapa se zobrazí, ale prohlížeč nenajde lokální miniatury a plnou velikost fotografií.</em></div></details></li>
-                <li><details class="step"><summary>☰ Tlačítko ☰ – menu (úplně vlevo nahoře)</summary><div class="step-body">Otevře nabídku se třemi volbami: 🌐 <strong>přepínač jazyka</strong> okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou, ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod s podrobným popisem ovládacích prvků a informacemi o verzi a autorovi, a 📄 <strong>Uložit mapu jako PDF</strong> vyexportuje aktuální pohled mapy se všemi zobrazenými objekty do PDF souboru – po kliknutí nejprve vyberete umístění a název souboru v klasickém okně „Uložit jako“, poté se PDF vytvoří a uloží.</div></details></li>
+                <li><details class="step"><summary>☰ Tlačítko ☰ – menu (úplně vlevo nahoře)</summary><div class="step-body">Otevře nabídku se třemi volbami: 🌐 <strong>přepínač jazyka</strong> okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou, ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod s podrobným popisem ovládacích prvků a informacemi o verzi a autorovi, a 📄 <strong>Uložit mapu jako PDF</strong> vyexportuje aktuální pohled mapy se všemi zobrazenými objekty do PDF souboru – po kliknutí nejprve vyberete umístění a název souboru v klasickém okně „Uložit jako“, poté se PDF vytvoří a uloží. Výtisk se vykresluje ve vysokém rozlišení (4×), příprava proto může chvíli trvat.</div></details></li>
                 <li><details class="step"><summary>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů</summary><div class="step-body">Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zapínat/vypínat, odebírat a u každého souboru přímo volit jeho vlastní styl zobrazení (první volba druhého řádku) i barvy (8 palet heatmapy, 8 barev teček, 8 barev zóny výskytu či 8 barev GPS trasy). Tlačítkem <strong>🎨 Sjednotit</strong> v záhlaví panelu sjednotíte VEŠKERÉ parametry zobrazení (styl, barvy, sytost, velikost teček, poloměr zóny, resp. tloušťku čáry a velikost bodů) podle souboru, který jste naposledy upravovali – u souborů jiného typu se převede vše, co má společný základ (barva a průhlednost). Veškerá nastavení se automaticky trvale ukládají v prohlížeči.</div></details></li>
                 <li><details class="step"><summary>📅 Tlačítko [Vše (počet) ▼] – filtr roku</summary><div class="step-body">Otevírá rozbalovací nabídku pro filtrování fotografií podle roku pořízení. Můžete vybrat zobrazení kompletního archivu (<em>Vše</em>) nebo zvolit konkrétní rok. U každého roku vidíte přesný počet zaznamenaných fotek.</div></details></li>
                 <li><details class="step"><summary>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť</summary><div class="step-body">V panelu Zdroje je u každého souboru s fotografiemi na druhém řádku jako první volba tlačítko stylu, které nezávisle přepíná způsob jeho prezentace na mapě (5 režimů): <br>• 🔥 <strong>Heatmapa</strong> – plynulá tepelná mapa hustoty s plnou sytostí (100 % průhlednosti lze kdykoli snížit pill 💧), 8 volitelných palet: Fialová, Google Photos, Inferno, Smaragd, Oceán, Západ slunce, Magma, Neon. <br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v elegantních rámečcích přímo na mapě. <br>• 📍 <strong>Špendlíky</strong> – klasické klastrované body s počtem fotek a náhledovou kartou při kliknutí; barva bodu odpovídá barvě teček daného souboru. <br>• 🔴 <strong>Tečky</strong> – neshlukovaný bodový mrak; velikost teček (1–25 px) se nastavuje pilulkou 🔴 u daného souboru a barvy volí každý soubor z 8 odstínů. <br>• ⬤ <strong>Zóna výskytu</strong> – škrabací mapa zobrazující navštívená území jako souvislý okruh; poloměr 0–10 000 km s desetinnými čísly se nastavuje pilulkou ⬤ u daného souboru (0 = 1 m), výchozí sytost je 50 % a maximum 100 % je zcela neprůsvitné.</div></details></li>
-                <li><details class="step"><summary>➕ Tlačítko [+] – přidat soubor či trasu</summary><div class="step-body">Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).</div></details></li>
+                <li><details class="step"><summary>➕ Tlačítko [+] – přidat soubor či trasu</summary><div class="step-body">Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).</div></details></li>
                 <li><details class="step"><summary>🗺️ Tlačítko mapových podkladů (vpravo)</summary><div class="step-body">Výběr ze 7 oficiálních mapových vrstev: <br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa. <br>• ⛰️ <strong>Google Terénní</strong> – plastický 3D reliéf pohoří, údolí a terénních nerovností. <br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky. <br>• 🌲 <strong>Mapy.cz Turistická</strong> – oficiální značené turistické i cyklistické trasy, vrstevnice a outdoorové body. <br>• 🗺️ <strong>Mapy.cz Základní</strong> – detailní česká kartografická mapa ČR i Evropy. <br>• 🛰️ <strong>Mapy.cz Letecká</strong> – vysoce detailní ortofotomapa a letecké snímky. <br>• 🌐 <strong>Esri Topo</strong> – podrobná celosvětová topografická mapa s vrstevnicemi.</div></details></li>
                 <li><details class="step"><summary>🔍 Tlačítka zoom [+ / −] (vpravo, na mobilu dole)</summary><div class="step-body">Tlačítka pro plynulé přiblížení a oddálení mapového pohledu. Na počítači lze mapu zoomovat také kolečkem myši, na mobilu či tabletu gestem roztažení dvou prstů.</div></details></li>
             </ol>
@@ -499,7 +499,7 @@
                 titleSyncStyles: "Sjednotit všechny parametry podle posledního upravovaného souboru",
                 btnToggleAll: "👁️ Vše",
                 titleToggleAll: "Zapnout / vypnout všechny vrstvy",
-                titleZoneSlider: "Posuvník má zhuštěný chod: 0–1 km | 1–100 km | 100–10000 km",
+                titleZoneSlider: "1–100 km | 100–1000 km | 1000–10000 km. Hodnoty pod 1 km zadejte ručně do číselného pole.",
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Obnovit výchozí barvy a průhlednost",
                 lblColor: "Barva / Paleta",
@@ -529,7 +529,7 @@
                 btnFull: "Plná vel. ↗",
                 zoomBadge: "🔍",
                 noThumb: "📷 Náhled nedostupný",
-                dropText: "Přetáhněte soubor dat či tras (.txt, .gpx, .kml, .kmz) sem",
+                dropText: "Přetáhněte soubor dat či tras (.txt, .gpx, .kml, .kmz, .geojson) sem",
                 toastAdded: "✅ Načteno {count} fotek z {name}",
                 toastDup: "⚠️ {name} již načten!",
                 toastDel: "{name} odebrán.",
@@ -548,11 +548,11 @@
                 guideTitle: "📖 Návod k použití:",
                 steps: [
                     "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong> Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript bleskově projde celou složku i podsložky bez modifikace fotek, vyčte GPS souřadnice z EXIF, Google JSON i Adobe XMP metadat a vytvoří datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, který mapa při otevření automaticky načte. Volbou <strong>2</strong> lze navíc zpracovat jen vybranou složku – v interaktivním prohlížeči složek přepínáte klávesami: čísla = vstup do podsložky, <strong>B</strong> = zpět nahoru, <strong>F</strong> / Enter = zpracovat aktuální složku, <strong>P</strong> = listování stránkami, <strong>K</strong> = konec.<br><em>⚠️ Důležité: Soubory <code>Mapa_Fotek.html</code> i <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte umístěné v hlavní kořenové složce s fotografiemi. Pokud HTML soubor přesunete do jiné složky, mapa se zobrazí, ale prohlížeč nenajde lokální miniatury a plnou velikost fotografií.</em>",
-                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong> Otevře nabídku se třemi volbami: 🌐 <strong>přepínač jazyka</strong> okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou, ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod s podrobným popisem ovládacích prvků a informacemi o verzi a autorovi, a 📄 <strong>Uložit mapu jako PDF</strong> vyexportuje aktuální pohled mapy se všemi zobrazenými objekty do PDF souboru – po kliknutí nejprve vyberete umístění a název souboru v klasickém okně „Uložit jako“, poté se PDF vytvoří a uloží.",
+                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong> Otevře nabídku se třemi volbami: 🌐 <strong>přepínač jazyka</strong> okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou, ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod s podrobným popisem ovládacích prvků a informacemi o verzi a autorovi, a 📄 <strong>Uložit mapu jako PDF</strong> vyexportuje aktuální pohled mapy se všemi zobrazenými objekty do PDF souboru – po kliknutí nejprve vyberete umístění a název souboru v klasickém okně „Uložit jako“, poté se PDF vytvoří a uloží. Výtisk se vykresluje ve vysokém rozlišení (4×), příprava proto může chvíli trvat.",
                     "<strong>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů:</strong> Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zapínat/vypínat, odebírat a u každého souboru přímo volit jeho vlastní styl zobrazení (první volba druhého řádku) i barvy (8 palet heatmapy, 8 barev teček, 8 barev zóny výskytu či 8 barev GPS trasy). Tlačítkem <strong>🎨 Sjednotit</strong> v záhlaví panelu sjednotíte VEŠKERÉ parametry zobrazení (styl, barvy, sytost, velikost teček, poloměr zóny, resp. tloušťku čáry a velikost bodů) podle souboru, který jste naposledy upravovali – u souborů jiného typu se převede vše, co má společný základ (barva a průhlednost). Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>📅 Tlačítko [Vše (počet) ▼] – filtr roku:</strong> Otevírá rozbalovací nabídku pro filtrování fotografií podle roku pořízení. Můžete vybrat zobrazení kompletního archivu (<em>Vše</em>) nebo zvolit konkrétní rok. U každého roku vidíte přesný počet zaznamenaných fotek.",
                     "<strong>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť:</strong> V panelu Zdroje je u každého souboru s fotografiemi na druhém řádku jako první volba tlačítko stylu, které nezávisle přepíná způsob jeho prezentace na mapě (5 režimů):<br>• 🔥 <strong>Heatmapa</strong> – plynulá tepelná mapa hustoty s plnou sytostí (100 % průhlednosti lze kdykoli snížit pill 💧), 8 volitelných palet: Fialová, Google Photos, Inferno, Smaragd, Oceán, Západ slunce, Magma, Neon.<br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v elegantních rámečcích přímo na mapě.<br>• 📍 <strong>Špendlíky</strong> – klasické klastrované body s počtem fotek a náhledovou kartou při kliknutí; barva bodu odpovídá barvě teček daného souboru.<br>• 🔴 <strong>Tečky</strong> – neshlukovaný bodový mrak; velikost teček (1–25 px) se nastavuje pilulkou 🔴 u daného souboru a barvy volí každý soubor z 8 odstínů.<br>• ⬤ <strong>Zóna výskytu</strong> – škrabací mapa zobrazující navštívená území jako souvislý okruh; poloměr 0–10 000 km s desetinnými čísly se nastavuje pilulkou ⬤ u daného souboru (0 = 1 m), výchozí sytost je 50 % a maximum 100 % je zcela neprůsvitné.",
-                    "<strong>➕ Tlačítko [+] – přidat soubor či trasu:</strong> Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).",
+                    "<strong>➕ Tlačítko [+] – přidat soubor či trasu:</strong> Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).",
                     "<strong>🗺️ Tlačítko mapových podkladů (vpravo):</strong> Výběr ze 7 oficiálních mapových vrstev:<br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa.<br>• ⛰️ <strong>Google Terénní</strong> – plastický 3D reliéf pohoří, údolí a terénních nerovností.<br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky.<br>• 🌲 <strong>Mapy.cz Turistická</strong> – oficiální značené turistické i cyklistické trasy, vrstevnice a outdoorové body.<br>• 🗺️ <strong>Mapy.cz Základní</strong> – detailní česká kartografická mapa ČR i Evropy.<br>• 🛰️ <strong>Mapy.cz Letecká</strong> – vysoce detailní ortofotomapa a letecké snímky.<br>• 🌐 <strong>Esri Topo</strong> – podrobná celosvětová topografická mapa s vrstevnicemi.",
                     "<strong>🔍 Tlačítka zoom [+ / −] (vpravo, na mobilu dole):</strong> Tlačítka pro plynulé přiblížení a oddálení mapového pohledu. Na počítači lze mapu zoomovat také kolečkem myši, na mobilu či tabletu gestem roztažení dvou prstů."
                 ]
@@ -569,7 +569,7 @@
                 titleSyncStyles: "Unify all parameters to match the last edited file",
                 btnToggleAll: "👁️ All",
                 titleToggleAll: "Show or hide all datasets",
-                titleZoneSlider: "Non-uniform scale: 0–1 km | 1–100 km | 100–10000 km",
+                titleZoneSlider: "1-100 km | 100-1000 km | 1000-10000 km. Values below 1 km: type them into the number field.",
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Reset colors and styles to default",
                 lblColor: "Color / Palette",
@@ -599,7 +599,7 @@
                 btnFull: "Full size ↗",
                 zoomBadge: "🔍",
                 noThumb: "📷 No preview",
-                dropText: "Drop data or GPS track file (.txt, .gpx, .kml, .kmz) here",
+                dropText: "Drop data or GPS track file (.txt, .gpx, .kml, .kmz, .geojson) here",
                 toastAdded: "✅ Loaded {count} photos from {name}",
                 toastDup: "⚠️ {name} already loaded!",
                 toastDel: "{name} removed.",
@@ -618,11 +618,11 @@
                 guideTitle: "📖 User Guide:",
                 steps: [
                     "<strong>⚡ Data File – First Run (ESSENTIAL):</strong> Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script quickly scans folders and subfolders without modifying photos, reads GPS coordinates from EXIF, Google JSON and Adobe XMP metadata, and creates <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, which the map loads automatically upon opening. Option <strong>2</strong> additionally processes a chosen folder only – in the interactive folder browser: number keys = enter subfolder, <strong>B</strong> = go back up, <strong>F</strong> / Enter = process current folder, <strong>P</strong> = page through results, <strong>K</strong> = quit.<br><em>⚠️ Important: Keep both <code>Mapa_Fotek.html</code> and <code>Mapa_Fotek_aktualizace_dat.bat</code> in the root folder containing your photos. If the HTML file is moved elsewhere, the map will display but local thumbnails and full-size photo viewing will not work.</em>",
-                    "<strong>☰ Menu button (top left corner):</strong> Opens a menu with three options: the 🌐 <strong>language switch</strong> instantly toggles the entire user interface, tooltips, and help between Czech and English, ℹ️ <strong>About &amp; Help</strong> opens this guide with detailed control explanations and author/version info, and 📄 <strong>Save map as PDF</strong> exports the current map view with all displayed objects into a PDF file – after clicking, first choose the location and file name in the classic “Save as” dialog, then the PDF is created and saved.",
+                    "<strong>☰ Menu button (top left corner):</strong> Opens a menu with three options: the 🌐 <strong>language switch</strong> instantly toggles the entire user interface, tooltips, and help between Czech and English, ℹ️ <strong>About &amp; Help</strong> opens this guide with detailed control explanations and author/version info, and 📄 <strong>Save map as PDF</strong> exports the current map view with all displayed objects into a PDF file – after clicking, first choose the location and file name in the classic “Save as” dialog, then the PDF is created and saved. The export is rendered at high resolution (4x), so preparation may take a while.",
                     "<strong>📂 Button [Sources (count)] – data sources manager:</strong> The number in parentheses shows the count of active loaded files. Click to open the sources panel, where you can toggle datasets and GPS tracks on/off, remove them, and customize each file's view style (first option on the second row) and colors (8 heatmap palettes, 8 dot colors, 8 coverage zone colors, or 8 track colors). Use the <strong>🎨 Unify</strong> button in the panel header to unify ALL display parameters (style, colors, intensity, dot size, zone radius, or line width and point size) to match the file you edited last – for files of the other type, everything with a common basis (color and opacity) is converted. All settings are automatically saved in browser storage.",
                     "<strong>📅 Button [All (count) ▼] – year filter:</strong> Opens a dropdown menu to filter photos by year taken. Choose <em>All</em> to view the complete archive or pick a specific year. Exact photo counts are shown next to each year.",
                     "<strong>🎨 View style – selected separately per data file:</strong> In the Sources panel, every photo dataset has a style button as the first option on its second row, independently switching how that file is presented on the map (5 modes):<br>• 🔥 <strong>Heatmap</strong> – smooth density heatmap at full intensity (the 💧 pill can lower the 100% opacity anytime), 8 palettes per dataset: Classic Violet, Google Photos, Inferno, Emerald, Ocean, Sunset, Magma, Neon.<br>• 🖼️ <strong>Photo Cards</strong> – photo thumbnails in rounded cards directly on the map.<br>• 📍 <strong>Pins</strong> – clustered points with photo count and preview cards upon click; the pin color matches the file's dot color.<br>• 🔴 <strong>Dots</strong> – unclustered point cloud; dot size (1–25 px) is set via the file's 🔴 pill and each file picks from 8 colors.<br>• ⬤ <strong>Coverage Zone</strong> – scratch-map style buffer showing visited areas; radius 0–10 000 km with decimals is set via the file's ⬤ pill (0 = 1 m), default intensity is 50% and the maximum of 100% is fully opaque.",
-                    "<strong>➕ Button [+] – add file or track:</strong> Allows you to quickly load additional photo data files (<code>.txt</code>) or GPS tracks &amp; waypoints (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>). You can also drag &amp; drop files directly into the map window.",
+                    "<strong>➕ Button [+] – add file or track:</strong> Allows you to quickly load additional photo data files (<code>.txt</code>) or GPS tracks &amp; waypoints (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>). You can also drag &amp; drop files directly into the map window.",
                     "<strong>🗺️ Map layers button (right):</strong> Choose from 7 official map styles:<br>• 🗺️ <strong>Google Standard</strong> – clean urban and street map.<br>• ⛰️ <strong>Google Terrain</strong> – 3D elevation relief and mountain ridges.<br>• 🛰️ <strong>Google Satellite</strong> – real aerial and satellite imagery with labels.<br>• 🌲 <strong>Mapy.cz Outdoor</strong> – official hiking and cycling trails with contour lines.<br>• 🗺️ <strong>Mapy.cz Basic</strong> – clean European cartography by Seznam.<br>• 🛰️ <strong>Mapy.cz Aerial</strong> – high-resolution aerial orthoimagery.<br>• 🌐 <strong>Esri Topo</strong> – worldwide topographic map with contours.",
                     "<strong>🔍 Zoom buttons [+ / −] (right, bottom on mobile):</strong> Buttons for smooth map zooming. On desktop you can also use the mouse scroll wheel, on touch devices use two-finger pinch gesture."
                 ]
@@ -799,21 +799,20 @@
             return (currentLang === "cs") ? s.replace(".", ",") : s;
         }
 
-        // Kusově lineární posuvník zóny (0–1 | 1–100 | 100–10000 km):
-        // zhuštěný chod v běžně používaném rozsahu 1–100 km, přesné zásahy mezních hodnot.
+        // Kusově lineární posuvník zóny: hodnoty pod 1 km jen ručně (číslo v poli),
+        // posuvník: 0–70 % = 1–100 km | 70–90 % = 100–1000 km | 90–100 % = 1000–10000 km.
         var ZK_SLIDER_MAX = 300;
         function zoneSliderFromKm(km) {
-            var v = Math.max(0, Math.min(10000, km));
-            if (v <= 1) return Math.round(v * 60);
-            if (v <= 100) return 60 + Math.round((v - 1) / 99 * 150);
-            return 210 + Math.round((v - 100) / 9900 * 90);
+            var v = Math.max(1, Math.min(10000, km));
+            if (v <= 100) return Math.round((v - 1) / 99 * 210);
+            if (v <= 1000) return 210 + Math.round((v - 100) / 900 * 60);
+            return 270 + Math.round((v - 1000) / 9000 * 30);
         }
         function zoneKmFromSlider(s) {
             s = Math.max(0, Math.min(ZK_SLIDER_MAX, Math.round(s)));
-            if (s <= 60) return Math.round(s / 60 * 100) / 100;
-            if (s <= 210) return Math.round((1 + (s - 60) / 150 * 99) * 10) / 10;
-            // horní pásmo: kroky po ~110 km, zaokrouhleno na hezké násobky 50
-            return Math.round((100 + (s - 210) / 90 * 9900) / 50) * 50;
+            if (s <= 210) return Math.round((1 + s / 210 * 99) * 10) / 10;
+            if (s <= 270) return Math.round((100 + (s - 210) * 15) / 5) * 5;
+            return Math.round(1000 + (s - 270) * 300);
         }
 
         // Plynulé slidery: hodnoty se aktualizují okamžitě, náročné překreslení/ukládání se odloží
@@ -1029,7 +1028,7 @@
 
         function renderMapToPdf(fileHandle, t) {
             var mapEl = document.getElementById("map");
-            if (!mapEl || typeof html2canvas === "undefined" || !window.jspdf) {
+            if (!mapEl || typeof html2canvas === "undefined" || !window.jspdf || typeof map === "undefined" || !map) {
                 window.__pdfState.error = "missing";
                 showToast(t.toastPdfErr);
                 return;
@@ -1040,57 +1039,113 @@
             var prevDisp = zoomCtl ? zoomCtl.style.display : null;
             if (zoomCtl) zoomCtl.style.display = "none";
 
-            var scale = Math.min(3, Math.max(1, 3600 / Math.max(mapEl.clientWidth, mapEl.clientHeight)));
+            // VYSOKÉ ROZLIŠENÍ (supersampling ~4× vůči obrazovce):
+            // 1) kontejner mapy se dočasně zvětší na 2× a mapa se posune o 1 úroveň zoomu výš –
+            //    stejný geografický záběr, ale dlaždice stažené s dvojnásobným detailem;
+            // 2) html2canvas zachytí s scale=2 => celkově ~4× více pixelů než na displeji.
+            var SS = 2; // zvětšení kontejneru
+            var prevW = mapEl.style.width, prevH = mapEl.style.height;
+            var center = map.getCenter(), zoom = map.getZoom();
 
-            html2canvas(mapEl, {
-                useCORS: true,
-                allowTaint: false,
-                backgroundColor: "#ffffff",
-                logging: false,
-                imageTimeout: 20000,
-                scale: scale
-            }).then(function(canvas) {
+            var restored = false;
+            function restore() {
+                if (restored) return;
+                restored = true;
+                mapEl.style.width = prevW;
+                mapEl.style.height = prevH;
                 if (zoomCtl) zoomCtl.style.display = prevDisp;
-                try {
-                    var landscape = canvas.width >= canvas.height;
-                    var pdf = new window.jspdf.jsPDF({ orientation: landscape ? "landscape" : "portrait", unit: "mm", format: "a4", compress: true });
-                    var pw = pdf.internal.pageSize.getWidth();
-                    var ph = pdf.internal.pageSize.getHeight();
-                    var margin = 8;
-                    var ratio = Math.min((pw - margin * 2) / canvas.width, (ph - margin * 2) / canvas.height);
-                    var w = canvas.width * ratio;
-                    var h = canvas.height * ratio;
-                    pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (pw - w) / 2, (ph - h) / 2, w, h);
+                map.invalidateSize({ pan: false });
+                map.setView(center, zoom);
+                if (window.__pdfState) window.__pdfState.zoomRestored = true;
+            }
 
-                    var blob = pdf.output("blob");
-                    window.__pdfState.captured = true;
-                    window.__pdfState.blobBytes = blob.size;
+            function waitForTiles(cb) {
+                // Počkáme na dohrání dlaždic všech podkladů (s pojistným limitem).
+                var layers = [];
+                map.eachLayer(function(l) { if (l instanceof L.TileLayer) layers.push(l); });
+                if (layers.length === 0) { setTimeout(cb, 500); return; }
+                var remaining = layers.length;
+                var finished = false;
+                function fin() { if (!finished) { finished = true; setTimeout(cb, 200); } }
+                var guard = setTimeout(fin, 4000);
+                layers.forEach(function(l) {
+                    var h = function() { l.off("load", h); remaining--; if (remaining <= 0) { clearTimeout(guard); fin(); } };
+                    l.on("load", h);
+                });
+            }
 
-                    if (fileHandle) {
-                        fileHandle.createWritable().then(function(writable) {
-                            return blob.stream().pipeTo(writable).then(function() {
-                                window.__pdfState.wrote = "picker";
+            function capture() {
+                // ochranné limity canvasu (paměť / maximální rozměry)
+                var outW = mapEl.clientWidth * SS, outH = mapEl.clientHeight * SS;
+                var scale = Math.min(SS, 10000 / Math.max(outW, outH));
+                scale = Math.max(1, Math.min(scale, Math.sqrt(60000000 / (outW * outH))));
+                window.__pdfState.outPx = outW + "x" + outH;
+
+                html2canvas(mapEl, {
+                    useCORS: true,
+                    allowTaint: false,
+                    backgroundColor: "#ffffff",
+                    logging: false,
+                    imageTimeout: 30000,
+                    scale: scale
+                }).then(function(canvas) {
+                    restore();
+                    try {
+                        var landscape = canvas.width >= canvas.height;
+                        var pdf = new window.jspdf.jsPDF({ orientation: landscape ? "landscape" : "portrait", unit: "mm", format: "a4", compress: true });
+                        var pw = pdf.internal.pageSize.getWidth();
+                        var ph = pdf.internal.pageSize.getHeight();
+                        var margin = 8;
+                        var ratio = Math.min((pw - margin * 2) / canvas.width, (ph - margin * 2) / canvas.height);
+                        var w = canvas.width * ratio;
+                        var h = canvas.height * ratio;
+                        pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (pw - w) / 2, (ph - h) / 2, w, h);
+
+                        var blob = pdf.output("blob");
+                        window.__pdfState.captured = true;
+                        window.__pdfState.blobBytes = blob.size;
+
+                        if (fileHandle) {
+                            fileHandle.createWritable().then(function(writable) {
+                                return blob.stream().pipeTo(writable).then(function() {
+                                    window.__pdfState.wrote = "picker";
+                                    showToast(t.toastPdfDone);
+                                });
+                            }).catch(function() {
+                                downloadPdfFallback(blob);
+                                window.__pdfState.wrote = "download";
                                 showToast(t.toastPdfDone);
                             });
-                        }).catch(function() {
+                        } else {
                             downloadPdfFallback(blob);
                             window.__pdfState.wrote = "download";
                             showToast(t.toastPdfDone);
-                        });
-                    } else {
-                        downloadPdfFallback(blob);
-                        window.__pdfState.wrote = "download";
-                        showToast(t.toastPdfDone);
+                        }
+                    } catch (err) {
+                        window.__pdfState.error = "render:" + (err && err.message ? err.message : "?");
+                        showToast(t.toastPdfErr);
                     }
-                } catch (err) {
-                    window.__pdfState.error = "render:" + (err && err.message ? err.message : "?");
+                }).catch(function(err) {
+                    restore();
+                    window.__pdfState.error = "capture:" + (err && err.message ? err.message : "?");
                     showToast(t.toastPdfErr);
-                }
-            }).catch(function(err) {
-                if (zoomCtl) zoomCtl.style.display = prevDisp;
-                window.__pdfState.error = "capture:" + (err && err.message ? err.message : "?");
+                });
+            }
+
+            try {
+                window.__pdfState.supersample = SS;
+                mapEl.style.width = (mapEl.clientWidth * SS) + "px";
+                mapEl.style.height = (mapEl.clientHeight * SS) + "px";
+                map.invalidateSize({ pan: false });
+                var zTarget = zoom + 1;
+                if (map.getMaxZoom && isFinite(map.getMaxZoom())) zTarget = Math.min(zTarget, map.getMaxZoom());
+                map.setView(center, zTarget);
+                waitForTiles(capture);
+            } catch (err) {
+                restore();
+                window.__pdfState.error = "prepare:" + (err && err.message ? err.message : "?");
                 showToast(t.toastPdfErr);
-            });
+            }
         }
 
         function downloadPdfFallback(blob) {
@@ -2038,7 +2093,7 @@
                                 slider.max = String(ZK_SLIDER_MAX);
                                 slider.step = "1";
                                 slider.value = zoneSliderFromKm(curZk);
-                                slider.title = t.titleZoneSlider || "Zhuštěný chod: 0–1 km | 1–100 km | 100–10000 km";
+                                slider.title = t.titleZoneSlider || "1–100 km | 100–1000 km | 1000–10000 km";
 
                                 var numInput = document.createElement("input");
                                 numInput.type = "text";
@@ -2683,6 +2738,91 @@
             }
         }
 
+        // PARSOVÁNÍ GEOJSON
+        function parseGeoJson(txt, name) {
+            try {
+                var gj = (typeof txt === "string") ? JSON.parse(txt) : txt;
+                if (!gj || typeof gj !== "object") return null;
+
+                // Sjednocení vstupu: FeatureCollection / Feature / samostatná geometrie / GeometryCollection
+                var feats = [];
+                if (gj.type === "FeatureCollection" && gj.features) {
+                    feats = gj.features;
+                } else if (gj.type === "Feature") {
+                    feats = [gj];
+                } else if (gj.type === "GeometryCollection" && gj.geometries) {
+                    feats = gj.geometries.map(function(g) { return { type: "Feature", geometry: g, properties: {} }; });
+                } else if (gj.type && gj.coordinates !== undefined) {
+                    feats = [{ type: "Feature", geometry: gj, properties: {} }];
+                }
+                if (feats.length === 0) return null;
+
+                var docName = name.replace(/\.[^/.]+$/, "");
+                var lines = [], points = [], totalDist = 0;
+
+                function pushLine(coords, label) {
+                    if (!coords) return;
+                    var pts = [], dKm = 0;
+                    for (var i = 0; i < coords.length; i++) {
+                        var c = coords[i];
+                        if (!c || c.length < 2) continue;
+                        var lon = parseFloat(c[0]), lat = parseFloat(c[1]);
+                        if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) continue;
+                        if (pts.length > 0) dKm += calcDistKm(pts[pts.length - 1][0], pts[pts.length - 1][1], lat, lon);
+                        pts.push([lat, lon]);
+                    }
+                    if (pts.length > 1) { totalDist += dKm; lines.push({ name: label || docName, points: pts, distanceKm: dKm }); }
+                }
+                function pushPoint(c, props) {
+                    if (!c || c.length < 2) return;
+                    var lon = parseFloat(c[0]), lat = parseFloat(c[1]);
+                    if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return;
+                    props = props || {};
+                    points.push({ name: props.name || props.title || "", desc: props.description || props.desc || "", lat: lat, lon: lon });
+                }
+
+                for (var i = 0; i < feats.length; i++) {
+                    var f = feats[i];
+                    if (!f) continue;
+                    var g = f.geometry || f;
+                    var props = f.properties || {};
+                    var label = props.name || props.title || "";
+                    if (!g || !g.type) continue;
+                    switch (g.type) {
+                        case "Point":          pushPoint(g.coordinates, props); break;
+                        case "MultiPoint":     if (g.coordinates) for (var m = 0; m < g.coordinates.length; m++) pushPoint(g.coordinates[m], props); break;
+                        case "LineString":     pushLine(g.coordinates, label); break;
+                        case "MultiLineString": if (g.coordinates) for (var ml = 0; ml < g.coordinates.length; ml++) pushLine(g.coordinates[ml], label); break;
+                        case "Polygon":        if (g.coordinates) for (var pg = 0; pg < g.coordinates.length; pg++) pushLine(g.coordinates[pg], label); break;
+                        case "MultiPolygon":   if (g.coordinates) for (var mp = 0; mp < g.coordinates.length; mp++) if (g.coordinates[mp]) for (var r = 0; r < g.coordinates[mp].length; r++) pushLine(g.coordinates[mp][r], label); break;
+                        case "GeometryCollection": if (g.geometries) for (var gc = 0; gc < g.geometries.length; gc++) {
+                            var sub = parseGeoJson(JSON.stringify({ type: "Feature", geometry: g.geometries[gc], properties: props }), name);
+                            if (sub) {
+                                for (var sl = 0; sl < sub.lines.length; sl++) { totalDist += sub.lines[sl].distanceKm; lines.push(sub.lines[sl]); }
+                                for (var sp = 0; sp < sub.points.length; sp++) points.push(sub.points[sp]);
+                            }
+                        } break;
+                    }
+                }
+
+                if (lines.length === 0 && points.length === 0) return null;
+
+                return {
+                    type: "track",
+                    format: "GeoJSON",
+                    name: name,
+                    title: docName,
+                    lines: lines,
+                    points: points,
+                    totalDistanceKm: totalDist,
+                    color: trackColors[(trackColorIdx++) % trackColors.length],
+                    active: true
+                };
+            } catch (e) {
+                return null;
+            }
+        }
+
         // PARSOVÁNÍ KMZ
         function parseKmz(arrayBuffer, name) {
             if (typeof JSZip === "undefined") {
@@ -2806,7 +2946,7 @@
 
         function handleFileSelect(f) {
             if (!f || f.length === 0) return;
-            var supportedExts = [".txt", ".gpx", ".kml", ".kmz"];
+            var supportedExts = [".txt", ".gpx", ".kml", ".kmz", ".geojson", ".json"];
             for (var i = 0; i < f.length; i++) {
                 (function(file) {
                     var name = file.name;
@@ -2815,8 +2955,8 @@
                     var isSupported = supportedExts.some(function(ext) { return lower.endsWith(ext); });
                     if (!isSupported) {
                         var warnMsg = currentLang === 'cs' 
-                            ? "⚠️ Nepodporovaný soubor: " + name + " (povolené: .txt, .gpx, .kml, .kmz)"
-                            : "⚠️ Unsupported file: " + name + " (allowed: .txt, .gpx, .kml, .kmz)";
+                            ? "⚠️ Nepodporovaný soubor: " + name + " (povolené: .txt, .gpx, .kml, .kmz, .geojson)"
+                            : "⚠️ Unsupported file: " + name + " (allowed: .txt, .gpx, .kml, .kmz, .geojson)";
                         showToast(warnMsg);
                         return;
                     }
@@ -2839,6 +2979,14 @@
                             var trk = parseKml(e.target.result, name);
                             if (trk) addTrackDS(trk);
                             else showToast("⚠️ " + (currentLang === 'cs' ? "Nepodařilo se načíst trasu z " : "Failed to parse track from ") + name);
+                        };
+                        r.readAsText(file, "UTF-8");
+                    } else if (lower.endsWith(".geojson") || lower.endsWith(".json")) {
+                        var r = new FileReader();
+                        r.onload = function(e) {
+                            var trk = parseGeoJson(e.target.result, name);
+                            if (trk) addTrackDS(trk);
+                            else showToast("⚠️ " + (currentLang === 'cs' ? "Nepodařilo se načíst GeoJSON data z " : "Failed to parse GeoJSON data from ") + name);
                         };
                         r.readAsText(file, "UTF-8");
                     } else if (lower.endsWith(".txt")) {
