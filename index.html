@@ -45,6 +45,11 @@
         .ui-btn:hover { background: #ffffff; color: #1a73e8; transform: translateY(-1px); }
         .ui-btn.active { background: #202124; color: #ffffff; border-color: #202124; }
         .ui-btn svg { width: 17px; height: 17px; fill: currentColor; }
+        .lang-split { display: flex; border-radius: 8px; overflow: hidden; margin-bottom: 6px; border: 1px solid #e8eaed; }
+        .lang-half { flex: 1; padding: 7px 0; font-size: 12px; font-weight: 600; border: none; cursor: pointer; background: #f8f9fa; color: #5f6368; transition: all 0.15s; }
+        .lang-half:first-child { border-right: 1px solid #e8eaed; }
+        .lang-half:hover { background: #e8f0fe; color: #1a73e8; }
+        .lang-half.active { background: #1a73e8; color: #fff; font-weight: 700; }
         
         .icon-only-btn { width: 34px; padding: 0; }
         
@@ -53,6 +58,25 @@
         .year-select-btn:hover { background: #ffffff; color: #1a73e8; transform: translateY(-1px); }
         .year-select-btn.active { background: #202124; color: #ffffff; border-color: #202124; }
         .caret { font-size: 9px; opacity: 0.6; margin-left: 2px; }
+        /* Časový filtr: roky / měsíce / kalendář dnů */
+        #yearDropdown { width: 252px; }
+        .tf-section { padding: 6px 10px 3px; font-size: 10px; font-weight: 700; color: #5f6368; text-transform: uppercase; letter-spacing: 0.6px; }
+        .tf-years { display: flex; flex-wrap: wrap; gap: 4px; padding: 2px 10px 4px; }
+        .tf-months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 2px 10px 6px; }
+        .tf-chip { position: relative; border: 1px solid #dadce0; background: #ffffff; color: #3c4043; font-size: 11px; font-weight: 600; padding: 4px 2px; border-radius: 6px; cursor: pointer; transition: all 0.12s; text-align: center; }
+        .tf-chip:hover:not(:disabled) { border-color: #1a73e8; color: #1a73e8; }
+        .tf-chip.active { background: #1a73e8; border-color: #1a73e8; color: #ffffff; }
+        .tf-chip.none { opacity: 0.35; cursor: default; }
+        .tf-cnt { margin-left: 3px; font-size: 9px; opacity: 0.75; }
+        .tf-cal { padding: 0 10px 8px; }
+        .tf-cal-head { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 3px; }
+        .tf-cal-head span { text-align: center; font-size: 9.5px; font-weight: 700; color: #80868b; padding: 2px 0; }
+        .tf-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+        .tf-day { height: 26px; border: 1px solid transparent; background: #f1f3f4; color: #202124; font-size: 11px; font-weight: 500; border-radius: 6px; cursor: pointer; transition: all 0.12s; padding: 0; text-align: center; }
+        .tf-day:hover:not(:disabled) { border-color: #1a73e8; color: #1a73e8; background: #e8f0fe; }
+        .tf-day.sel { background: #1a73e8; color: #ffffff; font-weight: 700; }
+        .tf-day.none { background: transparent; color: #c0c4c9; cursor: default; }
+        .tf-day.empty { visibility: hidden; }
         
         /* 2. Skupina: Zdroje + malé plus */
         .sources-group { display: flex; align-items: center; }
@@ -139,6 +163,12 @@
         .source-del-btn { border: none; background: transparent; color: #70757a; cursor: pointer; font-size: 16px; line-height: 1; width: 22px; height: 22px; padding: 0; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; touch-action: manipulation; transition: all 0.15s; }
         .source-del-btn:hover { color: #d93025; background: #fce8e6; }
         .source-del-btn:active { background: #fad2cf; }
+        .source-move-btn { border: none; background: transparent; color: #bdc1c6; cursor: pointer; font-size: 13px; line-height: 1; width: 18px; height: 18px; padding: 0; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; touch-action: manipulation; transition: all 0.15s; }
+        .source-move-btn:hover { color: #3c4043; background: #e8eaed; }
+        .source-move-btn:disabled { opacity: 0.25; cursor: default; }
+        .source-move-btn:disabled:hover { color: #bdc1c6; background: transparent; }
+        .close-all-btn { background: #fce8e6; color: #d93025; border: 1px solid #f5c6c2; padding: 2.5px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
+        .close-all-btn:hover { background: #fad2cf; border-color: #d93025; }
         
         .layers-dropdown { display: none; position: absolute; top: 38px; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 230px; max-width: calc(100vw - 20px); z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
         .layers-dropdown.open { display: block; }
@@ -248,8 +278,9 @@
             }
             .sources-dropdown {
                 width: 360px;
-                max-width: calc(100vw - 12px);
+                max-width: calc(100vw - 16px);
                 left: 0;
+                right: auto;
             }
             .source-controls-row {
                 padding-left: 24px;
@@ -295,7 +326,11 @@
                 max-width: 220px;
             }
             .sources-dropdown {
-                width: calc(100vw - 8px);
+                position: fixed;
+                top: calc(46px + var(--sat, 0px));
+                left: 4px;
+                right: auto;
+                width: min(380px, calc(100vw - 8px));
                 max-width: calc(100vw - 8px);
                 padding: 8px 6px;
             }
@@ -361,9 +396,15 @@
                 <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
             </button>
             <div id="mainMenuDropdown" class="dropdown-menu main-menu-dropdown" onclick="event.stopPropagation()">
-                <div class="dropdown-item" onclick="menuSelectLanguage()"><span id="menuLangItem">🌐 English</span></div>
+                <div class="lang-split" id="langSplit">
+                    <button class="lang-half active" id="langBtnCs" onclick="setLanguage('cs')">Čeština</button>
+                    <button class="lang-half" id="langBtnEn" onclick="setLanguage('en')">English</button>
+                </div>
+                <div class="lang-split" id="saveSplit">
+                    <button class="lang-half" onclick="menuExportPdf()">📄 PDF</button>
+                    <button class="lang-half" onclick="menuExportPng()">🖼️ PNG</button>
+                </div>
                 <div class="dropdown-item" onclick="menuOpenInfo()"><span id="menuInfoItem">ℹ️ Informace o aplikaci</span></div>
-                <div class="dropdown-item" onclick="menuExportPdf()"><span id="menuPdfItem">📄 Uložit mapu jako PDF</span></div>
             </div>
         </div>
         <!-- 1. Tlačítko: Seznam a správa zdrojů + malé plus -->
@@ -382,6 +423,7 @@
                         <button class="header-action-btn" onclick="unifyAllStyles()" id="btnSyncStyles" title="Sjednotit všechny parametry podle posledního upravovaného souboru">🎨 Sjednotit</button>
                         <button class="header-action-btn" onclick="resetAllDatasetStyles()" id="btnResetStyles" title="Obnovit výchozí styly">🔄 Reset</button>
                         <button class="add-mini-btn" onclick="document.getElementById('fileInput').click()" id="txtBtnAddMini">+ Přidat</button>
+                        <button class="close-all-btn" onclick="closeAllSources()" id="txtBtnCloseAll" title="Zavřít všechny zdroje">✕ Vše</button>
                     </div>
                 </div>
                 <div id="sourcesList" class="sources-list"></div>
@@ -389,7 +431,7 @@
         </div>
         <!-- 2. Tlačítko: Vše / Rok s počtem fotek -->
         <div style="position: relative;">
-            <button class="year-select-btn" onclick="toggleYearDropdown()" id="btnYearSelect">
+            <button class="year-select-btn" onclick="toggleYearDropdown()" id="btnYearSelect" title="Časový filtr (rok / měsíc / den)">
                 <span id="txtYearLabel">(0)</span>
                 <span class="caret">▼</span>
             </button>
@@ -451,9 +493,9 @@
             <div class="info-section-title" id="txtGuideTitle">📖 Návod k použití:</div>
             <ol class="info-steps" id="infoStepsList">
                 <li><details class="step"><summary>⚡ Datový soubor – první spuštění (ZÁKLAD)</summary><div class="step-body">Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript bleskově projde celou složku i podsložky bez modifikace fotek, vyčte GPS souřadnice z EXIF, Google JSON i Adobe XMP metadat a vytvoří datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, který mapa při otevření automaticky načte. Volbou <strong>2</strong> lze navíc zpracovat jen vybranou složku – v interaktivním prohlížeči složek přepínáte klávesami: čísla = vstup do podsložky, <strong>B</strong> = zpět nahoru, <strong>F</strong> / Enter = zpracovat aktuální složku, <strong>P</strong> = listování stránkami, <strong>K</strong> = konec.<br><em>⚠️ Důležité: Soubory <code>Mapa_Fotek.html</code> i <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte umístěné v hlavní kořenové složce s fotografiemi. Pokud HTML soubor přesunete do jiné složky, mapa se zobrazí, ale prohlížeč nenajde lokální miniatury a plnou velikost fotografií.</em></div></details></li>
-                <li><details class="step"><summary>☰ Tlačítko ☰ – menu (úplně vlevo nahoře)</summary><div class="step-body">Otevře nabídku se třemi volbami: 🌐 <strong>přepínač jazyka</strong> okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou, ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod s podrobným popisem ovládacích prvků a informacemi o verzi a autorovi, a 📄 <strong>Uložit mapu jako PDF</strong> vyexportuje aktuální pohled mapy se všemi zobrazenými objekty do PDF souboru – po kliknutí nejprve vyberete umístění a název souboru v klasickém okně „Uložit jako“, poté se PDF vytvoří a uloží. Výtisk se vykresluje ve vysokém rozlišení (4×), příprava proto může chvíli trvat.</div></details></li>
-                <li><details class="step"><summary>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů</summary><div class="step-body">Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zapínat/vypínat, odebírat a u každého souboru přímo volit jeho vlastní styl zobrazení (první volba druhého řádku) i barvy (8 palet heatmapy, 8 barev teček, 8 barev zóny výskytu či 8 barev GPS trasy). Tlačítkem <strong>🎨 Sjednotit</strong> v záhlaví panelu sjednotíte VEŠKERÉ parametry zobrazení (styl, barvy, sytost, velikost teček, poloměr zóny, resp. tloušťku čáry a velikost bodů) podle souboru, který jste naposledy upravovali – u souborů jiného typu se převede vše, co má společný základ (barva a průhlednost). Veškerá nastavení se automaticky trvale ukládají v prohlížeči.</div></details></li>
-                <li><details class="step"><summary>📅 Tlačítko [Vše (počet) ▼] – filtr roku</summary><div class="step-body">Otevírá rozbalovací nabídku pro filtrování fotografií podle roku pořízení. Můžete vybrat zobrazení kompletního archivu (<em>Vše</em>) nebo zvolit konkrétní rok. U každého roku vidíte přesný počet zaznamenaných fotek.</div></details></li>
+                <li><details class="step"><summary>☰ Tlačítko ☰ – menu (úplně vlevo nahoře)</summary><div class="step-body">Otevře nabídku: 🌐 <strong>přepínač jazyka</strong> přepne rozhraní mezi češtinou a angličtinou, 📄 <strong>PDF</strong> / 🖼️ <strong>PNG</strong> vyexportují pohled mapy ve vysokém rozlišení (4×) – PDF zahrnuje vektorové trasy, PNG je čistý rastrový výstup bez okrajů, a ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod. Načtené zdroje se automaticky ukládají a přežijí obnovení stránky (F5).</div></details></li>
+                <li><details class="step"><summary>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů</summary><div class="step-body">Číslo v závorce udává počet aktivních souborů. Kliknutím otevřete panel zdrojů, kde můžete soubory zapínat/vypínat, odebírat a přesouvat šipkami ▲▼. U každého souboru volíte styl zobrazení, barvy a parametry. GPS trasy podporují vyplněné polygony (barva + průhlednost výplně) automaticky z KML/GeoJSON souborů. Tlačítkem <strong>🎨 Sjednotit</strong> sjednotíte parametry podle posledně upraveného souboru. Tlačítko <strong>✕ Vše</strong> odebere všechny zdroje.</div></details></li>
+                <li><details class="step"><summary>📅 Tlačítko [Vše (počet) ▼] – časový filtr (rok / měsíc / den)</summary><div class="step-body">Otevírá časový filtr fotografií. Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok; po zvolení roku se nabídka rozbalí o mřížku měsíců a u vybraného měsíce i o kalendář dnů. U každé volby vidíte přesný počet fotek, prázdné volby jsou zašedlé. Opětovným kliknutím na vybranou položku se vrátíte o úroveň výš.</div></details></li>
                 <li><details class="step"><summary>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť</summary><div class="step-body">V panelu Zdroje je u každého souboru s fotografiemi na druhém řádku jako první volba tlačítko stylu, které nezávisle přepíná způsob jeho prezentace na mapě (5 režimů): <br>• 🔥 <strong>Heatmapa</strong> – plynulá tepelná mapa hustoty s plnou sytostí (100 % průhlednosti lze kdykoli snížit pill 💧), 8 volitelných palet: Fialová, Google Photos, Inferno, Smaragd, Oceán, Západ slunce, Magma, Neon. <br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v elegantních rámečcích přímo na mapě. <br>• 📍 <strong>Špendlíky</strong> – klasické klastrované body s počtem fotek a náhledovou kartou při kliknutí; barva bodu odpovídá barvě teček daného souboru. <br>• 🔴 <strong>Tečky</strong> – neshlukovaný bodový mrak; velikost teček (1–25 px) se nastavuje pilulkou 🔴 u daného souboru a barvy volí každý soubor z 8 odstínů. <br>• ⬤ <strong>Zóna výskytu</strong> – škrabací mapa zobrazující navštívená území jako souvislý okruh; poloměr 0–10 000 km s desetinnými čísly se nastavuje pilulkou ⬤ u daného souboru (0 = 1 m), výchozí sytost je 50 % a maximum 100 % je zcela neprůsvitné.</div></details></li>
                 <li><details class="step"><summary>➕ Tlačítko [+] – přidat soubor či trasu</summary><div class="step-body">Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).</div></details></li>
                 <li><details class="step"><summary>🗺️ Tlačítko mapových podkladů (vpravo)</summary><div class="step-body">Výběr ze 7 oficiálních mapových vrstev: <br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa. <br>• ⛰️ <strong>Google Terénní</strong> – plastický 3D reliéf pohoří, údolí a terénních nerovností. <br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky. <br>• 🌲 <strong>Mapy.cz Turistická</strong> – oficiální značené turistické i cyklistické trasy, vrstevnice a outdoorové body. <br>• 🗺️ <strong>Mapy.cz Základní</strong> – detailní česká kartografická mapa ČR i Evropy. <br>• 🛰️ <strong>Mapy.cz Letecká</strong> – vysoce detailní ortofotomapa a letecké snímky. <br>• 🌐 <strong>Esri Topo</strong> – podrobná celosvětová topografická mapa s vrstevnicemi.</div></details></li>
@@ -491,7 +533,11 @@
                 photosWord: "fotek",
                 allWord: "Vše",
                 btnSources: "Zdroje",
-                menuLangItem: "🌐 English",
+                monthsShort: ["Led", "Úno", "Bře", "Dub", "Kvě", "Čer", "Čvc", "Srp", "Zář", "Říj", "Lis", "Pro"],
+                wdShort: ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"],
+                tfYears: "Roky",
+                tfMonths: "Měsíce",
+                tfDays: "Dny",
                 menuInfoItem: "ℹ️ Informace o aplikaci",
                 menuPdfItem: "📄 Uložit mapu jako PDF",
                 btnAddMini: "+ Přidat",
@@ -499,17 +545,25 @@
                 titleSyncStyles: "Sjednotit všechny parametry podle posledního upravovaného souboru",
                 btnToggleAll: "👁️ Vše",
                 titleToggleAll: "Zapnout / vypnout všechny vrstvy",
-                titleZoneSlider: "1–100 km | 100–1000 km | 1000–10000 km. Hodnoty pod 1 km zadejte ručně do číselného pole.",
+                titleZoneSlider: "jemné 0–1 km (po 0,1) | hlavní 1–100 km (po 0,5) | 100–500 km (po 50) | 500–1000 km (po 100) | zbytek. Hodnoty pod 1 km zadejte do číselného pole.",
+                closeAll: "Zavřít vše",
+                confirmCloseAll: "Opravdu chcete zavřít všechny zdroje? Budou odstraněny všechny nahrané soubory i jejich vrstvy na mapě.",
+                moveUp: "Posunout výš",
+                moveDown: "Posunout níž",
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Obnovit výchozí barvy a průhlednost",
                 lblColor: "Barva / Paleta",
+                lblPointColor: "Barva bodů",
                 lblOpacity: "Průhlednost",
+                lblBlur: "Rozmazání",
                 lblViewStyle: "Styl zobrazení",
                 lblDotSize: "Velikost teček",
                 lblZoneRadius: "Poloměr zóny výskytu",
                 lblLineWidth: "Tloušťka čáry",
                 lblPointSize: "Velikost bodů",
                 lblPointIcon: "Ikona bodu",
+                lblFillColor: "Barva výplně",
+                lblFillOpacity: "Průhlednost výplně",
                 sourcesHeader: "Načtené datové soubory",
                 titleLayers: "Změnit mapový podklad",
                 lGoogle: "🗺️ Google (Klasická)",
@@ -537,6 +591,9 @@
                 toastPdfPreparing: "📄 Vytvářím PDF, chvíli strpení…",
                 toastPdfDone: "✅ PDF bylo uloženo",
                 toastPdfErr: "⚠️ Export do PDF se nezdařil",
+                toastPngPreparing: "🖼️ Vytvářím PNG, chvíli strpení…",
+                toastPngDone: "✅ PNG bylo uloženo",
+                toastStorageFull: "⚠️ Nedostatek místa v úložišti prohlížeče – zdroj se nepodařilo uložit.",
                 toastReset: "🔄 Styly byly obnoveny na výchozí",
                 noSources: "Žádné načtené soubory dat",
                 noFile: "Datový soubor Mapa_Fotek_data_*.txt nenalezen.<br>Spusťte Mapa_Fotek_aktualizace_dat.bat nebo přetáhněte data sem.",
@@ -550,7 +607,7 @@
                     "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong> Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript bleskově projde celou složku i podsložky bez modifikace fotek, vyčte GPS souřadnice z EXIF, Google JSON i Adobe XMP metadat a vytvoří datový soubor <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, který mapa při otevření automaticky načte. Volbou <strong>2</strong> lze navíc zpracovat jen vybranou složku – v interaktivním prohlížeči složek přepínáte klávesami: čísla = vstup do podsložky, <strong>B</strong> = zpět nahoru, <strong>F</strong> / Enter = zpracovat aktuální složku, <strong>P</strong> = listování stránkami, <strong>K</strong> = konec.<br><em>⚠️ Důležité: Soubory <code>Mapa_Fotek.html</code> i <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte umístěné v hlavní kořenové složce s fotografiemi. Pokud HTML soubor přesunete do jiné složky, mapa se zobrazí, ale prohlížeč nenajde lokální miniatury a plnou velikost fotografií.</em>",
                     "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong> Otevře nabídku se třemi volbami: 🌐 <strong>přepínač jazyka</strong> okamžitě přepne celé uživatelské rozhraní mapy, popisky i nápovědu mezi češtinou a angličtinou, ℹ️ <strong>Informace o aplikaci</strong> otevře tento návod s podrobným popisem ovládacích prvků a informacemi o verzi a autorovi, a 📄 <strong>Uložit mapu jako PDF</strong> vyexportuje aktuální pohled mapy se všemi zobrazenými objekty do PDF souboru – po kliknutí nejprve vyberete umístění a název souboru v klasickém okně „Uložit jako“, poté se PDF vytvoří a uloží. Výtisk se vykresluje ve vysokém rozlišení (4×), příprava proto může chvíli trvat.",
                     "<strong>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů:</strong> Číslo v závorce udává počet aktivních načtených souborů. Kliknutím otevřete panel zdrojů, kde můžete jednotlivé datové sady fotografií i GPS tras zapínat/vypínat, odebírat a u každého souboru přímo volit jeho vlastní styl zobrazení (první volba druhého řádku) i barvy (8 palet heatmapy, 8 barev teček, 8 barev zóny výskytu či 8 barev GPS trasy). Tlačítkem <strong>🎨 Sjednotit</strong> v záhlaví panelu sjednotíte VEŠKERÉ parametry zobrazení (styl, barvy, sytost, velikost teček, poloměr zóny, resp. tloušťku čáry a velikost bodů) podle souboru, který jste naposledy upravovali – u souborů jiného typu se převede vše, co má společný základ (barva a průhlednost). Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
-                    "<strong>📅 Tlačítko [Vše (počet) ▼] – filtr roku:</strong> Otevírá rozbalovací nabídku pro filtrování fotografií podle roku pořízení. Můžete vybrat zobrazení kompletního archivu (<em>Vše</em>) nebo zvolit konkrétní rok. U každého roku vidíte přesný počet zaznamenaných fotek.",
+                    "📅 Tlačítko [Vše (počet) ▼] – časový filtr (rok / měsíc / den):</strong> Otevírá časový filtr fotografií. Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok; po zvolení roku se nabídka rozbalí o mřížku měsíců a u vybraného měsíce i o kalendář dnů. U každé volby vidíte přesný počet fotek, prázdné volby jsou zašedlé. Opětovným kliknutím na vybranou položku se vrátíte o úroveň výš.",
                     "<strong>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť:</strong> V panelu Zdroje je u každého souboru s fotografiemi na druhém řádku jako první volba tlačítko stylu, které nezávisle přepíná způsob jeho prezentace na mapě (5 režimů):<br>• 🔥 <strong>Heatmapa</strong> – plynulá tepelná mapa hustoty s plnou sytostí (100 % průhlednosti lze kdykoli snížit pill 💧), 8 volitelných palet: Fialová, Google Photos, Inferno, Smaragd, Oceán, Západ slunce, Magma, Neon.<br>• 🖼️ <strong>Foto-karty</strong> – miniatury fotografií v elegantních rámečcích přímo na mapě.<br>• 📍 <strong>Špendlíky</strong> – klasické klastrované body s počtem fotek a náhledovou kartou při kliknutí; barva bodu odpovídá barvě teček daného souboru.<br>• 🔴 <strong>Tečky</strong> – neshlukovaný bodový mrak; velikost teček (1–25 px) se nastavuje pilulkou 🔴 u daného souboru a barvy volí každý soubor z 8 odstínů.<br>• ⬤ <strong>Zóna výskytu</strong> – škrabací mapa zobrazující navštívená území jako souvislý okruh; poloměr 0–10 000 km s desetinnými čísly se nastavuje pilulkou ⬤ u daného souboru (0 = 1 m), výchozí sytost je 50 % a maximum 100 % je zcela neprůsvitné.",
                     "<strong>➕ Tlačítko [+] – přidat soubor či trasu:</strong> Umožňuje rychle načíst další datový soubor fotografií (<code>.txt</code>) nebo GPS trasy a body zájmu (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>). Soubory můžete také jednoduše přetáhnout myší přímo do okna mapy (Drag &amp; Drop).",
                     "<strong>🗺️ Tlačítko mapových podkladů (vpravo):</strong> Výběr ze 7 oficiálních mapových vrstev:<br>• 🗺️ <strong>Google Klasická</strong> – standardní přehledná silniční a městská mapa.<br>• ⛰️ <strong>Google Terénní</strong> – plastický 3D reliéf pohoří, údolí a terénních nerovností.<br>• 🛰️ <strong>Google Satelitní</strong> – reálné letecké a družicové snímky povrchu s popisky.<br>• 🌲 <strong>Mapy.cz Turistická</strong> – oficiální značené turistické i cyklistické trasy, vrstevnice a outdoorové body.<br>• 🗺️ <strong>Mapy.cz Základní</strong> – detailní česká kartografická mapa ČR i Evropy.<br>• 🛰️ <strong>Mapy.cz Letecká</strong> – vysoce detailní ortofotomapa a letecké snímky.<br>• 🌐 <strong>Esri Topo</strong> – podrobná celosvětová topografická mapa s vrstevnicemi.",
@@ -561,7 +618,11 @@
                 photosWord: "photos",
                 allWord: "All",
                 btnSources: "Sources",
-                menuLangItem: "🌐 Čeština",
+                monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                wdShort: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+                tfYears: "Years",
+                tfMonths: "Months",
+                tfDays: "Days",
                 menuInfoItem: "ℹ️ About & Help",
                 menuPdfItem: "📄 Save map as PDF",
                 btnAddMini: "+ Add",
@@ -569,17 +630,25 @@
                 titleSyncStyles: "Unify all parameters to match the last edited file",
                 btnToggleAll: "👁️ All",
                 titleToggleAll: "Show or hide all datasets",
-                titleZoneSlider: "1-100 km | 100-1000 km | 1000-10000 km. Values below 1 km: type them into the number field.",
+                titleZoneSlider: "fine 0-1 km (by 0.1) | main 1-100 km (by 0.5) | 100-500 km (by 50) | 500-1000 km (by 100) | rest. Values below 1 km: type into the number field.",
+                closeAll: "Close all",
+                confirmCloseAll: "Do you really want to close all sources? All uploaded files and their map layers will be removed.",
+                moveUp: "Move up",
+                moveDown: "Move down",
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Reset colors and styles to default",
                 lblColor: "Color / Palette",
+                lblPointColor: "Point color",
                 lblOpacity: "Opacity",
+                lblBlur: "Blur",
                 lblViewStyle: "View style",
                 lblDotSize: "Dot size",
                 lblZoneRadius: "Coverage zone radius",
                 lblLineWidth: "Line width",
                 lblPointSize: "Point size",
                 lblPointIcon: "Waypoint icon",
+                lblFillColor: "Fill color",
+                lblFillOpacity: "Fill opacity",
                 sourcesHeader: "Loaded data files",
                 titleLayers: "Change map layer",
                 lGoogle: "🗺️ Google (Standard)",
@@ -607,6 +676,9 @@
                 toastPdfPreparing: "📄 Creating PDF, please wait…",
                 toastPdfDone: "✅ PDF saved",
                 toastPdfErr: "⚠️ PDF export failed",
+                toastPngPreparing: "🖼️ Creating PNG, please wait…",
+                toastPngDone: "✅ PNG saved",
+                toastStorageFull: "⚠️ Browser storage full – source could not be saved.",
                 toastReset: "🔄 Styles reset to defaults",
                 noSources: "No data sources loaded",
                 noFile: "Data file Mapa_Fotek_data_*.txt not found.<br>Run Mapa_Fotek_aktualizace_dat.bat or drag data here.",
@@ -620,7 +692,7 @@
                     "<strong>⚡ Data File – First Run (ESSENTIAL):</strong> Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script quickly scans folders and subfolders without modifying photos, reads GPS coordinates from EXIF, Google JSON and Adobe XMP metadata, and creates <code>Mapa_Fotek_data_YYYYMMDD.txt</code>, which the map loads automatically upon opening. Option <strong>2</strong> additionally processes a chosen folder only – in the interactive folder browser: number keys = enter subfolder, <strong>B</strong> = go back up, <strong>F</strong> / Enter = process current folder, <strong>P</strong> = page through results, <strong>K</strong> = quit.<br><em>⚠️ Important: Keep both <code>Mapa_Fotek.html</code> and <code>Mapa_Fotek_aktualizace_dat.bat</code> in the root folder containing your photos. If the HTML file is moved elsewhere, the map will display but local thumbnails and full-size photo viewing will not work.</em>",
                     "<strong>☰ Menu button (top left corner):</strong> Opens a menu with three options: the 🌐 <strong>language switch</strong> instantly toggles the entire user interface, tooltips, and help between Czech and English, ℹ️ <strong>About &amp; Help</strong> opens this guide with detailed control explanations and author/version info, and 📄 <strong>Save map as PDF</strong> exports the current map view with all displayed objects into a PDF file – after clicking, first choose the location and file name in the classic “Save as” dialog, then the PDF is created and saved. The export is rendered at high resolution (4x), so preparation may take a while.",
                     "<strong>📂 Button [Sources (count)] – data sources manager:</strong> The number in parentheses shows the count of active loaded files. Click to open the sources panel, where you can toggle datasets and GPS tracks on/off, remove them, and customize each file's view style (first option on the second row) and colors (8 heatmap palettes, 8 dot colors, 8 coverage zone colors, or 8 track colors). Use the <strong>🎨 Unify</strong> button in the panel header to unify ALL display parameters (style, colors, intensity, dot size, zone radius, or line width and point size) to match the file you edited last – for files of the other type, everything with a common basis (color and opacity) is converted. All settings are automatically saved in browser storage.",
-                    "<strong>📅 Button [All (count) ▼] – year filter:</strong> Opens a dropdown menu to filter photos by year taken. Choose <em>All</em> to view the complete archive or pick a specific year. Exact photo counts are shown next to each year.",
+                    "📅 Button [All (count) ▼] – time filter (year / month / day):</strong> Opens the photo time filter. Choose <em>All</em> for the complete archive or pick a specific year; once a year is selected, a month grid appears, and for a selected month also a day calendar. Exact photo counts are shown at every level, empty options are greyed out. Clicking the active item again steps back one level.",
                     "<strong>🎨 View style – selected separately per data file:</strong> In the Sources panel, every photo dataset has a style button as the first option on its second row, independently switching how that file is presented on the map (5 modes):<br>• 🔥 <strong>Heatmap</strong> – smooth density heatmap at full intensity (the 💧 pill can lower the 100% opacity anytime), 8 palettes per dataset: Classic Violet, Google Photos, Inferno, Emerald, Ocean, Sunset, Magma, Neon.<br>• 🖼️ <strong>Photo Cards</strong> – photo thumbnails in rounded cards directly on the map.<br>• 📍 <strong>Pins</strong> – clustered points with photo count and preview cards upon click; the pin color matches the file's dot color.<br>• 🔴 <strong>Dots</strong> – unclustered point cloud; dot size (1–25 px) is set via the file's 🔴 pill and each file picks from 8 colors.<br>• ⬤ <strong>Coverage Zone</strong> – scratch-map style buffer showing visited areas; radius 0–10 000 km with decimals is set via the file's ⬤ pill (0 = 1 m), default intensity is 50% and the maximum of 100% is fully opaque.",
                     "<strong>➕ Button [+] – add file or track:</strong> Allows you to quickly load additional photo data files (<code>.txt</code>) or GPS tracks &amp; waypoints (<code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>). You can also drag &amp; drop files directly into the map window.",
                     "<strong>🗺️ Map layers button (right):</strong> Choose from 7 official map styles:<br>• 🗺️ <strong>Google Standard</strong> – clean urban and street map.<br>• ⛰️ <strong>Google Terrain</strong> – 3D elevation relief and mountain ridges.<br>• 🛰️ <strong>Google Satellite</strong> – real aerial and satellite imagery with labels.<br>• 🌲 <strong>Mapy.cz Outdoor</strong> – official hiking and cycling trails with contour lines.<br>• 🗺️ <strong>Mapy.cz Basic</strong> – clean European cartography by Seznam.<br>• 🛰️ <strong>Mapy.cz Aerial</strong> – high-resolution aerial orthoimagery.<br>• 🌐 <strong>Esri Topo</strong> – worldwide topographic map with contours.",
@@ -685,7 +757,7 @@
             dark:   { fill: "#202124", border: "#000000" }
         };
 
-        var curYear = "all", heatLayers = [], photoClusterGroups = [], canvasLayerGroup = null;
+        var timePrefix = "all", heatLayers = [], photoClusterGroups = [], canvasLayerGroup = null;
         var fastCanvasRenderer = L.canvas({ padding: 0.5 });
 
         map.createPane('zonePane');
@@ -742,7 +814,7 @@
                     ctx.globalAlpha = Math.max(0.02, Math.min(1.0, alpha));
                     ctx.fillStyle = colDef.fill;
                     var grpKm = (grp.km === undefined || grp.km === null) ? 10 : parseFloat(grp.km);
-                    var radiusMeters = (!grpKm || grpKm === 0) ? 1 : grpKm * 1000;
+                    var radiusMeters = grpKm * 1000;
                     var rPixels = Math.max(1.5, radiusMeters / metersPerPixel);
                     ctx.beginPath();
                     for (var i = 0; i < pts.length; i++) {
@@ -799,20 +871,24 @@
             return (currentLang === "cs") ? s.replace(".", ",") : s;
         }
 
-        // Kusově lineární posuvník zóny: hodnoty pod 1 km jen ručně (číslo v poli),
-        // posuvník: 0–70 % = 1–100 km | 70–90 % = 100–1000 km | 90–100 % = 1000–10000 km.
-        var ZK_SLIDER_MAX = 300;
+        // Kusově lineární posuvník zóny: 0–1 km (10 bodů po 0,1) | 1–100 km (200 bodů po 0,5) |
+        // 100–500 km (8 bodů po 50) | 500–1000 km (5 bodů po 100) | 1000–10000 km (72 bodů ~125 km).
+        var ZK_SLIDER_MAX = 295;
         function zoneSliderFromKm(km) {
-            var v = Math.max(1, Math.min(10000, km));
-            if (v <= 100) return Math.round((v - 1) / 99 * 210);
-            if (v <= 1000) return 210 + Math.round((v - 100) / 900 * 60);
-            return 270 + Math.round((v - 1000) / 9000 * 30);
+            var v = Math.max(0, Math.min(10000, km));
+            if (v <= 1) return Math.round(v * 10);
+            if (v <= 100) return 10 + Math.round((v - 1) * 200 / 99);
+            if (v <= 500) return 210 + Math.round((v - 100) * 8 / 400);
+            if (v <= 1000) return 218 + Math.round((v - 500) * 5 / 500);
+            return 223 + Math.round((v - 1000) * 72 / 9000);
         }
         function zoneKmFromSlider(s) {
             s = Math.max(0, Math.min(ZK_SLIDER_MAX, Math.round(s)));
-            if (s <= 210) return Math.round((1 + s / 210 * 99) * 10) / 10;
-            if (s <= 270) return Math.round((100 + (s - 210) * 15) / 5) * 5;
-            return Math.round(1000 + (s - 270) * 300);
+            if (s <= 10) return Math.round(s * 10) / 100;
+            if (s <= 210) return Math.round((1 + (s - 10) * 99 / 200) * 10) / 10;
+            if (s <= 218) return Math.round(100 + (s - 210) * 400 / 8);
+            if (s <= 223) return Math.round(500 + (s - 218) * 500 / 5);
+            return Math.round(1000 + (s - 223) * 9000 / 72);
         }
 
         // Plynulé slidery: hodnoty se aktualizují okamžitě, náročné překreslení/ukládání se odloží
@@ -856,13 +932,16 @@
             currentLang = l;
             try { localStorage.setItem("mapa_fotek_lang", l); } catch(e) {}
             var t = i18n[l];
-            var miLang = document.getElementById("menuLangItem");
-            if (miLang) miLang.textContent = t.menuLangItem;
+            // Přepínač jazyka: zvýrazni aktivní jazyk (oba názvy zůstávají viditelné)
+            var optCs = document.getElementById("langBtnCs");
+            var optEn = document.getElementById("langBtnEn");
+            if (optCs) optCs.classList.toggle("active", l === "cs");
+            if (optEn) optEn.classList.toggle("active", l === "en");
             var miInfo = document.getElementById("menuInfoItem");
             if (miInfo) miInfo.textContent = t.menuInfoItem;
-            var miPdf = document.getElementById("menuPdfItem");
-            if (miPdf) miPdf.textContent = t.menuPdfItem;
             document.getElementById("txtBtnAddMini").textContent = t.btnAddMini;
+            var btnCloseAll = document.getElementById("txtBtnCloseAll");
+            if (btnCloseAll) { btnCloseAll.textContent = "✕ " + t.closeAll; btnCloseAll.title = t.confirmCloseAll; }
             var btnSync = document.getElementById("btnSyncStyles");
             if (btnSync) {
                 btnSync.textContent = t.btnSyncStyles;
@@ -965,14 +1044,9 @@
         function menuSelectLanguage() { toggleLanguage(); closeMenuDropdown(); }
         function menuOpenInfo() { openInfoModal(); closeMenuDropdown(); }
 
-        // ═══ EXPORT MAPY DO PDF (html2canvas + jsPDF, uložení přes systémový dialog "Uložit jako") ═══
-        var PDF_LIB_H2C = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-        var PDF_LIB_JSPDF = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
-
-        function pdfSuggestedName() {
-            var d = new Date();
-            return "Mapa_Fotek_" + d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0") + ".pdf";
-        }
+        // ═══ EXPORT: html2canvas scale:2 ═══
+        var EXPORT_LIB_H2C = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+        var EXPORT_LIB_JSPDF = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
 
         function loadScriptOnce(url, cb) {
             var old = document.querySelector('script[data-pdfsrc="' + url + '"]');
@@ -990,172 +1064,166 @@
             document.head.appendChild(s);
         }
 
-        function menuExportPdf() {
-            closeMenuDropdown();
-            closeAllPopovers();
-            var t = i18n[currentLang];
-
-            // Dialog "Uložit jako" musí být otevřen hned v kontextu kliknutí (požadavek prohlížeče na user gesture),
-            // samotné vykreslení PDF proběhne až poté a výsledek se do vybraného souboru zapíše.
-            if (window.showSaveFilePicker) {
-                window.showSaveFilePicker({
-                    suggestedName: pdfSuggestedName(),
-                    types: [{ description: "PDF dokument", accept: { "application/pdf": [".pdf"] } }]
-                }).then(function(handle) {
-                    startPdfPipeline(handle, t);
-                }).catch(function(err) {
-                    if (err && err.name === "AbortError") return; // uživatel zrušil dialog
-                    startPdfPipeline(null, t); // např. vypršená aktivace → fallback stažení
-                });
-            } else {
-                startPdfPipeline(null, t);
-            }
+        function stamp() {
+            var d = new Date();
+            return "Mapa_Fotek_" + d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
         }
 
-        function startPdfPipeline(fileHandle, t) {
-            showToast(t.toastPdfPreparing || "📄 Vytvářím PDF…");
-            if (!window.__pdfState) window.__pdfState = {};
-            window.__pdfState.started = true;
-
-            loadScriptOnce(PDF_LIB_H2C, function(e1) {
-                if (e1) { window.__pdfState.error = "h2c"; showToast(t.toastPdfErr); return; }
-                loadScriptOnce(PDF_LIB_JSPDF, function(e2) {
-                    if (e2 || !window.jspdf) { window.__pdfState.error = "jspdf"; showToast(t.toastPdfErr); return; }
-                    renderMapToPdf(fileHandle, t);
-                });
-            });
-        }
-
-        function renderMapToPdf(fileHandle, t) {
-            var mapEl = document.getElementById("map");
-            if (!mapEl || typeof html2canvas === "undefined" || !window.jspdf || typeof map === "undefined" || !map) {
-                window.__pdfState.error = "missing";
-                showToast(t.toastPdfErr);
-                return;
-            }
-
-            // Ovládací prvků zoomu se při zachytávání zbavíme (atribuce zůstává kvůli licencím podkladů)
-            var zoomCtl = mapEl.querySelector(".leaflet-control-zoom");
-            var prevDisp = zoomCtl ? zoomCtl.style.display : null;
-            if (zoomCtl) zoomCtl.style.display = "none";
-
-            // VYSOKÉ ROZLIŠENÍ (supersampling ~4× vůči obrazovce):
-            // 1) kontejner mapy se dočasně zvětší na 2× a mapa se posune o 1 úroveň zoomu výš –
-            //    stejný geografický záběr, ale dlaždice stažené s dvojnásobným detailem;
-            // 2) html2canvas zachytí s scale=2 => celkově ~4× více pixelů než na displeji.
-            var SS = 2; // zvětšení kontejneru
-            var prevW = mapEl.style.width, prevH = mapEl.style.height;
-            var center = map.getCenter(), zoom = map.getZoom();
-
-            var restored = false;
-            function restore() {
-                if (restored) return;
-                restored = true;
-                mapEl.style.width = prevW;
-                mapEl.style.height = prevH;
-                if (zoomCtl) zoomCtl.style.display = prevDisp;
-                map.invalidateSize({ pan: false });
-                map.setView(center, zoom);
-                if (window.__pdfState) window.__pdfState.zoomRestored = true;
-            }
-
-            function waitForTiles(cb) {
-                // Počkáme na dohrání dlaždic všech podkladů (s pojistným limitem).
-                var layers = [];
-                map.eachLayer(function(l) { if (l instanceof L.TileLayer) layers.push(l); });
-                if (layers.length === 0) { setTimeout(cb, 500); return; }
-                var remaining = layers.length;
-                var finished = false;
-                function fin() { if (!finished) { finished = true; setTimeout(cb, 200); } }
-                var guard = setTimeout(fin, 4000);
-                layers.forEach(function(l) {
-                    var h = function() { l.off("load", h); remaining--; if (remaining <= 0) { clearTimeout(guard); fin(); } };
-                    l.on("load", h);
-                });
-            }
-
-            function capture() {
-                // ochranné limity canvasu (paměť / maximální rozměry)
-                var outW = mapEl.clientWidth * SS, outH = mapEl.clientHeight * SS;
-                var scale = Math.min(SS, 10000 / Math.max(outW, outH));
-                scale = Math.max(1, Math.min(scale, Math.sqrt(60000000 / (outW * outH))));
-                window.__pdfState.outPx = outW + "x" + outH;
-
-                html2canvas(mapEl, {
-                    useCORS: true,
-                    allowTaint: false,
-                    backgroundColor: "#ffffff",
-                    logging: false,
-                    imageTimeout: 30000,
-                    scale: scale
-                }).then(function(canvas) {
-                    restore();
-                    try {
-                        var landscape = canvas.width >= canvas.height;
-                        var pdf = new window.jspdf.jsPDF({ orientation: landscape ? "landscape" : "portrait", unit: "mm", format: "a4", compress: true });
-                        var pw = pdf.internal.pageSize.getWidth();
-                        var ph = pdf.internal.pageSize.getHeight();
-                        var margin = 8;
-                        var ratio = Math.min((pw - margin * 2) / canvas.width, (ph - margin * 2) / canvas.height);
-                        var w = canvas.width * ratio;
-                        var h = canvas.height * ratio;
-                        pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (pw - w) / 2, (ph - h) / 2, w, h);
-
-                        var blob = pdf.output("blob");
-                        window.__pdfState.captured = true;
-                        window.__pdfState.blobBytes = blob.size;
-
-                        if (fileHandle) {
-                            fileHandle.createWritable().then(function(writable) {
-                                return blob.stream().pipeTo(writable).then(function() {
-                                    window.__pdfState.wrote = "picker";
-                                    showToast(t.toastPdfDone);
-                                });
-                            }).catch(function() {
-                                downloadPdfFallback(blob);
-                                window.__pdfState.wrote = "download";
-                                showToast(t.toastPdfDone);
-                            });
-                        } else {
-                            downloadPdfFallback(blob);
-                            window.__pdfState.wrote = "download";
-                            showToast(t.toastPdfDone);
-                        }
-                    } catch (err) {
-                        window.__pdfState.error = "render:" + (err && err.message ? err.message : "?");
-                        showToast(t.toastPdfErr);
-                    }
-                }).catch(function(err) {
-                    restore();
-                    window.__pdfState.error = "capture:" + (err && err.message ? err.message : "?");
-                    showToast(t.toastPdfErr);
-                });
-            }
-
-            try {
-                window.__pdfState.supersample = SS;
-                mapEl.style.width = (mapEl.clientWidth * SS) + "px";
-                mapEl.style.height = (mapEl.clientHeight * SS) + "px";
-                map.invalidateSize({ pan: false });
-                var zTarget = zoom + 1;
-                if (map.getMaxZoom && isFinite(map.getMaxZoom())) zTarget = Math.min(zTarget, map.getMaxZoom());
-                map.setView(center, zTarget);
-                waitForTiles(capture);
-            } catch (err) {
-                restore();
-                window.__pdfState.error = "prepare:" + (err && err.message ? err.message : "?");
-                showToast(t.toastPdfErr);
-            }
-        }
-
-        function downloadPdfFallback(blob) {
+        function downloadBlob(blob, filename) {
             var a = document.createElement("a");
             a.href = URL.createObjectURL(blob);
-            a.download = pdfSuggestedName();
+            a.download = filename;
             a.style.display = "none";
             document.body.appendChild(a);
             a.click();
             setTimeout(function() { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+        }
+
+        function expandMapA4(mapContainer) {
+            var origW = mapContainer.clientWidth;
+            var origH = mapContainer.clientHeight;
+            var a4r = 297 / 210;
+            var targetW, targetH, shiftX = 0, shiftY = 0;
+
+            if (origW >= origH) {
+                if (origW / origH >= a4r) {
+                    targetW = origW;
+                    targetH = Math.ceil(origW / a4r);
+                } else {
+                    targetH = origH;
+                    targetW = Math.ceil(origH * a4r);
+                }
+                shiftX = Math.ceil((targetW - origW) / 2);
+            } else {
+                if (origH / origW >= a4r) {
+                    targetH = origH;
+                    targetW = Math.ceil(origH / a4r);
+                } else {
+                    targetW = origW;
+                    targetH = Math.ceil(origW * a4r);
+                }
+                shiftY = Math.ceil((targetH - origH) / 2);
+            }
+
+            var landscape = origW >= origH;
+            var origHVal = mapContainer.style.height;
+            var origWVal = mapContainer.style.width;
+            var origMTop = mapContainer.style.marginTop;
+            var origMLft = mapContainer.style.marginLeft;
+            var origOVal = mapContainer.style.overflow;
+            mapContainer.style.overflow = "hidden";
+            mapContainer.style.height = targetH + "px";
+            mapContainer.style.width = targetW + "px";
+            if (shiftY) mapContainer.style.marginTop = -shiftY + "px";
+            if (shiftX) mapContainer.style.marginLeft = -shiftX + "px";
+            map.invalidateSize({ animate: false });
+            var ctrlContainer = mapContainer.querySelector(".leaflet-control-container");
+            if (ctrlContainer) ctrlContainer.style.display = "none";
+            var svgs = mapContainer.querySelectorAll(".leaflet-overlay-pane svg");
+            svgs.forEach(function(s) { s.style.display = "none"; });
+            return { targetW: targetW, targetH: targetH, landscape: landscape, restore: function() {
+                mapContainer.style.height = origHVal;
+                mapContainer.style.width = origWVal;
+                mapContainer.style.marginTop = origMTop;
+                mapContainer.style.marginLeft = origMLft;
+                mapContainer.style.overflow = origOVal;
+                map.invalidateSize({ animate: false });
+                if (ctrlContainer) ctrlContainer.style.display = "";
+                svgs.forEach(function(s) { s.style.display = ""; });
+            }};
+        }
+
+        function waitForTileLayers(cb) {
+            var layers = [];
+            map.eachLayer(function(l) { if (l instanceof L.TileLayer) layers.push(l); });
+            if (layers.length === 0) { setTimeout(cb, 600); return; }
+            var rem = layers.length;
+            var done = false;
+            function fin() { if (!done) { done = true; setTimeout(cb, 400); } }
+            var guard = setTimeout(fin, 5000);
+            layers.forEach(function(l) {
+                var h = function() { l.off("load", h); rem--; if (rem <= 0) { clearTimeout(guard); fin(); } };
+                l.on("load", h);
+            });
+        }
+
+        function captureA4(mapContainer, targetW, targetH) {
+            return html2canvas(mapContainer, {
+                useCORS: true,
+                allowTaint: true,
+                scale: 2,
+                logging: false,
+                width: targetW,
+                height: targetH
+            });
+        }
+
+        function menuExportPng() {
+            closeMenuDropdown(); closeAllPopovers();
+
+            function doExport() {
+                showToast(i18n[currentLang].toastPngPreparing || "🖼️ Vytvářím PNG…");
+                var mapContainer = document.getElementById("map");
+                if (!mapContainer || !map) { showToast("Chyba"); return; }
+
+                var ctx = expandMapA4(mapContainer);
+                waitForTileLayers(function() {
+                    captureA4(mapContainer, ctx.targetW, ctx.targetH).then(function(canvas) {
+                        ctx.restore();
+                        canvas.toBlob(function(blob) {
+                            if (!blob) { showToast("Chyba při exportu"); return; }
+                            downloadBlob(blob, stamp() + ".png");
+                            showToast(i18n[currentLang].toastPngDone || "🖼️ PNG uloženo");
+                        }, "image/png");
+                    }).catch(function(err) {
+                        ctx.restore();
+                        console.error("Export PNG selhal:", err);
+                        showToast("Chyba při exportu");
+                    });
+                });
+            }
+
+            if (typeof html2canvas !== "undefined") { doExport(); }
+            else { loadScriptOnce(EXPORT_LIB_H2C, function(e) { if (e) { showToast("Chyba: html2canvas se nepodařilo načíst"); return; } doExport(); }); }
+        }
+
+        function menuExportPdf() {
+            closeMenuDropdown(); closeAllPopovers();
+
+            function doExport() {
+                showToast(i18n[currentLang].toastPdfPreparing || "📄 Vytvářím PDF…");
+                var mapContainer = document.getElementById("map");
+                if (!mapContainer || !map) { showToast("Chyba"); return; }
+                if (!window.jspdf) { loadScriptOnce(EXPORT_LIB_JSPDF, function(e) { if (e) { showToast("Chyba: jsPDF se nepodařilo načíst"); return; } doExport(); }); return; }
+
+                var ctx = expandMapA4(mapContainer);
+                waitForTileLayers(function() {
+                    captureA4(mapContainer, ctx.targetW, ctx.targetH).then(function(canvas) {
+                        ctx.restore();
+                        try {
+                            var data = canvas.toDataURL("image/jpeg", 0.92);
+                            var pdf = new window.jspdf.jsPDF({ orientation: ctx.landscape ? "landscape" : "portrait", unit: "mm", format: "a4", compress: true });
+                            var pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight();
+                            var m = 3;
+                            var r = Math.min((pw - m * 2) / canvas.width, (ph - m * 2) / canvas.height);
+                            var iw = canvas.width * r, ih = canvas.height * r;
+                            pdf.addImage(data, "JPEG", (pw - iw) / 2, (ph - ih) / 2, iw, ih);
+                            downloadBlob(pdf.output("blob"), stamp() + ".pdf");
+                            showToast(i18n[currentLang].toastPdfDone);
+                        } catch (err) {
+                            console.error("Export PDF selhal:", err);
+                            showToast("Chyba při exportu PDF");
+                        }
+                    }).catch(function(err) {
+                        ctx.restore();
+                        console.error("Export PDF selhal:", err);
+                        showToast("Chyba při exportu");
+                    });
+                });
+            }
+
+            if (typeof html2canvas !== "undefined") { doExport(); }
+            else { loadScriptOnce(EXPORT_LIB_H2C, function(e) { if (e) { showToast("Chyba: html2canvas se nepodařilo načíst"); return; } doExport(); }); }
         }
 
         function closeOtherDropdowns(keep) {
@@ -1208,7 +1276,7 @@
         function closeLightbox() { document.getElementById("lightbox").classList.remove("active"); }
         document.addEventListener("keydown", function(e) { if (e.key === "Escape") { closeLightbox(); closeInfoModal(); } });
 
-        var tracksLayerGroup = L.layerGroup().addTo(map);
+        var sourceLayerGroups = [];
         var trackColors = ["#1a73e8", "#e53935", "#00897b", "#8e24aa", "#fb8c00", "#3949ab", "#43a047", "#d81b60"];
         var trackColorIdx = 0;
 
@@ -1223,17 +1291,28 @@
             return R * c;
         }
 
+        var sourceLayerGroups = [];
         function rebuild() {
             rawData = [];
-            tracksLayerGroup.clearLayers();
+            for (var si = 0; si < sourceLayerGroups.length; si++) { map.removeLayer(sourceLayerGroups[si]); }
+            sourceLayerGroups = [];
+            if (photoClusterGroups) { photoClusterGroups.forEach(function(pg) { try { map.removeLayer(pg.group); } catch(e){} }); photoClusterGroups = []; }
+            if (heatLayers) { heatLayers.forEach(function(hl) { try { map.removeLayer(hl.layer); } catch(e){} }); heatLayers = []; }
+            if (canvasLayerGroup) { try { map.removeLayer(canvasLayerGroup); } catch(e){} canvasLayerGroup.clearLayers(); canvasLayerGroup = null; }
+            if (zoneLayerInstance) { try { map.removeLayer(zoneLayerInstance); } catch(e){} zoneLayerInstance = null; }
             var ks = Object.keys(datasets), ac = 0;
             for (var i = 0; i < ks.length; i++) {
                 var d = datasets[ks[i]];
                 if (d.active) {
                     ac++;
+                    var lg = L.layerGroup();
                     if (d.type === "track") {
-                        renderTrackOnMap(d);
-                    } else {
+                        renderTrackOnMap(d, lg);
+                    }
+                    lg.addTo(map);
+                    sourceLayerGroups.push(lg);
+                    d._layerGroup = lg;
+                    if (d.type !== "track") {
                         var itm = d.items || [];
                         for (var j = 0; j < itm.length; j++) rawData.push(itm[j]);
                     }
@@ -1323,7 +1402,7 @@
 
         function createTrackPointIcon(d) {
             var sz = d.pointSize || 14;
-            var col = d.color || "#1a73e8";
+            var col = d.pointColor || d.color || "#1a73e8";
             var iconType = d.pointIcon || "dot";
             var op = (d.trackOpacity !== undefined ? d.trackOpacity : 85) / 100;
 
@@ -1345,9 +1424,32 @@
             });
         }
 
-        function renderTrackOnMap(d) {
+        function renderTrackOnMap(d, targetGroup) {
+            var lg = targetGroup;
             var trackOp = (d.trackOpacity !== undefined ? d.trackOpacity : 85) / 100;
             var lineWeight = d.lineWidth || 4.5;
+
+            // 0. Vykreslení polygonů (obrysy vždy, výplň volitelná) – pod čarami
+            if (d.polygons && d.polygons.length > 0) {
+                for (var pg = 0; pg < d.polygons.length; pg++) {
+                    var poly = d.polygons[pg];
+                    if (!poly.outer || poly.outer.length < 3) continue;
+                    var fColor = d.fillColor !== undefined ? d.fillColor : poly.fillColor;
+                    var fOp = d.fillOpacity !== undefined ? d.fillOpacity : (poly.fillOpacity !== null && poly.fillOpacity !== undefined ? poly.fillOpacity : 0);
+                    var outlineColor = d.color || "#1a73e8";
+                    var rings = [poly.outer];
+                    if (poly.holes) for (var h = 0; h < poly.holes.length; h++) rings.push(poly.holes[h]);
+                    var lPoly = L.polygon(rings, {
+                        color: outlineColor,
+                        weight: d.lineWidth || 4.5,
+                        opacity: trackOp,
+                        fillColor: fColor || "transparent",
+                        fillOpacity: fOp
+                    });
+                    lPoly.bindPopup("<div style='padding:6px 8px;font-size:12px;'>" + escapeHtml(poly.name || d.title || d.name) + "</div>");
+                    lg.addLayer(lPoly);
+                }
+            }
 
             // 1. Vykreslení linií (tras / úseků)
             if (d.lines && d.lines.length > 0) {
@@ -1376,7 +1478,7 @@
                         "<button onclick='zoomToTrack(\"" + encodeURIComponent(d.name) + "\")' class='c-btn c-btn-primary' style='display:block;width:100%;border:none;cursor:pointer;padding:4px 0;margin-top:4px;'>" + (currentLang === 'cs' ? "🔍 Přiblížit celou trasu" : "🔍 Zoom to track") + "</button>" +
                         "</div>";
                     poly.bindPopup(popupContent);
-                    tracksLayerGroup.addLayer(poly);
+                    lg.addLayer(poly);
                 }
             }
 
@@ -1390,13 +1492,13 @@
                     var pDesc = escapeHtml(pt.desc || "");
                     var ptPop = "<div style='padding:6px 8px;font-size:12px;min-width:140px;'>" +
                         "<div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
-                        "<span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:" + (d.color || "#1a73e8") + ";'></span> " +
+                        "<span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:" + (d.pointColor || d.color || "#1a73e8") + ";'></span> " +
                         pTitle + "</div>" +
                         (pDesc ? ("<div style='color:#5f6368;font-size:11px;line-height:1.4;margin-bottom:4px;'>" + pDesc + "</div>") : "") +
                         "<div style='color:#80868b;font-size:10px;font-family:monospace;'>" + pt.lat.toFixed(5) + ", " + pt.lon.toFixed(5) + "</div>" +
                         "</div>";
                     marker.bindPopup(ptPop);
-                    tracksLayerGroup.addLayer(marker);
+                    lg.addLayer(marker);
                 }
             }
         }
@@ -1422,6 +1524,93 @@
             }
         }
 
+        // --- Source persistence (survive F5 refresh) ---
+        function saveStoredSource(name, rawContent) {
+            try {
+                var idxKey = "mapa_fotek_saved_sources_idx";
+                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+                var srcKey = "mf_src_" + name;
+                localStorage.setItem(srcKey, rawContent);
+                if (idx.indexOf(name) === -1) { idx.push(name); localStorage.setItem(idxKey, JSON.stringify(idx)); }
+            } catch(e) {
+                console.warn("saveStoredSource failed for '" + name + "':", e.message || e);
+                if (e.name === "QuotaExceededError" || e.code === 22 || e.code === 1014) {
+                    var t = i18n[currentLang];
+                    showToast("⚠️ " + (t.toastStorageFull || "Nedostatek místa v úložišti prohlížeče. Zdroj " + name + " se nepodařilo uložit."));
+                }
+            }
+        }
+        function removeStoredSource(name) {
+            try {
+                var idxKey = "mapa_fotek_saved_sources_idx";
+                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+                var srcKey = "mf_src_" + name;
+                localStorage.removeItem(srcKey);
+                var pos = idx.indexOf(name); if (pos !== -1) { idx.splice(pos, 1); localStorage.setItem(idxKey, JSON.stringify(idx)); }
+            } catch(e) {}
+        }
+        function loadStoredSources() {
+            try {
+                var idxKey = "mapa_fotek_saved_sources_idx";
+                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+                if (idx.length === 0) {
+                    var legacy = localStorage.getItem("mapa_fotek_saved_sources");
+                    if (legacy) {
+                        try {
+                            var legacyObj = JSON.parse(legacy);
+                            var legacyNames = Object.keys(legacyObj);
+                            for (var li = 0; li < legacyNames.length; li++) {
+                                var ln = legacyNames[li];
+                                if (legacyObj[ln]) saveStoredSource(ln, legacyObj[ln]);
+                            }
+                            localStorage.removeItem("mapa_fotek_saved_sources");
+                            idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+                        } catch(le) { console.warn("Legacy migration failed:", le); }
+                    }
+                }
+                if (idx.length === 0) return;
+                for (var i = 0; i < idx.length; i++) {
+                    var name = idx[i];
+                    var content = localStorage.getItem("mf_src_" + name);
+                    if (!content) continue;
+                    var lower = name.toLowerCase();
+                    if (datasets[name]) continue;
+                    try {
+                        var trk;
+                        if (lower.endsWith(".txt")) {
+                            addDS(content, name);
+                        } else if (lower.endsWith(".gpx")) {
+                            trk = parseGpx(content, name);
+                        } else if (lower.endsWith(".kml") || lower.endsWith(".kmz")) {
+                            trk = parseKml(content, name);
+                            if (trk && lower.endsWith(".kmz")) trk.format = "KMZ";
+                        } else if (lower.endsWith(".geojson") || lower.endsWith(".json")) {
+                            trk = parseGeoJson(content, name);
+                        }
+                        if (trk) {
+                            var sv = getSavedDatasetStyle(name);
+                            if (sv) {
+                                if (sv.color) trk.color = sv.color;
+                                if (sv.pointColor) trk.pointColor = sv.pointColor;
+                                if (sv.trackOpacity !== undefined) trk.trackOpacity = sv.trackOpacity;
+                                if (sv.lineWidth !== undefined) trk.lineWidth = sv.lineWidth;
+                                if (sv.pointSize !== undefined) trk.pointSize = sv.pointSize;
+                                if (sv.pointIcon) trk.pointIcon = sv.pointIcon;
+                                if (sv.fillColor !== undefined) trk.fillColor = sv.fillColor;
+                                if (sv.fillOpacity !== undefined) trk.fillOpacity = sv.fillOpacity;
+                            }
+                            if (trk.trackOpacity === undefined) trk.trackOpacity = 85;
+                            if (trk.lineWidth === undefined) trk.lineWidth = 4.5;
+                            if (trk.pointSize === undefined) trk.pointSize = 14;
+                            if (!trk.pointIcon) trk.pointIcon = "dot";
+                            datasets[trk.name] = trk;
+                        }
+                    } catch(e) {}
+                }
+                rebuild();
+            } catch(e) {}
+        }
+
         function saveDatasetStyles() {
             try {
                 var mapStyles = {};
@@ -1431,6 +1620,7 @@
                         mode: d.mode,
                         heatPalette: d.heatPalette,
                         heatOpacity: d.heatOpacity,
+                        heatBlur: d.heatBlur,
                         dotColor: d.dotColor,
                         dotOpacity: d.dotOpacity,
                         dotSize: d.dotSize,
@@ -1438,10 +1628,13 @@
                         zoneOpacity: d.zoneOpacity,
                         zoneKm: d.zoneKm,
                         color: d.color,
+                        pointColor: d.pointColor,
                         trackOpacity: d.trackOpacity,
                         lineWidth: d.lineWidth,
                         pointSize: d.pointSize,
-                        pointIcon: d.pointIcon
+                        pointIcon: d.pointIcon,
+                        fillColor: d.fillColor,
+                        fillOpacity: d.fillOpacity
                     };
                 });
                 localStorage.setItem("mapa_fotek_dataset_styles", JSON.stringify(mapStyles));
@@ -1473,6 +1666,7 @@
                     d.mode = defaultPhotoMode;
                     d.heatPalette = palSequence[(photoIdx) % palSequence.length];
                     d.heatOpacity = 100;
+                    d.heatBlur = 25;
                     d.dotColor = dotSequence[(photoIdx) % dotSequence.length];
                     d.dotOpacity = 50;
                     d.dotSize = 3.5;
@@ -1499,6 +1693,35 @@
             if (ks.length === 0) return;
             var allActive = ks.every(function(k) { return datasets[k].active; });
             ks.forEach(function(k) { datasets[k].active = !allActive; });
+            rebuild();
+        }
+
+        function closeAllSources() {
+            var t = i18n[currentLang];
+            var ks = Object.keys(datasets);
+            if (ks.length === 0) return;
+            if (!confirm(t.confirmCloseAll)) return;
+            datasets = {};
+            try {
+                var idxKey = "mapa_fotek_saved_sources_idx";
+                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+                for (var i = 0; i < idx.length; i++) { localStorage.removeItem("mf_src_" + idx[i]); }
+                localStorage.removeItem(idxKey);
+                localStorage.removeItem("mapa_fotek_saved_sources");
+            } catch(e) {}
+            rebuild();
+        }
+
+        function moveSource(key, dir) {
+            var ks = Object.keys(datasets);
+            var idx = ks.indexOf(key);
+            if (idx === -1) return;
+            var target = idx + dir;
+            if (target < 0 || target >= ks.length) return;
+            var tmp = ks[idx]; ks[idx] = ks[target]; ks[target] = tmp;
+            var newDatasets = {};
+            ks.forEach(function(k) { newDatasets[k] = datasets[k]; });
+            datasets = newDatasets;
             rebuild();
         }
 
@@ -1534,6 +1757,7 @@
                         d.mode = src.mode || defaultPhotoMode;
                         d.heatPalette = src.heatPalette || "classic";
                         d.heatOpacity = src.heatOpacity !== undefined ? src.heatOpacity : 100;
+                        d.heatBlur = src.heatBlur !== undefined ? src.heatBlur : 25;
                         d.dotColor = src.dotColor || "red";
                         d.dotOpacity = src.dotOpacity !== undefined ? src.dotOpacity : 50;
                         d.dotSize = parseDotSize(src.dotSize, 3.5);
@@ -1558,10 +1782,13 @@
                     if (d.type === "track") {
                         // trasa ← trasa: kompletní kopie stylu
                         d.color = src.color || "#1a73e8";
+                        d.pointColor = src.pointColor || src.color || "#1a73e8";
                         d.trackOpacity = src.trackOpacity !== undefined ? src.trackOpacity : 85;
                         d.lineWidth = src.lineWidth !== undefined ? src.lineWidth : 4.5;
                         d.pointSize = src.pointSize !== undefined ? src.pointSize : 14;
                         d.pointIcon = src.pointIcon || "dot";
+                        if (src.fillColor !== undefined) d.fillColor = src.fillColor;
+                        if (src.fillOpacity !== undefined) d.fillOpacity = src.fillOpacity;
                     } else {
                         // fotky ← trasa: barva teček i zóny podle barvy trasy, sytost podle trasy
                         var key = dotKeyByFill(src.color) || "blue";
@@ -1745,6 +1972,23 @@
                 }
                 ri.appendChild(bd);
                 
+                var ks_all = Object.keys(datasets);
+                var idx_k = ks_all.indexOf(k);
+                var mu = document.createElement("button");
+                mu.className = "source-move-btn";
+                mu.innerHTML = "&#9650;";
+                mu.title = t.moveUp;
+                mu.disabled = (idx_k <= 0);
+                mu.onclick = (function(key) { return function(e) { if (e) e.stopPropagation(); moveSource(key, -1); }; })(k);
+                ri.appendChild(mu);
+                var md = document.createElement("button");
+                md.className = "source-move-btn";
+                md.innerHTML = "&#9660;";
+                md.title = t.moveDown;
+                md.disabled = (idx_k >= ks_all.length - 1);
+                md.onclick = (function(key) { return function(e) { if (e) e.stopPropagation(); moveSource(key, 1); }; })(k);
+                ri.appendChild(md);
+                
                 var dl = document.createElement("button");
                 dl.className = "source-del-btn";
                 dl.innerHTML = "&times;";
@@ -1755,6 +1999,7 @@
                         e.preventDefault();
                     }
                     delete datasets[k];
+                    removeStoredSource(k);
                     showToast(t.toastDel.replace("{name}", k));
                     rebuild();
                 };
@@ -1888,38 +2133,128 @@
                             pop.appendChild(grid);
                         });
                     };
-                } else if (d.type === "track") {
-                    colorBubble.style.background = d.color || "#1a73e8";
-                    colorBubble.onclick = function(e) {
+                }
+
+                if (d.type === "photos") {
+                    // photos: keep existing color bubble order
+                    controlsRow.appendChild(colorBubble);
+                }
+
+                if (d.type === "track") {
+                    // 1. Point color bubble
+                    var ptColorBubble = document.createElement("button");
+                    ptColorBubble.className = "color-bubble-btn";
+                    ptColorBubble.title = t.lblPointColor || "Barva bodů";
+                    ptColorBubble.style.background = d.pointColor || d.color || "#1a73e8";
+                    ptColorBubble.onclick = function(e) {
                         if (e) e.stopPropagation();
-                        openPopover(colorBubble, function(pop) {
-                            var title = document.createElement("div");
-                            title.className = "popover-title";
-                            title.textContent = t.lblColor || "Barva trasy";
+                        openPopover(ptColorBubble, function(pop) {
+                            var title = document.createElement("div"); title.className = "popover-title";
+                            title.textContent = currentLang === "cs" ? "Barva bodů" : "Point color";
                             pop.appendChild(title);
-
-                            var grid = document.createElement("div");
-                            grid.className = "color-palette-grid";
-
+                            var grid = document.createElement("div"); grid.className = "color-palette-grid";
                             trackColorOptions.forEach(function(c) {
-                                var btn = document.createElement("button");
-                                btn.style.background = c.fill;
-                                btn.title = c.title;
-                                if ((d.color || "#1a73e8").toLowerCase() === c.fill.toLowerCase()) btn.className = "active";
-                                btn.onclick = function(ev) {
-                                    if (ev) ev.stopPropagation();
-                                    d.color = c.fill;
-                                    lastEditedDataset = k;
-                                    saveDatasetStyles();
-                                    rebuild();
-                                };
+                                var btn = document.createElement("button"); btn.style.background = c.fill; btn.title = c.title;
+                                var effectivePtCol = d.pointColor || d.color || "#1a73e8";
+                                if (effectivePtCol.toLowerCase() === c.fill.toLowerCase()) btn.className = "active";
+                                btn.onclick = function(ev) { ev.stopPropagation(); d.pointColor = c.fill; lastEditedDataset = k; ptColorBubble.style.background = c.fill; saveDatasetStyles(); rebuild(); };
                                 grid.appendChild(btn);
                             });
                             pop.appendChild(grid);
                         });
                     };
+                    controlsRow.appendChild(ptColorBubble);
+
+                    // 2. Point icon pill (monochromatic trigger)
+                    var iconPill = document.createElement("button");
+                    iconPill.className = "source-pill-btn";
+                    iconPill.innerHTML = getTrackIconSvg(d.pointIcon || "dot", "#5f6368", 14, "#ffffff");
+                    iconPill.title = t.lblPointIcon || "Styl ikony bodu";
+                    iconPill.onclick = function(e) {
+                        if (e) e.stopPropagation();
+                        openPopover(iconPill, function(pop) {
+                            var title = document.createElement("div"); title.className = "popover-title";
+                            title.textContent = t.lblPointIcon || "Styl ikony bodu (8 stylů)";
+                            pop.appendChild(title);
+                            var grid = document.createElement("div"); grid.className = "icon-style-grid";
+                            trackIconOptions.forEach(function(io) {
+                                var btn = document.createElement("button");
+                                btn.className = "icon-style-btn" + ((d.pointIcon || "dot") === io.key ? " active" : "");
+                                btn.innerHTML = getTrackIconSvg(io.key, d.pointColor || d.color || "#1a73e8", 18, "#ffffff");
+                                btn.title = io.title;
+                                btn.onclick = function(ev) { ev.stopPropagation(); d.pointIcon = io.key; lastEditedDataset = k; saveDatasetStyles(); rebuild(); closeAllPopovers(); };
+                                grid.appendChild(btn);
+                            });
+                            pop.appendChild(grid);
+                        });
+                    };
+                    controlsRow.appendChild(iconPill);
+
+                    // Velikost bodů
+                    if (d.points && d.points.length > 0) {
+                        var curPtSz = d.pointSize || 14;
+                        var ptSzPill = document.createElement("button");
+                        ptSzPill.className = "source-pill-btn";
+                        ptSzPill.innerHTML = "🔘 " + curPtSz + "px";
+                        ptSzPill.title = t.lblPointSize || "Velikost bodů";
+                        ptSzPill.onclick = function(e) {
+                            if (e) e.stopPropagation();
+                            openPopover(ptSzPill, function(pop) {
+                                var title = document.createElement("div");
+                                title.className = "popover-title";
+                                title.textContent = (t.lblPointSize || "Velikost bodů") + " (4–30px)";
+                                pop.appendChild(title);
+
+                                var group = document.createElement("div");
+                                group.className = "slider-input-group";
+
+                                var slider = document.createElement("input");
+                                slider.type = "range";
+                                slider.min = "6";
+                                slider.max = "28";
+                                slider.step = "1";
+                                slider.value = curPtSz;
+
+                                var numInput = document.createElement("input");
+                                numInput.type = "text";
+                                numInput.inputMode = "numeric";
+                                numInput.value = curPtSz;
+
+                                function applyPtSz(v, syncNum) {
+                                    var n = parseInt(v, 10);
+                                    if (isNaN(n)) n = 4;
+                                    if (n < 4) n = 4;
+                                    if (n > 30) n = 30;
+                                    d.pointSize = n;
+                                    lastEditedDataset = k;
+                                    curPtSz = n;
+                                    ptSzPill.innerHTML = "🔘 " + n + "px";
+                                    slider.value = n;
+                                    if (syncNum !== false) numInput.value = n;
+                                    scheduleStyleApply("pts:" + k, function() {
+                                        saveDatasetStyles();
+                                        rebuild();
+                                    });
+                                }
+
+                                slider.oninput = function() { applyPtSz(this.value); };
+                                numInput.oninput = function() {
+                                    var clean = this.value.replace(/[^0-9]/g, '');
+                                    if (clean !== "") applyPtSz(clean, false);
+                                };
+                                numInput.onblur = function() { this.value = curPtSz; };
+                                numInput.onfocus = function() { this.select(); };
+                                numInput.onclick = function() { this.select(); };
+
+                                group.appendChild(slider);
+                                group.appendChild(numInput);
+                                group.appendChild(document.createTextNode("px"));
+                                pop.appendChild(group);
+                            });
+                        };
+                        controlsRow.appendChild(ptSzPill);
+                    }
                 }
-                controlsRow.appendChild(colorBubble);
 
                 // 2. Tlačítko: Průhlednost (Opacity Pill)
                 var curOp = 100;
@@ -2002,6 +2337,72 @@
                     });
                 };
                 controlsRow.appendChild(opPill);
+
+                // Blur pill – pouze pro heatmapu
+                if (d.type === "photos" && (d.mode || defaultPhotoMode) === "heat") {
+                    var curBlur = d.heatBlur !== undefined ? d.heatBlur : 25;
+                    var blurPill = document.createElement("button");
+                    blurPill.className = "source-pill-btn";
+                    blurPill.innerHTML = "🌫️ " + curBlur + "px";
+                    blurPill.title = t.lblBlur || "Rozmazání";
+                    blurPill.onclick = function(e) {
+                        if (e) e.stopPropagation();
+                        openPopover(blurPill, function(pop) {
+                            var title = document.createElement("div");
+                            title.className = "popover-title";
+                            title.textContent = (t.lblBlur || "Rozmazání") + " (5–50px)";
+                            pop.appendChild(title);
+
+                            var group = document.createElement("div");
+                            group.className = "slider-input-group";
+
+                            var slider = document.createElement("input");
+                            slider.type = "range";
+                            slider.min = "5";
+                            slider.max = "50";
+                            slider.step = "1";
+                            slider.value = curBlur;
+
+                            var numInput = document.createElement("input");
+                            numInput.type = "text";
+                            numInput.inputMode = "numeric";
+                            numInput.maxLength = 2;
+                            numInput.value = curBlur;
+
+                            function applyBlur(v, syncNum) {
+                                var n = parseInt(v, 10);
+                                if (isNaN(n)) n = 25;
+                                if (n < 5) n = 5;
+                                if (n > 50) n = 50;
+                                d.heatBlur = n;
+                                lastEditedDataset = k;
+                                curBlur = n;
+                                blurPill.innerHTML = "🌫️ " + n + "px";
+                                slider.value = n;
+                                if (syncNum !== false) numInput.value = n;
+                                scheduleStyleApply("blur:" + k, function() {
+                                    saveDatasetStyles();
+                                    updView();
+                                });
+                            }
+
+                            slider.oninput = function() { applyBlur(this.value); };
+                            numInput.oninput = function() {
+                                var clean = this.value.replace(/[^0-9]/g, '');
+                                if (clean !== "") applyBlur(clean, false);
+                            };
+                            numInput.onblur = function() { this.value = curBlur; };
+                            numInput.onfocus = function() { this.select(); };
+                            numInput.onclick = function() { this.select(); };
+
+                            group.appendChild(slider);
+                            group.appendChild(numInput);
+                            group.appendChild(document.createTextNode("px"));
+                            pop.appendChild(group);
+                        });
+                    };
+                    controlsRow.appendChild(blurPill);
+                }
 
                 // Volby specifické pro Fotky – podle stylu zobrazení daného SOUBORU:
                 // Tečky → velikost teček (1–25 px), Zóna výskytu → poloměr okruhu (0–10000 km)
@@ -2093,7 +2494,7 @@
                                 slider.max = String(ZK_SLIDER_MAX);
                                 slider.step = "1";
                                 slider.value = zoneSliderFromKm(curZk);
-                                slider.title = t.titleZoneSlider || "1–100 km | 100–1000 km | 1000–10000 km";
+                                slider.title = t.titleZoneSlider || "0-1 km (by 0.1) | 1-100 km (by 0.5) | 100-500 km (by 50) | 500-1000 km (by 100) | rest";
 
                                 var numInput = document.createElement("input");
                                 numInput.type = "text";
@@ -2135,8 +2536,39 @@
                     }
                 }
 
-                // Volby specifické pro GPS Trasy: Tloušťka, Velikost bodů, Typ ikony
+                // Volby specifické pro GPS Trasy: Barva linie, Tloušťka, Velikost bodů
                 if (d.type === "track") {
+                    // Barva linie – silná úsečka (ne kolečko)
+                    var curLineCol = d.color || "#1a73e8";
+                    var lineColorBtn = document.createElement("button");
+                    lineColorBtn.className = "source-pill-btn";
+                    lineColorBtn.style.cssText = "padding:3px 4px;";
+                    var lineBar = document.createElement("span");
+                    lineBar.style.cssText = "display:inline-block;width:20px;height:4px;border-radius:2px;background:" + curLineCol + ";vertical-align:middle;";
+                    lineColorBtn.appendChild(lineBar);
+                    lineColorBtn.title = t.lblColor || "Barva / Paleta";
+                    lineColorBtn.onclick = function(e) {
+                        if (e) e.stopPropagation();
+                        openPopover(lineColorBtn, function(pop) {
+                            var title = document.createElement("div"); title.className = "popover-title";
+                            title.textContent = currentLang === "cs" ? "Barva čáry" : "Line color";
+                            pop.appendChild(title);
+                            var grid = document.createElement("div"); grid.className = "color-palette-grid";
+                            trackColorOptions.forEach(function(c) {
+                                var btn = document.createElement("button"); btn.style.background = c.fill; btn.title = c.title;
+                                if ((d.color || "#1a73e8").toLowerCase() === c.fill.toLowerCase()) btn.className = "active";
+                                btn.onclick = function(ev) {
+                                    ev.stopPropagation(); d.color = c.fill; lastEditedDataset = k;
+                                    lineBar.style.background = c.fill;
+                                    saveDatasetStyles(); rebuild();
+                                };
+                                grid.appendChild(btn);
+                            });
+                            pop.appendChild(grid);
+                        });
+                    };
+                    controlsRow.appendChild(lineColorBtn);
+
                     // Tloušťka čáry
                     var curW = d.lineWidth || 4.5;
                     var widthPill = document.createElement("button");
@@ -2200,106 +2632,72 @@
                     };
                     controlsRow.appendChild(widthPill);
 
-                    // Body zájmu (POIs): Velikost a Styl ikony (pokud trasa obsahuje body)
-                    if (d.points && d.points.length > 0) {
-                        // Velikost bodů
-                        var curPtSz = d.pointSize || 14;
-                        var ptSzPill = document.createElement("button");
-                        ptSzPill.className = "source-pill-btn";
-                        ptSzPill.innerHTML = "🔘 " + curPtSz + "px";
-                        ptSzPill.title = t.lblPointSize || "Velikost bodů";
-                        ptSzPill.onclick = function(e) {
-                            if (e) e.stopPropagation();
-                            openPopover(ptSzPill, function(pop) {
-                                var title = document.createElement("div");
-                                title.className = "popover-title";
-                                title.textContent = (t.lblPointSize || "Velikost bodů") + " (4–30px)";
-                                pop.appendChild(title);
-
-                                var group = document.createElement("div");
-                                group.className = "slider-input-group";
-
-                                var slider = document.createElement("input");
-                                slider.type = "range";
-                                slider.min = "6";
-                                slider.max = "28";
-                                slider.step = "1";
-                                slider.value = curPtSz;
-
-                                var numInput = document.createElement("input");
-                                numInput.type = "text";
-                                numInput.inputMode = "numeric";
-                                numInput.value = curPtSz;
-
-                                function applyPtSz(v, syncNum) {
-                                    var n = parseInt(v, 10);
-                                    if (isNaN(n)) n = 4;
-                                    if (n < 4) n = 4;
-                                    if (n > 30) n = 30;
-                                    d.pointSize = n;
-                                    lastEditedDataset = k;
-                                    curPtSz = n;
-                                    ptSzPill.innerHTML = "🔘 " + n + "px";
-                                    slider.value = n;
-                                    if (syncNum !== false) numInput.value = n;
-                                    scheduleStyleApply("pts:" + k, function() {
-                                        saveDatasetStyles();
-                                        rebuild();
-                                    });
-                                }
-
-                                slider.oninput = function() { applyPtSz(this.value); };
-                                numInput.oninput = function() {
-                                    var clean = this.value.replace(/[^0-9]/g, '');
-                                    if (clean !== "") applyPtSz(clean, false);
-                                };
-                                numInput.onblur = function() { this.value = curPtSz; };
-                                numInput.onfocus = function() { this.select(); };
-                                numInput.onclick = function() { this.select(); };
-
-                                group.appendChild(slider);
-                                group.appendChild(numInput);
-                                group.appendChild(document.createTextNode("px"));
-                                pop.appendChild(group);
-                            });
-                        };
-                        controlsRow.appendChild(ptSzPill);
-
-                        // Výběr typu ikony z 8 stylů (jednobarevné monochromatické SVG v barvě trasy)
-                        var iconPill = document.createElement("button");
-                        iconPill.className = "source-pill-btn";
-                        iconPill.innerHTML = getTrackIconSvg(d.pointIcon || "dot", d.color || "#1a73e8", 14, "#ffffff");
-                        iconPill.title = t.lblPointIcon || "Styl ikony bodu";
-                        iconPill.onclick = function(e) {
-                            if (e) e.stopPropagation();
-                            openPopover(iconPill, function(pop) {
-                                var title = document.createElement("div");
-                                title.className = "popover-title";
-                                title.textContent = t.lblPointIcon || "Styl ikony bodu (8 stylů)";
-                                pop.appendChild(title);
-
-                                var grid = document.createElement("div");
-                                grid.className = "icon-style-grid";
-
-                                trackIconOptions.forEach(function(io) {
-                                    var btn = document.createElement("button");
-                                    btn.className = "icon-style-btn" + ((d.pointIcon || "dot") === io.key ? " active" : "");
-                                    btn.innerHTML = getTrackIconSvg(io.key, d.color || "#1a73e8", 18, "#ffffff");
-                                    btn.title = io.title;
-                                    btn.onclick = function(ev) {
-                                        if (ev) ev.stopPropagation();
-                                        d.pointIcon = io.key;
-                                        lastEditedDataset = k;
-                                        saveDatasetStyles();
-                                        rebuild();
-                                        closeAllPopovers();
-                                    };
-                                    grid.appendChild(btn);
+                    // Polygon fill controls (if dataset has polygons)
+                    if (d.polygons && d.polygons.length > 0) {
+                        // Fill color pill
+                        var fcPill = document.createElement("div");
+                        fcPill.className = "source-pill-btn";
+                        fcPill.style.cssText = "gap:3px;";
+                        var fcBubble = document.createElement("span");
+                        fcBubble.style.cssText = "width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid #dadce0;vertical-align:middle;";
+                        if (d.fillColor) { fcBubble.style.background = d.fillColor; } else { fcBubble.style.background = "repeating-conic-gradient(#ccc 0% 25%, transparent 0% 50%) 50%/8px 8px"; }
+                        fcPill.appendChild(fcBubble);
+                        fcPill.title = t.lblFillColor || "Barva výplně";
+                        (function(fcPill, fcBubble, d, k) {
+                            fcPill.onclick = function(ev) {
+                                ev.stopPropagation();
+                                var wasActive = fcPill.classList.contains("active");
+                                closeAllPopovers();
+                                if (wasActive) return;
+                                fcPill.classList.add("active");
+                                var pop = document.createElement("div"); pop.className = "style-popover"; pop.onclick = function(e) { e.stopPropagation(); };
+                                var title = document.createElement("div"); title.className = "popover-title"; title.textContent = t.lblFillColor || "Barva výplně"; pop.appendChild(title);
+                                var grid = document.createElement("div"); grid.style.cssText = "display:grid;grid-template-columns:repeat(4,1fr);gap:4px;";
+                                var colors = ["#e74c3c","#3498db","#2ecc71","#f39c12","#9b59b6","#1abc9c","#e67e22","#34495e"];
+                                colors.forEach(function(col) {
+                                    var b = document.createElement("span"); b.style.cssText = "width:20px;height:20px;border-radius:4px;cursor:pointer;border:2px solid " + (d.fillColor === col ? "#1a73e8" : "transparent") + ";background:" + col + ";";
+                                    b.onclick = function(ev2) { ev2.stopPropagation(); d.fillColor = col; fcBubble.style.background = col; fcBubble.style.backgroundImage = "none"; lastEditedDataset = k; saveDatasetStyles(); rebuild(); closeAllPopovers(); };
+                                    grid.appendChild(b);
                                 });
                                 pop.appendChild(grid);
-                            });
-                        };
-                        controlsRow.appendChild(iconPill);
+                                var noFillBtn = document.createElement("div"); noFillBtn.style.cssText = "font-size:11px;color:#80868b;cursor:pointer;margin-top:6px;text-align:center;";
+                                noFillBtn.textContent = "✕ " + (currentLang === "cs" ? "Bez výplně" : "No fill");
+                                noFillBtn.onclick = function(ev) { ev.stopPropagation(); d.fillColor = null; fcBubble.style.background = "repeating-conic-gradient(#ccc 0% 25%, transparent 0% 50%) 50%/8px 8px"; lastEditedDataset = k; saveDatasetStyles(); rebuild(); closeAllPopovers(); };
+                                pop.appendChild(noFillBtn);
+                                document.getElementById("sourcesPanel").appendChild(pop);
+                                activePopover = pop;
+                            };
+                        })(fcPill, fcBubble, d, k);
+                        controlsRow.appendChild(fcPill);
+
+                        // Fill opacity pill
+                        var foCur = d.fillOpacity !== undefined ? d.fillOpacity : 0.5;
+                        var foPill = document.createElement("div");
+                        foPill.className = "source-pill-btn";
+                        foPill.style.cssText = "gap:3px;";
+                        var foVal = document.createElement("span"); foVal.style.cssText = "font-size:11px;font-weight:600;min-width:0;";
+                        foVal.textContent = "💧 " + Math.round(foCur * 100) + "%";
+                        foPill.appendChild(foVal);
+                        foPill.title = t.lblFillOpacity || "Průhlednost výplně";
+                        (function(foPill, foVal, d) {
+                            foPill.onclick = function(ev) {
+                                ev.stopPropagation();
+                                var wasActive = foPill.classList.contains("active");
+                                closeAllPopovers();
+                                if (wasActive) return;
+                                foPill.classList.add("active");
+                                var pop = document.createElement("div"); pop.className = "style-popover"; pop.onclick = function(e) { e.stopPropagation(); };
+                                var title = document.createElement("div"); title.className = "popover-title"; title.textContent = t.lblFillOpacity || "Průhlednost výplně"; pop.appendChild(title);
+                                var range = document.createElement("input"); range.type = "range"; range.min = "0"; range.max = "100"; range.value = Math.round(foCur * 100); range.style.cssText = "width:100%;accent-color:#1a73e8;";
+                                var val = document.createElement("div"); val.style.cssText = "font-size:11px;color:#5f6368;text-align:center;margin-top:2px;"; val.textContent = range.value + "%";
+                                range.oninput = function() { foVal.textContent = "💧 " + range.value + "%"; val.textContent = range.value + "%"; d.fillOpacity = parseInt(range.value) / 100; saveDatasetStyles(); };
+                                range.onchange = function() { rebuild(); };
+                                pop.appendChild(range); pop.appendChild(val);
+                                document.getElementById("sourcesPanel").appendChild(pop);
+                                activePopover = pop;
+                            };
+                        })(foPill, foVal, d);
+                        controlsRow.appendChild(foPill);
                     }
                 }
 
@@ -2309,46 +2707,155 @@
         }
 
 
+        // ===== ČASOVÝ FILTR: rok -> měsíc -> kalendář dnů =====
+        // timePrefix: "all" | "RRRR" | "RRRRMM" | "RRRRMMDD" – filtr je prefixový nad DATUM (p[2])
+        function pad2(n) { return String(n).padStart(2, "0"); }
+        function countForPrefix(pfx) {
+            if (!pfx || pfx === "all") return rawData.length;
+            var c = 0;
+            for (var i = 0; i < rawData.length; i++) {
+                if (String(rawData[i][2]).indexOf(pfx) === 0) c++;
+            }
+            return c;
+        }
+        function setTimeFilter(pfx) {
+            timePrefix = pfx;
+            renderYearDropdown();
+            updView();
+        }
+        function fmtTimePrefix(pfx, t) {
+            if (!pfx || pfx === "all") return t.allWord;
+            var y = pfx.substring(0, 4);
+            if (pfx.length <= 4) return y;
+            var mi = parseInt(pfx.substring(4, 6), 10) - 1;
+            var mn = t.monthsShort[mi] || "";
+            if (pfx.length <= 6) return mn + "\u00A0" + y;
+            var day = parseInt(pfx.substring(6, 8), 10);
+            return (currentLang === "cs") ? (day + ".\u00A0" + (mi + 1) + ".\u00A0" + y) : (mn + "\u00A0" + day + ",\u00A0" + y);
+        }
+
         function renderYearDropdown() {
             var t = i18n[currentLang], loc = currentLang === 'cs' ? "cs-CZ" : "en-US";
-            var yc = {};
-            for (var i = 0; i < rawData.length; i++) {
-                var d = String(rawData[i][2]);
-                if (d.length >= 4) {
-                    var y = d.substring(0, 4);
-                    yc[y] = (yc[y] || 0) + 1;
-                }
-            }
-            var sy = Object.keys(yc).sort().reverse();
             var dd = document.getElementById("yearDropdown");
             dd.innerHTML = "";
 
+            // dostupné roky a jejich počty
+            var yc = {};
+            for (var i = 0; i < rawData.length; i++) {
+                var dstr = String(rawData[i][2]);
+                if (dstr.length >= 4) {
+                    var yk = dstr.substring(0, 4);
+                    yc[yk] = (yc[yk] || 0) + 1;
+                }
+            }
+            var years = Object.keys(yc).sort().reverse();
+
+            // úroveň zanoření podle délky prefixu
+            var lvl = (timePrefix === "all") ? 0 : Math.min(3, timePrefix.length >= 8 ? 3 : (timePrefix.length === 6 ? 2 : 1));
+            var ySel = lvl >= 1 ? timePrefix.substring(0, 4) : null;
+            var mSel = lvl >= 2 ? parseInt(timePrefix.substring(4, 6), 10) : null;
+            var dSel = lvl >= 3 ? parseInt(timePrefix.substring(6, 8), 10) : null;
+
+            // Vše
             var allItem = document.createElement("div");
-            allItem.className = "dropdown-item" + (curYear === "all" ? " active" : "");
+            allItem.className = "dropdown-item" + (lvl === 0 ? " active" : "");
             allItem.innerHTML = "<span>" + t.allWord + "</span><span class='item-count'>(" + rawData.length.toLocaleString(loc) + ")</span>";
-            allItem.onclick = function() { selectYear("all"); };
+            allItem.onclick = function() { setTimeFilter("all"); };
             dd.appendChild(allItem);
 
-            sy.forEach(function(yr) {
-                var it = document.createElement("div");
-                it.className = "dropdown-item" + (curYear === yr ? " active" : "");
-                it.innerHTML = "<span>" + yr + "</span><span class='item-count'>(" + yc[yr].toLocaleString(loc) + ")</span>";
-                it.onclick = function() { selectYear(yr); };
-                dd.appendChild(it);
+            // Roky
+            var secY = document.createElement("div");
+            secY.className = "tf-section";
+            secY.textContent = t.tfYears;
+            dd.appendChild(secY);
+            var gridY = document.createElement("div");
+            gridY.className = "tf-years";
+            years.forEach(function(yr) {
+                var chip = document.createElement("button");
+                chip.type = "button";
+                chip.className = "tf-chip" + (ySel === yr ? " active" : "");
+                chip.innerHTML = yr + "<span class='tf-cnt'>" + yc[yr].toLocaleString(loc) + "</span>";
+                // klik na rok vždy nastaví rok (sbalí případný měsíc/den); na Vše se vrátí položkou Vše
+                chip.onclick = function() { setTimeFilter(yr); };
+                gridY.appendChild(chip);
             });
+            dd.appendChild(gridY);
 
-            var activeCount = (curYear === "all") ? rawData.length : (yc[curYear] || 0);
-            var prefix = (curYear === "all") ? t.allWord : curYear;
-            document.getElementById("txtYearLabel").textContent = prefix + " (" + activeCount.toLocaleString(loc) + ")";
-        }
+            // Měsíce (jen při zvoleném konkrétním roku)
+            if (ySel && lvl >= 1) {
+                var secM = document.createElement("div");
+                secM.className = "tf-section";
+                secM.textContent = t.tfMonths;
+                dd.appendChild(secM);
+                var gridM = document.createElement("div");
+                gridM.className = "tf-months";
+                for (var m = 1; m <= 12; m++) {
+                    var mpfx = ySel + pad2(m);
+                    var mc = countForPrefix(mpfx);
+                    (function(mpfx2, mc2, m2) {
+                        var chip = document.createElement("button");
+                        chip.type = "button";
+                        chip.className = "tf-chip" + (mSel === m2 ? " active" : "") + (mc2 === 0 ? " none" : "");
+                        chip.innerHTML = t.monthsShort[m2 - 1] + (mc2 > 0 ? "<span class='tf-cnt'>" + mc2.toLocaleString(loc) + "</span>" : "");
+                        chip.disabled = (mc2 === 0);
+                        chip.title = mc2.toLocaleString(loc);
+                        // klik na aktivní měsíc se vrátí o úroveň výš (na rok)
+                        chip.onclick = function() { setTimeFilter(mSel === m2 ? ySel : mpfx2); };
+                        gridM.appendChild(chip);
+                    })(mpfx, mc, m);
+                }
+                dd.appendChild(gridM);
+            }
 
-        function selectYear(yr) {
-            curYear = yr;
-            document.getElementById("yearDropdown").classList.remove("open");
-            var btn = document.getElementById("btnYearSelect");
-            if (btn) btn.classList.remove("active");
-            renderYearDropdown();
-            updView();
+            // Kalendář dnů (jen při zvoleném měsíci)
+            if (ySel && mSel && lvl >= 2) {
+                var secD = document.createElement("div");
+                secD.className = "tf-section";
+                secD.textContent = t.tfDays;
+                dd.appendChild(secD);
+                var cal = document.createElement("div");
+                cal.className = "tf-cal";
+
+                var headRow = document.createElement("div");
+                headRow.className = "tf-cal-head";
+                t.wdShort.forEach(function(w) {
+                    var c = document.createElement("span");
+                    c.textContent = w;
+                    headRow.appendChild(c);
+                });
+                cal.appendChild(headRow);
+
+                var grid = document.createElement("div");
+                grid.className = "tf-cal-grid";
+                var yi = parseInt(ySel, 10);
+                var offset = (new Date(yi, mSel - 1, 1).getDay() + 6) % 7; // týden od pondělí
+                var dim = new Date(yi, mSel, 0).getDate();
+                for (var b = 0; b < offset; b++) {
+                    var emp = document.createElement("span");
+                    emp.className = "tf-day empty";
+                    grid.appendChild(emp);
+                }
+                for (var day = 1; day <= dim; day++) {
+                    var dpfx = ySel + pad2(mSel) + pad2(day);
+                    var dc = countForPrefix(dpfx);
+                    (function(dpfx2, dc2, day2) {
+                        var cell = document.createElement("button");
+                        cell.type = "button";
+                        cell.className = "tf-day" + (dSel === day2 ? " sel" : "") + (dc2 === 0 ? " none" : "");
+                        cell.textContent = String(day2);
+                        cell.disabled = (dc2 === 0);
+                        cell.title = dc2.toLocaleString(loc);
+                        // klik na vybraný den se vrátí o úroveň výš (na měsíc)
+                        cell.onclick = function() { setTimeFilter(dSel === day2 ? timePrefix.substring(0, 6) : dpfx2); };
+                        grid.appendChild(cell);
+                    })(dpfx, dc, day);
+                }
+                cal.appendChild(grid);
+                dd.appendChild(cal);
+            }
+
+            // popisek horního tlačítka
+            document.getElementById("txtYearLabel").textContent = fmtTimePrefix(timePrefix, t) + " (" + countForPrefix(timePrefix).toLocaleString(loc) + ")";
         }
 
         function createPopupContent(p) {
@@ -2364,18 +2871,23 @@
         function updView() {
             var loc = currentLang === 'cs' ? "cs-CZ" : "en-US";
 
+            // Clean up photo layers from their per-dataset groups
             if (photoClusterGroups && photoClusterGroups.length > 0) {
-                photoClusterGroups.forEach(function(pg) { map.removeLayer(pg.group); });
+                photoClusterGroups.forEach(function(pg) { try { pg.group.remove(); } catch(e){} });
                 photoClusterGroups = [];
             }
             if (heatLayers && heatLayers.length > 0) {
-                heatLayers.forEach(function(hl) { map.removeLayer(hl.layer); });
+                heatLayers.forEach(function(hl) { try { hl.layer.remove(); } catch(e){} });
                 heatLayers = [];
             }
-            if (canvasLayerGroup) { map.removeLayer(canvasLayerGroup); canvasLayerGroup.clearLayers(); canvasLayerGroup = null; }
-            if (zoneLayerInstance) { map.removeLayer(zoneLayerInstance); zoneLayerInstance = null; }
-
-            // Každý datový soubor se vykreslí podle SVÉHO stylu zobrazení (nezávisle na ostatních)
+            if (canvasLayerGroup) { try { canvasLayerGroup.clearLayers(); } catch(e){} canvasLayerGroup = null; }
+            if (zoneLayerInstance) { try { zoneLayerInstance.remove(); } catch(e){} zoneLayerInstance = null; }
+            // Also clear per-dataset groups of photo layers
+            var ks0 = Object.keys(datasets);
+            for (var ci = 0; ci < ks0.length; ci++) {
+                var dd = datasets[ks0[ci]];
+                if (dd._layerGroup && dd.type === "photos") { try { dd._layerGroup.clearLayers(); } catch(e){} }
+            }
             var ks = Object.keys(datasets);
             var dotsAdded = false;
             var colorGroupsAcc = null;
@@ -2383,22 +2895,24 @@
             for (var k = 0; k < ks.length; k++) {
                 var d = datasets[ks[k]];
                 if (!d.active || d.type !== "photos") continue;
-                var pts = (curYear === "all") ? d.items : (d.items || []).filter(function(p) { return String(p[2]).indexOf(curYear) === 0; });
+                var pts = (timePrefix === "all") ? d.items : (d.items || []).filter(function(p) { return String(p[2]).indexOf(timePrefix) === 0; });
                 if (!pts || pts.length === 0) continue;
                 var mode = d.mode || defaultPhotoMode;
+                var lg = d._layerGroup;
 
-                // 🔥 HEATMAPA
+                // HEATMAPA
                 if (mode === "heat") {
                     var op = (d.heatOpacity !== undefined ? d.heatOpacity : 100) / 100;
                     var hp = [];
                     for (var i = 0; i < pts.length; i++) hp.push([pts[i][0], pts[i][1], 0.75 * op]);
                     var h = hpZ(map.getZoom());
                     var grad = heatPalettes[d.heatPalette || "classic"] || heatPalettes.classic;
-                    var hl = L.heatLayer(hp, { radius: h.r, blur: h.b, minOpacity: h.o * op, maxZoom: 17, gradient: grad });
-                    map.addLayer(hl);
-                    heatLayers.push({ layer: hl, palette: d.heatPalette || "classic", opacity: op });
+                    var blur = d.heatBlur !== undefined ? d.heatBlur : h.b;
+                    var hl = L.heatLayer(hp, { radius: h.r, blur: blur, minOpacity: h.o * op, maxZoom: 17, gradient: grad });
+                    if (lg) { lg.addLayer(hl); } else { map.addLayer(hl); }
+                    heatLayers.push({ layer: hl, palette: d.heatPalette || "classic", opacity: op, heatBlur: d.heatBlur });
                 }
-                // 🖼️ FOTO-KARTY
+                // FOTO-KARTY
                 else if (mode === "photoCards") {
                     var cg = L.markerClusterGroup({
                         chunkedLoading: true,
@@ -2433,10 +2947,10 @@
                         cMarkers.push(cm);
                     }
                     cg.addLayers(cMarkers);
-                    map.addLayer(cg);
+                    if (lg) { lg.addLayer(cg); } else { map.addLayer(cg); }
                     photoClusterGroups.push({ group: cg });
                 }
-                // 📍 ŠPENDLÍKY / KLASTROVÁNÍ
+                // SPENDLÍKY / KLASTROVÁNÍ
                 else if (mode === "clusters") {
                     var pinCol = dotColors[d.dotColor || "red"] || dotColors.red;
                     var pg = L.markerClusterGroup({
@@ -2470,10 +2984,10 @@
                         pMarkers.push(pm);
                     }
                     pg.addLayers(pMarkers);
-                    map.addLayer(pg);
+                    if (lg) { lg.addLayer(pg); } else { map.addLayer(pg); }
                     photoClusterGroups.push({ group: pg });
                 }
-                // 🔴 TEČKY
+                // TEČKY
                 else if (mode === "dots") {
                     if (!canvasLayerGroup) canvasLayerGroup = L.layerGroup();
                     var col = dotColors[d.dotColor || "red"] || dotColors.red;
@@ -2491,11 +3005,11 @@
                             fillOpacity: dop
                         });
                         dm.bindPopup(createPopupContent(dp));
-                        canvasLayerGroup.addLayer(dm);
+                        if (lg) { lg.addLayer(dm); } else { canvasLayerGroup.addLayer(dm); }
                     }
                     dotsAdded = true;
                 }
-                // ⬤ ZÓNA VÝSKYTU
+                // ZÓNA VÝSKYTU
                 else if (mode === "zone") {
                     if (!colorGroupsAcc) colorGroupsAcc = [];
                     colorGroupsAcc.push({ colorKey: d.zoneColor || "blue", opacity: (d.zoneOpacity !== undefined ? d.zoneOpacity : 50), km: parseZoneKm(d.zoneKm, 10), pts: pts });
@@ -2517,7 +3031,8 @@
                     var item = heatLayers[i];
                     var grad = heatPalettes[item.palette] || heatPalettes.classic;
                     var op = item.opacity !== undefined ? item.opacity : 0.75;
-                    item.layer.setOptions({ radius: h.r, blur: h.b, minOpacity: h.o * op, gradient: grad });
+                    var blur = item.heatBlur !== undefined ? item.heatBlur : h.b;
+                    item.layer.setOptions({ radius: h.r, blur: blur, minOpacity: h.o * op, gradient: grad });
                 }
             }
         });
@@ -2632,6 +3147,7 @@
                 var xml = parser.parseFromString(xmlStr, "application/xml");
                 var lines = [];
                 var points = [];
+                var polygons = [];
                 var totalDist = 0;
                 var docName = "";
                 var nameNode = xml.querySelector("Document > name, Folder > name, name");
@@ -2691,6 +3207,40 @@
                             }
                         }
                     }
+
+                    // Polygony (<Polygon>)
+                    var polyNodes = pm.querySelectorAll("Polygon");
+                    for (var pg = 0; pg < polyNodes.length; pg++) {
+                        var pgNode = polyNodes[pg];
+                        var outerNode = pgNode.querySelector("outerBoundaryIs > LinearRing > coordinates");
+                        if (!outerNode) continue;
+                        var outer = parseCoordString(outerNode.textContent);
+                        if (outer.length < 3) continue;
+                        var holes = [];
+                        var innerNodes = pgNode.querySelectorAll("innerBoundaryIs > LinearRing > coordinates");
+                        for (var hi = 0; hi < innerNodes.length; hi++) {
+                            var hRing = parseCoordString(innerNodes[hi].textContent);
+                            if (hRing.length >= 3) holes.push(hRing);
+                        }
+                        // Extract fill color from <Style>
+                        var fillColor = null, fillOpacity = null;
+                        var style = pgNode.querySelector("Style");
+                        if (style) {
+                            var polyStyle = style.querySelector("PolyStyle > color");
+                            if (polyStyle) {
+                                var kmlColor = polyStyle.textContent.trim();
+                                if (kmlColor.length >= 8) {
+                                    var a = parseInt(kmlColor.substring(0, 2), 16) / 255;
+                                    var b = parseInt(kmlColor.substring(2, 4), 16);
+                                    var g = parseInt(kmlColor.substring(4, 6), 16);
+                                    var r = parseInt(kmlColor.substring(6, 8), 16);
+                                    fillColor = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                                    fillOpacity = Math.round(a * 100) / 100;
+                                }
+                            }
+                        }
+                        polygons.push({ name: pName || docName, outer: outer, holes: holes, fillColor: fillColor, fillOpacity: fillOpacity });
+                    }
                 }
 
                 // 2. Záložní kontrola pro KML bez Placemark obalů
@@ -2720,7 +3270,7 @@
                     }
                 }
 
-                if (lines.length === 0 && points.length === 0) return null;
+                if (lines.length === 0 && points.length === 0 && polygons.length === 0) return null;
 
                 return {
                     type: "track",
@@ -2729,6 +3279,7 @@
                     title: docName,
                     lines: lines,
                     points: points,
+                    polygons: polygons,
                     totalDistanceKm: totalDist,
                     color: trackColors[(trackColorIdx++) % trackColors.length],
                     active: true
@@ -2758,7 +3309,7 @@
                 if (feats.length === 0) return null;
 
                 var docName = name.replace(/\.[^/.]+$/, "");
-                var lines = [], points = [], totalDist = 0;
+                var lines = [], points = [], polygons = [], totalDist = 0;
 
                 function pushLine(coords, label) {
                     if (!coords) return;
@@ -2772,6 +3323,27 @@
                         pts.push([lat, lon]);
                     }
                     if (pts.length > 1) { totalDist += dKm; lines.push({ name: label || docName, points: pts, distanceKm: dKm }); }
+                }
+                function pushPolygon(coords, label, props) {
+                    if (!coords || coords.length === 0) return;
+                    props = props || {};
+                    var outer = [], holes = [];
+                    for (var r = 0; r < coords.length; r++) {
+                        var ring = [];
+                        for (var i = 0; i < coords[r].length; i++) {
+                            var c = coords[r][i];
+                            if (!c || c.length < 2) continue;
+                            var lon = parseFloat(c[0]), lat = parseFloat(c[1]);
+                            if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) continue;
+                            ring.push([lat, lon]);
+                        }
+                        if (ring.length < 3) continue;
+                        if (r === 0) outer = ring; else holes.push(ring);
+                    }
+                    if (outer.length < 3) return;
+                    var fc = props.fill || (props.style && props.style.fill) || null;
+                    var fo = props["fill-opacity"] !== undefined ? parseFloat(props["fill-opacity"]) : ((props.style && props.style.fillOpacity !== undefined) ? parseFloat(props.style.fillOpacity) : null);
+                    polygons.push({ name: label || docName, outer: outer, holes: holes, fillColor: fc, fillOpacity: fo });
                 }
                 function pushPoint(c, props) {
                     if (!c || c.length < 2) return;
@@ -2793,8 +3365,8 @@
                         case "MultiPoint":     if (g.coordinates) for (var m = 0; m < g.coordinates.length; m++) pushPoint(g.coordinates[m], props); break;
                         case "LineString":     pushLine(g.coordinates, label); break;
                         case "MultiLineString": if (g.coordinates) for (var ml = 0; ml < g.coordinates.length; ml++) pushLine(g.coordinates[ml], label); break;
-                        case "Polygon":        if (g.coordinates) for (var pg = 0; pg < g.coordinates.length; pg++) pushLine(g.coordinates[pg], label); break;
-                        case "MultiPolygon":   if (g.coordinates) for (var mp = 0; mp < g.coordinates.length; mp++) if (g.coordinates[mp]) for (var r = 0; r < g.coordinates[mp].length; r++) pushLine(g.coordinates[mp][r], label); break;
+                        case "Polygon":        if (g.coordinates) pushPolygon(g.coordinates, label, props); break;
+                        case "MultiPolygon":   if (g.coordinates) for (var mp = 0; mp < g.coordinates.length; mp++) pushPolygon(g.coordinates[mp], label, props); break;
                         case "GeometryCollection": if (g.geometries) for (var gc = 0; gc < g.geometries.length; gc++) {
                             var sub = parseGeoJson(JSON.stringify({ type: "Feature", geometry: g.geometries[gc], properties: props }), name);
                             if (sub) {
@@ -2805,7 +3377,7 @@
                     }
                 }
 
-                if (lines.length === 0 && points.length === 0) return null;
+                if (lines.length === 0 && points.length === 0 && polygons.length === 0) return null;
 
                 return {
                     type: "track",
@@ -2814,6 +3386,7 @@
                     title: docName,
                     lines: lines,
                     points: points,
+                    polygons: polygons,
                     totalDistanceKm: totalDist,
                     color: trackColors[(trackColorIdx++) % trackColors.length],
                     active: true
@@ -2841,6 +3414,7 @@
                         var track = parseKml(kmlText, name);
                         if (track) {
                             track.format = "KMZ";
+                            saveStoredSource(name, kmlText);
                             addTrackDS(track);
                         } else {
                             showToast("⚠️ V " + name + " nebyla nalezena platná data");
@@ -2863,10 +3437,13 @@
             var savedStyle = getSavedDatasetStyle(track.name);
             if (savedStyle) {
                 if (savedStyle.color) track.color = savedStyle.color;
+                if (savedStyle.pointColor) track.pointColor = savedStyle.pointColor;
                 if (savedStyle.trackOpacity !== undefined) track.trackOpacity = savedStyle.trackOpacity;
                 if (savedStyle.lineWidth !== undefined) track.lineWidth = savedStyle.lineWidth;
                 if (savedStyle.pointSize !== undefined) track.pointSize = savedStyle.pointSize;
                 if (savedStyle.pointIcon) track.pointIcon = savedStyle.pointIcon;
+                if (savedStyle.fillColor !== undefined) track.fillColor = savedStyle.fillColor;
+                if (savedStyle.fillOpacity !== undefined) track.fillOpacity = savedStyle.fillOpacity;
             }
             if (track.trackOpacity === undefined) track.trackOpacity = 85;
             if (track.lineWidth === undefined) track.lineWidth = 4.5;
@@ -2914,6 +3491,7 @@
                 var initialMode = (savedStyle && savedStyle.mode && validModes.indexOf(savedStyle.mode) !== -1) ? savedStyle.mode : defaultPhotoMode;
                 var initialPal = (savedStyle && savedStyle.heatPalette) ? savedStyle.heatPalette : palSequence[numPhotoSets % palSequence.length];
                 var initialHeatOp = (savedStyle && savedStyle.heatOpacity !== undefined) ? savedStyle.heatOpacity : 100;
+                var initialHeatBlur = (savedStyle && savedStyle.heatBlur !== undefined) ? savedStyle.heatBlur : 25;
                 var initialDot = (savedStyle && savedStyle.dotColor) ? savedStyle.dotColor : dotSequence[numPhotoSets % dotSequence.length];
                 var initialDotOp = (savedStyle && savedStyle.dotOpacity !== undefined) ? savedStyle.dotOpacity : 50;
                 var initialZone = (savedStyle && savedStyle.zoneColor) ? savedStyle.zoneColor : zoneSequence[numPhotoSets % zoneSequence.length];
@@ -2929,6 +3507,7 @@
                     mode: initialMode,
                     heatPalette: initialPal,
                     heatOpacity: initialHeatOp,
+                    heatBlur: initialHeatBlur,
                     dotColor: initialDot,
                     dotOpacity: initialDotOp,
                     zoneColor: initialZone,
@@ -2937,6 +3516,7 @@
                     zoneKm: initialZoneKm
                 };
                 rebuild();
+                saveStoredSource(n, s);
                 var ov = document.getElementById("loading-overlay");
                 if (ov) ov.style.display = "none";
                 showToast(t.toastAdded.replace("{count}", it.length.toLocaleString(currentLang === 'cs' ? "cs-CZ" : "en-US")).replace("{name}", n));
@@ -2963,29 +3543,35 @@
 
                     if (lower.endsWith(".kmz")) {
                         var r = new FileReader();
-                        r.onload = function(e) { parseKmz(e.target.result, name); };
+                        r.onload = function(e) {
+                            var raw = e.target.result;
+                            parseKmz(raw, name);
+                        };
                         r.readAsArrayBuffer(file);
                     } else if (lower.endsWith(".gpx")) {
                         var r = new FileReader();
                         r.onload = function(e) {
-                            var trk = parseGpx(e.target.result, name);
-                            if (trk) addTrackDS(trk);
+                            var raw = e.target.result;
+                            var trk = parseGpx(raw, name);
+                            if (trk) { saveStoredSource(name, raw); addTrackDS(trk); }
                             else showToast("⚠️ " + (currentLang === 'cs' ? "Nepodařilo se načíst trasu z " : "Failed to parse track from ") + name);
                         };
                         r.readAsText(file, "UTF-8");
                     } else if (lower.endsWith(".kml")) {
                         var r = new FileReader();
                         r.onload = function(e) {
-                            var trk = parseKml(e.target.result, name);
-                            if (trk) addTrackDS(trk);
+                            var raw = e.target.result;
+                            var trk = parseKml(raw, name);
+                            if (trk) { saveStoredSource(name, raw); addTrackDS(trk); }
                             else showToast("⚠️ " + (currentLang === 'cs' ? "Nepodařilo se načíst trasu z " : "Failed to parse track from ") + name);
                         };
                         r.readAsText(file, "UTF-8");
                     } else if (lower.endsWith(".geojson") || lower.endsWith(".json")) {
                         var r = new FileReader();
                         r.onload = function(e) {
-                            var trk = parseGeoJson(e.target.result, name);
-                            if (trk) addTrackDS(trk);
+                            var raw = e.target.result;
+                            var trk = parseGeoJson(raw, name);
+                            if (trk) { saveStoredSource(name, raw); addTrackDS(trk); }
                             else showToast("⚠️ " + (currentLang === 'cs' ? "Nepodařilo se načíst GeoJSON data z " : "Failed to parse GeoJSON data from ") + name);
                         };
                         r.readAsText(file, "UTF-8");
@@ -3085,6 +3671,7 @@
         }
 
         initAppPreferences();
+        loadStoredSources();
         autoLoadData();
     </script>
 </body>
