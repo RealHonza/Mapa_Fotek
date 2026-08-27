@@ -1282,7 +1282,7 @@
             </button>
             <div id="yearDropdown" class="dropdown-menu" onclick="event.stopPropagation()"></div>
         </div>
-        <input type="file" id="fileInput" accept=".txt,.gpx,.kml,.kmz,.geojson,.json" multiple style="display:none" onchange="handleFileSelect(this.files)">
+        <input type="file" id="fileInput" accept=".txt,.gpx,.kml,.kmz,.geojson,.json,.jpg,.jpeg,.png" multiple style="display:none" onchange="handleFileSelect(this.files)">
     </div>
 
     <!-- HORNÍ LIŠTA VPRAVO: VRSTVY MAPY + ZOOM (velikost teček a poloměr zóny se nastavují u každého souboru v panelu Zdroje) -->
@@ -1332,7 +1332,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.06</span>
+                    <span class="info-meta-val">2.10</span>
                 </div>
             </div>
 
@@ -2352,7 +2352,13 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                             var coords = [];
                             for (var p = 0; p < line.points.length; p++) {
                                 var pt = line.points[p];
-                                coords.push(Array.isArray(pt) ? [pt[1], pt[0]] : [pt.lng || pt[1], pt.lat || pt[0]]);
+                                var c;
+                                if (Array.isArray(pt)) {
+                                    c = pt.length > 2 && !isNaN(pt[2]) ? [pt[1], pt[0], pt[2]] : [pt[1], pt[0]];
+                                } else {
+                                    c = (pt.alt !== undefined && !isNaN(pt.alt)) ? [pt.lng || pt[1], pt.lat || pt[0], pt.alt] : [pt.lng || pt[1], pt.lat || pt[0]];
+                                }
+                                coords.push(c);
                             }
                             features.push({
                                 type: "Feature",
@@ -2377,7 +2383,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                             var outerCoords = [];
                             for (var o = 0; o < poly.outer.length; o++) {
                                 var op = poly.outer[o];
-                                outerCoords.push(Array.isArray(op) ? [op[1], op[0]] : [op.lng || op[1], op.lat || op[0]]);
+                                outerCoords.push(Array.isArray(op) ? (op.length > 2 && !isNaN(op[2]) ? [op[1], op[0], op[2]] : [op[1], op[0]]) : [op.lng || op[1], op.lat || op[0]]);
                             }
                             rings.push(outerCoords);
                             if (poly.holes) {
@@ -2385,7 +2391,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                                     var holeCoords = [];
                                     for (var hi = 0; hi < poly.holes[h].length; hi++) {
                                         var hp = poly.holes[h][hi];
-                                        holeCoords.push(Array.isArray(hp) ? [hp[1], hp[0]] : [hp.lng || hp[1], hp.lat || hp[0]]);
+                                        holeCoords.push(Array.isArray(hp) ? (hp.length > 2 && !isNaN(hp[2]) ? [hp[1], hp[0], hp[2]] : [hp[1], hp[0]]) : [hp.lng || hp[1], hp.lat || hp[0]]);
                                     }
                                     rings.push(holeCoords);
                                 }
@@ -2409,9 +2415,10 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                     if (d.points && d.points.length > 0) {
                         for (var wp = 0; wp < d.points.length; wp++) {
                             var wpt = d.points[wp];
+                            var wcoords = (wpt.elev !== undefined && !isNaN(wpt.elev)) ? [wpt.lon, wpt.lat, wpt.elev] : [wpt.lon, wpt.lat];
                             features.push({
                                 type: "Feature",
-                                geometry: { type: "Point", coordinates: [wpt.lon, wpt.lat] },
+                                geometry: { type: "Point", coordinates: wcoords },
                                 properties: {
                                     dataset: d.name,
                                     name: wpt.name || null,
@@ -2858,12 +2865,19 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
         var _undoBtnEl = null;
         var _undoSaved = false;
 
-        function saveUndoState() {
-            if (_undoSaved) return;
+        // Aktuálníž obsah datasetu (pro undo zavření/viditelnosti)
+        function snapshotDatasetState() {
             var snap = {};
             Object.keys(datasets).forEach(function(k) {
                 var d = datasets[k];
+                var raw = null;
+                var isImage = !!(d && d.fromImage);
+                try { raw = localStorage.getItem(isImage ? "mf_photo_" + k : "mf_src_" + k); } catch(e) {}
                 snap[k] = {
+                    exists: true,
+                    active: d.active,
+                    raw: raw,
+                    isImage: isImage,
                     mode: d.mode, heatPalette: d.heatPalette, heatOpacity: d.heatOpacity,
                     heatBlur: d.heatBlur, dotColor: d.dotColor, dotOpacity: d.dotOpacity,
                     dotSize: d.dotSize, zoneColor: d.zoneColor, zoneOpacity: d.zoneOpacity,
@@ -2872,7 +2886,12 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                     pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity
                 };
             });
-            _undoState = snap;
+            return snap;
+        }
+
+        function saveUndoState() {
+            if (_undoSaved) return;
+            _undoState = snapshotDatasetState();
             _undoSaved = true;
             if (_undoBtnEl) { _undoBtnEl.style.opacity = ""; _undoBtnEl.style.pointerEvents = ""; }
         }
@@ -2882,15 +2901,79 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
         function undoLastAction() {
             if (!_undoState) return;
             _undoSkipSave = true;
+            // 1. Obnovit smazané zdroje z uloženého raw obsahu
+            var removedKeys = [];
+            Object.keys(_undoState).forEach(function(k) {
+                if (!datasets[k] && _undoState[k] && _undoState[k].exists) removedKeys.push(k);
+            });
+            for (var ri = 0; ri < removedKeys.length; ri++) {
+                (function(k) {
+                    var raw = _undoState[k] ? _undoState[k].raw : null;
+                    var isImage = _undoState[k] ? _undoState[k].isImage : false;
+                    if (!raw) return;
+                    if (isImage) {
+                        try {
+                            var items = JSON.parse(raw);
+                            if (!items || !items.length) return;
+                            var numPhotoSets = Object.keys(datasets).filter(function(x){ return datasets[x].type === "photos"; }).length;
+                            var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "magma", "neon", "google"];
+                            var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark"];
+                            var zoneSequence = ["blue", "green", "teal", "purple", "red", "orange", "yellow", "dark"];
+                            var sd = getSavedDatasetStyle(k);
+                            datasets[k] = {
+                                type: "photos",
+                                fromImage: true,
+                                name: k,
+                                active: _undoState[k].active,
+                                items: items,
+                                mode: (sd && sd.mode && validModes.indexOf(sd.mode) !== -1) ? sd.mode : defaultPhotoMode,
+                                heatPalette: (sd && sd.heatPalette) ? sd.heatPalette : palSequence[numPhotoSets % palSequence.length],
+                                heatOpacity: (sd && sd.heatOpacity !== undefined) ? sd.heatOpacity : 100,
+                                heatBlur: (sd && sd.heatBlur !== undefined) ? sd.heatBlur : 25,
+                                dotColor: (sd && sd.dotColor) ? sd.dotColor : dotSequence[numPhotoSets % dotSequence.length],
+                                dotOpacity: (sd && sd.dotOpacity !== undefined) ? sd.dotOpacity : 50,
+                                zoneColor: (sd && sd.zoneColor) ? sd.zoneColor : zoneSequence[numPhotoSets % zoneSequence.length],
+                                zoneOpacity: (sd && sd.zoneOpacity !== undefined) ? sd.zoneOpacity : 50,
+                                dotSize: parseDotSize(sd ? sd.dotSize : undefined, legacyNum("mapa_fotek_dot_size", 3.5)),
+                                zoneKm: parseZoneKm(sd ? sd.zoneKm : undefined, legacyNum("mapa_fotek_zone_km", 10))
+                            };
+                            try { savePhotoSource(k, raw); } catch(pe) {}
+                        } catch(e) {}
+                        return;
+                    }
+                    var lower = k.toLowerCase();
+                        try {
+                            var trk = null;
+                            if (lower.endsWith(".txt")) { trk = parseRawForUndo(raw, k); }
+                            else if (lower.endsWith(".gpx")) { trk = parseGpx(raw, k); }
+                            else if (lower.endsWith(".kml") || lower.endsWith(".kmz")) { trk = parseKml(raw, k); if (trk && lower.endsWith(".kmz")) trk.format = "KMZ"; }
+                            else if (lower.endsWith(".geojson") || lower.endsWith(".json")) { trk = parseGeoJson(raw, k); }
+                            if (trk) {
+                                datasets[k] = trk;
+                                try { saveStoredSource(k, raw); } catch(se) {}
+                            }
+                        } catch(e) {}
+                })(removedKeys[ri]);
+            }
+            // 2. Vrátit stav (active + styly) pro všechny snapshotované soubory
             Object.keys(_undoState).forEach(function(k) {
                 if (!datasets[k]) return;
                 var s = _undoState[k], d = datasets[k];
+                d.active = s.active;
                 d.mode = s.mode; d.heatPalette = s.heatPalette; d.heatOpacity = s.heatOpacity;
                 d.heatBlur = s.heatBlur; d.dotColor = s.dotColor; d.dotOpacity = s.dotOpacity;
                 d.dotSize = s.dotSize; d.zoneColor = s.zoneColor; d.zoneOpacity = s.zoneOpacity;
                 d.zoneKm = s.zoneKm; d.color = s.color; d.pointColor = s.pointColor;
                 d.trackOpacity = s.trackOpacity; d.lineWidth = s.lineWidth; d.pointSize = s.pointSize;
                 d.pointIcon = s.pointIcon; d.fillColor = s.fillColor; d.fillOpacity = s.fillOpacity;
+            });
+            // 3. Smazat soubory, které ve snapshotu nebyly (přidané po snapshotu)
+            Object.keys(datasets).forEach(function(k) {
+                if (!_undoState[k]) {
+                    var wasImage = !!(datasets[k] && datasets[k].fromImage);
+                    delete datasets[k];
+                    try { localStorage.removeItem(wasImage ? "mf_photo_" + k : "mf_src_" + k); } catch(e) {}
+                }
             });
             _undoState = null;
             _undoSaved = false;
@@ -2899,6 +2982,40 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
             _undoSkipSave = false;
             rebuild();
             showToast(i18n[currentLang].toastUndo || "↩️ Změna byla vrácena zpět");
+        }
+        // Undo obnova zdroje z raw obsahu bez vedlejších efektů (bez toastu/rebuild)
+        function parseRawForUndo(raw, name) {
+            var ls = raw.split("\n"), it = [];
+            for (var i = 0; i < ls.length; i++) {
+                try {
+                    var l = ls[i].trim();
+                    if (!l || l.indexOf("//") === 0 || l.indexOf("DATUM") === 0 || l.indexOf("window.") === 0 || l === "`;") continue;
+                    var p = l.split(";");
+                    if (p.length >= 4) {
+                        var dt = p[0].trim(), fn = p[1].trim(), la = parseFloat(p[2].trim()), lo = parseFloat(p[3].trim()), sz = p.length > 4 ? parseInt(p[4].trim()) || 0 : 0, rp = p.length > 5 ? p[5].trim() : "";
+                        if (!isNaN(la) && !isNaN(lo) && Math.abs(la) <= 90 && Math.abs(lo) <= 180) it.push([la, lo, dt, fn, sz, rp]);
+                    }
+                } catch(lineErr) {}
+            }
+            if (it.length === 0) return null;
+            var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "magma", "neon", "google"];
+            var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark"];
+            var zoneSequence = ["blue", "green", "teal", "purple", "red", "orange", "yellow", "dark"];
+            var savedStyle = getSavedDatasetStyle(name);
+            var defMode = (savedStyle && savedStyle.mode && validModes.indexOf(savedStyle.mode) !== -1) ? savedStyle.mode : defaultPhotoMode;
+            return {
+                type: "photos", name: name, active: true, items: it,
+                mode: defMode,
+                heatPalette: (savedStyle && savedStyle.heatPalette) ? savedStyle.heatPalette : palSequence[0],
+                heatOpacity: (savedStyle && savedStyle.heatOpacity !== undefined) ? savedStyle.heatOpacity : 100,
+                heatBlur: (savedStyle && savedStyle.heatBlur !== undefined) ? savedStyle.heatBlur : 25,
+                dotColor: (savedStyle && savedStyle.dotColor) ? savedStyle.dotColor : dotSequence[0],
+                dotOpacity: (savedStyle && savedStyle.dotOpacity !== undefined) ? savedStyle.dotOpacity : 50,
+                zoneColor: (savedStyle && savedStyle.zoneColor) ? savedStyle.zoneColor : zoneSequence[0],
+                zoneOpacity: (savedStyle && savedStyle.zoneOpacity !== undefined) ? savedStyle.zoneOpacity : 50,
+                dotSize: parseDotSize(savedStyle ? savedStyle.dotSize : undefined, legacyNum("mapa_fotek_dot_size", 3.5)),
+                zoneKm: parseZoneKm(savedStyle ? savedStyle.zoneKm : undefined, legacyNum("mapa_fotek_zone_km", 10))
+            };
         }
 
         function getSavedDatasetStyle(name) {
@@ -2953,6 +3070,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
         function toggleAllSources() {
             var ks = Object.keys(datasets);
             if (ks.length === 0) return;
+            saveUndoState();
             var allActive = ks.every(function(k) { return datasets[k].active; });
             ks.forEach(function(k) { datasets[k].active = !allActive; });
             rebuild();
@@ -2963,6 +3081,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
             var ks = Object.keys(datasets);
             if (ks.length === 0) return;
             if (!confirm(t.confirmCloseAll)) return;
+            saveUndoState();
             datasets = {};
             try {
                 var idxKey = "mapa_fotek_saved_sources_idx";
@@ -2970,6 +3089,10 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                 for (var i = 0; i < idx.length; i++) { localStorage.removeItem("mf_src_" + idx[i]); }
                 localStorage.removeItem(idxKey);
                 localStorage.removeItem("mapa_fotek_saved_sources");
+                var pIdxKey = "mapa_fotek_photo_idx";
+                var pIdx = JSON.parse(localStorage.getItem(pIdxKey) || "[]");
+                for (var pi = 0; pi < pIdx.length; pi++) { localStorage.removeItem("mf_photo_" + pIdx[pi]); }
+                localStorage.removeItem(pIdxKey);
             } catch(e) {}
             rebuild();
         }
@@ -3196,6 +3319,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                 cb.onclick = function(e) { e.stopPropagation(); };
                 cb.onchange = function(e) {
                     if (e) e.stopPropagation();
+                    saveUndoState();
                     d.active = cb.checked;
                     rebuild();
                 };
@@ -3304,8 +3428,10 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                         e.stopPropagation();
                         e.preventDefault();
                     }
+                    saveUndoState();
                     delete datasets[k];
                     removeStoredSource(k);
+                    removePhotoSource(k);
                     showToast(t.toastDel.replace("{name}", k));
                     rebuild();
                 };
@@ -4204,7 +4330,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
             var lat = p[0], lon = p[1], dt = p[2], rawFn = p[3] || "Photo", fs = p[4] || 0, rp = p[5] || "";
             var fn = escapeHtml(rawFn);
             var jsFn = rawFn.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
-            var df = fmtDate(dt), fu = rp ? encodeURI(rp) : "", gm = "https://www.google.com/maps?q="+lat+","+lon, my = "https://mapy.cz/zakladni?q="+lat+"%2C"+lon, sz = fmtBytes(fs);
+            var df = fmtDate(dt), fu = rp ? (rp.indexOf("data:") === 0 ? rp : encodeURI(rp)) : "", gm = "https://www.google.com/maps?q="+lat+","+lon, my = "https://mapy.cz/zakladni?q="+lat+"%2C"+lon, sz = fmtBytes(fs);
             var th = fu ? "<div class=\"thumb-wrapper\" onclick=\"openLB(\x27"+fu+"\x27,\x27"+jsFn+"\x27)\"><img src=\""+fu+"\" class=\"thumb-img\" loading=\"lazy\" decoding=\"async\" onerror=\"this.parentElement.outerHTML=\x27<div class=no-thumb>" + t.noThumb + "</div>\x27\"><div class=\"thumb-badge\">"+t.zoomBadge+"</div></div>" : "<div class=\"no-thumb\">"+t.noThumb+"</div>";
             return th + "<div class=\"card-body\"><div class=\"card-title\" title=\""+fn+"\">"+fn+"</div><div class=\"card-meta\"><span>"+df+"</span><span>"+lat.toFixed(4)+", "+lon.toFixed(4)+"</span></div>"+(sz ? "<div class=\"card-size\">"+sz+"</div>" : "") + "<div class=\"card-actions\"><a href=\""+my+"\" target=\"_blank\" class=\"c-btn c-btn-mapycz\">"+t.btnMapy+"</a><a href=\""+gm+"\" target=\"_blank\" class=\"c-btn c-btn-secondary\">"+t.btnGoogle+"</a>"+(fu ? "<a href=\""+fu+"\" target=\"_blank\" class=\"c-btn c-btn-primary\">"+t.btnFull+"</a>" : "")+"</div></div>";
         }
@@ -4406,11 +4532,13 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                         for (var i = 0; i < trkpts.length; i++) {
                             var lat = parseFloat(trkpts[i].getAttribute("lat"));
                             var lon = parseFloat(trkpts[i].getAttribute("lon"));
+                            var eleNode = trkpts[i].querySelector("ele");
+                            var ele = eleNode ? parseFloat(eleNode.textContent) : NaN;
                             if (!isNaN(lat) && !isNaN(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
                                 if (pts.length > 0) {
                                     dKm += calcDistKm(pts[pts.length - 1][0], pts[pts.length - 1][1], lat, lon);
                                 }
-                                pts.push([lat, lon]);
+                                pts.push(isNaN(ele) ? [lat, lon] : [lat, lon, ele]);
                             }
                         }
                         if (pts.length > 1) {
@@ -4433,11 +4561,13 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                     for (var i = 0; i < rtepts.length; i++) {
                         var lat = parseFloat(rtepts[i].getAttribute("lat"));
                         var lon = parseFloat(rtepts[i].getAttribute("lon"));
+                        var eleNode = rtepts[i].querySelector("ele");
+                        var ele = eleNode ? parseFloat(eleNode.textContent) : NaN;
                         if (!isNaN(lat) && !isNaN(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
                             if (pts.length > 0) {
                                 dKm += calcDistKm(pts[pts.length - 1][0], pts[pts.length - 1][1], lat, lon);
                             }
-                            pts.push([lat, lon]);
+                            pts.push(isNaN(ele) ? [lat, lon] : [lat, lon, ele]);
                         }
                     }
                     if (pts.length > 1) {
@@ -4459,7 +4589,12 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                         var wDesc = "";
                         var wd = wpt.querySelector("desc, cmt");
                         if (wd) wDesc = wd.textContent.trim();
-                        points.push({ name: wName, desc: wDesc, lat: lat, lon: lon });
+                        var wElev = NaN;
+                        var we = wpt.querySelector("ele");
+                        if (we) wElev = parseFloat(we.textContent);
+                        var wptObj = { name: wName, desc: wDesc, lat: lat, lon: lon };
+                        if (!isNaN(wElev)) wptObj.elev = wElev;
+                        points.push(wptObj);
                     }
                 }
 
@@ -4504,7 +4639,8 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                             var lon = parseFloat(parts[0]);
                             var lat = parseFloat(parts[1]);
                             if (!isNaN(lat) && !isNaN(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
-                                arr.push([lat, lon]);
+                                var alt = parseFloat(parts[2]);
+                                arr.push(isNaN(alt) ? [lat, lon] : [lat, lon, alt]);
                             }
                         }
                     }
@@ -4544,7 +4680,10 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                         if (ptCoord) {
                             var pts = parseCoordString(ptCoord.textContent);
                             if (pts.length > 0) {
-                                points.push({ name: pName, desc: pDesc, lat: pts[0][0], lon: pts[0][1] });
+                                var kpt = pts[0];
+                                var kObj = { name: pName, desc: pDesc, lat: kpt[0], lon: kpt[1] };
+                                if (kpt.length > 2 && !isNaN(kpt[2])) kObj.elev = kpt[2];
+                                points.push(kObj);
                             }
                         }
                     }
@@ -4661,7 +4800,8 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                         var lon = parseFloat(c[0]), lat = parseFloat(c[1]);
                         if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) continue;
                         if (pts.length > 0) dKm += calcDistKm(pts[pts.length - 1][0], pts[pts.length - 1][1], lat, lon);
-                        pts.push([lat, lon]);
+                        var elev = parseFloat(c[2]);
+                        pts.push(isNaN(elev) ? [lat, lon] : [lat, lon, elev]);
                     }
                     if (pts.length > 1) { totalDist += dKm; lines.push({ name: label || docName, points: pts, distanceKm: dKm }); }
                 }
@@ -4676,7 +4816,8 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                             if (!c || c.length < 2) continue;
                             var lon = parseFloat(c[0]), lat = parseFloat(c[1]);
                             if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) continue;
-                            ring.push([lat, lon]);
+                            var elev = parseFloat(c[2]);
+                            ring.push(isNaN(elev) ? [lat, lon] : [lat, lon, elev]);
                         }
                         if (ring.length < 3) continue;
                         if (r === 0) outer = ring; else holes.push(ring);
@@ -4691,7 +4832,10 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                     var lon = parseFloat(c[0]), lat = parseFloat(c[1]);
                     if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return;
                     props = props || {};
-                    points.push({ name: props.name || props.title || "", desc: props.description || props.desc || "", lat: lat, lon: lon });
+                    var elev = parseFloat(c[2]);
+                    var pObj = { name: props.name || props.title || "", desc: props.description || props.desc || "", lat: lat, lon: lon };
+                    if (!isNaN(elev)) pObj.elev = elev;
+                    points.push(pObj);
                 }
 
                 for (var i = 0; i < feats.length; i++) {
@@ -4865,9 +5009,281 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
             } catch(e) { return false; }
         }
 
+        // ---- EXIF parsing (JPEG) - ruční binární parser, plně offline ----
+        function readUint16BE(dv, o) { return (dv.getUint8(o) << 8) | dv.getUint8(o + 1); }
+        function readUint32BE(dv, o) { return ((dv.getUint8(o) << 24) | (dv.getUint8(o + 1) << 16) | (dv.getUint8(o + 2) << 8) | dv.getUint8(o + 3)) >>> 0; }
+
+        function parseJpegExif(arrayBuffer) {
+            try {
+                var dv = new DataView(arrayBuffer);
+                if (dv.byteLength < 4) return null;
+                if (dv.getUint8(0) !== 0xFF || dv.getUint8(1) !== 0xD8) return null; // SOI
+                var offset = 2;
+                while (offset + 4 <= dv.byteLength) {
+                    if (dv.getUint8(offset) !== 0xFF) { offset++; continue; }
+                    var marker = dv.getUint8(offset + 1);
+                    if (marker === 0xD8 || (marker >= 0xD0 && marker <= 0xD7) || marker === 0x01) { offset += 2; continue; }
+                    var len = readUint16BE(dv, offset + 2);
+                    if (marker === 0xE1) { // APP1
+                        var appData = offset + 4;
+                        if (appData + 6 <= dv.byteLength) {
+                            if (dv.getUint8(appData) === 0x45 && dv.getUint8(appData + 1) === 0x78 &&
+                                dv.getUint8(appData + 2) === 0x69 && dv.getUint8(appData + 3) === 0x66) { // "Exif"
+                                return parseExifBody(dv, appData + 6, offset + 2 + len);
+                            }
+                        }
+                    }
+                    if (len < 2) break;
+                    offset += 2 + len;
+                }
+            } catch(e) {}
+            return null;
+        }
+
+        function parseExifBody(dv, start, end) {
+            try {
+                if (start + 8 > end) return null;
+                var isBE = false;
+                var b0 = dv.getUint8(start), b1 = dv.getUint8(start + 1);
+                if (b0 === 0x49 && b1 === 0x49) isBE = false;        // II
+                else if (b0 === 0x4D && b1 === 0x4D) isBE = true;   // MM
+                else return null;
+                var read16 = function(o) { return isBE ? readUint16BE(dv, o) : ((dv.getUint8(o + 1) << 8) | dv.getUint8(o)); };
+                var read32 = function(o) { return isBE ? readUint32BE(dv, o) : ((dv.getUint8(o + 3) << 24) | (dv.getUint8(o + 2) << 16) | (dv.getUint8(o + 1) << 8) | dv.getUint8(o)); };
+                if (read16(start + 2) !== 0x2A) return null;
+                var ifd0Offset = read32(start + 4);
+                var gpsIfdOffset = null;
+                var result = { lat: null, lon: null, orientation: null };
+
+                function readIFD(base) {
+                    var abs = start + base;
+                    if (abs + 2 > end) return null;
+                    var count = read16(abs);
+                    for (var i = 0; i < count; i++) {
+                        var entry = abs + 2 + i * 12;
+                        if (entry + 12 > end) break;
+                        var tag = read16(entry);
+                        var type = read16(entry + 2);
+                        var valPtr = entry + 8;
+                        if (tag === 0x8825 && type === 4) { gpsIfdOffset = read32(valPtr); }
+                        else if (tag === 0x0112 && type === 3) { result.orientation = read16(valPtr); }
+                    }
+                    return abs + 2 + count * 12;
+                }
+                readIFD(ifd0Offset);
+                if (gpsIfdOffset !== null) {
+                    var gAbs = start + gpsIfdOffset;
+                    if (gAbs + 2 <= end) {
+                        var gCount = read16(gAbs);
+                        var gLat = null, gLon = null, gLatRef = null, gLonRef = null;
+                        for (var gi = 0; gi < gCount; gi++) {
+                            var ge = gAbs + 2 + gi * 12;
+                            if (ge + 12 > end) break;
+                            var gTag = read16(ge);
+                            var gType = read16(ge + 2);
+                            var gVal = ge + 8;
+                            if (gTag === 1) { gLatRef = String.fromCharCode(dv.getUint8(gVal)); continue; }
+                            else if (gTag === 3) { gLonRef = String.fromCharCode(dv.getUint8(gVal)); continue; }
+                            if (gType === 5 && (gTag === 2 || gTag === 4)) {
+                                var rOff = read32(gVal);           // offset k datům (relativní k start TIFF hlavičky)
+                                var dBase = start + rOff;
+                                if (dBase + 24 <= end) {
+                                    var readRat = function(o) { var n = read32(o), dm = read32(o + 4); return dm === 0 ? 0 : n / dm; };
+                                    var deg = readRat(dBase), min = readRat(dBase + 8), sec = readRat(dBase + 16);
+                                    var val = deg + min / 60 + sec / 3600;
+                                    if (gTag === 2) gLat = val; else gLon = val;
+                                }
+                            }
+                        }
+                        if (gLat !== null && gLon !== null) {
+                            var lat = gLat, lon = gLon;
+                            if (gLatRef === "S") lat = -lat;
+                            if (gLonRef === "W") lon = -lon;
+                            if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) { result.lat = lat; result.lon = lon; }
+                        }
+                    }
+                }
+                if (result.lat === null || result.lon === null) return null;
+                return result;
+            } catch(e) { return null; }
+        }
+
+        // ---- PNG GPS (z textových chunk oma tEXt / eXIf, častokrát chybí) ----
+        function parsePngGps(arrayBuffer) {
+            try {
+                var dv = new DataView(arrayBuffer);
+                if (readUint32BE(dv, 1) !== 0x504E4700) return null; // "PNG\r\n\x1a\n" po signature
+                if (dv.getUint8(0) !== 0x89) return null;
+                var offset = 8;
+                var lat = null, lon = null;
+                function ascii(s) { var o = ""; for (var k = 0; k < s.length; k++) o += String.fromCharCode(s.charCodeAt(k) & 0xFF); return o; }
+                while (offset + 8 <= dv.byteLength) {
+                    var len = readUint32BE(dv, offset);
+                    var type = "";
+                    for (var t = 0; t < 4; t++) type += String.fromCharCode(dv.getUint8(offset + 4 + t));
+                    var dataStart = offset + 8;
+                    if (type === "tEXt") {
+                        var txt = "";
+                        for (var ti = dataStart; ti < dataStart + len && ti < dv.byteLength; ti++) txt += String.fromCharCode(dv.getUint8(ti));
+                        var kv = txt.split("\0");
+                        if (kv.length >= 2) {
+                            if (kv[0] === "GPS-Latitude" && !isNaN(parseFloat(kv[1]))) lat = parseFloat(kv[1]);
+                            if (kv[0] === "GPS-Longitude" && !isNaN(parseFloat(kv[1]))) lon = parseFloat(kv[1]);
+                        }
+                    }
+                    if (type === "IEND") break;
+                    offset += 12 + len;
+                }
+                if (lat === null || lon === null) return null;
+                return { lat: lat, lon: lon, orientation: null };
+            } catch(e) { return null; }
+        }
+
+        // ---- Přidání fotografie (JPG/JPEG/PNG) do mapy z EXIF GPS ----
+        function handlePhotoFile(file) {
+            var t = i18n[currentLang];
+            var name = file.name;
+            var lower = name.toLowerCase();
+            var isPng = lower.endsWith(".png");
+            var r = new FileReader();
+            r.onload = function(e) {
+                try {
+                    var ab = e.target.result;
+                    var gps = isPng ? parsePngGps(ab) : parseJpegExif(ab);
+                    if (!gps || gps.lat === null || gps.lon === null) {
+                        showToast("⚠️ " + (currentLang === 'cs' ? "Fotka nemá v EXIF GPS údaje o poloze: " : "Photo has no EXIF GPS location: ") + name);
+                        return;
+                    }
+                    // Náhled: zmenšený base64 náhled, aby přežil F5 a šetřil úložiště
+                    var blob = new Blob([ab], { type: file.type });
+                    var objUrl = URL.createObjectURL(blob);
+                    var img = new Image();
+                    img.onload = function() {
+                        var canvas = document.createElement("canvas");
+                        var maxW = 480;
+                        var w = img.naturalWidth, h = img.naturalHeight;
+                        var scale = (w > maxW) ? maxW / w : 1;
+                        canvas.width = Math.max(1, Math.round(w * scale));
+                        canvas.height = Math.max(1, Math.round(h * scale));
+                        var ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        var dataUrl = "";
+                        try { dataUrl = canvas.toDataURL("image/jpeg", 0.7); } catch(cve) { dataUrl = objUrl; }
+                        URL.revokeObjectURL(objUrl);
+                        addPhotoFromFile(name, gps.lat, gps.lon, file.lastModified, file.size, dataUrl);
+                    };
+                    img.onerror = function() { URL.revokeObjectURL(objUrl); addPhotoFromFile(name, gps.lat, gps.lon, file.lastModified, file.size, objUrl); };
+                    img.src = objUrl;
+                } catch(err) {
+                    showToast("⚠️ " + (currentLang === 'cs' ? "Chyba při čtení fotky: " : "Error reading photo: ") + name);
+                }
+            };
+            if (isPng) r.readAsArrayBuffer(file); else r.readAsArrayBuffer(file);
+        }
+
+        function addPhotoFromFile(name, lat, lon, lastModified, size, thumbUrl) {
+            var t = i18n[currentLang];
+            var dt = "";
+            try {
+                var d = new Date(lastModified);
+                if (!isNaN(d.getTime())) dt = d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2);
+            } catch(de) {}
+            var items = [[lat, lon, dt, name, size || 0, thumbUrl]];
+            var numPhotoSets = Object.keys(datasets).filter(function(k){ return datasets[k].type === "photos"; }).length;
+            var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "magma", "neon", "google"];
+            var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark"];
+            var zoneSequence = ["blue", "green", "teal", "purple", "red", "orange", "yellow", "dark"];
+            var sd = getSavedDatasetStyle(name);
+            datasets[name] = {
+                type: "photos",
+                fromImage: true,
+                name: name,
+                active: true,
+                items: items,
+                mode: (sd && sd.mode && validModes.indexOf(sd.mode) !== -1) ? sd.mode : defaultPhotoMode,
+                heatPalette: (sd && sd.heatPalette) ? sd.heatPalette : palSequence[numPhotoSets % palSequence.length],
+                heatOpacity: (sd && sd.heatOpacity !== undefined) ? sd.heatOpacity : 100,
+                heatBlur: (sd && sd.heatBlur !== undefined) ? sd.heatBlur : 25,
+                dotColor: (sd && sd.dotColor) ? sd.dotColor : dotSequence[numPhotoSets % dotSequence.length],
+                dotOpacity: (sd && sd.dotOpacity !== undefined) ? sd.dotOpacity : 50,
+                zoneColor: (sd && sd.zoneColor) ? sd.zoneColor : zoneSequence[numPhotoSets % zoneSequence.length],
+                zoneOpacity: (sd && sd.zoneOpacity !== undefined) ? sd.zoneOpacity : 50,
+                dotSize: parseDotSize(sd ? sd.dotSize : undefined, legacyNum("mapa_fotek_dot_size", 3.5)),
+                zoneKm: parseZoneKm(sd ? sd.zoneKm : undefined, legacyNum("mapa_fotek_zone_km", 10))
+            };
+            savePhotoSource(name, JSON.stringify(items));
+            rebuild();
+            showToast("📷 " + (currentLang === 'cs' ? "Fotka přidána: " : "Photo added: ") + name + " (" + lat.toFixed(5) + ", " + lon.toFixed(5) + ")");
+        }
+
+        // Perzistence fotky (JPG/PNG) - ukládá [lat,lon,dt,fn,sz,thumbUrl]
+        function savePhotoSource(name, json) {
+            try {
+                var idxKey = "mapa_fotek_photo_idx";
+                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+                localStorage.setItem("mf_photo_" + name, json);
+                if (idx.indexOf(name) === -1) { idx.push(name); localStorage.setItem(idxKey, JSON.stringify(idx)); }
+            } catch(e) {
+                console.warn("savePhotoSource failed for '" + name + "':", e.message || e);
+                if (e.name === "QuotaExceededError" || e.code === 22 || e.code === 1014) {
+                    showToast("⚠️ " + (i18n[currentLang].toastStorageFull || "Nedostatek místa v úložišti prohlížeče. Fotka se nepodařila uložit, zůstane jen do obnovení stránky."));
+                }
+            }
+        }
+
+        function removePhotoSource(name) {
+            try {
+                var idxKey = "mapa_fotek_photo_idx";
+                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+                localStorage.removeItem("mf_photo_" + name);
+                var pos = idx.indexOf(name); if (pos !== -1) { idx.splice(pos, 1); localStorage.setItem(idxKey, JSON.stringify(idx)); }
+            } catch(e) {}
+        }
+
+        function loadPhotoSources() {
+            try {
+                var idxKey = "mapa_fotek_photo_idx";
+                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+                for (var i = 0; i < idx.length; i++) {
+                    (function(pname) {
+                        if (datasets[pname]) return;
+                        var raw = localStorage.getItem("mf_photo_" + pname);
+                        if (!raw) return;
+                        try {
+                            var items = JSON.parse(raw);
+                            if (!items || !items.length) return;
+                            var numPhotoSets = Object.keys(datasets).filter(function(k){ return datasets[k].type === "photos"; }).length;
+                            var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "magma", "neon", "google"];
+                            var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark"];
+                            var zoneSequence = ["blue", "green", "teal", "purple", "red", "orange", "yellow", "dark"];
+                            var sd = getSavedDatasetStyle(pname);
+                            datasets[pname] = {
+                                type: "photos",
+                                fromImage: true,
+                                name: pname,
+                                active: true,
+                                items: items,
+                                mode: (sd && sd.mode && validModes.indexOf(sd.mode) !== -1) ? sd.mode : defaultPhotoMode,
+                                heatPalette: (sd && sd.heatPalette) ? sd.heatPalette : palSequence[numPhotoSets % palSequence.length],
+                                heatOpacity: (sd && sd.heatOpacity !== undefined) ? sd.heatOpacity : 100,
+                                heatBlur: (sd && sd.heatBlur !== undefined) ? sd.heatBlur : 25,
+                                dotColor: (sd && sd.dotColor) ? sd.dotColor : dotSequence[numPhotoSets % dotSequence.length],
+                                dotOpacity: (sd && sd.dotOpacity !== undefined) ? sd.dotOpacity : 50,
+                                zoneColor: (sd && sd.zoneColor) ? sd.zoneColor : zoneSequence[numPhotoSets % zoneSequence.length],
+                                zoneOpacity: (sd && sd.zoneOpacity !== undefined) ? sd.zoneOpacity : 50,
+                                dotSize: parseDotSize(sd ? sd.dotSize : undefined, legacyNum("mapa_fotek_dot_size", 3.5)),
+                                zoneKm: parseZoneKm(sd ? sd.zoneKm : undefined, legacyNum("mapa_fotek_zone_km", 10))
+                            };
+                        } catch(pe) {}
+                    })(idx[i]);
+                }
+                if (idx.length > 0) rebuild();
+            } catch(e) {}
+        }
+
         function handleFileSelect(f) {
             if (!f || f.length === 0) return;
-            var supportedExts = [".txt", ".gpx", ".kml", ".kmz", ".geojson", ".json"];
+            var supportedExts = [".txt", ".gpx", ".kml", ".kmz", ".geojson", ".json", ".jpg", ".jpeg", ".png"];
             for (var i = 0; i < f.length; i++) {
                 (function(file) {
                     var name = file.name;
@@ -4876,9 +5292,14 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
                     var isSupported = supportedExts.some(function(ext) { return lower.endsWith(ext); });
                     if (!isSupported) {
                         var warnMsg = currentLang === 'cs' 
-                            ? "⚠️ Nepodporovaný soubor: " + name + " (povolené: .txt, .gpx, .kml, .kmz, .geojson)"
-                            : "⚠️ Unsupported file: " + name + " (allowed: .txt, .gpx, .kml, .kmz, .geojson)";
+                            ? "⚠️ Nepodporovaný soubor: " + name + " (povolené: .txt, .gpx, .kml, .kmz, .geojson, .jpg, .png)"
+                            : "⚠️ Unsupported file: " + name + " (allowed: .txt, .gpx, .kml, .kmz, .geojson, .jpg, .png)";
                         showToast(warnMsg);
+                        return;
+                    }
+
+                    if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png")) {
+                        handlePhotoFile(file);
                         return;
                     }
 
@@ -4955,6 +5376,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
 
         initAppPreferences();
         loadStoredSources();
+        loadPhotoSources();
     </script>
 </body>
 </html>
