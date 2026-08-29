@@ -1,10 +1,12 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Mapa fotek • Photo Map</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Cpath%20d%3D%22M50%2010.5%20C31.5%2010.5%2017.5%2024.5%2017.5%2043.5%20C17.5%2062%2042.5%2086.5%2050%2093.5%20C57.5%2086.5%2082.5%2062%2082.5%2043.5%20C82.5%2024.5%2068.5%2010.5%2050%2010.5%20Z%22%20fill%3D%22%231E8544%22/%3E%3Crect%20x%3D%2227.5%22%20y%3D%2225%22%20width%3D%2245%22%20height%3D%2234%22%20rx%3D%221.5%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%222.8%22/%3E%3Cpath%20d%3D%22M30.5%2054.5%20C34%2050%2042%2036.5%2046.5%2034.5%20C49%2033.5%2051.5%2038.5%2055.5%2045.5%20C59%2051%2063%2053.5%2068%2054.5%20L30.5%2054.5%20Z%22%20fill%3D%22%23ffffff%22/%3E%3Cpath%20d%3D%22M58%2033%20A3.6%203.6%200%201%200%2063%2038.5%20A4%204%200%200%201%2058%2033%20Z%22%20fill%3D%22%23ffffff%22/%3E%3Cpolygon%20points%3D%2268%2C40.5%2065.5%2C44.5%2070.5%2C44.5%22%20fill%3D%22%23ffffff%22/%3E%3Cpolygon%20points%3D%2268%2C43.5%2064.5%2C48.5%2071.5%2C48.5%22%20fill%3D%22%23ffffff%22/%3E%3Cpolygon%20points%3D%2268%2C47.5%2063%2C53.5%2073%2C53.5%22%20fill%3D%22%23ffffff%22/%3E%3Crect%20x%3D%2267.2%22%20y%3D%2253.5%22%20width%3D%221.6%22%20height%3D%222%22%20fill%3D%22%23ffffff%22/%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,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">
+    <link rel="shortcut icon" type="image/png" href="data:image/png;base64,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">
+    <link rel="apple-touch-icon" href="data:image/png;base64,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">
     <style>
 .leaflet-image-layer,.leaflet-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane,.leaflet-pane>canvas,.leaflet-pane>svg,.leaflet-tile,.leaflet-tile-container,.leaflet-zoom-box{position:absolute;left:0;top:0}.leaflet-container{overflow:hidden}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}.leaflet-tile::selection{background:0 0}.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}.leaflet-marker-icon,.leaflet-marker-shadow{display:block}.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer{max-width:none!important;max-height:none!important;width:auto;padding:0}.leaflet-container img.leaflet-tile{mix-blend-mode:plus-lighter}.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}.leaflet-container{-webkit-tap-highlight-color:transparent}.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,.4)}.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}.leaflet-zoom-box{width:0;height:0;-moz-box-sizing:border-box;box-sizing:border-box;z-index:800}.leaflet-overlay-pane svg{-moz-user-select:none}.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}.leaflet-map-pane canvas{z-index:100}.leaflet-map-pane svg{z-index:200}.leaflet-vml-shape{width:1px;height:1px}.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}.leaflet-control{position:relative;z-index:800;pointer-events:visiblePainted;pointer-events:auto}.leaflet-bottom,.leaflet-top{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-control{float:left;clear:both}.leaflet-right .leaflet-control{float:right}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px}.leaflet-fade-anim .leaflet-popup{opacity:0;-webkit-transition:opacity .2s linear;-moz-transition:opacity .2s linear;transition:opacity .2s linear}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}.leaflet-zoom-animated{-webkit-transform-origin:0 0;-ms-transform-origin:0 0;transform-origin:0 0}svg.leaflet-zoom-animated{will-change:transform}.leaflet-zoom-anim .leaflet-zoom-animated{-webkit-transition:-webkit-transform .25s cubic-bezier(0,0,.25,1);-moz-transition:-moz-transform .25s cubic-bezier(0,0,.25,1);transition:transform .25s cubic-bezier(0,0,.25,1)}.leaflet-pan-anim .leaflet-tile,.leaflet-zoom-anim .leaflet-tile{-webkit-transition:none;-moz-transition:none;transition:none}.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:-webkit-grab;cursor:-moz-grab;cursor:grab}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}.leaflet-control,.leaflet-popup-pane{cursor:auto}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable{cursor:move;cursor:-webkit-grabbing;cursor:-moz-grabbing;cursor:grabbing}.leaflet-image-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}.leaflet-image-layer.leaflet-interactive,.leaflet-marker-icon.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:visiblePainted;pointer-events:auto}.leaflet-container{background:#ddd;outline-offset:1px}.leaflet-container a{color:#0078a8}.leaflet-zoom-box{border:2px dotted #38f;background:rgba(255,255,255,.5)}.leaflet-container{font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;font-size:12px;font-size:.75rem;line-height:1.5}.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,.65);border-radius:4px}.leaflet-bar a{background-color:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:#000}.leaflet-bar a,.leaflet-control-layers-toggle{background-position:50% 50%;background-repeat:no-repeat;display:block}.leaflet-bar a:focus,.leaflet-bar a:hover{background-color:#f4f4f4}.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}.leaflet-bar a.leaflet-disabled{cursor:default;background-color:#f4f4f4;color:#bbb}.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}.leaflet-touch .leaflet-bar a:first-child{border-top-left-radius:2px;border-top-right-radius:2px}.leaflet-touch .leaflet-bar a:last-child{border-bottom-left-radius:2px;border-bottom-right-radius:2px}.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console',Monaco,monospace;text-indent:1px}.leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out{font-size:22px}.leaflet-control-layers{box-shadow:0 1px 5px rgba(0,0,0,.4);background:#fff;border-radius:5px}.leaflet-control-layers-toggle{background-image:url(images/layers.png);width:36px;height:36px}.leaflet-retina .leaflet-control-layers-toggle{background-image:url(images/layers-2x.png);background-size:26px 26px}.leaflet-touch .leaflet-control-layers-toggle{width:44px;height:44px}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle{display:none}.leaflet-control-layers-expanded .leaflet-control-layers-list{display:block;position:relative}.leaflet-control-layers-expanded{padding:6px 10px 6px 6px;color:#333;background:#fff}.leaflet-control-layers-scrollbar{overflow-y:scroll;overflow-x:hidden;padding-right:5px}.leaflet-control-layers-selector{margin-top:2px;position:relative;top:1px}.leaflet-control-layers label{display:block;font-size:13px;font-size:1.08333em}.leaflet-control-layers-separator{height:0;border-top:1px solid #ddd;margin:5px -10px 5px -6px}.leaflet-default-icon-path{background-image:url(images/marker-icon.png)}.leaflet-container .leaflet-control-attribution{background:#fff;background:rgba(255,255,255,.8);margin:0}.leaflet-control-attribution,.leaflet-control-scale-line{padding:0 5px;color:#333;line-height:1.4}.leaflet-control-attribution a{text-decoration:none}.leaflet-control-attribution a:focus,.leaflet-control-attribution a:hover{text-decoration:underline}.leaflet-attribution-flag{display:inline!important;vertical-align:baseline!important;width:1em;height:.6669em}.leaflet-left .leaflet-control-scale{margin-left:5px}.leaflet-bottom .leaflet-control-scale{margin-bottom:5px}.leaflet-control-scale-line{border:2px solid #777;border-top:none;line-height:1.1;padding:2px 5px 1px;white-space:nowrap;-moz-box-sizing:border-box;box-sizing:border-box;background:rgba(255,255,255,.8);text-shadow:1px 1px #fff}.leaflet-control-scale-line:not(:first-child){border-top:2px solid #777;border-bottom:none;margin-top:-2px}.leaflet-control-scale-line:not(:first-child):not(:last-child){border-bottom:2px solid #777}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers{box-shadow:none}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-layers{border:2px solid rgba(0,0,0,.2);background-clip:padding-box}.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}.leaflet-popup-content-wrapper{padding:1px;text-align:left;border-radius:12px}.leaflet-popup-content{margin:13px 24px 13px 20px;line-height:1.3;font-size:13px;font-size:1.08333em;min-height:1px}.leaflet-popup-content p{margin:17px 0;margin:1.3em 0}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-top:-1px;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;pointer-events:auto;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#333;box-shadow:0 3px 14px rgba(0,0,0,.4)}.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;right:0;border:none;text-align:center;width:24px;height:24px;font:16px/24px Tahoma,Verdana,sans-serif;color:#757575;text-decoration:none;background:0 0}.leaflet-container a.leaflet-popup-close-button:focus,.leaflet-container a.leaflet-popup-close-button:hover{color:#585858}.leaflet-popup-scrolled{overflow:auto}.leaflet-oldie .leaflet-popup-content-wrapper{-ms-zoom:1}.leaflet-oldie .leaflet-popup-tip{width:24px;margin:0 auto}.leaflet-oldie .leaflet-control-layers,.leaflet-oldie .leaflet-control-zoom,.leaflet-oldie .leaflet-popup-content-wrapper,.leaflet-oldie .leaflet-popup-tip{border:1px solid #999}.leaflet-div-icon{background:#fff;border:1px solid #666}.leaflet-tooltip{position:absolute;padding:6px;background-color:#fff;border:1px solid #fff;border-radius:3px;color:#222;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.4)}.leaflet-tooltip.leaflet-interactive{cursor:pointer;pointer-events:auto}.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before,.leaflet-tooltip-top:before{position:absolute;pointer-events:none;border:6px solid transparent;background:0 0;content:""}.leaflet-tooltip-bottom{margin-top:6px}.leaflet-tooltip-top{margin-top:-6px}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before{left:50%;margin-left:-6px}.leaflet-tooltip-top:before{bottom:0;margin-bottom:-12px;border-top-color:#fff}.leaflet-tooltip-bottom:before{top:0;margin-top:-12px;margin-left:-6px;border-bottom-color:#fff}.leaflet-tooltip-left{margin-left:-6px}.leaflet-tooltip-right{margin-left:6px}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{top:50%;margin-top:-6px}.leaflet-tooltip-left:before{right:0;margin-right:-12px;border-left-color:#fff}.leaflet-tooltip-right:before{left:0;margin-left:-12px;border-right-color:#fff}@media print{@page{size:A4;margin:0}body.print-export>*:not(#map){display:none!important}body.print-export #map{position:fixed;left:0;top:0;margin:0;z-index:99999}.leaflet-control{-webkit-print-color-adjust:exact;print-color-adjust:exact}} body.pngtest-export>*:not(#map){display:none!important}
 </style>
@@ -238,10 +240,14 @@
         .icon-style-btn:hover { background: #e8f0fe; border-color: #1a73e8; transform: scale(1.12); }
         .icon-style-btn.active { background: #e8f0fe; border-color: #1a73e8; box-shadow: 0 0 0 1.5px #1a73e8; }
         
-        .slider-input-group { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #3c4043; font-weight: 500; }
-        .slider-input-group input[type="range"] { flex: 1; accent-color: #1a73e8; height: 4px; cursor: pointer; }
-        .slider-input-group input[type="text"], .slider-input-group input[type="number"] { width: 44px; text-align: center; border: 1px solid #dadce0; border-radius: 4px; padding: 2px 4px; font-size: 11px; font-weight: 700; color: #1a73e8; outline: none; }
-        .slider-input-group input[type="text"]:focus, .slider-input-group input[type="number"]:focus { border-color: #1a73e8; }
+        .slider-input-group { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #3c4043; font-weight: 500; min-height: 32px; }
+        .slider-input-group input[type="range"] { flex: 1; accent-color: #1a73e8; height: 6px; cursor: pointer; touch-action: manipulation; -webkit-appearance: none; appearance: none; background: #dadce0; border-radius: 3px; outline: none; margin: 6px 0; padding: 0; }
+        .slider-input-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #1a73e8; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid #ffffff; transition: transform 0.1s ease; }
+        .slider-input-group input[type="range"]::-webkit-slider-thumb:active { transform: scale(1.2); }
+        .slider-input-group input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #1a73e8; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.3); border: 2px solid #ffffff; transition: transform 0.1s ease; }
+        .slider-input-group input[type="range"]::-moz-range-thumb:active { transform: scale(1.2); }
+        .slider-input-group input[type="text"], .slider-input-group input[type="number"] { width: 50px; text-align: center; border: 1.5px solid #dadce0; border-radius: 6px; padding: 3px 4px; font-size: 11px; font-weight: 700; color: #1a73e8; outline: none; background: #ffffff; min-height: 26px; box-sizing: border-box; touch-action: manipulation; }
+        .slider-input-group input[type="text"]:focus, .slider-input-group input[type="number"]:focus { border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.18); }
         
         .source-item-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; flex-grow: 0; margin-left: auto; }
         .source-count { font-size: 10px; color: #5f6368; background: #e8eaed; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
@@ -1102,6 +1108,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         }
 
         // Zobrazení hodnot (v češtině s desetinnou čárkou)
+        function fmtLineWidth(n) {
+            var s = String(Math.round(n * 10) / 10);
+            return (currentLang === "cs") ? s.replace(".", ",") : s;
+        }
         function fmtDotSize(n) {
             var s = String(Math.round(n * 10) / 10);
             return (currentLang === "cs") ? s.replace(".", ",") : s;
@@ -1938,14 +1948,18 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             return R * 2 * Math.atan2(Math.sqrt(aa), Math.sqrt(1 - aa));
         }
 
-        // Orthodromická interpolace: pro segment delší než 100 km vloží mezilehlé body každých ~100 km
-        function geodesicPoints(pts) {
+        // OrthodromickĂˇ interpolace: pro segment delĹˇĂ­ neĹľ 100 km vloĹľĂ­ mezilehlĂ© body kaĹľdĂ˝ch ~100 km
+        // isClosed = true pro uzavĹ™enĂ© prstence polygonĹŻ (zpracuje i uzavĂ­racĂ­ hranu z poslednĂ­ho bodu do prvnĂ­ho)
+        function geodesicPoints(pts, isClosed) {
             if (!pts || pts.length < 2) return pts;
             var STEP_KM = 100;
             var result = [];
-            for (var i = 0; i < pts.length - 1; i++) {
-                var A = pts[i], B = pts[i + 1];
+            var count = isClosed ? pts.length : (pts.length - 1);
+            for (var i = 0; i < count; i++) {
+                var A = pts[i];
+                var B = pts[(i + 1) % pts.length];
                 result.push(A);
+                if (isClosed && i === pts.length - 1 && A[0] === B[0] && A[1] === B[1]) continue;
                 var distKm = calcDistKmLL(A, B);
                 if (distKm > STEP_KM) {
                     var n = Math.floor(distKm / STEP_KM);
@@ -1955,21 +1969,31 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                         Math.pow(Math.sin((lat2 - lat1) / 2), 2) +
                         Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon2 - lon1) / 2), 2)
                     ));
-                    for (var k = 1; k <= n; k++) {
-                        var f = k / (n + 1);
-                        var A2 = Math.sin((1 - f) * d) / Math.sin(d);
-                        var B2 = Math.sin(f * d) / Math.sin(d);
-                        var x = A2 * Math.cos(lat1) * Math.cos(lon1) + B2 * Math.cos(lat2) * Math.cos(lon2);
-                        var y = A2 * Math.cos(lat1) * Math.sin(lon1) + B2 * Math.cos(lat2) * Math.sin(lon2);
-                        var z = A2 * Math.sin(lat1) + B2 * Math.sin(lat2);
-                        var lat = Math.atan2(z, Math.sqrt(x * x + y * y)) * 180 / Math.PI;
-                        var lon = Math.atan2(y, x) * 180 / Math.PI;
-                        result.push([lat, lon]);
+                    if (d > 1e-7) {
+                        for (var k = 1; k <= n; k++) {
+                            var f = k / (n + 1);
+                            var A2 = Math.sin((1 - f) * d) / Math.sin(d);
+                            var B2 = Math.sin(f * d) / Math.sin(d);
+                            var x = A2 * Math.cos(lat1) * Math.cos(lon1) + B2 * Math.cos(lat2) * Math.cos(lon2);
+                            var y = A2 * Math.cos(lat1) * Math.sin(lon1) + B2 * Math.cos(lat2) * Math.sin(lon2);
+                            var z = A2 * Math.sin(lat1) + B2 * Math.sin(lat2);
+                            var lat = Math.atan2(z, Math.sqrt(x * x + y * y)) * 180 / Math.PI;
+                            var lon = Math.atan2(y, x) * 180 / Math.PI;
+                            result.push([lat, lon]);
+                        }
                     }
                 }
             }
-            result.push(pts[pts.length - 1]);
+            if (!isClosed) {
+                result.push(pts[pts.length - 1]);
+            }
             return result;
+        }
+
+        // GeodetickĂˇ interpolace pro polygonovĂ© prstence (vnÄ›jĹˇĂ­ obrys i vnitĹ™nĂ­ otvory)
+        function geodesicRing(ring) {
+            if (!ring || ring.length < 3) return ring;
+            return geodesicPoints(ring, true);
         }
 
         function getTrackIconSvg(type, color, size, strokeColor) {
@@ -2030,8 +2054,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     var fColor = d.fillColor !== undefined ? d.fillColor : poly.fillColor;
                     var fOp = d.fillOpacity !== undefined ? d.fillOpacity : (poly.fillOpacity !== null && poly.fillOpacity !== undefined ? poly.fillOpacity : 0);
                     var outlineColor = d.color || "#1a73e8";
-                    var rings = [poly.outer];
-                    if (poly.holes) for (var h = 0; h < poly.holes.length; h++) rings.push(poly.holes[h]);
+                    // GeodetickĂˇ interpolace stran polygonu delĹˇĂ­ch neĹľ 100 km (vÄŤetnÄ› obvodovĂ˝ch i vnitĹ™nĂ­ch dÄ›r)
+                    var rings = [geodesicRing(poly.outer)];
+                    if (poly.holes) {
+                        for (var h = 0; h < poly.holes.length; h++) {
+                            rings.push(geodesicRing(poly.holes[h]));
+                        }
+                    }
                     var lPoly = L.polygon(rings, {
                         color: outlineColor,
                         weight: d.lineWidth || 4.5,
@@ -2951,16 +2980,31 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                 onVal(n);
                                 if (deferChanged) {
                                     clearTimeout(_numInputTimer);
-                                    _numInputTimer = setTimeout(function() { onChanged(); }, 1000);
+                                    _numInputTimer = setTimeout(function() { onChanged(); }, 500);
                                 } else {
                                     onChanged();
                                 }
                             }
 
                             slider.oninput = function() { applyNum(this.value, true, false); };
+                            slider.onkeydown = function(ev) {
+                                if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") {
+                                    ev.preventDefault();
+                                    applyNum(Math.max(0, parseInt(this.value, 10) - 1), true, false);
+                                } else if (ev.key === "ArrowRight" || ev.key === "ArrowUp") {
+                                    ev.preventDefault();
+                                    applyNum(Math.min(100, parseInt(this.value, 10) + 1), true, false);
+                                }
+                            };
                             numInput.oninput = function() {
                                 var clean = this.value.replace(/[^0-9]/g, '');
                                 if (clean !== "") applyNum(clean, false, true);
+                            };
+                            numInput.onkeydown = function(ev) {
+                                if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                                else if (ev.key === "Escape") { ev.preventDefault(); this.value = slider.value; this.blur(); }
+                                else if (ev.key === "ArrowUp") { ev.preventDefault(); applyNum(Math.min(100, parseInt(slider.value, 10) + 1), true, false); }
+                                else if (ev.key === "ArrowDown") { ev.preventDefault(); applyNum(Math.max(0, parseInt(slider.value, 10) - 1), true, false); }
                             };
                             numInput.onblur = function() { clearTimeout(_numInputTimer); numInput.value = slider.value; onChanged(); };
                             numInput.onfocus = function() { this.select(); };
@@ -3259,15 +3303,30 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                 }
 
                                 slider.oninput = function() { applyPtSz(this.value); };
+                                slider.onkeydown = function(ev) {
+                                    if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") {
+                                        ev.preventDefault();
+                                        applyPtSz(Math.max(4, parseInt(this.value, 10) - 1));
+                                    } else if (ev.key === "ArrowRight" || ev.key === "ArrowUp") {
+                                        ev.preventDefault();
+                                        applyPtSz(Math.min(30, parseInt(this.value, 10) + 1));
+                                    }
+                                };
                                 var _ptSzTimer = null;
                                 numInput.oninput = function() {
-                                    var clean = this.value.replace(/[^0-9]/g, '');
+                                    var clean = this.value.replace(/[^0-9]/g, "");
                                     if (clean !== "") {
                                         var n = parseInt(clean, 10); if (n < 4) n = 4; if (n > 30) n = 30;
-                                        slider.value = n; numInput.value = n; d.pointSize = n; lastEditedDataset = k; curPtSz = n; ptSzPill.innerHTML = "🔘 " + n;
+                                        slider.value = n; d.pointSize = n; lastEditedDataset = k; curPtSz = n; ptSzPill.innerHTML = "đź” " + n;
                                         clearTimeout(_ptSzTimer);
-                                        _ptSzTimer = setTimeout(function() { scheduleStyleApply("pts:" + k, function() { saveDatasetStyles(); rebuild(); }); }, 1000);
+                                        _ptSzTimer = setTimeout(function() { scheduleStyleApply("pts:" + k, function() { saveDatasetStyles(); rebuild(); }); }, 500);
                                     }
+                                };
+                                numInput.onkeydown = function(ev) {
+                                    if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                                    else if (ev.key === "Escape") { ev.preventDefault(); this.value = curPtSz; this.blur(); }
+                                    else if (ev.key === "ArrowUp") { ev.preventDefault(); applyPtSz(Math.min(30, curPtSz + 1)); }
+                                    else if (ev.key === "ArrowDown") { ev.preventDefault(); applyPtSz(Math.max(4, curPtSz - 1)); }
                                 };
                                 numInput.onblur = function() { clearTimeout(_ptSzTimer); this.value = curPtSz; scheduleStyleApply("pts:" + k, function() { saveDatasetStyles(); rebuild(); }); };
                                 numInput.onfocus = function() { this.select(); };
@@ -3332,15 +3391,30 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             }
 
                             slider.oninput = function() { applyBlur(this.value); };
+                            slider.onkeydown = function(ev) {
+                                if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") {
+                                    ev.preventDefault();
+                                    applyBlur(Math.max(5, parseInt(this.value, 10) - 1));
+                                } else if (ev.key === "ArrowRight" || ev.key === "ArrowUp") {
+                                    ev.preventDefault();
+                                    applyBlur(Math.min(50, parseInt(this.value, 10) + 1));
+                                }
+                            };
                             var _blurTimer = null;
                             numInput.oninput = function() {
-                                var clean = this.value.replace(/[^0-9]/g, '');
+                                var clean = this.value.replace(/[^0-9]/g, "");
                                 if (clean !== "") {
                                     var n = parseInt(clean, 10); if (n < 5) n = 5; if (n > 50) n = 50;
-                                    slider.value = n; numInput.value = n; d.heatBlur = n; lastEditedDataset = k; curBlur = n; blurPill.innerHTML = "🌫️ " + n + "px";
+                                    slider.value = n; d.heatBlur = n; lastEditedDataset = k; curBlur = n; blurPill.innerHTML = "đźŚ«ď¸Ź " + n + "px";
                                     clearTimeout(_blurTimer);
-                                    _blurTimer = setTimeout(function() { scheduleStyleApply("blur:" + k, function() { saveDatasetStyles(); updView(); }); }, 1000);
+                                    _blurTimer = setTimeout(function() { scheduleStyleApply("blur:" + k, function() { saveDatasetStyles(); updView(); }); }, 500);
                                 }
+                            };
+                            numInput.onkeydown = function(ev) {
+                                if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                                else if (ev.key === "Escape") { ev.preventDefault(); this.value = curBlur; this.blur(); }
+                                else if (ev.key === "ArrowUp") { ev.preventDefault(); applyBlur(Math.min(50, curBlur + 1)); }
+                                else if (ev.key === "ArrowDown") { ev.preventDefault(); applyBlur(Math.max(5, curBlur - 1)); }
                             };
                             numInput.onblur = function() { clearTimeout(_blurTimer); this.value = curBlur; scheduleStyleApply("blur:" + k, function() { saveDatasetStyles(); updView(); }); };
                             numInput.onfocus = function() { this.select(); };
@@ -3405,15 +3479,30 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                 }
 
                                 slider.oninput = function() { applyDs(this.value); };
+                                slider.onkeydown = function(ev) {
+                                    if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") {
+                                        ev.preventDefault();
+                                        applyDs(Math.max(1, Math.round((parseFloat(this.value) - 0.5) * 10) / 10));
+                                    } else if (ev.key === "ArrowRight" || ev.key === "ArrowUp") {
+                                        ev.preventDefault();
+                                        applyDs(Math.min(25, Math.round((parseFloat(this.value) + 0.5) * 10) / 10));
+                                    }
+                                };
                                 var _dsTimer = null;
                                 numInput.oninput = function() {
-                                    var clean = this.value.replace(/[^0-9]/g, '');
-                                    if (clean !== "") {
-                                        var n = parseDotSize(clean, curDs);
-                                        slider.value = n; numInput.value = fmtDotSize(n); d.dotSize = n; lastEditedDataset = k; curDs = n; dszPill.innerHTML = "🔴 " + fmtDotSize(n) + "px";
+                                    var raw = this.value.replace(/[^0-9.,]/g, "");
+                                    if (raw !== "" && raw !== "." && raw !== ",") {
+                                        var n = parseDotSize(raw, curDs);
+                                        slider.value = n; d.dotSize = n; lastEditedDataset = k; curDs = n; dszPill.innerHTML = "đź”´ " + fmtDotSize(n) + "px";
                                         clearTimeout(_dsTimer);
-                                        _dsTimer = setTimeout(function() { scheduleStyleApply("dsz:" + k, function() { saveDatasetStyles(); updView(); }); }, 1000);
+                                        _dsTimer = setTimeout(function() { scheduleStyleApply("dsz:" + k, function() { saveDatasetStyles(); updView(); }); }, 500);
                                     }
+                                };
+                                numInput.onkeydown = function(ev) {
+                                    if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                                    else if (ev.key === "Escape") { ev.preventDefault(); this.value = fmtDotSize(curDs); this.blur(); }
+                                    else if (ev.key === "ArrowUp") { ev.preventDefault(); applyDs(Math.min(25, Math.round((curDs + 0.5) * 10) / 10)); }
+                                    else if (ev.key === "ArrowDown") { ev.preventDefault(); applyDs(Math.max(1, Math.round((curDs - 0.5) * 10) / 10)); }
                                 };
                                 numInput.onblur = function() { clearTimeout(_dsTimer); this.value = fmtDotSize(curDs); scheduleStyleApply("dsz:" + k, function() { saveDatasetStyles(); updView(); }); };
                                 numInput.onfocus = function() { this.select(); };
@@ -3515,14 +3604,40 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                 }
 
                                 slider.oninput = function() { applyZk(zoneKmFromSlider(this.value)); };
+                                slider.onkeydown = function(ev) {
+                                    if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") {
+                                        ev.preventDefault();
+                                        var nextVal = Math.max(0, parseInt(this.value, 10) - 1);
+                                        this.value = nextVal;
+                                        applyZk(zoneKmFromSlider(nextVal));
+                                    } else if (ev.key === "ArrowRight" || ev.key === "ArrowUp") {
+                                        ev.preventDefault();
+                                        var nextVal = Math.min(ZK_SLIDER_MAX, parseInt(this.value, 10) + 1);
+                                        this.value = nextVal;
+                                        applyZk(zoneKmFromSlider(nextVal));
+                                    }
+                                };
                                 var _zkTimer = null;
                                 numInput.oninput = function() {
-                                    var clean = this.value.replace(/[^0-9]/g, '');
-                                    if (clean !== "") {
-                                        var n = parseZoneKm(clean, curZk);
-                                        slider.value = zoneSliderFromKm(n); numInput.value = fmtZoneKm(n); d.zoneKm = n; lastEditedDataset = k; curZk = n; zkPill.innerHTML = "⬤ " + fmtZoneKm(n) + "km";
+                                    var raw = this.value.replace(/[^0-9.,]/g, "");
+                                    if (raw !== "" && raw !== "." && raw !== ",") {
+                                        var n = parseZoneKm(raw, curZk);
+                                        slider.value = zoneSliderFromKm(n); d.zoneKm = n; lastEditedDataset = k; curZk = n; zkPill.innerHTML = "â¬¤ " + fmtZoneKm(n) + "km";
                                         clearTimeout(_zkTimer);
-                                        _zkTimer = setTimeout(function() { scheduleStyleApply("zk:" + k, function() { saveDatasetStyles(); updView(); }); }, 1000);
+                                        _zkTimer = setTimeout(function() { scheduleStyleApply("zk:" + k, function() { saveDatasetStyles(); updView(); }); }, 500);
+                                    }
+                                };
+                                numInput.onkeydown = function(ev) {
+                                    if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                                    else if (ev.key === "Escape") { ev.preventDefault(); this.value = fmtZoneKm(curZk); this.blur(); }
+                                    else if (ev.key === "ArrowUp") {
+                                        ev.preventDefault();
+                                        var step = curZk < 1 ? 0.1 : (curZk < 100 ? 1 : (curZk < 1000 ? 50 : 100));
+                                        applyZk(Math.min(10000, Math.round((curZk + step) * 10) / 10));
+                                    } else if (ev.key === "ArrowDown") {
+                                        ev.preventDefault();
+                                        var step = curZk <= 1 ? 0.1 : (curZk <= 100 ? 1 : (curZk <= 1000 ? 50 : 100));
+                                        applyZk(Math.max(0, Math.round((curZk - step) * 10) / 10));
                                     }
                                 };
                                 numInput.onblur = function() { clearTimeout(_zkTimer); this.value = fmtZoneKm(curZk); scheduleStyleApply("zk:" + k, function() { saveDatasetStyles(); updView(); }); };
@@ -3619,18 +3734,33 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             }
 
                             slider.oninput = function() { applyW(this.value); };
-                            var _lwTimer = null;
-                            numInput.oninput = function() {
-                                var clean = this.value.replace(/[^0-9.]/g, '');
-                                if (clean !== "") {
-                                    var n = parseFloat(clean);
-                                    if (isNaN(n)) n = 1; if (n < 0.5) n = 0.5; if (n > 20) n = 20;
-                                    slider.value = n; numInput.value = n; d.lineWidth = n; lastEditedDataset = k; curW = n; widthPill.innerHTML = "📏 " + n;
-                                    clearTimeout(_lwTimer);
-                                    _lwTimer = setTimeout(function() { scheduleStyleApply("w:" + k, function() { saveDatasetStyles(); rebuild(); }); }, 1000);
+                            slider.onkeydown = function(ev) {
+                                if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") {
+                                    ev.preventDefault();
+                                    applyW(Math.max(0.5, Math.round((parseFloat(this.value) - 0.5) * 10) / 10));
+                                } else if (ev.key === "ArrowRight" || ev.key === "ArrowUp") {
+                                    ev.preventDefault();
+                                    applyW(Math.min(20, Math.round((parseFloat(this.value) + 0.5) * 10) / 10));
                                 }
                             };
-                            numInput.onblur = function() { clearTimeout(_lwTimer); this.value = curW; scheduleStyleApply("w:" + k, function() { saveDatasetStyles(); rebuild(); }); };
+                            var _lwTimer = null;
+                            numInput.oninput = function() {
+                                var raw = this.value.replace(/[^0-9.,]/g, "");
+                                if (raw !== "" && raw !== "." && raw !== ",") {
+                                    var n = parseFloat(raw.replace(",", "."));
+                                    if (isNaN(n)) n = 1; if (n < 0.5) n = 0.5; if (n > 20) n = 20;
+                                    slider.value = n; d.lineWidth = n; lastEditedDataset = k; curW = n; widthPill.innerHTML = "đź“Ź " + fmtLineWidth(n);
+                                    clearTimeout(_lwTimer);
+                                    _lwTimer = setTimeout(function() { scheduleStyleApply("w:" + k, function() { saveDatasetStyles(); rebuild(); }); }, 500);
+                                }
+                            };
+                            numInput.onkeydown = function(ev) {
+                                if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                                else if (ev.key === "Escape") { ev.preventDefault(); this.value = fmtLineWidth(curW); this.blur(); }
+                                else if (ev.key === "ArrowUp") { ev.preventDefault(); applyW(Math.min(20, Math.round((curW + 0.5) * 10) / 10)); }
+                                else if (ev.key === "ArrowDown") { ev.preventDefault(); applyW(Math.max(0.5, Math.round((curW - 0.5) * 10) / 10)); }
+                            };
+                            numInput.onblur = function() { clearTimeout(_lwTimer); this.value = fmtLineWidth(curW); scheduleStyleApply("w:" + k, function() { saveDatasetStyles(); rebuild(); }); };
                             numInput.onfocus = function() { this.select(); };
                             numInput.onclick = function() { this.select(); };
 
