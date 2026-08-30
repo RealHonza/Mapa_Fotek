@@ -589,7 +589,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.21</span>
+                    <span class="info-meta-val">2.22</span>
                 </div>
             </div>
 
@@ -674,6 +674,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         var validModes = ["heat", "photoCards", "clusters", "dots", "zone"];
         // Výchozí styl zobrazení pro datové soubory (migrace ze staršího globálního nastavení)
         var defaultPhotoMode = (validModes.indexOf(savedViewMode) !== -1) ? savedViewMode : "heat";
+        var validTrackPointModes = ["symbol", "pins", "heat", "zone"];
+        var defaultTrackPointMode = "symbol";
 
         var i18n = {
             cs: {
@@ -707,6 +709,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 lblOpacity: "Průhlednost",
                 lblBlur: "Rozmazání",
                 lblViewStyle: "Styl zobrazení",
+                lblPointViewStyle: "Styl zobrazení bodů",
                 lblDotSize: "Velikost symbolu",
                 lblDotIcon: "Styl symbolu",
                 lblZoneRadius: "Poloměr zóny výskytu",
@@ -730,6 +733,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 mClusters: "Špendlíky",
                 mDots: "Symbol",
                 mZone: "Zóna výskytu",
+                mTPSymbol: "Symbol",
+                mTPPins: "Špendlíky",
+                mTPHeat: "Heatmapa",
+                mTPZone: "Zóna",
                 btnMapy: "Mapy.cz ↗",
                 btnGoogle: "Google ↗",
                 btnFull: "Plná vel. ↗",
@@ -800,6 +807,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 lblOpacity: "Opacity",
                 lblBlur: "Blur",
                 lblViewStyle: "View style",
+                lblPointViewStyle: "Point view style",
                 lblDotSize: "Symbol size",
                 lblDotIcon: "Symbol style",
                 lblZoneRadius: "Coverage zone radius",
@@ -823,6 +831,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 mClusters: "Pins",
                 mDots: "Symbol",
                 mZone: "Coverage Zone",
+                mTPSymbol: "Symbol",
+                mTPPins: "Pins",
+                mTPHeat: "Heatmap",
+                mTPZone: "Zone",
                 btnMapy: "Mapy.cz ↗",
                 btnGoogle: "Google ↗",
                 btnFull: "Full size ↗",
@@ -1157,10 +1169,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         function getModeSvg(key) {
             switch (key) {
                 case "photoCards": return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>';
-                case "clusters":   return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
-                case "dots":       return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>';
-                case "zone":       return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="12" cy="12" r="10" fill-opacity="0.25"/><circle cx="12" cy="12" r="5"/></svg>';
-                default:           return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>';
+                case "clusters":
+                case "pins":     return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>';
+                case "dots":
+                case "symbol":   return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>';
+                case "heat":     return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>';
+                case "zone":     return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="12" cy="12" r="10" fill-opacity="0.25"/><circle cx="12" cy="12" r="5"/></svg>';
+                default:         return '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>';
             }
         }
 
@@ -2161,23 +2176,110 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 }
             }
 
-            // 2. Vykreslení samostatných bodů zájmu (POIs / Waypoints) jako špendlíky/tečky
+            // 2. Vykreslení samostatných bodů zájmu (POIs / Waypoints) – dle pointMode
             if (d.points && d.points.length > 0) {
-                var pointIcon = createTrackPointIcon(d);
-                for (var p = 0; p < d.points.length; p++) {
-                    var pt = d.points[p];
-                    var marker = L.marker([pt.lat, pt.lon], { icon: pointIcon });
+                var tpMode = d.pointMode || "symbol";
+                var ptOp = ((d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 85)) / 100);
+
+                // Funkce pro popup bodu
+                function trackPtPopup(pt) {
                     var pTitle = escapeHtml(pt.name || (currentLang === 'cs' ? "Bod zájmu" : "Waypoint"));
                     var pDesc = escapeHtml(pt.desc || "");
-                    var ptPop = "<div style='padding:6px 8px;font-size:12px;min-width:140px;'>" +
+                    return "<div style='padding:6px 8px;font-size:12px;min-width:140px;'>" +
                         "<div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
                         "<span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:" + (d.pointColor || d.color || "#1a73e8") + ";'></span> " +
                         pTitle + "</div>" +
                         (pDesc ? ("<div style='color:#5f6368;font-size:11px;line-height:1.4;margin-bottom:4px;'>" + pDesc + "</div>") : "") +
                         "<div style='color:#80868b;font-size:10px;font-family:monospace;'>" + pt.lat.toFixed(5) + ", " + pt.lon.toFixed(5) + "</div>" +
                         "</div>";
-                    marker.bindPopup(ptPop);
-                    lg.addLayer(marker);
+                }
+
+                if (tpMode === "heat") {
+                    // Heatmapa: body jako L.heatLayer – průhlednost z heatOpacity
+                    var heatOp = ((d.heatOpacity !== undefined ? d.heatOpacity : 100) / 100);
+                    var heatData = d.points.map(function(pt) { return [pt.lat, pt.lon, heatOp]; });
+                    var heatBlur = d.heatBlur !== undefined ? d.heatBlur : 25;
+                    var heatRadius = Math.max(5, Math.round(heatBlur * 0.6));
+                    var palKey = d.heatPalette || "classic";
+                    var palGrad = (typeof heatPalettes !== "undefined" && heatPalettes[palKey]) ? heatPalettes[palKey] : null;
+                    var heatOpts = { radius: heatRadius, blur: heatBlur, maxZoom: 18, max: 1.0, opacity: heatOp };
+                    if (palGrad) heatOpts.gradient = palGrad;
+                    var heatLayer = L.heatLayer(heatData, heatOpts);
+                    lg.addLayer(heatLayer);
+                    // Malé tečky pro popupy (neviditelné, jen pro kliknutí)
+                    for (var p = 0; p < d.points.length; p++) {
+                        var pt = d.points[p];
+                        var m = L.circleMarker([pt.lat, pt.lon], { radius: 1, opacity: 0, fillOpacity: 0, interactive: true });
+                        m.bindPopup(trackPtPopup(pt));
+                        lg.addLayer(m);
+                    }
+                } else if (tpMode === "zone") {
+                    // Zóna: body jako L.ZoneCanvasLayer (format jako u fotek)
+                    var zoneArr = d.points.map(function(pt) { return [pt.lat, pt.lon]; });
+                    var zoneKm = d.zoneKm !== undefined ? d.zoneKm : 10;
+                    var zColor = d.zoneColor || "blue";
+                    var zoneLayer = new L.ZoneCanvasLayer([{
+                        pts: zoneArr,
+                        colorKey: zColor,
+                        km: parseZoneKm(zoneKm, 10),
+                        opacity: (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 50))
+                    }]);
+                    lg.addLayer(zoneLayer);
+                    // Marker pro popupy
+                    var zObj2 = dotColors[zColor];
+                    var zoneFill = zObj2 ? zObj2.fill : "#1a73e8";
+                    for (var p = 0; p < d.points.length; p++) {
+                        var pt = d.points[p];
+                        var m = L.circleMarker([pt.lat, pt.lon], { radius: 3, fillColor: zoneFill, color: "#ffffff", weight: 1, fillOpacity: ptOp, opacity: ptOp });
+                        m.bindPopup(trackPtPopup(pt));
+                        lg.addLayer(m);
+                    }
+                } else if (tpMode === "pins") {
+                    // Špendlíky s clustery (stejně jako u fotek)
+                    var pinColor = d.pointColor || d.color || "#1a73e8";
+                    var pinColObj = dotColors[pinColor] || { fill: pinColor };
+                    var loc = currentLang === 'cs' ? 'cs-CZ' : 'en-US';
+                    var pg = L.markerClusterGroup({
+                        maxClusterRadius: 50,
+                        spiderfyOnMaxZoom: true,
+                        showCoverageOnHover: false,
+                        zoomToBoundsOnClick: true,
+                        iconCreateFunction: function(cluster) {
+                            var count = cluster.getChildCount();
+                            var size = count < 10 ? 32 : (count < 100 ? 38 : (count < 1000 ? 44 : 50));
+                            var cClass = count < 10 ? "cluster-s" : (count < 100 ? "cluster-m" : (count < 1000 ? "cluster-l" : "cluster-xl"));
+                            return L.divIcon({
+                                html: '<div class="cluster-circle ' + cClass + '">' + count.toLocaleString(loc) + '</div>',
+                                className: 'custom-cluster-icon',
+                                iconSize: [size, size],
+                                iconAnchor: [size / 2, size / 2]
+                            });
+                        }
+                    });
+                    var pMarkers = [];
+                    for (var p = 0; p < d.points.length; p++) {
+                        var pt = d.points[p];
+                        var pinIcon = L.divIcon({
+                            html: "<div style='width:12px;height:12px;background:" + pinColObj.fill + ";border:2px solid #ffffff;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.3);'></div>",
+                            className: 'single-dot-icon',
+                            iconSize: [12, 12],
+                            iconAnchor: [6, 6]
+                        });
+                        var marker = L.marker([pt.lat, pt.lon], { icon: pinIcon });
+                        marker.bindPopup(trackPtPopup(pt));
+                        pMarkers.push(marker);
+                    }
+                    pg.addLayers(pMarkers);
+                    lg.addLayer(pg);
+                } else {
+                    // Symbol (výchozí): existující chování
+                    var pointIcon = createTrackPointIcon(d);
+                    for (var p = 0; p < d.points.length; p++) {
+                        var pt = d.points[p];
+                        var marker = L.marker([pt.lat, pt.lon], { icon: pointIcon });
+                        marker.bindPopup(trackPtPopup(pt));
+                        lg.addLayer(marker);
+                    }
                 }
             }
         }
@@ -2270,6 +2372,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             var sv = getSavedDatasetStyle(name);
                             if (sv) {
                                 if (sv.color) trk.color = sv.color;
+                                if (sv.pointMode) trk.pointMode = sv.pointMode;
                                 if (sv.pointColor) trk.pointColor = sv.pointColor;
                                 if (sv.trackOpacity !== undefined) trk.trackOpacity = sv.trackOpacity;
                                 if (sv.trackLineOpacity !== undefined) trk.trackLineOpacity = sv.trackLineOpacity;
@@ -2284,6 +2387,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             if (trk.lineWidth === undefined) trk.lineWidth = 4.5;
                             if (trk.pointSize === undefined) trk.pointSize = 14;
                             if (!trk.pointIcon) trk.pointIcon = "dot";
+                            if (!trk.pointMode) trk.pointMode = "symbol";
                             datasets[trk.name] = trk;
                         }
                     } catch(e) {}
@@ -2308,6 +2412,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     var d = datasets[k];
                     mapStyles[k] = {
                         mode: d.mode,
+                        pointMode: d.pointMode,
                         heatPalette: d.heatPalette,
                         heatOpacity: d.heatOpacity,
                         heatBlur: d.heatBlur,
@@ -2554,6 +2659,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     photoIdx++;
                 } else if (d.type === "track") {
                     d.color = trackColorList[(trackIdx++) % trackColorList.length];
+                    d.pointMode = "symbol";
                     d.trackOpacity = 85;
                     d.lineWidth = 4.5;
                     d.pointSize = 14;
@@ -2700,7 +2806,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 activePopover.parentNode.removeChild(activePopover);
             }
             activePopover = null;
-            document.querySelectorAll(".color-bubble-btn, .source-pill-btn").forEach(function(b) {
+            document.querySelectorAll(".color-bubble-btn, .source-pill-btn, .icon-style-btn").forEach(function(b) {
                 b.classList.remove("active");
             });
         }
@@ -3091,19 +3197,35 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                 });
                             }, true);
                         } else {
-                            var showPoints = d.type === "photos" || hasPoints;
-                            makeSliderRow(currentLang === "cs" ? "Body" : "Points", curOpPoint, function(n) {
-                                curOpPoint = n;
-                            }, function() {
-                                scheduleStyleApply("oppoint:" + k, function() {
-                                    if (d.type === "track") {
-                                        d.trackPointOpacity = curOpPoint;
-                                    }
-                                    lastEditedDataset = k;
-                                    saveDatasetStyles();
-                                    rebuild();
-                                });
-                            }, showPoints);
+                            var tpM = d.pointMode || defaultTrackPointMode;
+                            var curHeatOp = d.heatOpacity !== undefined ? d.heatOpacity : 100;
+
+                            if (tpM === "heat" && hasPoints) {
+                                makeSliderRow(currentLang === "cs" ? "Heatmapa" : "Heatmap", curHeatOp, function(n) {
+                                    curHeatOp = n;
+                                }, function() {
+                                    scheduleStyleApply("opheat:" + k, function() {
+                                        d.heatOpacity = curHeatOp;
+                                        lastEditedDataset = k;
+                                        saveDatasetStyles();
+                                        rebuild();
+                                    });
+                                }, true);
+                            } else {
+                                var showPoints = d.type === "photos" || hasPoints;
+                                makeSliderRow(currentLang === "cs" ? "Body" : "Points", curOpPoint, function(n) {
+                                    curOpPoint = n;
+                                }, function() {
+                                    scheduleStyleApply("oppoint:" + k, function() {
+                                        if (d.type === "track") {
+                                            d.trackPointOpacity = curOpPoint;
+                                        }
+                                        lastEditedDataset = k;
+                                        saveDatasetStyles();
+                                        rebuild();
+                                    });
+                                }, showPoints);
+                            }
 
                             var showLines = d.type === "track" || hasPolygons;
                             makeSliderRow(currentLang === "cs" ? "Čáry" : "Lines", curOpLine, function(n) {
@@ -3185,6 +3307,53 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     controlsRow.appendChild(modeBtn);
                 }
 
+                // 0b. Tlačítko (pouze tracky): Přepínač stylu zobrazení bodů
+                if (d.type === "track" && d.points && d.points.length > 0) {
+                    var tpModeBtn = document.createElement("button");
+                    tpModeBtn.className = "icon-style-btn";
+                    tpModeBtn.title = t.lblPointViewStyle || "Styl zobrazení bodů";
+                    var dsTPMode = function() { return d.pointMode || defaultTrackPointMode; };
+                    var syncTPModeBtn = function() { tpModeBtn.innerHTML = getModeSvg(dsTPMode()); };
+                    syncTPModeBtn();
+                    tpModeBtn.onclick = function(e) {
+                        if (e) e.stopPropagation();
+                        openPopover(tpModeBtn, function(pop) {
+                            var title = document.createElement("div");
+                            title.className = "popover-title";
+                            title.textContent = t.lblPointViewStyle || "Styl zobrazení bodů";
+                            pop.appendChild(title);
+
+                            var grid = document.createElement("div");
+                            grid.className = "icon-style-grid";
+
+                            var tpModeOpts = [
+                                { k: "symbol", ti: t.mTPSymbol },
+                                { k: "pins",   ti: t.mTPPins },
+                                { k: "heat",   ti: t.mTPHeat },
+                                { k: "zone",   ti: t.mTPZone }
+                            ];
+                            tpModeOpts.forEach(function(o) {
+                                var btn = document.createElement("button");
+                                btn.className = "icon-style-btn" + (dsTPMode() === o.k ? " active" : "");
+                                btn.innerHTML = getModeSvg(o.k);
+                                btn.title = o.ti;
+                                btn.onclick = function(ev) {
+                                    if (ev) ev.stopPropagation();
+                                    d.pointMode = o.k;
+                                    lastEditedDataset = k;
+                                    saveDatasetStyles();
+                                    rebuild();
+                                    renderSrc();
+                                    closeAllPopovers();
+                                };
+                                grid.appendChild(btn);
+                            });
+                            pop.appendChild(grid);
+                        });
+                    };
+                    controlsRow.appendChild(tpModeBtn);
+                }
+
                 // 1. Tlačítko: Barevné kolečko (Color Bubble)
                 var colorBubble = document.createElement("button");
                 colorBubble.className = "color-bubble-btn";
@@ -3228,7 +3397,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                         d.heatPalette = p.key;
                                         lastEditedDataset = k;
                                         saveDatasetStyles();
-                                        updView();
+                                        rebuild();
                                         renderSrc();
                                     };
                                     grid.appendChild(btn);
@@ -3263,57 +3432,109 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 }
 
                 if (d.type === "track") {
-                    // 1. Point color bubble
+                    var tpM = d.pointMode || defaultTrackPointMode;
+
+                    // 1. Point color bubble – upraveno dle pointMode
                     var ptColorBubble = document.createElement("button");
                     ptColorBubble.className = "color-bubble-btn";
                     ptColorBubble.title = t.lblPointColor || "Barva bodů";
-                    ptColorBubble.style.background = d.pointColor || d.color || "#1a73e8";
+
+                    if (tpM === "heat") {
+                        var pObj = pals.find(function(p){ return p.key === (d.heatPalette || "classic"); });
+                        ptColorBubble.style.background = pObj ? pObj.grad : "linear-gradient(135deg, #9182f3, #ffd54f, #c2185b)";
+                    } else if (tpM === "zone") {
+                        var zObj = dotColors[d.zoneColor || "blue"];
+                        ptColorBubble.style.background = zObj ? zObj.fill : "#1a73e8";
+                    } else {
+                        ptColorBubble.style.background = d.pointColor || d.color || "#1a73e8";
+                    }
+
                     ptColorBubble.onclick = function(e) {
                         if (e) e.stopPropagation();
                         openPopover(ptColorBubble, function(pop) {
                             var title = document.createElement("div"); title.className = "popover-title";
-                            title.textContent = currentLang === "cs" ? "Barva bodů" : "Point color";
+                            title.textContent = tpM === "heat" ? (t.lblColor || "Barva / Paleta") :
+                                                tpM === "zone" ? (currentLang === "cs" ? "Barva zóny" : "Zone color") :
+                                                (currentLang === "cs" ? "Barva bodů" : "Point color");
                             pop.appendChild(title);
                             var grid = document.createElement("div"); grid.className = "color-palette-grid";
-                            trackColorOptions.forEach(function(c) {
-                                var btn = document.createElement("button"); btn.style.background = c.fill; btn.title = c.title;
-                                var effectivePtCol = d.pointColor || d.color || "#1a73e8";
-                                if (effectivePtCol.toLowerCase() === c.fill.toLowerCase()) btn.className = "active";
-                                btn.onclick = function(ev) { ev.stopPropagation(); d.pointColor = c.fill; lastEditedDataset = k; ptColorBubble.style.background = c.fill; saveDatasetStyles(); rebuild(); };
-                                grid.appendChild(btn);
-                            });
+
+                            if (tpM === "heat") {
+                                pals.forEach(function(p) {
+                                    var btn = document.createElement("button");
+                                    btn.style.background = p.grad;
+                                    btn.title = p.title;
+                                    if ((d.heatPalette || "classic") === p.key) btn.className = "active";
+                                    btn.onclick = function(ev) {
+                                        if (ev) ev.stopPropagation();
+                                        d.heatPalette = p.key;
+                                        lastEditedDataset = k;
+                                        saveDatasetStyles();
+                                        rebuild();
+                                        renderSrc();
+                                    };
+                                    grid.appendChild(btn);
+                                });
+                            } else if (tpM === "zone") {
+                                var curZCol = d.zoneColor || "blue";
+                                dotColorOptions.forEach(function(c) {
+                                    var btn = document.createElement("button");
+                                    btn.style.background = c.fill;
+                                    btn.title = c.title;
+                                    if (curZCol === c.key) btn.className = "active";
+                                    btn.onclick = function(ev) {
+                                        if (ev) ev.stopPropagation();
+                                        d.zoneColor = c.key;
+                                        lastEditedDataset = k;
+                                        saveDatasetStyles();
+                                        rebuild();
+                                        renderSrc();
+                                    };
+                                    grid.appendChild(btn);
+                                });
+                            } else {
+                                trackColorOptions.forEach(function(c) {
+                                    var btn = document.createElement("button"); btn.style.background = c.fill; btn.title = c.title;
+                                    var effectivePtCol = d.pointColor || d.color || "#1a73e8";
+                                    if (effectivePtCol.toLowerCase() === c.fill.toLowerCase()) btn.className = "active";
+                                    btn.onclick = function(ev) { ev.stopPropagation(); d.pointColor = c.fill; lastEditedDataset = k; ptColorBubble.style.background = c.fill; saveDatasetStyles(); rebuild(); };
+                                    grid.appendChild(btn);
+                                });
+                            }
                             pop.appendChild(grid);
                         });
                     };
                     controlsRow.appendChild(ptColorBubble);
 
-                    // 2. Point icon pill (monochromatic trigger)
-                    var iconPill = document.createElement("button");
-                    iconPill.className = "source-pill-btn";
-                    iconPill.innerHTML = getTrackIconSvg(d.pointIcon || "dot", "#5f6368", 14, "#ffffff");
-                    iconPill.title = t.lblPointIcon || "Styl ikony bodu";
-                    iconPill.onclick = function(e) {
-                        if (e) e.stopPropagation();
-                        openPopover(iconPill, function(pop) {
-                            var title = document.createElement("div"); title.className = "popover-title";
-                            title.textContent = t.lblPointIcon || "Styl ikony bodu (8 stylů)";
-                            pop.appendChild(title);
-                            var grid = document.createElement("div"); grid.className = "icon-style-grid";
-                            trackIconOptions.forEach(function(io) {
-                                var btn = document.createElement("button");
-                                btn.className = "icon-style-btn" + ((d.pointIcon || "dot") === io.key ? " active" : "");
-                                btn.innerHTML = getTrackIconSvg(io.key, d.pointColor || d.color || "#1a73e8", 18, "#ffffff");
-                                btn.title = io.title;
-                                btn.onclick = function(ev) { ev.stopPropagation(); d.pointIcon = io.key; lastEditedDataset = k; saveDatasetStyles(); rebuild(); closeAllPopovers(); };
-                                grid.appendChild(btn);
+                    // 2. Point icon pill – pouze pro symbol mód
+                    if (tpM === "symbol") {
+                        var iconPill = document.createElement("button");
+                        iconPill.className = "source-pill-btn";
+                        iconPill.innerHTML = getTrackIconSvg(d.pointIcon || "dot", "#5f6368", 14, "#ffffff");
+                        iconPill.title = t.lblPointIcon || "Styl ikony bodu";
+                        iconPill.onclick = function(e) {
+                            if (e) e.stopPropagation();
+                            openPopover(iconPill, function(pop) {
+                                var title = document.createElement("div"); title.className = "popover-title";
+                                title.textContent = t.lblPointIcon || "Styl ikony bodu (8 stylů)";
+                                pop.appendChild(title);
+                                var grid = document.createElement("div"); grid.className = "icon-style-grid";
+                                trackIconOptions.forEach(function(io) {
+                                    var btn = document.createElement("button");
+                                    btn.className = "icon-style-btn" + ((d.pointIcon || "dot") === io.key ? " active" : "");
+                                    btn.innerHTML = getTrackIconSvg(io.key, d.pointColor || d.color || "#1a73e8", 18, "#ffffff");
+                                    btn.title = io.title;
+                                    btn.onclick = function(ev) { ev.stopPropagation(); d.pointIcon = io.key; lastEditedDataset = k; saveDatasetStyles(); rebuild(); closeAllPopovers(); };
+                                    grid.appendChild(btn);
+                                });
+                                pop.appendChild(grid);
                             });
-                            pop.appendChild(grid);
-                        });
-                    };
-                    controlsRow.appendChild(iconPill);
+                        };
+                        controlsRow.appendChild(iconPill);
+                    }
 
-                    // Velikost bodů
-                    if (d.points && d.points.length > 0) {
+                    // 3. Velikost bodů – pouze pro symbol mód
+                    if (tpM === "symbol" && d.points && d.points.length > 0) {
                         var curPtSz = d.pointSize || 14;
                         var ptSzPill = document.createElement("button");
                         ptSzPill.className = "source-pill-btn";
@@ -3396,6 +3617,131 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             });
                         };
                         controlsRow.appendChild(ptSzPill);
+                    }
+
+                    // 4. Blur pill – pro heat mód
+                    if (tpM === "heat" && d.points && d.points.length > 0) {
+                        var curBlur = d.heatBlur !== undefined ? d.heatBlur : 25;
+                        var blurPill = document.createElement("button");
+                        blurPill.className = "source-pill-btn";
+                        blurPill.innerHTML = "\uD83C\uDF2B\uFE0F " + curBlur + "px";
+                        blurPill.title = t.lblBlur || "Rozmazání";
+                        blurPill.onclick = function(e) {
+                            if (e) e.stopPropagation();
+                            openPopover(blurPill, function(pop) {
+                                var title = document.createElement("div");
+                                title.className = "popover-title";
+                                title.textContent = (t.lblBlur || "Rozmazání") + " (5–50px)";
+                                pop.appendChild(title);
+                                var group = document.createElement("div");
+                                group.className = "slider-input-group";
+                                var slider = document.createElement("input");
+                                slider.type = "range"; slider.min = "5"; slider.max = "50"; slider.step = "1"; slider.value = curBlur;
+                                var numInput = document.createElement("input");
+                                numInput.type = "text"; numInput.inputMode = "numeric"; numInput.maxLength = 2; numInput.value = curBlur;
+                                function applyTPBlur(v, syncNum) {
+                                    var n = parseInt(v, 10); if (isNaN(n)) n = 25; if (n < 5) n = 5; if (n > 50) n = 50;
+                                    d.heatBlur = n; lastEditedDataset = k; curBlur = n;
+                                    blurPill.innerHTML = "\uD83C\uDF2B\uFE0F " + n + "px"; slider.value = n;
+                                    if (syncNum !== false) numInput.value = n;
+                                    scheduleStyleApply("tpblur:" + k, function() { saveDatasetStyles(); rebuild(); });
+                                }
+                                slider.oninput = function() { applyTPBlur(this.value); };
+                                slider.onkeydown = function(ev) {
+                                    if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") { ev.preventDefault(); applyTPBlur(Math.max(5, parseInt(this.value, 10) - 1)); }
+                                    else if (ev.key === "ArrowRight" || ev.key === "ArrowUp") { ev.preventDefault(); applyTPBlur(Math.min(50, parseInt(this.value, 10) + 1)); }
+                                };
+                                var _tpBlurT = null;
+                                numInput.oninput = function() {
+                                    var clean = this.value.replace(/[^0-9]/g, "");
+                                    if (clean !== "") {
+                                        var n = parseInt(clean, 10); if (n < 5) n = 5; if (n > 50) n = 50;
+                                        slider.value = n; d.heatBlur = n; lastEditedDataset = k; curBlur = n; blurPill.innerHTML = "\uD83C\uDF2B\uFE0F " + n + "px";
+                                        clearTimeout(_tpBlurT);
+                                        _tpBlurT = setTimeout(function() { scheduleStyleApply("tpblur:" + k, function() { saveDatasetStyles(); rebuild(); }); }, 500);
+                                    }
+                                };
+                                numInput.onkeydown = function(ev) {
+                                    if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                                    else if (ev.key === "Escape") { ev.preventDefault(); this.value = curBlur; this.blur(); }
+                                    else if (ev.key === "ArrowUp") { ev.preventDefault(); applyTPBlur(Math.min(50, curBlur + 1)); }
+                                    else if (ev.key === "ArrowDown") { ev.preventDefault(); applyTPBlur(Math.max(5, curBlur - 1)); }
+                                };
+                                numInput.onblur = function() { clearTimeout(_tpBlurT); this.value = curBlur; scheduleStyleApply("tpblur:" + k, function() { saveDatasetStyles(); rebuild(); }); };
+                                numInput.onfocus = function() { this.select(); };
+                                numInput.onclick = function() { this.select(); };
+                                group.appendChild(slider); group.appendChild(numInput);
+                                pop.appendChild(group);
+                            });
+                        };
+                        controlsRow.appendChild(blurPill);
+                    }
+
+                    // 5. Zone radius pill – pro zone mód
+                    if (tpM === "zone" && d.points && d.points.length > 0) {
+                        var curZk = parseZoneKm(d.zoneKm, 10);
+                        var tpZkPill = document.createElement("button");
+                        tpZkPill.className = "source-pill-btn";
+                        tpZkPill.innerHTML = "\u2B24 " + fmtZoneKm(curZk) + "km";
+                        tpZkPill.title = t.lblZoneRadius || "Poloměr zóny";
+                        tpZkPill.onclick = function(e) {
+                            if (e) e.stopPropagation();
+                            openPopover(tpZkPill, function(pop) {
+                                var title = document.createElement("div");
+                                title.className = "popover-title";
+                                title.textContent = (t.lblZoneRadius || "Poloměr zóny") + " (0–10 000 km)";
+                                pop.appendChild(title);
+                                var group = document.createElement("div");
+                                group.className = "slider-input-group";
+                                var slider = document.createElement("input");
+                                slider.type = "range"; slider.min = "0"; slider.max = String(ZK_SLIDER_MAX); slider.step = "1"; slider.value = zoneSliderFromKm(curZk);
+                                var numInput = document.createElement("input");
+                                numInput.type = "text"; numInput.inputMode = "decimal"; numInput.value = fmtZoneKm(curZk);
+                                function applyTPZk(v, syncNum) {
+                                    var n = zoneKmFromSlider(parseInt(v, 10));
+                                    d.zoneKm = n; lastEditedDataset = k; curZk = n;
+                                    tpZkPill.innerHTML = "\u2B24 " + fmtZoneKm(n) + "km"; slider.value = zoneSliderFromKm(n);
+                                    if (syncNum !== false) numInput.value = fmtZoneKm(n);
+                                    scheduleStyleApply("tpzone:" + k, function() { saveDatasetStyles(); rebuild(); });
+                                }
+                                slider.oninput = function() { applyTPZk(this.value); };
+                                slider.onkeydown = function(ev) {
+                                    if (ev.key === "ArrowLeft" || ev.key === "ArrowDown") { ev.preventDefault(); applyTPZk(Math.max(0, parseInt(this.value, 10) - 1)); }
+                                    else if (ev.key === "ArrowRight" || ev.key === "ArrowUp") { ev.preventDefault(); applyTPZk(Math.min(100, parseInt(this.value, 10) + 1)); }
+                                };
+                                var _tpZkT = null;
+                                numInput.oninput = function() {
+                                    var raw = this.value.replace(",", "."); var n = parseFloat(raw);
+                                    if (!isNaN(n)) {
+                                        if (n < 0) n = 0; if (n > 10000) n = 10000;
+                                        d.zoneKm = n; lastEditedDataset = k; curZk = n; tpZkPill.innerHTML = "\u2B24 " + fmtZoneKm(n) + "km";
+                                        clearTimeout(_tpZkT);
+                                        _tpZkT = setTimeout(function() { scheduleStyleApply("tpzone:" + k, function() { saveDatasetStyles(); rebuild(); }); }, 500);
+                                    }
+                                };
+                                numInput.onkeydown = function(ev) {
+                                    if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                                    else if (ev.key === "Escape") { ev.preventDefault(); this.value = fmtZoneKm(curZk); this.blur(); }
+                                    else if (ev.key === "ArrowUp") {
+                                        ev.preventDefault();
+                                        var allKm = [0,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
+                                        var idx = allKm.indexOf(curZk); if (idx === -1) { var b = 0; allKm.forEach(function(v,i){ if(v<=curZk) b=i; }); idx = b; }
+                                        if (idx < allKm.length - 1) applyTPZk(zoneSliderFromKm(allKm[idx + 1]));
+                                    } else if (ev.key === "ArrowDown") {
+                                        ev.preventDefault();
+                                        var allKm2 = [0,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000,2000,5000,10000];
+                                        var idx2 = allKm2.indexOf(curZk); if (idx2 === -1) { var b2 = 0; allKm2.forEach(function(v,i){ if(v<=curZk) b2=i; }); idx2 = b2; }
+                                        if (idx2 > 0) applyTPZk(zoneSliderFromKm(allKm2[idx2 - 1]));
+                                    }
+                                };
+                                numInput.onblur = function() { clearTimeout(_tpZkT); this.value = fmtZoneKm(curZk); scheduleStyleApply("tpzone:" + k, function() { saveDatasetStyles(); rebuild(); }); };
+                                numInput.onfocus = function() { this.select(); };
+                                numInput.onclick = function() { this.select(); };
+                                group.appendChild(slider); group.appendChild(numInput); group.appendChild(document.createTextNode("km"));
+                                pop.appendChild(group);
+                            });
+                        };
+                        controlsRow.appendChild(tpZkPill);
                     }
                 }
 
@@ -3492,6 +3838,47 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     var dsM5 = d.mode || defaultPhotoMode;
 
                     if (dsM5 === "dots") {
+                        var curDotIcon = d.dotIcon || "dot";
+                        var dotColFill = dotColors[d.dotColor || "red"] ? dotColors[d.dotColor || "red"].fill : "#ea4335";
+                        var dotIconPill = document.createElement("button");
+                        dotIconPill.className = "source-pill-btn";
+                        dotIconPill.innerHTML = getTrackIconSvg(curDotIcon, "#5f6368", 14, "#ffffff");
+                        dotIconPill.title = t.lblDotIcon || "Styl symbolu";
+                        dotIconPill.onclick = function(e) {
+                            if (e) e.stopPropagation();
+                            openPopover(dotIconPill, function(pop) {
+                                var title = document.createElement("div");
+                                title.className = "popover-title";
+                                title.textContent = t.lblDotIcon || "Styl symbolu";
+                                pop.appendChild(title);
+                                var grid = document.createElement("div");
+                                grid.className = "icon-style-grid";
+                                trackIconOptions.forEach(function(io) {
+                                    var btn = document.createElement("button");
+                                    btn.className = "icon-style-btn" + (io.key === curDotIcon ? " active" : "");
+                                    btn.innerHTML = getTrackIconSvg(io.key, dotColFill, 18, "#ffffff");
+                                    btn.title = io.title;
+                                    btn.onclick = function(ev) {
+                                        ev.stopPropagation();
+                                        curDotIcon = io.key;
+                                        d.dotIcon = io.key;
+                                        lastEditedDataset = k;
+                                        dotIconPill.innerHTML = getTrackIconSvg(io.key, "#5f6368", 14, "#ffffff");
+                                        grid.querySelectorAll(".icon-style-btn").forEach(function(b){ b.classList.remove("active"); });
+                                        btn.classList.add("active");
+                                        scheduleStyleApply("dio:" + k, function() {
+                                            saveDatasetStyles();
+                                            rebuild();
+                                        });
+                                    };
+                                    grid.appendChild(btn);
+                                });
+                                pop.appendChild(grid);
+                            });
+                        };
+                        controlsRow.appendChild(dotIconPill);
+
+                        // Velikost symbolu
                         var curDs = parseDotSize(d.dotSize, 3.5);
                         var dszPill = document.createElement("button");
                         dszPill.className = "source-pill-btn";
@@ -3572,46 +3959,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             });
                         };
                         controlsRow.appendChild(dszPill);
-
-                        var curDotIcon = d.dotIcon || "dot";
-                        var dotIconPill = document.createElement("button");
-                        dotIconPill.className = "source-pill-btn";
-                        var _dioLabel = function(ik) { var found = dotIconOptions.find(function(o){ return o.key === ik; }); return found ? found.title : "Kolečko"; };
-                        dotIconPill.innerHTML = "✏️ " + _dioLabel(curDotIcon);
-                        dotIconPill.title = t.lblDotIcon || "Styl symbolu";
-                        dotIconPill.onclick = function(e) {
-                            if (e) e.stopPropagation();
-                            openPopover(dotIconPill, function(pop) {
-                                var title = document.createElement("div");
-                                title.className = "popover-title";
-                                title.textContent = t.lblDotIcon || "Styl symbolu";
-                                pop.appendChild(title);
-                                var grid = document.createElement("div");
-                                grid.className = "track-icon-grid";
-                                dotIconOptions.forEach(function(io) {
-                                    var btn = document.createElement("button");
-                                    btn.className = "track-icon-btn" + (io.key === curDotIcon ? " track-icon-active" : "");
-                                    btn.innerHTML = io.svg;
-                                    btn.title = io.title;
-                                    btn.onclick = function(ev) {
-                                        ev.stopPropagation();
-                                        curDotIcon = io.key;
-                                        d.dotIcon = io.key;
-                                        lastEditedDataset = k;
-                                        dotIconPill.innerHTML = "✏️ " + _dioLabel(io.key);
-                                        grid.querySelectorAll(".track-icon-btn").forEach(function(b){ b.classList.remove("track-icon-active"); });
-                                        btn.classList.add("track-icon-active");
-                                        scheduleStyleApply("dio:" + k, function() {
-                                            saveDatasetStyles();
-                                            rebuild();
-                                        });
-                                    };
-                                    grid.appendChild(btn);
-                                });
-                                pop.appendChild(grid);
-                            });
-                        };
-                        controlsRow.appendChild(dotIconPill);
                     }
 
                     if (dsM5 === "zone") {
@@ -4647,6 +4994,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             var savedStyle = getSavedDatasetStyle(track.name);
             if (savedStyle) {
                 if (savedStyle.color) track.color = savedStyle.color;
+                if (savedStyle.pointMode) track.pointMode = savedStyle.pointMode;
                 if (savedStyle.pointColor) track.pointColor = savedStyle.pointColor;
                 if (savedStyle.trackOpacity !== undefined) track.trackOpacity = savedStyle.trackOpacity;
                 if (savedStyle.trackLineOpacity !== undefined) track.trackLineOpacity = savedStyle.trackLineOpacity;
@@ -4661,6 +5009,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             if (track.lineWidth === undefined) track.lineWidth = 4.5;
             if (track.pointSize === undefined) track.pointSize = 14;
             if (!track.pointIcon) track.pointIcon = "dot";
+            if (!track.pointMode) track.pointMode = "symbol";
 
             datasets[track.name] = track;
             rebuild();
