@@ -107,7 +107,7 @@
             position: absolute;
             top: calc(10px + var(--sat));
             left: calc(10px + var(--sal));
-            z-index: 1000;
+            z-index: 1500;
             display: flex;
             gap: 6px;
             align-items: center;
@@ -117,7 +117,7 @@
             position: absolute;
             top: calc(10px + var(--sat));
             right: calc(10px + var(--sar));
-            z-index: 1000;
+            z-index: 1500;
             display: flex;
             gap: 6px;
             align-items: center;
@@ -267,6 +267,17 @@
         .close-all-btn { background: #fce8e6; color: #d93025; border: 1px solid #f5c6c2; padding: 2.5px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
         .close-all-btn:hover { background: #fad2cf; border-color: #d93025; }
         
+        .measure-panel { display: none; position: absolute; top: calc(10px + var(--sat)); left: 50%; transform: translateX(-50%); z-index: 1500; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 32px; padding: 0 8px; }
+        .measure-panel.open { display: flex; align-items: center; }
+        .measure-panel-content { display: flex; align-items: center; gap: 8px; height: 100%; }
+        .measure-panel-btn { height: 28px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.15s; user-select: none; white-space: nowrap; }
+        .measure-panel-btn:hover { background: #ffffff; color: #1a73e8; }
+        .measure-panel-btn.active { background: #1a73e8; color: #ffffff; border-color: #1a73e8; }
+        .measure-panel-btn.icon-only-btn { width: 34px; padding: 0; font-size: 16px; }
+        .measure-panel-btn .degree-badge { position: absolute; top: -4px; right: -4px; background: #c00; color: white; font-size: 9px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; line-height: 1; }
+        .measure-panel-close { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: #5f6368; font-size: 18px; cursor: pointer; border-radius: 4px; line-height: 1; }
+        .measure-panel-close:hover { background: #f1f3f4; color: #202124; }
+        
         .layers-dropdown { display: none; position: absolute; top: 38px; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 230px; max-width: calc(100vw - 20px); z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
         .layers-dropdown.open { display: block; }
         
@@ -318,7 +329,12 @@
         .cluster-l { background: #f4b400; color: #202124; }
         .cluster-xl { background: #d93025; }
         
-        /* MOBILNÍ & TABLETOVÁ OPTIMALIZACE PRO ANDROID I IOS */
+        .grid-panel { display: none; position: absolute; top: 60px; left: 50%; transform: translateX(-50%); z-index: 1500; background: rgba(255,255,255,0.98); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); padding: 10px; border: 1px solid rgba(0,0,0,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .grid-panel.open { display: block; }
+        .grid-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: #3c4043; }
+        .grid-panel-btns { display: flex; gap: 8px; }
+        .close-btn { cursor: pointer; border: none; background: none; font-size: 16px; color: #5f6368; }
+        .grid-label { font-size: 10px; color: #333; font-weight: bold; background: rgba(255,255,255,0.7); border-radius: 3px; padding: 1px 2px; }
         @media (max-width: 768px) {
             .top-bar-left {
                 top: calc(8px + var(--sat));
@@ -359,7 +375,7 @@
                 height: auto;
                 border-radius: 8px;
                 box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-                z-index: 1000;
+                z-index: 1500;
                 background: rgba(255, 255, 255, 0.96);
             }
             .zoom-btn {
@@ -484,6 +500,13 @@
     <div id="loading-overlay"><div class="spinner"></div><div id="loadingText" style="font-weight:500;color:#202124;font-size:13px;">Načítám data...</div></div>
     <div id="drop-zone-overlay"><div style="font-size:42px">📂</div><div id="dropText">Přetáhněte soubor dat či tras (.txt, .gpx, .kml, .kmz, .geojson) sem</div></div>
     <div id="toast"></div>
+    <!-- Panel Měření (připnutý k hornímu okraji uprostřed) -->
+    <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()">
+        <div class="measure-panel-content">
+            <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;">🌐</button>
+            <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření">&times;</button>
+        </div>
+    </div>
     <div id="map"></div>
 
     <!-- HORNÍ LIŠTA VLEVO: MENU + ZDROJE + ROK -->
@@ -504,6 +527,7 @@
                     <button class="lang-half" onclick="menuExportPdfVektor()">🧪 PDF<br><span class="sub">vektor</span></button>
                 </div>
                 <div class="dropdown-item" onclick="menuOpenInfo()"><span id="menuInfoItem">ℹ️ Informace o aplikaci</span></div>
+                <div class="dropdown-item" onclick="toggleMeasurePanel()"><span id="menuMeasureItem">📏 Spustit měření</span></div>
                 <div class="dropdown-item" onclick="spustitEditor()"><span id="menuEditorItem">✏️ Spustit editor</span></div>
             </div>
         </div>
@@ -542,7 +566,6 @@
         <input type="file" id="fileInput" accept=".txt,.gpx,.kml,.kmz,.geojson,.json,.jpg,.jpeg,.png" multiple style="display:none" onchange="handleFileSelect(this.files)">
     </div>
 
-    <!-- HORNÍ LIŠTA VPRAVO: VRSTVY MAPY + ZOOM (velikost teček a poloměr zóny se nastavují u každého souboru v panelu Zdroje) -->
     <div class="top-bar-right">
         <!-- Přepínač mapových podkladů (pouze ikona, 34px) -->
         <div style="position: relative;">
@@ -688,6 +711,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tfMonths: "Měsíce",
                 tfDays: "Dny",
                 menuInfoItem: "ℹ️ Informace o aplikaci",
+                menuMeasureItem: "📏 Spustit měření",
                 menuEditorItem: "✏️ Spustit editor",
                 menuPdfItem: "📄 Uložit mapu jako PDF",
                 btnAddMini: "+ Přidat",
@@ -767,7 +791,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 guideTitle: "📖 Návod k použití:",
                 steps: [
                     "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong><br>Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript má <strong>3 funkce:</strong><div class=\"step-sub\"><br>① <strong>Generovat data fotek (celý archiv)</strong> – projde všechny složky a podsložky, vyčte GNSS z EXIF, Google JSON, Adobe XMP a DJI SRT titulků, deduplikuje a seřadí dle data<br>② <strong>Generovat data fotek (vybrat konkrétní podsložku)</strong><br>③ <strong>Statistika archivu</strong> – vygeneruje přehled složek do CSV (počty, velikosti, nejstarší/nejnovější soubory). Vygenerovaný soubor není pro tuto aplikaci</div><br><strong>Výstupní soubor:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – formát: JavaScriptový datový soubor (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Struktura řádků:</strong> hlavičkové komentáře (<code>//</code>) + záhlaví sloupců + data oddělená středníkem<div class=\"step-sub\"><br><strong>Povinné sloupce (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Nepovinné doplňkové sloupce: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Příklad řádku:</strong><br><code>20240815_143022; foto_z_vyletu.jpg; 49.123456; 16.654321; 5242880; DoCZ/2024/08/foto_z_vyletu.jpg</code><br><br><strong>Popis sloupců:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (z EXIF, názvu souboru nebo data úpravy)<br>• <strong>NAZEV_SOUBORU</strong> – název souboru včetně přípony<br>• <strong>LATITUDE</strong> – zeměpisná šířka (desetinné stupně, 6 desetinných míst)<br>• <strong>LONGITUDE</strong> – zeměpisná délka (desetinné stupně, 6 desetinných míst)<br>• <strong>VELIKOST_BAJTY</strong> – velikost souboru v bajtech <em>(nepovinné)</em><br>• <strong>RELATIVNI_CESTA</strong> – relativní cesta k souboru vůči kořenové složce <em>(nepovinné)</em></div>Soubor přetáhněte do mapy nebo nahrajte přes tlačítko +<br><em>⚠️ Soubor <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte v hlavní kořenové složce s fotografiemi.</em>",
-                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong><br>Otevře nabídku se čtyřmi volbami:<br>• 🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou<br>• 📄 <strong>Uložit mapu</strong> – rozdělené tlačítko se třemi volbami:<div class=\"step-sub\"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≈ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů<br>🧪 <strong>PDF-vektor</strong> – export souboru PDF přes tiskový dialog, rozlišení dle dialogu (obvykle rozlišení displeje ~96 DPI, v tiskárně lze zvýšit), poměr stran dle displeje, zobrazí se všechny vrstvy včetně vektorů (čáry, polygony, body), ty jsou ale v PDF převedeny do rastru</div><br>• ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod<br>• ✏️ <strong>Spustit editor</strong> – otevře postranní panel editoru. Editor je externí nadstavba a nemusí být ve vaší verzi aplikace dostupný.",
+                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong><br>Otevře nabídku s pěti volbami:<br>• 🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou<br>• 📄 <strong>Uložit mapu</strong> – rozdělené tlačítko se třemi volbami:<div class=\"step-sub\"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≈ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů<br>🧪 <strong>PDF-vektor</strong> – export souboru PDF přes tiskový dialog, rozlišení dle dialogu (obvykle rozlišení displeje ~96 DPI, v tiskárně lze zvýšit), poměr stran dle displeje, zobrazí se všechny vrstvy včetně vektorů (čáry, polygony, body), ty jsou ale v PDF převedeny do rastru</div><br>• 📏 <strong>Spustit měření</strong> – otevře panel měření uprostřed horního okraje. V panelu: <strong>Mřížka</strong> – 3 stavy: vypnuto / zobrazení mřížky se zvýrazněnými hlavními rovnoběžkami (rovník, obratníky, polární kruhy) / mřížka s popisky souřadnic<br>• ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod<br>• ✏️ <strong>Spustit editor</strong> – otevře postranní panel editoru. Editor je externí nadstavba a nemusí být ve vaší verzi aplikace dostupný.",
                     "<strong>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů:</strong><br>Číslo v závorce = počet aktivních souborů. Panel zdrojů:<br>• ☑️ Zapnout/vypnout, odebrat, přejmenovat soubor<br>• ↕️ Přetáhnout pro změnu pořadí vykreslování<br>• 🎛️ Ovládací pilulky pro styl, barvy a parametry (podrobně v kroku 4)<br>• ⬇️ <strong>GeoJSON export</strong> – uloží jeden zdroj samostatně jako GeoJSON (tlačítko pod křížkem zdroje)<br>• 🎨 <strong>Sjednotit</strong> – parametry podle posledně upraveného souboru<br>• ↩️ <strong>Zpět</strong> – vrátí poslední sjednocení nebo reset<br>• 🔍 Klik na název = přiblížení na souřadnice<br><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť:</strong><br>V panelu Zdroje je u každého souboru tlačítko stylu a sada ovládacích pilulek:<div class=\"step-sub\"><br><strong>Fotky – 5 režimů:</strong><br>• 🔥 <strong>Heatmapa</strong> – 🎨 8 palet, 💧 průhlednost, 🌙 rozostření (5–50 px)<br>• 🖼️ <strong>Foto-karty</strong> – 💧 průhlednost<br>• 📍 <strong>Špendlíky</strong> – 🎨 8 barev, 💧 průhlednost<br>• ⭐ <strong>Symbol</strong> – 🎨 8 barev, 💧 průhlednost, 📌 styl symbolu (8 stylů), 🔴 velikost (1–25 px)<br>• ⬤ <strong>Zóna výskytu</strong> – 🎨 8 barev, 💧 průhlednost, ⬤ poloměr (0–10 000 km)<br><br><strong>GNSS trasy a polygony:</strong><br>• 🟠 Barva bodů, 📌 styl ikony (8 stylů), 🔘 velikost bodů (4–30 px)<br>• 💧 Průhlednost čar, bodů i výplní<br>• ━━ Barva čáry a polygonu, 📏 tloušťka čáry (0,5–20 px)<br>• Pokud polygony: 🖌️ barva výplně, 💧 průhlednost výplně (0–100 %)<br>• 🌐 <strong>Geodetická interpolace:</strong> Úseky tras i hrany polygonů delší než 100 km se automaticky ortodromicky zakřivují podél povrchu Země.<br><br><strong>🎛️ Vyladěné posuvníky:</strong><br>• Plynulé dotykové ovládání pro mobily a tablety.<br>• Přímé psaní hodnot do číselného pole (s tečkou i čárkou, potvrzení <code>Enter</code>).<br>• Klávesové ovládání: šipky <strong>Doleva / Dolů</strong> snižují o 1 jednotku/krok, <strong>Doprava / Nahoru</strong> zvyšují o 1 jednotku/krok.</div><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>📅 Tlačítko [Vše (počet) ▼] – časový filtr (rok / měsíc / den):</strong><br>Otevírá časový filtr fotografií:<br>• 📅 Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok<br>• 🗓️ Po zvolení roku se nabídka rozbalí o mřížku měsíců<br>• 📆 U vybraného měsíce i o kalendář dnů<br>• ↩️ Opětovným kliknutím se vrátíte o úroveň výš",
@@ -786,6 +810,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tfMonths: "Months",
                 tfDays: "Days",
                 menuInfoItem: "ℹ️ About & Help",
+                menuMeasureItem: "📏 Start Measurement",
                 menuEditorItem: "✏️ Launch Editor",
                 menuPdfItem: "📄 Save map as PDF",
                 btnAddMini: "+ Add",
@@ -865,7 +890,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 guideTitle: "📖 User Guide:",
                 steps: [
                     "<strong>⚡ Data File – First Run (ESSENTIAL):</strong><br>Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script has <strong>3 functions:</strong><div class=\"step-sub\"><br>① <strong>Generate photo data (full archive)</strong> – scans all folders and subfolders, reads GPS from EXIF, Google JSON, Adobe XMP, and DJI SRT subtitles, deduplicates, and sorts by date<br>② <strong>Generate photo data (select a specific subfolder)</strong><br>③ <strong>Archive statistics</strong> – generates a folder overview to CSV (file counts, sizes, oldest/newest files). The generated file is not for this application</div><br><strong>Output file:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – format: JavaScript data file (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Row structure:</strong> comment header (<code>//</code>) + column header + data rows separated by semicolons<div class=\"step-sub\"><br><strong>Required columns (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Optional columns: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Example row:</strong><br><code>20240815_143022; hike_photo.jpg; 49.123456; 16.654321; 5242880; trips/CZ/2024/08/hike_photo.jpg</code><br><br><strong>Column descriptions:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (from EXIF, filename, or file modification date)<br>• <strong>NAZEV_SOUBORU</strong> – filename with extension<br>• <strong>LATITUDE</strong> – latitude in decimal degrees (6 decimal places)<br>• <strong>LONGITUDE</strong> – longitude in decimal degrees (6 decimal places)<br>• <strong>VELIKOST_BAJTY</strong> – file size in bytes <em>(optional)</em><br>• <strong>RELATIVNI_CESTA</strong> – relative path to file from root folder <em>(optional)</em></div>Drag it into the map or upload via the + button<br><em>⚠️ Keep <code>Mapa_Fotek_aktualizace_dat.bat</code> in the root photos folder.</em>",
-                    "<strong>☰ Menu button (top left corner):</strong><br>Opens a menu with four options:<br>• 🌐 <strong>Language switch</strong> – toggles between Czech and English<br>• 📄 <strong>Save map</strong> – split button with three options:<div class=\"step-sub\"><br>📄 <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≈ 1.41), 3mm margins, <em>without</em> vectors<br>🖼️ <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors<br>🧪 <strong>PDF-vector</strong> – PDF file via the print dialog, resolution per dialog (usually display resolution ~96 DPI, can be raised in the print settings), aspect ratio per display, all layers shown including vectors (lines, polygons, points), but these are converted to raster in the PDF</div><br>• ℹ️ <strong>About &amp; Help</strong> – opens this guide<br>• ✏️ <strong>Launch Editor</strong> – opens editor side panel. The editor is an external add-on and may not be available in your version of the application.",
+                    "<strong>☰ Menu button (top left corner):</strong><br>Opens a menu with five options:<br>• 🌐 <strong>Language switch</strong> – toggles between Czech and English<br>• 📄 <strong>Save map</strong> – split button with three options:<div class=\"step-sub\"><br>📄 <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≈ 1.41), 3mm margins, <em>without</em> vectors<br>🖼️ <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors<br>🧪 <strong>PDF-vector</strong> – PDF file via the print dialog, resolution per dialog (usually display resolution ~96 DPI, can be raised in the print settings), aspect ratio per display, all layers shown including vectors (lines, polygons, points), but these are converted to raster in the PDF</div><br>• ℹ️ <strong>About &amp; Help</strong> – opens this guide<br>• 📏 <strong>Start Measurement</strong> – opens measurement panel at top center. Panel contains: <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels<br>• 📏 <strong>Start Measurement</strong> – opens measurement panel at top center. Panel contains: <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels<br>• ✏️ <strong>Launch Editor</strong> – opens editor side panel. The editor is an external add-on and may not be available in your version of the application.",
                     "<strong>📂 Button [Sources (count)] – data sources manager:</strong><br>Number = count of active files. Sources panel:<br>• Toggle on/off, remove, rename each file<br>• Drag to reorder rendering (top items draw on top)<br>• Control pills for style, colors and parameters (details in step 4)<br>• ⬇️ <strong>GeoJSON export</strong> – saves a single source as GeoJSON (button under the × close button)<br>• 🎨 <strong>Unify</strong> – sync parameters to match the last edited file<br>• ↩️ <strong>Undo</strong> – reverts last unify or reset<br>• Click a file name to zoom the map to its coordinates<br><br>All settings are automatically saved permanently in browser storage.",
                     "<strong>🎨 View Style – Selected independently for each dataset:</strong><br>In the Sources panel, each file has a style trigger and pills:<div class=\"step-sub\"><br><strong>Photos – 5 modes:</strong><br>• 🔥 <strong>Heatmap</strong> – 🎨 8 palettes, 💧 opacity, 🌙 blur (5–50 px)<br>• 🖼️ <strong>Photo Cards</strong> – 💧 opacity<br>• 📍 <strong>Pins</strong> – 🎨 8 colors, 💧 opacity<br>• ⭐ <strong>Symbol</strong> – 🎨 8 colors, 💧 opacity, 📌 symbol icon (8 styles), 🔴 size (1–25 px)<br>• ⬤ <strong>Coverage Zone</strong> – 🎨 8 colors, 💧 opacity, ⬤ radius (0–10,000 km)<br><br><strong>GNSS Tracks & Polygons:</strong><br>• 🟠 Point color, 📌 waypoint icon (8 styles), 🔘 point size (4–30 px)<br>• 💧 Line, point, and fill opacity<br>• ━━ Line & polygon color, 📏 line width (0.5–20 px)<br>• If polygons: 🖌️ fill color, 💧 fill opacity (0–100 %)<br>• 🌐 <strong>Geodetic Interpolation:</strong> Track segments and polygon edges longer than 100 km automatically bend along Earth's great circle curvature.<br><br><strong>🎛️ Fine-tuned Sliders:</strong><br>• Smooth touch controls for mobile & tablet.<br>• Direct typing into numeric fields (supports comma and period, press <code>Enter</code>).<br>• Keyboard navigation: <strong>Left / Down</strong> arrows decrease by 1 unit/step, <strong>Right / Up</strong> arrows increase by 1 unit/step.</div><br>All settings are automatically saved in the browser.",
                     "<strong>📅 Button [All (count) ▼] – time filter (year / month / day):</strong><br>Opens the photo time filter:<br>• 📅 Choose <em>All</em> for the complete archive or a specific year<br>• 🗓️ After selecting a year, a month grid appears<br>• 📆 For a selected month, also a day calendar<br>• ↩️ Clicking the active item steps back one level",
@@ -1221,6 +1246,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             if (miInfo) miInfo.textContent = t.menuInfoItem;
             var miEditor = document.getElementById("menuEditorItem");
             if (miEditor) miEditor.textContent = t.menuEditorItem;
+            var miMeasure = document.getElementById("menuMeasureItem");
+            if (miMeasure) miMeasure.textContent = t.menuMeasureItem;
             document.getElementById("txtBtnAddMini").textContent = t.btnAddMini;
             var btnGj = document.getElementById("txtBtnExportGj");
             if (btnGj) btnGj.textContent = t.btnExportGj;
@@ -1999,6 +2026,32 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             updView();
         }
 
+        // Grid
+        var gridLayer = null;
+        function generateGrid() {
+            var geojson = { type: "FeatureCollection", features: [] };
+            for (var lng = -180; lng <= 180; lng += 10) {
+                 var coords = [];
+                 for (var lat = -89.9; lat <= 89.9; lat += 0.5) coords.push([lng, lat]);
+                 geojson.features.push({ type: "Feature", geometry: { type: "LineString", coordinates: coords } });
+            }
+            for (var lat = -80; lat <= 80; lat += 10) {
+                 var coords = [];
+                 for (var lng = -180; lng <= 180; lng += 0.5) coords.push([lng, lat]);
+                 geojson.features.push({ type: "Feature", geometry: { type: "LineString", coordinates: coords } });
+            }
+            return geojson;
+        }
+        function toggleGrid() {
+            closeMenuDropdown();
+            if (gridLayer) {
+                map.removeLayer(gridLayer);
+                gridLayer = null;
+            } else {
+                gridLayer = L.geoJSON(generateGrid(), { style: { color: '#666', weight: 0.5, opacity: 0.5, dashArray: '5, 5' } }).addTo(map);
+            }
+        }
+
         function escapeHtml(str) {
             if (!str) return "";
             return String(str)
@@ -2691,6 +2744,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             try {
                 var idxKey = "mapa_fotek_saved_sources_idx";
                 var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
+
                 for (var i = 0; i < idx.length; i++) { localStorage.removeItem("mf_src_" + idx[i]); }
                 localStorage.removeItem(idxKey);
                 localStorage.removeItem("mapa_fotek_saved_sources");
@@ -2718,6 +2772,197 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         }
 
         var lastEditedDataset = null;
+
+        // Grid & Measure Panel
+        var gridLayer = null;
+        var gridLabelsLayer = null;
+        var gridState = 0; // 0=off, 1=grid, 2=grid+labels
+
+        var specialParallels = [
+            { lat: 0, name: "Rovník" },
+            { lat: 23.4367, name: "Obratník Raka" },
+            { lat: -23.4367, name: "Obratník Kozoroha" },
+            { lat: 66.5633, name: "Severní polární kruh" },
+            { lat: -66.5633, name: "Jižní polární kruh" }
+        ];
+
+        function toggleMeasurePanel() {
+            var p = document.getElementById("measurePanel");
+            p.classList.toggle("open");
+            closeMenuDropdown();
+        }
+
+        function getGridInterval(zoom) {
+            if (zoom < 3) return 30;
+            if (zoom < 5) return 10;
+            if (zoom < 7) return 5;
+            if (zoom < 9) return 1;
+            if (zoom < 11) return 0.5;
+            if (zoom < 13) return 0.1;
+            if (zoom < 15) return 0.05;
+            if (zoom < 17) return 0.01;
+            if (zoom < 19) return 0.005;
+            return 0.001;
+        }
+
+        function generateGrid(zoom, bounds, withLabels) {
+            var interval = getGridInterval(zoom);
+            var geojson = { type: "FeatureCollection", features: [] };
+            
+            var west = Math.floor(bounds.getWest() / interval) * interval;
+            var east = Math.ceil(bounds.getEast() / interval) * interval;
+            var south = Math.floor(bounds.getSouth() / interval) * interval;
+            var north = Math.ceil(bounds.getNorth() / interval) * interval;
+
+            // Offset v pixelech od kraje obrazovky - převést na stupně
+            var pixelOffset = 40; // 40px od kraje
+            var topLeft = map.containerPointToLatLng([pixelOffset, pixelOffset]);
+            var bottomRight = map.containerPointToLatLng([map.getSize().x - pixelOffset, map.getSize().y - pixelOffset]);
+            var labelOffsetLat = Math.abs(north - bottomRight.lat);
+            var labelOffsetLng = Math.abs(west - topLeft.lng);
+
+            var labels = [];
+
+            // Helper: round to 5 decimal places
+            function round5(v) { return Math.round(v * 100000) / 100000; }
+            // Helper: localized special parallel name
+            function spName(p) {
+                return (currentLang === "en") 
+                    ? (p.name.replace("Rovník", "Equator")
+                        .replace("Obratník Raka", "Tropic of Cancer")
+                        .replace("Obratník Kozoroha", "Tropic of Capricorn")
+                        .replace("Severní polární kruh", "Arctic Circle")
+                        .replace("Jižní polární kruh", "Antarctic Circle"))
+                    : p.name;
+            }
+
+            for (var lng = west; lng <= east; lng += interval) {
+                 var coords = [];
+                 for (var lat = south; lat <= north; lat += interval) coords.push([lng, lat]);
+                 geojson.features.push({ type: "Feature", properties: { isSpecial: false }, geometry: { type: "LineString", coordinates: coords } });
+                 if (withLabels) labels.push({ lat: north - labelOffsetLat, lng: lng, text: round5(lng) + "°", anchor: [20, 0] });
+            }
+            for (var lat = south; lat <= north; lat += interval) {
+                 var coords = [];
+                 for (var lng = west; lng <= east; lng += interval) coords.push([lng, lat]);
+                 var isSpecial = specialParallels.some(function(p) { return Math.abs(p.lat - lat) < 0.001; });
+                 geojson.features.push({ type: "Feature", properties: { isSpecial: isSpecial }, geometry: { type: "LineString", coordinates: coords } });
+                 if (withLabels) labels.push({ lat: lat, lng: west + labelOffsetLng, text: round5(lat) + "°", anchor: [0, 10] });
+            }
+            specialParallels.forEach(function(p) {
+                if (p.lat >= south && p.lat <= north) {
+                    var coords = [];
+                    for (var lng = west; lng <= east; lng += interval) coords.push([lng, p.lat]);
+                    geojson.features.push({ type: "Feature", properties: { isSpecial: true, name: p.name }, geometry: { type: "LineString", coordinates: coords } });
+                    if (withLabels) {
+                        var labelText = spName(p) + " " + Math.abs(p.lat) + "°";
+                        labels.push({ lat: p.lat, lng: west + labelOffsetLng, text: labelText, anchor: [0, 10] });
+                        labels.push({ lat: p.lat, lng: east - labelOffsetLng, text: labelText, anchor: [20, 10] });
+                    }
+                }
+            });
+            return { geojson: geojson, labels: labels };
+        }
+
+        function createLabelIcon(text, anchor) {
+            return L.divIcon({
+                className: 'grid-label',
+                html: '<div style="font-size:10px;font-weight:bold;color:#333;background:rgba(255,255,255,0.85);padding:1px 3px;border-radius:3px;white-space:nowrap;">' + text + '</div>',
+                iconSize: null,
+                iconAnchor: anchor
+            });
+        }
+
+        function updateGrid() {
+            if (gridState === 0) return;
+            map.removeLayer(gridLayer);
+            if (gridLabelsLayer) map.removeLayer(gridLabelsLayer);
+
+            var data = generateGrid(map.getZoom(), map.getBounds(), gridState === 2);
+            gridLayer = L.geoJSON(data.geojson, { 
+                style: function(feature) {
+                    if (feature.properties && feature.properties.isSpecial) {
+                        return { color: '#c00', weight: 1.5, opacity: 0.9, dashArray: null };
+                    }
+                    return { color: '#444', weight: 1, opacity: 0.6, dashArray: '5, 5' };
+                }
+            }).addTo(map);
+
+            if (gridState === 2) {
+                gridLabelsLayer = L.layerGroup();
+                data.labels.forEach(function(lbl) {
+                    L.marker([lbl.lat, lbl.lng], {
+                        icon: createLabelIcon(lbl.text, lbl.anchor)
+                    }).addTo(gridLabelsLayer);
+                });
+                gridLabelsLayer.addTo(map);
+            }
+        }
+
+        function cycleGrid() {
+            gridState = (gridState + 1) % 3;
+            var btn = document.getElementById("btnMeasureGrid");
+            
+            if (gridLayer) {
+                map.removeLayer(gridLayer);
+                if (gridLabelsLayer) map.removeLayer(gridLabelsLayer);
+                map.off('moveend zoomend', updateGrid);
+                gridLayer = null;
+                gridLabelsLayer = null;
+            }
+            
+            if (gridState !== 0) {
+                var data = generateGrid(map.getZoom(), map.getBounds(), gridState === 2);
+                gridLayer = L.geoJSON(data.geojson, { 
+                    style: function(feature) {
+                        if (feature.properties && feature.properties.isSpecial) {
+                            return { color: '#c00', weight: 1.5, opacity: 0.9, dashArray: null };
+                        }
+                        return { color: '#444', weight: 1, opacity: 0.6, dashArray: '5, 5' };
+                    }
+                }).addTo(map);
+                if (gridState === 2) {
+                    gridLabelsLayer = L.layerGroup();
+                    data.labels.forEach(function(lbl) {
+                        L.marker([lbl.lat, lbl.lng], {
+                            icon: createLabelIcon(lbl.text, lbl.anchor)
+                        }).addTo(gridLabelsLayer);
+                    });
+                    gridLabelsLayer.addTo(map);
+                }
+                map.on('moveend zoomend', updateGrid);
+            }
+            
+            // Update button appearance
+            if (btn) {
+                // Remove old badge if exists
+                var oldBadge = btn.querySelector('.degree-badge');
+                if (oldBadge) oldBadge.remove();
+                
+                btn.classList.toggle("active", gridState !== 0);
+                
+                if (gridState === 0) {
+                    // Off - monochromatic
+                    btn.textContent = "🌐";
+                    btn.style.filter = "grayscale(100%)";
+                } else if (gridState === 1) {
+                    // Grid on - colored
+                    btn.textContent = "🌐";
+                    btn.style.filter = "none";
+                } else {
+                    // Grid + labels - colored with degree badge (7°)
+                    btn.textContent = "🌐";
+                    btn.style.filter = "none";
+                    var badge = document.createElement('span');
+                    badge.className = 'degree-badge';
+                    badge.style.background = "rgba(0,0,0,0.5)";
+                    badge.style.color = "white";
+                    badge.textContent = "7°";
+                    btn.appendChild(badge);
+                }
+            }
+        }
+
 
         // Akcentové barvy palet heatmapy (pro převod na barvu trasy při sjednocení)
         var heatPaletteAccents = { classic: "#c2185b", google: "#ea4335", inferno: "#de4968", emerald: "#00bfa5", ocean: "#00b4d8", sunset: "#e91e63", magma: "#9e2f7f", neon: "#70e000" };
@@ -5452,9 +5697,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
             _undoBtnEl = document.getElementById("btnUndo");
 
-            if (currentLang !== "cs") {
-                setLanguage(currentLang);
-            }
+            // Always call setLanguage to initialize menu items from i18n
+            setLanguage(currentLang);
 
             var guideSearchEl = document.getElementById("guideSearch");
             if (guideSearchEl && t.guideSearchPH) guideSearchEl.placeholder = t.guideSearchPH;
