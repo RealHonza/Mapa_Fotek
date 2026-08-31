@@ -103,25 +103,37 @@
         #map { width: 100%; height: 100%; z-index: 1; background: #ffffff; }
         
         /* HORNÍ LIŠTY S RESPOZIVNÍM CHOVÁNÍM */
-        .top-bar-left {
+        /* SPOLEČNÝ OBALOVACÍ KONTEJNER */
+        .top-nav-container {
             position: absolute;
             top: calc(10px + var(--sat));
             left: calc(10px + var(--sal));
-            z-index: 1500;
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            pointer-events: auto;
-        }
-        .top-bar-right {
-            position: absolute;
-            top: calc(10px + var(--sat));
             right: calc(10px + var(--sar));
             z-index: 1500;
             display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+        }
+        .top-bar-left {
+            position: static;
+            order: 1;
+            display: flex;
             gap: 6px;
             align-items: center;
             pointer-events: auto;
+            flex: 0 0 auto;
+        }
+        .top-bar-right {
+            position: static;
+            order: 3;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            pointer-events: auto;
+            flex: 0 0 auto;
         }
         
         .ui-btn { height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.15s; user-select: none; }
@@ -267,8 +279,11 @@
         .close-all-btn { background: #fce8e6; color: #d93025; border: 1px solid #f5c6c2; padding: 2.5px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
         .close-all-btn:hover { background: #fad2cf; border-color: #d93025; }
         
-        .measure-panel { display: none; position: absolute; top: calc(10px + var(--sat)); left: 50%; transform: translateX(-50%); z-index: 1500; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 32px; padding: 0 8px; }
+        .measure-panel { display: none; position: static; transform: none; order: 2; margin: 0 auto; pointer-events: auto; flex: 0 1 auto; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 32px; padding: 0 8px; }
         .measure-panel.open { display: flex; align-items: center; }
+        @media (max-width: 600px) {
+            .measure-panel { width: 100%; justify-content: center; order: 4; margin-top: 4px; flex: 0 0 100%; }
+        }
         .measure-panel-content { display: flex; align-items: center; gap: 8px; height: 100%; }
         .measure-panel-btn { height: 28px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.15s; user-select: none; white-space: nowrap; }
         .measure-panel-btn:hover { background: #ffffff; color: #1a73e8; }
@@ -500,15 +515,10 @@
     <div id="loading-overlay"><div class="spinner"></div><div id="loadingText" style="font-weight:500;color:#202124;font-size:13px;">Načítám data...</div></div>
     <div id="drop-zone-overlay"><div style="font-size:42px">📂</div><div id="dropText">Přetáhněte soubor dat či tras (.txt, .gpx, .kml, .kmz, .geojson) sem</div></div>
     <div id="toast"></div>
-    <!-- Panel Měření (připnutý k hornímu okraji uprostřed) -->
-    <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()">
-        <div class="measure-panel-content">
-            <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;">🌐</button>
-            <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření">&times;</button>
-        </div>
-    </div>
     <div id="map"></div>
 
+    <!-- SPOLEČNÝ KONTEJNER: horní lišty + panel měření -->
+    <div class="top-nav-container">
     <!-- HORNÍ LIŠTA VLEVO: MENU + ZDROJE + ROK -->
     <div class="top-bar-left">
         <!-- 0. Hamburger menu: jazyk + uložit (PDF/PNG) + informace -->
@@ -566,6 +576,14 @@
         <input type="file" id="fileInput" accept=".txt,.gpx,.kml,.kmz,.geojson,.json,.jpg,.jpeg,.png" multiple style="display:none" onchange="handleFileSelect(this.files)">
     </div>
 
+    <!-- Panel Měření -->
+    <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()">
+        <div class="measure-panel-content">
+            <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;">🌐</button>
+            <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření">&times;</button>
+        </div>
+    </div>
+
     <div class="top-bar-right">
         <!-- Přepínač mapových podkladů (pouze ikona, 34px) -->
         <div style="position: relative;">
@@ -590,6 +608,7 @@
             <button class="zoom-btn" onclick="map.zoomOut()" title="Oddálit">−</button>
         </div>
     </div>
+    </div><!-- /top-nav-container -->
 
     <!-- MODÁLNÍ OKNO: INFORMACE O PROGRAMU -->
     <div id="infoModalBackdrop" class="modal-backdrop" onclick="closeInfoModal()">
@@ -612,7 +631,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.22</span>
+                    <span class="info-meta-val">2.27</span>
                 </div>
             </div>
 
@@ -902,7 +921,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         };
 
         var datasets = {}, rawData = [];
-        var map = L.map("map", { center: [50.0878, 14.4204], zoom: 6, zoomControl: false });
+        var map = L.map("map", { 
+    center: [50.0878, 14.4204], 
+    zoom: 6, 
+    zoomControl: false,
+    minZoom: 2,
+    maxBounds: [[-85.05112878, -180], [85.05112878, 180]],
+    maxBoundsViscosity: 1.0
+});
 
         var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var mapyAttr = '&copy; <a href="https://www.seznam.cz" target="_blank">Seznam.cz, a.s.</a>, &copy; OpenStreetMap';
@@ -1661,27 +1687,38 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             var t = i18n[currentLang];
             var features = [];
             var ks = Object.keys(datasets);
+            var hasHeatmap = false;
             for (var i = 0; i < ks.length; i++) {
                 var d = datasets[ks[i]];
                 if (!d.active) continue;
+                if (d.type === "photos" && (d.mode || "dots") === "heat") hasHeatmap = true;
 
                 if (d.type === "photos") {
                     var items = d.items || [];
                     for (var j = 0; j < items.length; j++) {
                         var it = items[j];
                         var lat = it[0], lon = it[1], date = it[2], fname = it[3];
+                        var mode = d.mode || "dots";
+                        var props = {
+                            dataset: d.name,
+                            name: fname || null,
+                            description: date || null,
+                            mode: mode,
+                            pointColor: d.dotColor || null,
+                            opacity: mode === "heat" ? (d.heatOpacity || 100) / 100 : (mode === "dots" ? (d.dotOpacity || 50) / 100 : (mode === "zone" ? (d.zoneOpacity || 50) / 100 : null)),
+                            zoneRadiusKm: mode === "zone" ? d.zoneKm : null
+                        };
+                        if (mode === "heat") {
+                            props.heatPalette = d.heatPalette || "classic";
+                            props.heatBlur = d.heatBlur || 25;
+                            props.heatRadius = Math.max(5, Math.round((d.heatBlur || 25) * 0.6));
+                            // Weight for heatmap intensity (used by some renderers)
+                            props.weight = 1.0;
+                        }
                         features.push({
                             type: "Feature",
                             geometry: { type: "Point", coordinates: [lon, lat] },
-                            properties: {
-                                dataset: d.name,
-                                date: date || null,
-                                file: fname || null,
-                                mode: d.mode || null,
-                                pointColor: d.dotColor || null,
-                                opacity: d.mode === "heatmap" ? d.heatOpacity : (d.mode === "dots" ? d.dotOpacity : (d.mode === "zone" ? d.zoneOpacity : null)),
-                                zoneRadiusKm: d.mode === "zone" ? d.zoneKm : null
-                            }
+                            properties: props
                         });
                     }
                 } else if (d.type === "track") {
@@ -1795,22 +1832,20 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             var features = [];
 
             if (d.type === "photos") {
+                // Jednotlivý export – bez parametrů stylu (pouze základní identifikace)
                 var items = d.items || [];
                 for (var j = 0; j < items.length; j++) {
                     var p = items[j];
                     var lat = p[0], lon = p[1], dt = p[2], fname = p[3] || "Photo";
+                    var props = {
+                        dataset: d.name,
+                        name: fname || null,
+                        description: dt || null
+                    };
                     features.push({
                         type: "Feature",
                         geometry: { type: "Point", coordinates: [lon, lat] },
-                        properties: {
-                            dataset: d.name,
-                            date: dt || null,
-                            file: fname || null,
-                            mode: d.mode || null,
-                            pointColor: d.dotColor || null,
-                            opacity: d.mode === "heatmap" ? d.heatOpacity : (d.mode === "dots" ? d.dotOpacity : (d.mode === "zone" ? d.zoneOpacity : null)),
-                            zoneRadiusKm: d.mode === "zone" ? d.zoneKm : null
-                        }
+                        properties: props
                     });
                 }
             } else if (d.type === "track") {
@@ -1838,10 +1873,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             properties: {
                                 dataset: d.name,
                                 name: line.name || d.title || d.name || null,
-                                distanceKm: line.distanceKm || null,
-                                color: lineColor,
-                                opacity: trackOp / 100,
-                                lineWidth: d.lineWidth || 4.5
+                                distanceKm: line.distanceKm || null
                             }
                         });
                     }
@@ -1873,12 +1905,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             geometry: { type: "Polygon", coordinates: rings },
                             properties: {
                                 dataset: d.name,
-                                name: poly.name || d.title || d.name || null,
-                                color: lineColor,
-                                opacity: trackOp / 100,
-                                lineWidth: d.lineWidth || 4.5,
-                                fillColor: d.fillColor || poly.fillColor || null,
-                                fillOpacity: d.fillOpacity !== undefined ? d.fillOpacity : (poly.fillOpacity || 0)
+                                name: poly.name || d.title || d.name || null
                             }
                         });
                     }
@@ -1894,10 +1921,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             properties: {
                                 dataset: d.name,
                                 name: wpt.name || null,
-                                description: wpt.desc || null,
-                                color: d.pointColor || d.color || "#1a73e8",
-                                pointSize: d.pointSize || 14,
-                                pointIcon: d.pointIcon || "dot"
+                                description: wpt.desc || null
                             }
                         });
                     }
@@ -2146,7 +2170,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             var sz = d.pointSize || 14;
             var col = d.pointColor || d.color || "#1a73e8";
             var iconType = d.pointIcon || "dot";
-            var op = ((d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 85)) / 100);
+            var rawOp = (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 85));
+            if (rawOp < 50) rawOp = 50;
+            var op = rawOp / 100;
 
             var iconSize = sz + 6;
             var anchor = [iconSize / 2, iconSize / 2];
@@ -2232,7 +2258,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             // 2. Vykreslení samostatných bodů zájmu (POIs / Waypoints) – dle pointMode
             if (d.points && d.points.length > 0) {
                 var tpMode = d.pointMode || "symbol";
-                var ptOp = ((d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 85)) / 100);
+                var _rawPtOp = (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 85));
+                if (_rawPtOp < 50) _rawPtOp = 50;
+                var ptOp = _rawPtOp / 100;
 
                 // Funkce pro popup bodu
                 function trackPtPopup(pt) {
@@ -2271,11 +2299,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     var zoneArr = d.points.map(function(pt) { return [pt.lat, pt.lon]; });
                     var zoneKm = d.zoneKm !== undefined ? d.zoneKm : 10;
                     var zColor = d.zoneColor || "blue";
+                    var _zoneRawOp = (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 50));
+                    if (_zoneRawOp < 50) _zoneRawOp = 50;
                     var zoneLayer = new L.ZoneCanvasLayer([{
                         pts: zoneArr,
                         colorKey: zColor,
                         km: parseZoneKm(zoneKm, 10),
-                        opacity: (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 50))
+                        opacity: _zoneRawOp
                     }]);
                     lg.addLayer(zoneLayer);
                     // Marker pro popupy
@@ -2425,7 +2455,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                             var sv = getSavedDatasetStyle(name);
                             if (sv) {
                                 if (sv.color) trk.color = sv.color;
-                                if (sv.pointMode) trk.pointMode = sv.pointMode;
+                                // pointMode se apriorně nemění – vždy symbol pro GeoJSON/KML/KMZ/GPX (uživatel přepne sám)
                                 if (sv.pointColor) trk.pointColor = sv.pointColor;
                                 if (sv.trackOpacity !== undefined) trk.trackOpacity = sv.trackOpacity;
                                 if (sv.trackLineOpacity !== undefined) trk.trackLineOpacity = sv.trackLineOpacity;
@@ -2437,6 +2467,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                 if (sv.fillOpacity !== undefined) trk.fillOpacity = sv.fillOpacity;
                             }
                             if (trk.trackOpacity === undefined) trk.trackOpacity = 85;
+                            if (trk.trackPointOpacity === undefined || trk.trackPointOpacity < 50) trk.trackPointOpacity = 50;
                             if (trk.lineWidth === undefined) trk.lineWidth = 4.5;
                             if (trk.pointSize === undefined) trk.pointSize = 14;
                             if (!trk.pointIcon) trk.pointIcon = "dot";
@@ -3337,6 +3368,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     var baseOp = d.trackOpacity !== undefined ? d.trackOpacity : 85;
                     curOpLine = d.trackLineOpacity !== undefined ? d.trackLineOpacity : baseOp;
                     curOpPoint = d.trackPointOpacity !== undefined ? d.trackPointOpacity : baseOp;
+                    if ((d.pointMode || "symbol") === "symbol" && curOpPoint < 50) curOpPoint = 50;
                     if (hasPolygons) {
                         curOpFill = d.fillOpacity !== undefined ? Math.round(d.fillOpacity * 100) : 50;
                     }
@@ -3585,6 +3617,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                 btn.onclick = function(ev) {
                                     if (ev) ev.stopPropagation();
                                     d.pointMode = o.k;
+                                    if (d.pointMode === "symbol" && (d.trackPointOpacity === undefined || d.trackPointOpacity < 50)) d.trackPointOpacity = 50;
                                     lastEditedDataset = k;
                                     saveDatasetStyles();
                                     rebuild();
@@ -4800,15 +4833,38 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 }
             }
 
-            if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
+if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
 
             if (colorGroupsAcc && colorGroupsAcc.length > 0) {
                 zoneLayerInstance = new L.ZoneCanvasLayer(colorGroupsAcc);
                 map.addLayer(zoneLayerInstance);
             }
-        }
-
-        map.on("zoomend", function() {
+            
+            // HEATMAPA pro TRACK (KML/KMZ/GeoJSON body)
+            for (var k = 0; k < ks.length; k++) {
+                var d = datasets[ks[k]];
+                if (!d.active || d.type !== "track") continue;
+                var mode = d.pointMode || "symbol";
+                if (mode !== "heat") continue;
+                var trackPts = d.points || [];
+                if (!trackPts || trackPts.length === 0) continue;
+                
+                var op = (d.heatOpacity !== undefined ? d.heatOpacity : (d.trackOpacity || 85)) / 100;
+                var hp = [];
+                for (var i = 0; i < trackPts.length; i++) {
+                    var tp = trackPts[i];
+                    hp.push([tp.lat, tp.lon, 0.75 * op]);
+                }
+                var h = hpZ(map.getZoom());
+                var grad = heatPalettes[d.heatPalette || "classic"] || heatPalettes.classic;
+                var blur = d.heatBlur !== undefined ? d.heatBlur : h.b;
+                var hl = L.heatLayer(hp, { radius: h.r, blur: blur, minOpacity: h.o * op, maxZoom: 17, gradient: grad });
+                var lg = d._layerGroup;
+                if (lg) { lg.addLayer(hl); } else { map.addLayer(hl); }
+                heatLayers.push({ layer: hl, palette: d.heatPalette || "classic", opacity: op, heatBlur: d.heatBlur });
+            }
+            
+            map.on("zoomend", function() {
             if (heatLayers && heatLayers.length > 0) {
                 var h = hpZ(map.getZoom());
                 for (var i = 0; i < heatLayers.length; i++) {
@@ -4818,8 +4874,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     var blur = item.heatBlur !== undefined ? item.heatBlur : h.b;
                     item.layer.setOptions({ radius: h.r, blur: blur, minOpacity: h.o * op, gradient: grad });
                 }
-            }
+}
         });
+    }
 
         // PARSOVÁNÍ GPX
         function parseGpx(xmlStr, name) {
@@ -4926,7 +4983,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     points: points,
                     totalDistanceKm: totalDist,
                     color: trackColors[(trackColorIdx++) % trackColors.length],
-                    active: true
+                    active: true,
+                    // Default heatmap properties for track point mode "heat"
+                    heatPalette: "classic",
+                    heatBlur: 25,
+                    heatOpacity: 100,
+                    // Default point opacity for track symbols (min 50%)
+                    trackPointOpacity: 50
                 };
             } catch (e) {
                 return null;
@@ -5079,7 +5142,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     polygons: polygons,
                     totalDistanceKm: totalDist,
                     color: trackColors[(trackColorIdx++) % trackColors.length],
-                    active: true
+                    active: true,
+                    // Default heatmap properties for track point mode "heat"
+                    heatPalette: "classic",
+                    heatBlur: 25,
+                    heatOpacity: 100,
+                    // Default point opacity for track symbols (min 50%)
+                    trackPointOpacity: 50
                 };
             } catch (e) {
                 return null;
@@ -5181,6 +5250,78 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
                 if (lines.length === 0 && points.length === 0 && polygons.length === 0) return null;
 
+                // Detect if this is a heatmap export (photos with heatmap mode)
+                var isHeatmap = false;
+                var heatPalette = "classic", heatBlur = 25, heatOpacity = 100, dotColor = "red", dotOpacity = 50;
+                for (var i = 0; i < feats.length; i++) {
+                    var p = feats[i].properties || {};
+                    if (p.mode === "heat" || p.mode === "heatmap" || p.heatPalette || p.heatBlur !== undefined || p.heatRadius !== undefined) {
+                        isHeatmap = true;
+                        if (p.heatPalette) heatPalette = p.heatPalette;
+                        if (p.heatBlur !== undefined) heatBlur = p.heatBlur;
+                        if (p.heatOpacity !== undefined) heatOpacity = p.heatOpacity;
+                        if (p.pointColor) dotColor = p.pointColor;
+                        if (p.opacity !== undefined) dotOpacity = Math.round(p.opacity * 100);
+                        break;
+                    }
+                }
+
+                if (isHeatmap && points.length > 0) {
+                    // Create photos dataset with heatmap mode (mode must be "heat" to match updView)
+                    var items = points.map(function(p) {
+                        return [p.lat, p.lon, p.name || "", p.desc || "", 0, ""];
+                    });
+                    return {
+                        type: "photos",
+                        format: "GeoJSON",
+                        name: name,
+                        title: docName,
+                        active: true,
+                        items: items,
+                        mode: "heat",
+                        heatPalette: heatPalette,
+                        heatOpacity: heatOpacity,
+                        heatBlur: heatBlur,
+                        dotColor: dotColor,
+                        dotOpacity: dotOpacity,
+                        dotSize: 3.5,
+                        zoneColor: "blue",
+                        zoneOpacity: 50,
+                        zoneKm: 10
+                    };
+                }
+
+                // Varianta 2: jednotlivý export fotek bez parametrů – detekce podle description "20260606__142347"
+                if (!isHeatmap && points.length > 0 && lines.length === 0 && polygons.length === 0) {
+                    var photoCnt = 0;
+                    for (var _pi = 0; _pi < points.length; _pi++) {
+                        if (points[_pi].desc && /^\d{8}__\d{6}/.test(points[_pi].desc)) photoCnt++;
+                    }
+                    if (photoCnt > 0 && photoCnt >= Math.ceil(points.length / 2)) {
+                        var items2 = points.map(function(p) {
+                            return [p.lat, p.lon, p.desc || "", p.name || "", 0, ""];
+                        });
+                        return {
+                            type: "photos",
+                            format: "GeoJSON",
+                            name: name,
+                            title: docName,
+                            active: true,
+                            items: items2,
+                            mode: "dots",
+                            heatPalette: "classic",
+                            heatOpacity: 100,
+                            heatBlur: 25,
+                            dotColor: "red",
+                            dotOpacity: 50,
+                            dotSize: 3.5,
+                            zoneColor: "blue",
+                            zoneOpacity: 50,
+                            zoneKm: 10
+                        };
+                    }
+                }
+
                 return {
                     type: "track",
                     format: "GeoJSON",
@@ -5191,7 +5332,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     polygons: polygons,
                     totalDistanceKm: totalDist,
                     color: trackColors[(trackColorIdx++) % trackColors.length],
-                    active: true
+                    active: true,
+                    // Default heatmap properties for track point mode "heat"
+                    heatPalette: "classic",
+                    heatBlur: 25,
+                    heatOpacity: 100,
+                    // Default point opacity for track symbols (min 50%)
+                    trackPointOpacity: 50
                 };
             } catch (e) {
                 return null;
@@ -5239,7 +5386,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             var savedStyle = getSavedDatasetStyle(track.name);
             if (savedStyle) {
                 if (savedStyle.color) track.color = savedStyle.color;
-                if (savedStyle.pointMode) track.pointMode = savedStyle.pointMode;
+                // pointMode se apriorně nemění – vždy symbol pro GeoJSON/KML/KMZ/GPX (uživatel přepne sám)
                 if (savedStyle.pointColor) track.pointColor = savedStyle.pointColor;
                 if (savedStyle.trackOpacity !== undefined) track.trackOpacity = savedStyle.trackOpacity;
                 if (savedStyle.trackLineOpacity !== undefined) track.trackLineOpacity = savedStyle.trackLineOpacity;
@@ -5251,6 +5398,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 if (savedStyle.fillOpacity !== undefined) track.fillOpacity = savedStyle.fillOpacity;
             }
             if (track.trackOpacity === undefined) track.trackOpacity = 85;
+            if (track.trackPointOpacity === undefined || track.trackPointOpacity < 50) track.trackPointOpacity = 50;
             if (track.lineWidth === undefined) track.lineWidth = 4.5;
             if (track.pointSize === undefined) track.pointSize = 14;
             if (!track.pointIcon) track.pointIcon = "dot";
