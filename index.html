@@ -595,6 +595,7 @@
     <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()">
         <div class="measure-panel-content">
             <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;">🌐</button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleMeasureDistance()" id="btnMeasureDist" title="Měřit vzdálenost" style="width: 34px;">📏</button>
             <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření">&times;</button>
         </div>
     </div>
@@ -646,7 +647,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.29</span>
+                    <span class="info-meta-val">2.30</span>
                 </div>
             </div>
 
@@ -745,7 +746,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tfMonths: "Měsíce",
                 tfDays: "Dny",
                 menuInfoItem: "ℹ️ Informace o aplikaci",
-                menuMeasureItem: "📏 Spustit měření",
+menuMeasureItem: "📏 Spustit měření",
+                btnMeasureGrid: "Mřížka souřadnic",
+                btnMeasureDist: "Měřit vzdálenost",
+                btnMeasureClose: "Zavřít panel měření",
+                btnMeasureDistCancel: "Zrušit měření (Esc)",
                 menuEditorItem: "✏️ Spustit editor",
                 menuPdfItem: "📄 Uložit mapu jako PDF",
                 btnAddMini: "+ Přidat",
@@ -762,6 +767,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Obnovit výchozí barvy a průhlednost",
                 titleUndo: "Vrátit poslední změnu stylů (sjednocení / reset)",
+                btnMeasureDist: "Měřit vzdálenost",
                 lblColor: "Barva / Paleta",
                 lblPointColor: "Barva bodů",
                 lblOpacity: "Průhlednost",
@@ -845,6 +851,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tfDays: "Days",
                 menuInfoItem: "ℹ️ About & Help",
                 menuMeasureItem: "📏 Start Measurement",
+                btnMeasureGrid: "Coordinate grid",
+                btnMeasureClose: "Close measurement panel",
+                btnMeasureDistCancel: "Cancel measurement (Esc)",
                 menuEditorItem: "✏️ Launch Editor",
                 menuPdfItem: "📄 Save map as PDF",
                 btnAddMini: "+ Add",
@@ -861,6 +870,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Reset colors and styles to default",
                 titleUndo: "Undo last style change (unify / reset)",
+                btnMeasureDist: "Measure distance",
                 lblColor: "Color / Palette",
                 lblPointColor: "Point color",
                 lblOpacity: "Opacity",
@@ -936,7 +946,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         };
 
         var datasets = {}, rawData = [];
-        var map = L.map("map", { 
+var map = L.map("map", { 
     center: [50.0878, 14.4204], 
     zoom: 6, 
     zoomControl: false,
@@ -946,7 +956,12 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     preferCanvas: true
 });
 
-        var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
+// Create dedicated pane for measurement elements (high z-index, isolated from other layers)
+map.createPane('measurePane');
+map.getPane('measurePane').style.zIndex = 550;
+map.getPane('measurePane').style.pointerEvents = 'none';
+
+var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var mapyAttr = '&copy; <a href="https://www.seznam.cz" target="_blank">Seznam.cz, a.s.</a>, &copy; OpenStreetMap';
 
         function googleLang() {
@@ -1290,6 +1305,12 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             if (miEditor) miEditor.textContent = t.menuEditorItem;
             var miMeasure = document.getElementById("menuMeasureItem");
             if (miMeasure) miMeasure.textContent = t.menuMeasureItem;
+            var bmGrid = document.getElementById("btnMeasureGrid");
+            if (bmGrid) bmGrid.title = t.btnMeasureGrid;
+            var bmDist = document.getElementById("btnMeasureDist");
+            if (bmDist) bmDist.title = t.btnMeasureDist;
+            var bmClose = document.querySelector(".measure-panel-close");
+            if (bmClose) bmClose.title = t.btnMeasureClose;
             document.getElementById("txtBtnAddMini").textContent = t.btnAddMini;
             var btnGj = document.getElementById("txtBtnExportGj");
             if (btnGj) btnGj.textContent = t.btnExportGj;
@@ -2021,6 +2042,16 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     Math.sin(dLon/2) * Math.sin(dLon/2);
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
             return R * c;
+        }
+
+        function calcAzimuth(lat1, lon1, lat2, lon2) {
+            var dLon = (lon2 - lon1) * Math.PI / 180;
+            var lat1Rad = lat1 * Math.PI / 180;
+            var lat2Rad = lat2 * Math.PI / 180;
+            var y = Math.sin(dLon) * Math.cos(lat2Rad);
+            var x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLon);
+            var azimuth = Math.atan2(y, x) * 180 / Math.PI;
+            return (azimuth + 360) % 360;
         }
 
         var sourceLayerGroups = [];
@@ -2841,6 +2872,690 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             closeMenuDropdown();
         }
 
+        // Distance measurement tool
+        // Dedicated layer group for all measurement elements (persists across sessions)
+        var measureLayerGroup = L.layerGroup().addTo(map);
+        
+        var measurePointCounter = 1;
+        var measureLineCounter = 1;
+        var measurePolygonCounter = 1;
+        var measureDistanceState = {
+            active: false,
+            points: [],
+            markers: [],
+            segmentLabels: [],
+            line: null,
+            polygon: null,
+            areaLabel: null,
+            tempLine: null,
+            tempLabel: null,
+            snapPoints: [],
+            completed: false
+        };
+
+        function toggleMeasureDistance() {
+            var btn = document.getElementById("btnMeasureDist");
+            if (!measureDistanceState.active) {
+                startMeasureDistance();
+                if (btn) btn.classList.add("active");
+            } else {
+                stopMeasureDistance();
+                if (btn) btn.classList.remove("active");
+            }
+        }
+
+function startMeasureDistance() {
+            if (measureDistanceState.active) return;
+            measureDistanceState.active = true;
+            measureDistanceState.points = [];
+            measureDistanceState.markers = [];
+            measureDistanceState.line = null;
+            measureDistanceState.tempLine = null;
+            measureDistanceState.tempLabel = null;
+            
+            // Change cursor to crosshair
+            map.getContainer().style.cursor = "crosshair";
+            
+            // Collect all snappable points from active datasets
+            measureDistanceState.snapPoints = collectSnapPoints();
+            
+            // Add map mousemove handler for live preview
+            measureDistanceState.mapMoveHandler = function(e) {
+                if (!measureDistanceState.active || measureDistanceState.points.length === 0) return;
+                
+                var latLng = e.latlng;
+                
+                // Snap to nearby points
+                var snapped = snapToPoint(latLng);
+                if (snapped) latLng = snapped;
+                
+                // Update temporary line from last point (geodeticky lomená po 100 km)
+                if (measureDistanceState.tempLine) {
+                    var __geoTempU = geodesicPoints([[measureDistanceState.points[measureDistanceState.points.length - 1].lat, measureDistanceState.points[measureDistanceState.points.length - 1].lng],[latLng.lat, latLng.lng]], false);
+                    measureDistanceState.tempLine.setLatLngs(__geoTempU);
+                } else {
+                    var __geoTempC = geodesicPoints([[measureDistanceState.points[measureDistanceState.points.length - 1].lat, measureDistanceState.points[measureDistanceState.points.length - 1].lng],[latLng.lat, latLng.lng]], false);
+                    measureDistanceState.tempLine = L.polyline(__geoTempC, {
+                        color: '#e41e26',
+                        weight: 2,
+                        dashArray: '6, 4',
+                        opacity: 0.7,
+                        pane: 'measurePane'
+                    }).addTo(measureLayerGroup);
+                }
+                
+                // Calculate and show live distance
+                var distM = calcDistKm(
+                    measureDistanceState.points[measureDistanceState.points.length - 1].lat,
+                    measureDistanceState.points[measureDistanceState.points.length - 1].lng,
+                    latLng.lat,
+                    latLng.lng
+                ) * 1000;
+                
+                if (measureDistanceState.tempLabel) {
+                    map.removeLayer(measureDistanceState.tempLabel);
+                }
+                
+                var __geoTmp = geodesicPoints([[measureDistanceState.points[measureDistanceState.points.length - 1].lat, measureDistanceState.points[measureDistanceState.points.length - 1].lng],[latLng.lat, latLng.lng]], false);
+                var __nTmp = __geoTmp.length - 1;
+                var midLat, midLng;
+                if (__nTmp % 2 === 1) {
+                    var __miT = Math.floor(__nTmp / 2);
+                    midLat = (__geoTmp[__miT][0] + __geoTmp[__miT + 1][0]) / 2;
+                    midLng = (__geoTmp[__miT][1] + __geoTmp[__miT + 1][1]) / 2;
+                } else {
+                    var __viT = __nTmp / 2;
+                    midLat = __geoTmp[__viT][0];
+                    midLng = __geoTmp[__viT][1];
+                }
+                
+                measureDistanceState.tempLabel = L.popup({
+                    closeButton: false,
+                    closeOnClick: false,
+                    autoClose: false,
+                    className: 'measure-distance-popup measure-temp-label',
+                    offset: [0, -15]
+                })
+                .setLatLng([midLat, midLng])
+                .setContent('<div style="background:#e41e26;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);">' + formatDistance(distM) + '</div>')
+                .openOn(map);
+            };
+            
+            map.on("mousemove", measureDistanceState.mapMoveHandler);
+            
+            // Click handler for map (background clicks)
+            measureDistanceState.mapClickHandler = function(e) {
+                if (!measureDistanceState.active) return;
+                var latLng = e.latlng;
+                
+                // Snap to nearby points
+                var snapped = snapToPoint(latLng);
+                if (snapped) latLng = snapped;
+                
+                addMeasurePoint(latLng);
+            };
+            
+            map.on("click", measureDistanceState.mapClickHandler);
+            map.on("mousemove", measureDistanceState.mapMoveHandler);
+            
+// Right-click to start new measurement (keep existing lines/markers visible)
+            measureDistanceState.contextMenuHandler = function(e) {
+                if (!measureDistanceState.active) return;
+                if (e.originalEvent) {
+                    e.originalEvent.preventDefault();
+                    e.originalEvent.stopPropagation();
+                } else {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                
+                // Just reset the active measurement state, keep existing visuals
+                if (measureDistanceState.tempLine) {
+                    map.removeLayer(measureDistanceState.tempLine);
+                    measureDistanceState.tempLine = null;
+                }
+                if (measureDistanceState.tempLabel) {
+                    map.removeLayer(measureDistanceState.tempLabel);
+                    measureDistanceState.tempLabel = null;
+                }
+                
+                // Reset only the active measurement state
+                measureDistanceState.points = [];
+                measureDistanceState.markers = [];
+                measureDistanceState.tempLine = null;
+                measureDistanceState.tempLabel = null;
+                measureDistanceState.line = null;
+                // Keep previous line/polygon in measureLayerGroup – zůstane vidět!
+                
+                // Update button tooltip
+                var btn = document.getElementById("btnMeasureDist");
+                if (btn) btn.title = i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc/Pravé tlačítko)" : "Cancel measurement (Esc/Right-click)");
+            };
+            
+            map.on("contextmenu", measureDistanceState.contextMenuHandler);
+            
+            // Escape / Enter handler
+            measureDistanceState.escapeHandler = function(e) {
+                if (e.key === "Escape") {
+                    stopMeasureDistance();
+                } else if (e.key === "Enter") {
+                    if (measureDistanceState.points.length >= 3) closeMeasurePolygon();
+                }
+            };
+            document.addEventListener("keydown", measureDistanceState.escapeHandler);
+            
+            // Update button tooltip
+            var btn = document.getElementById("btnMeasureDist");
+            if (btn) btn.title = i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc/Pravé tlačítko)" : "Cancel measurement (Esc/Right-click)");
+        }
+
+        function addMeasurePoint(latLng) {
+            if (!measureDistanceState.active) return;
+            
+            // Snap to nearby points
+            var snapped = snapToPoint(latLng);
+            if (snapped) latLng = snapped;
+
+            // Polygon closure - click on first point with >=3 points
+            if (measureDistanceState.points.length >= 3) {
+                var first = measureDistanceState.points[0];
+                var fp = map.latLngToContainerPoint(first);
+                var cp = map.latLngToContainerPoint(latLng);
+                var dx = fp.x - cp.x, dy = fp.y - cp.y;
+                if (Math.sqrt(dx*dx + dy*dy) < 15) {
+                    closeMeasurePolygon();
+                    return;
+                }
+            }
+            
+            measureDistanceState.points.push(latLng);
+            
+            var pointIndex = measureDistanceState.points.length;
+            
+            // Add marker for this point
+            var icon = L.divIcon({
+                html: '<div style="width:16px;height:16px;background:#e41e26;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>',
+                className: '',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            });
+            var marker = L.marker(latLng, {icon: icon, zIndexOffset: 100}).addTo(measureLayerGroup);
+            measureDistanceState.markers.push(marker);
+            
+if (measureDistanceState.points.length === 1) {
+                // First point - just show marker, no line yet
+} else {
+                    // Add segment to the line
+                    if (measureDistanceState.line) {
+                        measureDistanceState.line.setLatLngs(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false));
+} else {
+                    measureDistanceState.line = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
+                        color: '#e41e26',
+                        weight: 3,
+                        dashArray: '8, 6',
+                        opacity: 0.9,
+                        pane: 'measurePane',
+                        zIndex: 850
+                    }).addTo(measureLayerGroup);
+                    }
+                
+                // Calculate segment distance
+                var distM = calcDistKm(
+                    measureDistanceState.points[measureDistanceState.points.length - 2].lat,
+                    measureDistanceState.points[measureDistanceState.points.length - 2].lng,
+                    measureDistanceState.points[measureDistanceState.points.length - 1].lat,
+                    measureDistanceState.points[measureDistanceState.points.length - 1].lng
+                ) * 1000;
+                
+                // Show segment distance label
+                showSegmentLabel(distM, measureDistanceState.points[measureDistanceState.points.length - 2], measureDistanceState.points[measureDistanceState.points.length - 1]);
+                
+                // Mark as completed once we have at least one segment
+                measureDistanceState.completed = true;
+            }
+            
+            // Update button tooltip
+            var btn = document.getElementById("btnMeasureDist");
+            if (btn) btn.title = i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc/Pravé tlačítko)" : "Cancel measurement (Esc/Right-click)");
+        }
+        
+        function addMeasurePoint(latLng) {
+            if (!measureDistanceState.active) return;
+            
+            // Snap to nearby points
+            var snapped = snapToPoint(latLng);
+            if (snapped) latLng = snapped;
+            
+            measureDistanceState.points.push(latLng);
+            
+            var pointIndex = measureDistanceState.points.length;
+            
+            // Add marker for this point
+            var ptNum = measurePointCounter++;
+            var icon = L.divIcon({
+                html: '<div style="width:20px;height:20px;background:#e41e26;border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;">' + ptNum + '</div>',
+                className: '',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+            var marker = L.marker(latLng, {icon: icon}).addTo(measureLayerGroup);
+            (function(m, n, ll){
+                m.on('click', function(e){
+                    var lat = ll.lat.toFixed(5);
+                    var lng = ll.lng.toFixed(5);
+                    L.popup({closeButton:true, autoClose:true, className:'measure-coord-popup', offset:[0,-10]})
+                     .setLatLng(ll)
+                     .setContent("<div style='padding:6px 8px;font-size:12px;min-width:140px;'><div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'><span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:#e41e26;'></span> " + n + "</div><div style='color:#80868b;font-size:10px;font-family:monospace;'>" + lat + ", " + lng + "</div></div>")
+                     .openOn(map);
+                    L.DomEvent.stopPropagation(e);
+                });
+            })(marker, ptNum, latLng);
+            measureDistanceState.markers.push(marker);
+            
+if (measureDistanceState.points.length === 1) {
+                // First point - just show marker, no line yet
+            } else {
+                // Add segment to the line
+                if (measureDistanceState.line) {
+                    measureDistanceState.line.setLatLngs(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false));
+} else {
+                    measureDistanceState.line = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
+                        color: '#e41e26',
+                        weight: 3,
+                        dashArray: '8, 6',
+                        opacity: 0.9,
+                        pane: 'measurePane',
+                        zIndex: 850
+                    }).addTo(measureLayerGroup);
+                    
+                    // Prevent click/dblclick propagation to map
+                    measureDistanceState.line.on('click dblclick', function(e) {
+                        L.DomEvent.stopPropagation(e);
+                    });
+                    
+                    // Prevent click/dblclick propagation to map
+                    measureDistanceState.line.on('click dblclick', function(e) {
+                        L.DomEvent.stopPropagation(e);
+                    });
+                }
+                
+                // Calculate segment distance
+                var distM = calcDistKm(
+                    measureDistanceState.points[measureDistanceState.points.length - 2].lat,
+                    measureDistanceState.points[measureDistanceState.points.length - 2].lng,
+                    measureDistanceState.points[measureDistanceState.points.length - 1].lat,
+                    measureDistanceState.points[measureDistanceState.points.length - 1].lng
+                ) * 1000;
+                
+                // Show segment distance label
+                showSegmentLabel(distM, measureDistanceState.points[measureDistanceState.points.length - 2], measureDistanceState.points[measureDistanceState.points.length - 1]);
+            }
+            
+            // Update button tooltip
+            var btn = document.getElementById("btnMeasureDist");
+            if (btn) btn.title = i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc/Pravé tlačítko)" : "Cancel measurement (Esc/Right-click)");
+        }
+
+        function stopMeasureDistance() {
+            if (!measureDistanceState.active) return;
+            
+            // Escape = jen zruší aktivní režim měření, NESMAŽE žádná naměřená data
+            // (ta zůstanou na mapě do obnovení stránky F5)
+            
+            // 1. Odstraní pouze dočasné prvky (náhledová čára a popup při tahání myši)
+            if (measureDistanceState.tempLine) {
+                map.removeLayer(measureDistanceState.tempLine);
+                measureDistanceState.tempLine = null;
+            }
+            if (measureDistanceState.tempLabel) {
+                map.removeLayer(measureDistanceState.tempLabel);
+                measureDistanceState.tempLabel = null;
+            }
+            
+            // 2. Odebere všechny event handlery měření
+            if (measureDistanceState.mapClickHandler) {
+                map.off("click", measureDistanceState.mapClickHandler);
+                measureDistanceState.mapClickHandler = null;
+            }
+            if (measureDistanceState.containerClickHandler) {
+                map.getContainer().removeEventListener("click", measureDistanceState.containerClickHandler);
+                measureDistanceState.containerClickHandler = null;
+            }
+            if (measureDistanceState.mapMoveHandler) {
+                map.off("mousemove", measureDistanceState.mapMoveHandler);
+                measureDistanceState.mapMoveHandler = null;
+            }
+            if (measureDistanceState.escapeHandler) {
+                document.removeEventListener("keydown", measureDistanceState.escapeHandler);
+                measureDistanceState.escapeHandler = null;
+            }
+            if (measureDistanceState.contextMenuHandler) {
+                map.off("contextmenu", measureDistanceState.contextMenuHandler);
+                measureDistanceState.contextMenuHandler = null;
+            }
+            
+            // 3. Resetuje pouze aktivní stav měření (body, dočasné prvky)
+            measureDistanceState.points = [];
+            measureDistanceState.markers = [];
+            measureDistanceState.tempLine = null;
+            measureDistanceState.tempLabel = null;
+            measureDistanceState.snapPoints = [];
+            measureDistanceState.completed = false;
+            
+            // 3. NESMAŽE permanentní prvky (markery, čáry, popisky) - ty zůstanou na mapě do F5!
+            // measureDistanceState.line, .markers, .labels, .labels se NESMAŽOU
+            
+            // 4. Reset aktivního stavu
+            measureDistanceState.active = false;
+            measureDistanceState.completed = false;
+            measureDistanceState.active = false;
+            
+            // 4. Obnoví kurzor a tlačítko
+            map.getContainer().style.cursor = "";
+            var btn = document.getElementById("btnMeasureDist");
+            if (btn) {
+                btn.classList.remove("active");
+                btn.title = i18n[currentLang].btnMeasureDist || (currentLang === "cs" ? "Měřit vzdálenost" : "Measure distance");
+            }
+}
+        
+        // Clear all measurements from map and memory
+        function clearAllMeasurements() {
+            measureLayerGroup.clearLayers();
+            measureDistanceState.points = [];
+            measureDistanceState.markers = [];
+            measureDistanceState.segmentLabels = [];
+            measureDistanceState.line = null;
+            measureDistanceState.tempLine = null;
+            measureDistanceState.tempLabel = null;
+            measureDistanceState.points = [];
+            measureDistanceState.markers = [];
+            measureDistanceState.segmentLabels = [];
+            measureDistanceState.line = null;
+            measureDistanceState.tempLine = null;
+            measureDistanceState.tempLabel = null;
+            measureDistanceState.snapPoints = [];
+            measureDistanceState.completed = false;
+            measureDistanceState.active = false;
+            
+            var btn = document.getElementById("btnMeasureDist");
+            if (btn) {
+                btn.classList.remove("active");
+                btn.title = i18n[currentLang].btnMeasureDist || (currentLang === "cs" ? "Měřit vzdálenost" : "Measure distance");
+            }
+        }
+        
+        // Collect all snappable points from active datasets
+        function collectSnapPoints() {
+            var points = [];
+            var ks = Object.keys(datasets);
+            for (var i = 0; i < ks.length; i++) {
+                var d = datasets[ks[i]];
+                if (!d.active) continue;
+                
+                // Photo points
+                if (d.items && d.items.length > 0) {
+                    for (var j = 0; j < d.items.length; j++) {
+                        var it = d.items[j];
+                        points.push({
+                            lat: it[0],
+                            lng: it[1],
+                            name: it[3] || "",
+                            type: "photo"
+                        });
+                    }
+                }
+                
+                // Track points (waypoints)
+                if (d.points && d.points.length > 0) {
+                    for (var j = 0; j < d.points.length; j++) {
+                        var pt = d.points[j];
+                        points.push({
+                            lat: pt.lat,
+                            lng: pt.lon,
+                            name: pt.name || "",
+                            type: "track"
+                        });
+                    }
+                }
+                
+                // Track line vertices (could add if needed)
+                if (d.lines && d.lines.length > 0) {
+                    for (var l = 0; l < d.lines.length; l++) {
+                        var line = d.lines[l];
+                        if (line.points && line.points.length > 0) {
+                            for (var p = 0; p < line.points.length; p++) {
+                                var pt = line.points[p];
+                                points.push({
+                                    lat: pt[0],
+                                    lng: pt[1],
+                                    name: line.name || "",
+                                    type: "line"
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            return points;
+        }
+
+        // Snap to nearby point if within threshold (in pixels)
+function snapToPoint(latLng) {
+            if (!measureDistanceState.snapPoints || measureDistanceState.snapPoints.length === 0) return null;
+            
+            var containerPoint = map.latLngToContainerPoint(latLng);
+            var bestPoint = null;
+            var bestDist = 20; // Snap threshold in pixels (20px)
+            
+            for (var i = 0; i < measureDistanceState.snapPoints.length; i++) {
+                var sp = measureDistanceState.snapPoints[i];
+                var spPoint = map.latLngToContainerPoint([sp.lat, sp.lng]);
+                var dx = containerPoint.x - spPoint.x;
+                var dy = containerPoint.y - spPoint.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    bestPoint = sp;
+                }
+            }
+            
+            if (bestPoint) {
+                return L.latLng(bestPoint.lat, bestPoint.lng);
+            }
+            return null;
+        }
+
+        function showSegmentLabel(distM, pointA, pointB) {
+            var __geoSeg = geodesicPoints([[pointA.lat, pointA.lng],[pointB.lat, pointB.lng]], false);
+            var __nSeg = __geoSeg.length - 1;
+            var midLat, midLng;
+            if (__nSeg % 2 === 1) {
+                var __mi = Math.floor(__nSeg / 2);
+                midLat = (__geoSeg[__mi][0] + __geoSeg[__mi + 1][0]) / 2;
+                midLng = (__geoSeg[__mi][1] + __geoSeg[__mi + 1][1]) / 2;
+            } else {
+                var __vi = __nSeg / 2;
+                midLat = __geoSeg[__vi][0];
+                midLng = __geoSeg[__vi][1];
+            }
+            var distText = formatDistance(distM);
+            var azimuth = calcAzimuth(pointA.lat, pointA.lng, pointB.lat, pointB.lng);
+            var azimuthText = azimuth.toFixed(1).replace('.', ',') + '°';
+            
+            var label = L.marker([midLat, midLng], {
+                icon: L.divIcon({
+                    className: 'measure-segment-label',
+                    html: '<div class="measure-label-bg" style="background:#e41e26;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,0.25);z-index:10000;min-width:160px;text-align:center;padding:0;">' +
+                        '<div class="measure-label-text" style="background:#e41e26;color:#fff;padding:2px 12px;border-radius:3px;font-size:11px;font-weight:600;white-space:nowrap;cursor:default;z-index:10001;min-width:160px;text-align:center;">' +
+                            '<span class="measure-dist-part" style="user-select:all;cursor:text;padding-right:8px;border-right:1px solid rgba(255,255,255,0.2);margin-right:4px;">' + distText + '</span>' +
+                            '<span class="measure-azimuth-part" style="user-select:all;cursor:text;padding-left:4px;">' + azimuthText + '</span>' +
+                        '</div>' +
+                    '</div>',
+                    iconSize: [0, 0],
+                    iconAnchor: [20, 10]
+                })
+            }).addTo(measureLayerGroup);
+            
+            // Click on distance part -> select only distance
+            var distPart = label.getElement().querySelector('.measure-dist-part');
+            if (distPart) {
+                distPart.onclick = function(e) {
+                    var range = document.createRange();
+                    range.selectNodeContents(this);
+                    var sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    L.DomEvent.stopPropagation(e);
+                };
+            }
+            
+            // Click on azimuth part -> select only azimuth
+            var azPart = label.getElement().querySelector('.measure-azimuth-part');
+            if (azPart) {
+                azPart.onclick = function(e) {
+                    var range = document.createRange();
+                    range.selectNodeContents(this);
+                    var sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                    L.DomEvent.stopPropagation(e);
+                };
+            }
+            
+            if (!measureDistanceState.segmentLabels) measureDistanceState.segmentLabels = [];
+            measureDistanceState.segmentLabels.push(label);
+        }
+
+        function addCoordinateClickHandlers() {
+            if (!measureDistanceState.markers) return;
+            measureDistanceState.markers.forEach(function(marker, index) {
+                marker.on('click', function(e) {
+                    var point = measureDistanceState.points[index];
+                    if (!point) return;
+                    var lat = point.lat.toFixed(5);
+                    var lng = point.lng.toFixed(5);
+                    var coordText = lat + ", " + lng;
+                    
+                    L.popup({
+                        closeButton: true,
+                        closeOnClick: true,
+                        autoClose: true,
+                        className: 'measure-coord-popup',
+                        offset: [0, -15]
+                    })
+                    .setLatLng([point.lat, point.lng])
+                    .setContent('<div style="background:#333;color:#fff;padding:6px 10px;border-radius:4px;font-size:12px;font-family:monospace;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3);"><div style="font-weight:700;margin-bottom:2px;">' + (currentLang === "cs" ? "Souřadnice" : "Coordinates") + '</div><div>' + coordText + '</div></div>')
+                    .openOn(map);
+                    
+                    L.DomEvent.stopPropagation(e);
+                });
+            });
+        }
+
+        function formatDistance(meters) {
+            var t = i18n[currentLang];
+            if (meters < 100) {
+                return meters.toFixed(1).replace('.', ',') + " m";
+            } else if (meters < 1000) {
+                return Math.round(meters) + " m";
+            } else if (meters < 10000) {
+                return (meters / 1000).toFixed(2).replace('.', ',') + " km";
+            } else if (meters < 100000) {
+                return (meters / 1000).toFixed(1).replace('.', ',') + " km";
+            } else {
+                return Math.round(meters / 1000) + " km";
+            }
+        }
+
+        function calcPolygonAreaM2(latlngs) {
+            if (!latlngs || latlngs.length < 3) return 0;
+            var R = 6371000;
+            var area = 0;
+            for (var i = 0; i < latlngs.length; i++) {
+                var p1 = latlngs[i];
+                var p2 = latlngs[(i + 1) % latlngs.length];
+                var lat1 = p1.lat * Math.PI / 180;
+                var lat2 = p2.lat * Math.PI / 180;
+                var dLon = (p2.lng - p1.lng) * Math.PI / 180;
+                area += dLon * (2 + Math.sin(lat1) + Math.sin(lat2));
+            }
+            area = Math.abs(area * R * R / 2);
+            return area;
+        }
+
+        function formatArea(m2) {
+            if (m2 < 1000) {
+                // <1000 m² → 4 platné cifry
+                var s = m2.toPrecision(4);
+                if (s.indexOf('e') !== -1) s = m2.toFixed(4);
+                return s + " m²";
+            } else if (m2 < 1000000) {
+                return Math.round(m2).toLocaleString(currentLang === 'cs' ? 'cs-CZ' : 'en-US') + " m²";
+            } else if (m2 < 1000000000) {
+                var v = m2 / 1000000;
+                var s = v.toPrecision(4);
+                if (s.indexOf('e') !== -1) s = v.toFixed(4);
+                return s + " km²";
+            } else {
+                return Math.round(m2 / 1000000).toLocaleString(currentLang === 'cs' ? 'cs-CZ' : 'en-US') + " km²";
+            }
+        }
+
+        function closeMeasurePolygon() {
+            if (!measureDistanceState.active || measureDistanceState.points.length < 3) return;
+            // Uzavři polygon
+            var pts = measureDistanceState.points.slice();
+            // Geodeticky lomený polygon
+            var geoRing = geodesicPoints(pts.map(function(p){ return [p.lat, p.lng]; }), true);
+            // Odstraň dočasnou čáru
+            if (measureDistanceState.tempLine) { map.removeLayer(measureDistanceState.tempLine); measureDistanceState.tempLine = null; }
+            if (measureDistanceState.tempLabel) { map.removeLayer(measureDistanceState.tempLabel); measureDistanceState.tempLabel = null; }
+            // Vytvoř polygon 20% červená
+            measureDistanceState.polygon = L.polygon(geoRing, {
+                color: '#e41e26',
+                weight: 2,
+                opacity: 0.9,
+                fillColor: '#e41e26',
+                fillOpacity: 0.2,
+                pane: 'measurePane'
+            }).addTo(measureLayerGroup);
+            measureDistanceState.polygon.on('click dblclick', function(e){ L.DomEvent.stopPropagation(e); });
+            // Plocha
+            var areaM2 = calcPolygonAreaM2(pts);
+            var areaText = formatArea(areaM2);
+            var bounds = L.latLngBounds(pts);
+            var center = bounds.getCenter();
+            measureDistanceState.areaLabel = L.marker(center, {
+                icon: L.divIcon({
+                    className: 'measure-area-label',
+                    html: '<div class="measure-label-bg" style="background:#ffffff;border:1px solid #e41e26;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,0.25);z-index:10000;min-width:180px;text-align:center;padding:0;">' +
+                        '<div style="background:#ffffff;color:#e41e26;padding:4px 14px;border-radius:3px;font-size:16px;font-weight:700;white-space:nowrap;cursor:text;user-select:all;min-width:180px;text-align:center;">' + areaText + '</div>' +
+                    '</div>',
+                    iconSize: [0, 0],
+                    iconAnchor: [40, 12]
+                })
+            }).addTo(measureLayerGroup);
+            var alDiv = measureDistanceState.areaLabel.getElement();
+            if (alDiv) {
+                var inner = alDiv.querySelector('div');
+                if (inner) inner.onclick = function(e){
+                    var range = document.createRange(); range.selectNodeContents(this);
+                    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+                    L.DomEvent.stopPropagation(e);
+                };
+            }
+            // Ulož stav jako dokončený
+            measureDistanceState.completed = true;
+            // Reset aktivní body pro případné další měření, ale polygon zůstane
+            measureDistanceState.points = [];
+            measureDistanceState.markers = [];
+            measureDistanceState.line = null;
+            measureDistanceState.tempLine = null;
+            measureDistanceState.tempLabel = null;
+        }
+
         function getGridInterval(zoom) {
             if (zoom < 3) return 30;
             if (zoom < 5) return 10;
@@ -2969,7 +3684,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                         }
                         return { color: '#444', weight: 1, opacity: 0.6, dashArray: '5, 5' };
                     }
-                }).addTo(map);
+}).addTo(measureLayerGroup);
                 if (gridState === 2) {
                     gridLabelsLayer = L.layerGroup();
                     data.labels.forEach(function(lbl) {
