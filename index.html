@@ -288,6 +288,7 @@
         .measure-panel-btn { height: 28px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.15s; user-select: none; white-space: nowrap; }
         .measure-panel-btn:hover { background: #ffffff; color: #1a73e8; }
         .measure-panel-btn.active { background: #1a73e8; color: #ffffff; border-color: #1a73e8; }
+        .measure-panel-btn.flash { background: #fce8e6 !important; color: #d93025 !important; border-color: #f5c6c2 !important; }
         .measure-panel-btn.icon-only-btn { width: 34px; padding: 0; font-size: 16px; }
         .measure-panel-btn .degree-badge { position: absolute; top: -4px; right: -4px; background: #c00; color: white; font-size: 9px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .measure-panel-close { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: #5f6368; font-size: 18px; cursor: pointer; border-radius: 4px; line-height: 1; }
@@ -335,6 +336,9 @@
         .info-steps .step-body { padding: 2px 12px 10px; font-size: 11.5px; font-weight: 400; color: #3c4043; line-height: 1.5; }
         .info-steps .step-sub { display: block; margin: 6px 0 6px 24px; padding: 4px 0 4px 8px; border-left: 2px solid #dadce0; }
         
+        .info-steps .step-body ul { margin: 6px 0 6px 16px; padding-left: 16px; list-style: none; }
+        .info-steps .step-body ul li { position: relative; padding-left: 16px; margin-bottom: 4px; }
+        .info-steps .step-body ul li::before { content: "•"; position: absolute; left: 0; color: #5f6368; }
         .custom-cluster { background: rgba(255, 255, 255, 0.95); border: 2px solid #1a73e8; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.28); color: #1a73e8; font-weight: 700; font-size: 12px; display: flex !important; align-items: center; justify-content: center; }
         .custom-cluster:hover { transform: scale(1.1); }
         .custom-marker { background: #ea4335; border: 2px solid white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3); width: 10px !important; height: 10px !important; margin-left: -5px !important; margin-top: -5px !important; }
@@ -524,7 +528,12 @@
                 transition: none !important; animation: none !important;
             }
         }
+        .leaflet-marker-icon, .leaflet-pane > svg path.leaflet-interactive {
+            pointer-events: auto !important;
+        }
+        .show-coords-label, .measure-temp-label { width: 50%; max-width: 120px; }
     </style>
+    <!-- ⚠️ KÓDOVÁNÍ: Soubor MUSÍ zůstat UTF-8 (bez BOM) – čeština/angličtina + ikony 📏🌐🗑️📦/logo SVG. Nepoužívejte PowerShell Set-Content bez -Encoding UTF8 (rozbije diakritiku/emoji v legendě a i18n.cs/en). Používejte nástroje read/edit/write. ⚠️ -->
 </head>
 <body>
     <div id="loading-overlay"><div class="spinner"></div><div id="loadingText" style="font-weight:500;color:#202124;font-size:13px;">Načítám data...</div></div>
@@ -595,7 +604,11 @@
     <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()">
         <div class="measure-panel-content">
             <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;">🌐</button>
-            <button class="measure-panel-btn icon-only-btn" onclick="toggleMeasureDistance()" id="btnMeasureDist" title="Měřit vzdálenost" style="width: 34px;">📏</button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleMeasureDistance()" id="btnMeasureDist" title="Měřit" style="width: 34px;">📏</button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleShowCoords()" id="btnShowCoords" title="Zobrazit souřadnice" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleParallel()" id="btnParallel" title="Rovnoběžka" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="17" y1="8" x2="17" y2="16"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleMeridian()" id="btnMeridian" title="Poledník" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="17" x2="16" y2="17"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="clearAllMeasurements()" id="btnClearMeasure" title="Smazat měřené" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
             <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření">&times;</button>
         </div>
     </div>
@@ -647,21 +660,12 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.30</span>
+                    <span class="info-meta-val">2.33</span>
                 </div>
             </div>
 
             <div class="guide-header"><div class="info-section-title" id="txtGuideTitle">📖 Návod k použití:</div><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" oninput="filterGuideSteps(this.value)"></div>
-            <ol class="info-steps" id="infoStepsList">
-                <li><details class="step"><summary>⚡ Datový soubor – první spuštění (ZÁKLAD)</summary><div class="step-body">Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript má <strong>3 funkce:</strong><div class="step-sub"><br>① <strong>Generovat data fotek (celý archiv)</strong> – projde všechny složky a podsložky, vyčte GNSS z EXIF, Google JSON, Adobe XMP a DJI SRT titulků, deduplikuje a seřadí dle data<br>② <strong>Generovat data fotek (vybrat konkrétní podsložku)</strong><br>③ <strong>Statistika archivu</strong> – vygeneruje přehled složek do CSV (počty, velikosti, nejstarší/nejnovější soubory). Vygenerovaný soubor není pro tuto aplikaci</div><br><strong>Výstupní soubor:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – formát: JavaScriptový datový soubor (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Struktura řádků:</strong> hlavičkové komentáře (<code>//</code>) + záhlaví sloupců + data oddělená středníkem<div class="step-sub"><br><strong>Povinné sloupce (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Nepovinné doplňkové sloupce: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Příklad řádku:</strong><br><code>20240815_143022; foto_z_vyletu.jpg; 49.123456; 16.654321; 5242880; DoCZ/2024/08/foto_z_vyletu.jpg</code><br><br><strong>Popis sloupců:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (z EXIF, názvu souboru nebo data úpravy)<br>• <strong>NAZEV_SOUBORU</strong> – název souboru včetně přípony<br>• <strong>LATITUDE</strong> – zeměpisná šířka (desetinné stupně, 6 desetinných míst)<br>• <strong>LONGITUDE</strong> – zeměpisná délka (desetinné stupně, 6 desetinných míst)<br>• <strong>VELIKOST_BAJTY</strong> – velikost souboru v bajtech <em>(nepovinné)</em><br>• <strong>RELATIVNI_CESTA</strong> – relativní cesta k souboru vůči kořenové složce <em>(nepovinné)</em></div>Soubor přetáhněte do mapy nebo nahrajte přes tlačítko +<br><em>⚠️ Soubor <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte v hlavní kořenové složce s fotografiemi.</em></div></details></li>
-                <li><details class="step"><summary>☰ Tlačítko ☰ – menu (úplně vlevo nahoře)</summary><div class="step-body">Otevře nabídku se čtyřmi volbami:<br>• 🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou<br>• 📄 <strong>Uložit mapu</strong> – rozdělené tlačítko se dvěma volbami:<div class="step-sub"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≈ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů</div><br>• ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod<br>• ✏️ <strong>Spustit editor</strong> – otevře postranní panel editoru. Editor je externí nadstavba a nemusí být ve vaší verzi aplikace dostupný.</div></details></li>
-                <li><details class="step"><summary>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů</summary><div class="step-body">Číslo v závorce = počet aktivních souborů. Panel zdrojů:<br>• ☑️ Zapnout/vypnout, odebrat, přejmenovat<br>• ↕️ Přetáhnout pro změnu pořadí vykreslování<br>• 🎛️ Ovládací pilulky pro styl, barvy a parametry (podrobně v kroku 4)<br>• ⬇️ <strong>GeoJSON export</strong> – uloží jeden zdroj samostatně jako GeoJSON (tlačítko pod křížkem zdroje)<br>• 🎨 <strong>Sjednotit</strong> – parametry podle posledně upraveného souboru<br>• ↩️ <strong>Zpět</strong> – vrátí poslední sjednocení nebo reset<br>• 🔍 Klik na název = přiblížení na souřadnice</div></details></li>
-                <li><details class="step"><summary>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť</summary><div class="step-body">V panelu Zdroje je u každého souboru tlačítko stylu a sada ovládacích pilulek:<div class="step-sub"><br><strong>Fotky – 5 režimů:</strong><br>• 🔥 <strong>Heatmapa</strong> – 🎨 8 palet, 💧 průhlednost, 🌙 rozostření (5–50 px)<br>• 🖼️ <strong>Foto-karty</strong> – 💧 průhlednost<br>• 📍 <strong>Špendlíky</strong> – 🎨 8 barev, 💧 průhlednost<br>• ⭐ <strong>Symbol</strong> – 🎨 8 barev, 💧 průhlednost, 📌 styl symbolu (8 stylů), 🔴 velikost (1–25 px)<br>• ⬤ <strong>Zóna výskytu</strong> – 🎨 8 barev, 💧 průhlednost, ⬤ poloměr (0–10 000 km)<br><br><strong>GNSS trasy a polygony:</strong><br>• 🟠 Barva bodů, 📌 styl ikony (8 stylů), 🔘 velikost bodů (4–30 px)<br>• 💧 Průhlednost čar, bodů i výplní<br>• ━━ Barva čáry a polygonu, 📏 tloušťka čáry (0,5–20 px)<br>• Pokud polygony: 🖌️ barva výplně, 💧 průhlednost výplně (0–100 %)<br>• 🌐 <strong>Geodetická interpolace:</strong> Úseky tras i hrany polygonů delší než 100 km se automaticky ortodromicky zakřivují podél povrchu Země.<br><br><strong>🎛️ Vyladěné posuvníky:</strong><br>• Plynulé dotykové ovládání pro mobily a tablety.<br>• Přímé psaní hodnot do číselného pole (s tečkou i čárkou, potvrzení <code>Enter</code>).<br>• Klávesové ovládání: šipky <strong>Doleva / Dolů</strong> snižují o 1 jednotku/krok, <strong>Doprava / Nahoru</strong> zvyšují o 1 jednotku/krok.</div></div></details></li>
-                <li><details class="step"><summary>📅 Tlačítko [Vše (počet) ▼] – časový filtr (rok / měsíc / den)</summary><div class="step-body">Otevírá časový filtr fotografií:<br>• 📅 Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok<br>• 🗓️ Po zvolení roku se nabídka rozbalí o mřížku měsíců<br>• 📆 U vybraného měsíce i o kalendář dnů<br>• ↩️ Opětovným kliknutím se vrátíte o úroveň výš</div></details></li>
-                <li><details class="step"><summary>➕ Tlačítko [+] – přidat soubor či trasu</summary><div class="step-body">Podporované formáty souborů:<div class="step-sub"><br>📸 <strong>Fotky:</strong> <code>.txt</code> (generovaný BAT skriptem)<br>🖼️ <strong>Fotky z EXIF GNSS:</strong> <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code> (s GNSS metadaty; poloha se přečte přímo ze souboru)<br>🗺️ <strong>GNSS trasy:</strong> <code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code></div><br>Soubory můžete také přetáhnout myší přímo do okna mapy (Drag &amp; Drop).</div></details></li>
-                <li><details class="step"><summary>🗺️ Tlačítko mapových podkladů (vpravo)</summary><div class="step-body">Výběr ze 8 mapových vrstev:<div class="step-sub"><br>• 🗺️ <strong>Google Klasická</strong> – přehledná silniční a městská mapa<br>• ⛰️ <strong>Google Terénní</strong> – plastický 3D reliéf pohoří a údolí<br>• 🛰️ <strong>Google Satelitní</strong> – letecké a družicové snímky s popisky<br>• 🌲 <strong>Mapy.cz Turistická</strong> – značené turistické i cyklistické trasy, vrstevnice<br>• 🗺️ <strong>Mapy.cz Základní</strong> – detailní česká kartografická mapa<br>• 🛰️ <strong>Mapy.cz Letecká</strong> – detailní ortofotomapa<br>• 🌐 <strong>Esri Topo</strong> – celosvětová topografická mapa s vrstevnicemi<br>• 🌍 <strong>Offline vektor</strong> – plně offline vektorová mapa světa (bez internetu)</div></div></details></li>
-                <li><details class="step"><summary>🔍 Tlačítka zoom [+ / −] (vpravo, na mobilu dole)</summary><div class="step-body">Tlačítka pro přiblížení a oddálení mapy. Na počítači lze zoomovat také kolečkem myši, na mobilu gestem roztažení dvou prstů.</div></details></li>
-            </ol>
+            <ol class="info-steps" id="infoStepsList"></ol>
         </div>
     </div>
 
@@ -735,6 +739,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         var validTrackPointModes = ["symbol", "pins", "heat", "zone"];
         var defaultTrackPointMode = "symbol";
 
+        // ⚠️ UTF-8 POVINNĚ – i18n.cs/en obsahuje diakritiku a emoji (📏🌐🗑️) – zachovejte UTF-8, jinak se rozbije legenda/i18n
         var i18n = {
             cs: {
                 photosWord: "fotek",
@@ -748,9 +753,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 menuInfoItem: "ℹ️ Informace o aplikaci",
 menuMeasureItem: "📏 Spustit měření",
                 btnMeasureGrid: "Mřížka souřadnic",
-                btnMeasureDist: "Měřit vzdálenost",
+                btnMeasureDist: "Měřit",
+                btnShowCoords: "Zobrazit souřadnice",
+                btnParallel: "Rovnoběžka",
+                btnMeridian: "Poledník",
                 btnMeasureClose: "Zavřít panel měření",
                 btnMeasureDistCancel: "Zrušit měření (Esc)",
+                btnClearMeasure: "Smazat měřené",
                 menuEditorItem: "✏️ Spustit editor",
                 menuPdfItem: "📄 Uložit mapu jako PDF",
                 btnAddMini: "+ Přidat",
@@ -767,7 +776,6 @@ menuMeasureItem: "📏 Spustit měření",
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Obnovit výchozí barvy a průhlednost",
                 titleUndo: "Vrátit poslední změnu stylů (sjednocení / reset)",
-                btnMeasureDist: "Měřit vzdálenost",
                 lblColor: "Barva / Paleta",
                 lblPointColor: "Barva bodů",
                 lblOpacity: "Průhlednost",
@@ -830,8 +838,8 @@ menuMeasureItem: "📏 Spustit měření",
                 lblVersion: "Verze:",
                 guideTitle: "📖 Návod k použití:",
                 steps: [
-                    "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong><br>Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript má <strong>3 funkce:</strong><div class=\"step-sub\"><br>① <strong>Generovat data fotek (celý archiv)</strong> – projde všechny složky a podsložky, vyčte GNSS z EXIF, Google JSON, Adobe XMP a DJI SRT titulků, deduplikuje a seřadí dle data<br>② <strong>Generovat data fotek (vybrat konkrétní podsložku)</strong><br>③ <strong>Statistika archivu</strong> – vygeneruje přehled složek do CSV (počty, velikosti, nejstarší/nejnovější soubory). Vygenerovaný soubor není pro tuto aplikaci</div><br><strong>Výstupní soubor:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – formát: JavaScriptový datový soubor (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Struktura řádků:</strong> hlavičkové komentáře (<code>//</code>) + záhlaví sloupců + data oddělená středníkem<div class=\"step-sub\"><br><strong>Povinné sloupce (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Nepovinné doplňkové sloupce: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Příklad řádku:</strong><br><code>20240815_143022; foto_z_vyletu.jpg; 49.123456; 16.654321; 5242880; DoCZ/2024/08/foto_z_vyletu.jpg</code><br><br><strong>Popis sloupců:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (z EXIF, názvu souboru nebo data úpravy)<br>• <strong>NAZEV_SOUBORU</strong> – název souboru včetně přípony<br>• <strong>LATITUDE</strong> – zeměpisná šířka (desetinné stupně, 6 desetinných míst)<br>• <strong>LONGITUDE</strong> – zeměpisná délka (desetinné stupně, 6 desetinných míst)<br>• <strong>VELIKOST_BAJTY</strong> – velikost souboru v bajtech <em>(nepovinné)</em><br>• <strong>RELATIVNI_CESTA</strong> – relativní cesta k souboru vůči kořenové složce <em>(nepovinné)</em></div>Soubor přetáhněte do mapy nebo nahrajte přes tlačítko +<br><em>⚠️ Soubor <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte v hlavní kořenové složce s fotografiemi.</em>",
-                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong><br>Otevře nabídku se čtyřmi volbami:<br>• 🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou<br>• 📄 <strong>Uložit mapu</strong> – rozdělené tlačítko se dvěma volbami:<div class=\"step-sub\"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≈ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů</div><br>• 📏 <strong>Spustit měření</strong> – otevře panel měření uprostřed horního okraje. V panelu: <strong>Mřížka</strong> – 3 stavy: vypnuto / zobrazení mřížky se zvýrazněnými hlavními rovnoběžkami (rovník, obratníky, polární kruhy) / mřížka s popisky souřadnic<br>• ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod<br>• ✏️ <strong>Spustit editor</strong> – otevře postranní panel editoru. Editor je externí nadstavba a nemusí být ve vaší verzi aplikace dostupný.",
+                    "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong><br>Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript má <strong>3 funkce:</strong><div class=\"step-sub\"><br>① <strong>Generovat data fotek (celý archiv)</strong> – projde všechny složky a podsložky, vyčte GNSS z EXIF, Google JSON, Adobe XMP a DJI SRT titulků, deduplikuje a seřadí dle data<br>② <strong>Generovat data fotek (vybrat konkrétní podsložku)</strong><br>③ <strong>Statistika archivu</strong> – vygeneruje přehled složek do CSV (počty, velikosti, nejstarší/nejnovější soubory). Vygenerovaný soubor není pro tuto aplikaci</div><br><strong>Výstupní soubor:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – formát: JavaScriptový datový soubor (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Struktura řádků:</strong> hlavičkové komentáře (<code>//</code>) + záhlaví sloupců + data oddělená středníkem<div class=\"step-sub\"><br><strong>Povinné sloupce (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Nepovinné doplňkové sloupce: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Příklad řádku:</strong><br><code>20240815_143022; foto_z_vyletu.jpg; 49.123456; 16.654321; 5242880; DoCZ/2024/08/foto_z_vyletu.jpg</code><br><br><strong>Popis sloupců:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (z EXIF, názvu souboru nebo data úpravy)<br>• <strong>NAZEV_SOUBORU</strong> – název souboru včetně přípony<br>• <strong>LATITUDE</strong> – zeměpisná šířka (desetinné stupně, 6 desetinných míst)<br>• <strong>LONGITUDE</strong> – zeměpisná délka (desetinné stupně, 6 desetinných míst)<br>• <strong>VELIKOST_BAJTY</strong> – velikost souboru v bajtech <em>(nepovinné)</em><br>• <strong>RELATIVNI_CESTA</strong> – relativní cesta k souboru vůči kořenové složce <em>(nepovinné)</em></div>Soubor přetáhněte do mapy nebo nahrajte přes tlačítko +<br><em>⚠️ Soubory <code>Mapa_Fotky.html</code> a <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte v hlavní kořenové složce s fotografiemi. V opačném případě se nezobrazí miniatury fotek a nepůjde na ně prokliknout do plné velikosti.</em>",
+                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong><br>Otevře nabídku s pěti volbami:<ul><li>🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou</li><li>📄 <strong>Uložit mapu</strong> – rozdělené tlačítko se dvěma volbami:<div class=\"step-sub\"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≈ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů</div></li><li>📏 <strong>Spustit měření</strong> – otevře panel měření uprostřed horního okraje. V panelu:<ul><li>🌐 <strong>Mřížka</strong> – 3 stavy: vypnuto / zobrazení mřížky se zvýrazněnými hlavními rovnoběžkami (rovník, obratníky, polární kruhy) / mřížka s popisky souřadnic</li><li>📏 <strong>Měřit</strong> – měří vzdálenost a azimut v místě prvního bodu čáry (čáry aproximuje po 100 km úsecích na ortodromu), uzavřením čáry na polygon vypočte plochu</li><li>📍 <strong>Zobrazit souřadnice</strong> – u kurzoru souřadnice (6 des. míst), klik zkopíruje, snap na body</li><li>🗑️ <strong>Smazat měřené</strong> – vymaže vše z měření</li></ul></li><li>ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod</li><li>✏️ <strong>Spustit editor</strong> – otevře postranní panel editoru. Editor je externí nadstavba a nemusí být ve vaší verzi aplikace dostupný.",
                     "<strong>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů:</strong><br>Číslo v závorce = počet aktivních souborů. Panel zdrojů:<br>• ☑️ Zapnout/vypnout, odebrat, přejmenovat soubor<br>• ↕️ Přetáhnout pro změnu pořadí vykreslování<br>• 🎛️ Ovládací pilulky pro styl, barvy a parametry (podrobně v kroku 4)<br>• ⬇️ <strong>GeoJSON export</strong> – uloží jeden zdroj samostatně jako GeoJSON (tlačítko pod křížkem zdroje)<br>• 🎨 <strong>Sjednotit</strong> – parametry podle posledně upraveného souboru<br>• ↩️ <strong>Zpět</strong> – vrátí poslední sjednocení nebo reset<br>• 🔍 Klik na název = přiblížení na souřadnice<br><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť:</strong><br>V panelu Zdroje je u každého souboru tlačítko stylu a sada ovládacích pilulek:<div class=\"step-sub\"><br><strong>Fotky – 5 režimů:</strong><br>• 🔥 <strong>Heatmapa</strong> – 🎨 8 palet, 💧 průhlednost, 🌙 rozostření (5–50 px)<br>• 🖼️ <strong>Foto-karty</strong> – 💧 průhlednost<br>• 📍 <strong>Špendlíky</strong> – 🎨 8 barev, 💧 průhlednost<br>• ⭐ <strong>Symbol</strong> – 🎨 8 barev, 💧 průhlednost, 📌 styl symbolu (8 stylů), 🔴 velikost (1–25 px)<br>• ⬤ <strong>Zóna výskytu</strong> – 🎨 8 barev, 💧 průhlednost, ⬤ poloměr (0–10 000 km)<br><br><strong>GNSS trasy a polygony:</strong><br>• 🟠 Barva bodů, 📌 styl ikony (8 stylů), 🔘 velikost bodů (4–30 px)<br>• 💧 Průhlednost čar, bodů i výplní<br>• ━━ Barva čáry a polygonu, 📏 tloušťka čáry (0,5–20 px)<br>• Pokud polygony: 🖌️ barva výplně, 💧 průhlednost výplně (0–100 %)<br>• 🌐 <strong>Geodetická interpolace:</strong> Úseky tras i hrany polygonů delší než 100 km se automaticky ortodromicky zakřivují podél povrchu Země.<br><br><strong>🎛️ Vyladěné posuvníky:</strong><br>• Plynulé dotykové ovládání pro mobily a tablety.<br>• Přímé psaní hodnot do číselného pole (s tečkou i čárkou, potvrzení <code>Enter</code>).<br>• Klávesové ovládání: šipky <strong>Doleva / Dolů</strong> snižují o 1 jednotku/krok, <strong>Doprava / Nahoru</strong> zvyšují o 1 jednotku/krok.</div><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>📅 Tlačítko [Vše (počet) ▼] – časový filtr (rok / měsíc / den):</strong><br>Otevírá časový filtr fotografií:<br>• 📅 Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok<br>• 🗓️ Po zvolení roku se nabídka rozbalí o mřížku měsíců<br>• 📆 U vybraného měsíce i o kalendář dnů<br>• ↩️ Opětovným kliknutím se vrátíte o úroveň výš",
@@ -852,8 +860,13 @@ menuMeasureItem: "📏 Spustit měření",
                 menuInfoItem: "ℹ️ About & Help",
                 menuMeasureItem: "📏 Start Measurement",
                 btnMeasureGrid: "Coordinate grid",
+                btnMeasureDist: "Measure",
+                btnShowCoords: "Show coordinates",
+                btnParallel: "Parallel",
+                btnMeridian: "Meridian",
                 btnMeasureClose: "Close measurement panel",
                 btnMeasureDistCancel: "Cancel measurement (Esc)",
+                btnClearMeasure: "Clear measurements",
                 menuEditorItem: "✏️ Launch Editor",
                 menuPdfItem: "📄 Save map as PDF",
                 btnAddMini: "+ Add",
@@ -870,7 +883,6 @@ menuMeasureItem: "📏 Spustit měření",
                 btnResetStyles: "🔄 Reset",
                 titleResetStyles: "Reset colors and styles to default",
                 titleUndo: "Undo last style change (unify / reset)",
-                btnMeasureDist: "Measure distance",
                 lblColor: "Color / Palette",
                 lblPointColor: "Point color",
                 lblOpacity: "Opacity",
@@ -933,8 +945,8 @@ menuMeasureItem: "📏 Spustit měření",
                 lblVersion: "Version:",
                 guideTitle: "📖 User Guide:",
                 steps: [
-                    "<strong>⚡ Data File – First Run (ESSENTIAL):</strong><br>Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script has <strong>3 functions:</strong><div class=\"step-sub\"><br>① <strong>Generate photo data (full archive)</strong> – scans all folders and subfolders, reads GPS from EXIF, Google JSON, Adobe XMP, and DJI SRT subtitles, deduplicates, and sorts by date<br>② <strong>Generate photo data (select a specific subfolder)</strong><br>③ <strong>Archive statistics</strong> – generates a folder overview to CSV (file counts, sizes, oldest/newest files). The generated file is not for this application</div><br><strong>Output file:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – format: JavaScript data file (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Row structure:</strong> comment header (<code>//</code>) + column header + data rows separated by semicolons<div class=\"step-sub\"><br><strong>Required columns (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Optional columns: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Example row:</strong><br><code>20240815_143022; hike_photo.jpg; 49.123456; 16.654321; 5242880; trips/CZ/2024/08/hike_photo.jpg</code><br><br><strong>Column descriptions:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (from EXIF, filename, or file modification date)<br>• <strong>NAZEV_SOUBORU</strong> – filename with extension<br>• <strong>LATITUDE</strong> – latitude in decimal degrees (6 decimal places)<br>• <strong>LONGITUDE</strong> – longitude in decimal degrees (6 decimal places)<br>• <strong>VELIKOST_BAJTY</strong> – file size in bytes <em>(optional)</em><br>• <strong>RELATIVNI_CESTA</strong> – relative path to file from root folder <em>(optional)</em></div>Drag it into the map or upload via the + button<br><em>⚠️ Keep <code>Mapa_Fotek_aktualizace_dat.bat</code> in the root photos folder.</em>",
-                    "<strong>☰ Menu button (top left corner):</strong><br>Opens a menu with four options:<br>• 🌐 <strong>Language switch</strong> – toggles between Czech and English<br>• 📄 <strong>Save map</strong> – split button with two options:<div class=\"step-sub\"><br>📄 <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≈ 1.41), 3mm margins, <em>without</em> vectors<br>🖼️ <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors<br>🧪 <strong>PDF-vector</strong> – PDF file via the print dialog, resolution per dialog (usually display resolution ~96 DPI, can be raised in the print settings), aspect ratio per display, all layers shown including vectors (lines, polygons, points), but these are converted to raster in the PDF</div><br>• ℹ️ <strong>About &amp; Help</strong> – opens this guide<br>• 📏 <strong>Start Measurement</strong> – opens measurement panel at top center. Panel contains: <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels<br>• 📏 <strong>Start Measurement</strong> – opens measurement panel at top center. Panel contains: <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels<br>• ✏️ <strong>Launch Editor</strong> – opens editor side panel. The editor is an external add-on and may not be available in your version of the application.",
+                    "<strong>⚡ Data File – First Run (ESSENTIAL):</strong><br>Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script has <strong>3 functions:</strong><div class=\"step-sub\"><br>① <strong>Generate photo data (full archive)</strong> – scans all folders and subfolders, reads GPS from EXIF, Google JSON, Adobe XMP, and DJI SRT subtitles, deduplicates, and sorts by date<br>② <strong>Generate photo data (select a specific subfolder)</strong><br>③ <strong>Archive statistics</strong> – generates a folder overview to CSV (file counts, sizes, oldest/newest files). The generated file is not for this application</div><br><strong>Output file:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – format: JavaScript data file (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Row structure:</strong> comment header (<code>//</code>) + column header + data rows separated by semicolons<div class=\"step-sub\"><br><strong>Required columns (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Optional columns: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Example row:</strong><br><code>20240815_143022; hike_photo.jpg; 49.123456; 16.654321; 5242880; trips/CZ/2024/08/hike_photo.jpg</code><br><br><strong>Column descriptions:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (from EXIF, filename, or file modification date)<br>• <strong>NAZEV_SOUBORU</strong> – filename with extension<br>• <strong>LATITUDE</strong> – latitude in decimal degrees (6 decimal places)<br>• <strong>LONGITUDE</strong> – longitude in decimal degrees (6 decimal places)<br>• <strong>VELIKOST_BAJTY</strong> – file size in bytes <em>(optional)</em><br>• <strong>RELATIVNI_CESTA</strong> – relative path to file from root folder <em>(optional)</em></div>Drag it into the map or upload via the + button<br><em>⚠️ Keep both <code>Mapa_Fotky.html</code> and <code>Mapa_Fotek_aktualizace_dat.bat</code> in the root photos folder. Otherwise thumbnails won't display and you can't click to full size.</em>",
+                    "<strong>☰ Menu button (top left corner):</strong><br>Opens a menu with five options:<ul><li>🌐 <strong>Language switch</strong> – toggles between Czech and English</li><li>📄 <strong>Save map</strong> – split button with two options:<div class=\"step-sub\"><br>📄 <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≈ 1.41), 3mm margins, <em>without</em> vectors<br>🖼️ <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors<br>🧪 <strong>PDF-vector</strong> – PDF file via the print dialog, resolution per dialog (usually display resolution ~96 DPI, can be raised in the print settings), aspect ratio per display, all layers shown including vectors (lines, polygons, points), but these are converted to raster in the PDF</div></li><li>ℹ️ <strong>About &amp; Help</strong> – opens this guide</li><li>📏 <strong>Start Measurement</strong> – opens measurement panel at top center. Panel contains: <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels</li><li>📏 <strong>Start Measurement</strong> – opens measurement panel at top center. Panel contains: <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels</li><li>✏️ <strong>Launch Editor</strong> – opens editor side panel. The editor is an external add-on and may not be available in your version of the application.",
                     "<strong>📂 Button [Sources (count)] – data sources manager:</strong><br>Number = count of active files. Sources panel:<br>• Toggle on/off, remove, rename each file<br>• Drag to reorder rendering (top items draw on top)<br>• Control pills for style, colors and parameters (details in step 4)<br>• ⬇️ <strong>GeoJSON export</strong> – saves a single source as GeoJSON (button under the × close button)<br>• 🎨 <strong>Unify</strong> – sync parameters to match the last edited file<br>• ↩️ <strong>Undo</strong> – reverts last unify or reset<br>• Click a file name to zoom the map to its coordinates<br><br>All settings are automatically saved permanently in browser storage.",
                     "<strong>🎨 View Style – Selected independently for each dataset:</strong><br>In the Sources panel, each file has a style trigger and pills:<div class=\"step-sub\"><br><strong>Photos – 5 modes:</strong><br>• 🔥 <strong>Heatmap</strong> – 🎨 8 palettes, 💧 opacity, 🌙 blur (5–50 px)<br>• 🖼️ <strong>Photo Cards</strong> – 💧 opacity<br>• 📍 <strong>Pins</strong> – 🎨 8 colors, 💧 opacity<br>• ⭐ <strong>Symbol</strong> – 🎨 8 colors, 💧 opacity, 📌 symbol icon (8 styles), 🔴 size (1–25 px)<br>• ⬤ <strong>Coverage Zone</strong> – 🎨 8 colors, 💧 opacity, ⬤ radius (0–10,000 km)<br><br><strong>GNSS Tracks & Polygons:</strong><br>• 🟠 Point color, 📌 waypoint icon (8 styles), 🔘 point size (4–30 px)<br>• 💧 Line, point, and fill opacity<br>• ━━ Line & polygon color, 📏 line width (0.5–20 px)<br>• If polygons: 🖌️ fill color, 💧 fill opacity (0–100 %)<br>• 🌐 <strong>Geodetic Interpolation:</strong> Track segments and polygon edges longer than 100 km automatically bend along Earth's great circle curvature.<br><br><strong>🎛️ Fine-tuned Sliders:</strong><br>• Smooth touch controls for mobile & tablet.<br>• Direct typing into numeric fields (supports comma and period, press <code>Enter</code>).<br>• Keyboard navigation: <strong>Left / Down</strong> arrows decrease by 1 unit/step, <strong>Right / Up</strong> arrows increase by 1 unit/step.</div><br>All settings are automatically saved in the browser.",
                     "<strong>📅 Button [All (count) ▼] – time filter (year / month / day):</strong><br>Opens the photo time filter:<br>• 📅 Choose <em>All</em> for the complete archive or a specific year<br>• 🗓️ After selecting a year, a month grid appears<br>• 📆 For a selected month, also a day calendar<br>• ↩️ Clicking the active item steps back one level",
@@ -1118,7 +1130,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 this._map = map;
                 var pane = map.getPane('zonePane');
                 this._canvas = L.DomUtil.create('canvas', 'leaflet-zone-canvas', pane);
-                this._ctx = this._canvas.getContext('2d');
+                this._ctx = this._canvas.getContext('2d', {willReadFrequently: true});
                 var size = map.getSize();
                 this._canvas.width = size.x;
                 this._canvas.height = size.y;
@@ -1308,7 +1320,15 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var bmGrid = document.getElementById("btnMeasureGrid");
             if (bmGrid) bmGrid.title = t.btnMeasureGrid;
             var bmDist = document.getElementById("btnMeasureDist");
-            if (bmDist) bmDist.title = t.btnMeasureDist;
+            if (bmDist) bmDist.title = measureDistanceState.active ? (t.btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc)" : "Cancel measurement (Esc)")) : t.btnMeasureDist;
+            var bmShow = document.getElementById("btnShowCoords");
+            if (bmShow) bmShow.title = t.btnShowCoords;
+            var bmPar = document.getElementById("btnParallel");
+            if (bmPar) bmPar.title = t.btnParallel;
+            var bmMer = document.getElementById("btnMeridian");
+            if (bmMer) bmMer.title = t.btnMeridian;
+            var bmClear = document.getElementById("btnClearMeasure");
+            if (bmClear) bmClear.title = t.btnClearMeasure;
             var bmClose = document.querySelector(".measure-panel-close");
             if (bmClose) bmClose.title = t.btnMeasureClose;
             document.getElementById("txtBtnAddMini").textContent = t.btnAddMini;
@@ -2289,7 +2309,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     });
                     var distText = lineObj.distanceKm > 0 ? (lineObj.distanceKm.toFixed(2) + " km") : "";
                     var titleText = escapeHtml(lineObj.name || d.title || d.name);
-                    var popupContent = "<div style='padding:6px 8px;font-size:12px;min-width:180px;'>" +
+                    var popupContent = "<div style='padding:6px 8px;font-size:12px;min-width:auto;'>" +
                         "<div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
                         "<span style='display:inline-block;width:10px;height:10px;border-radius:50%;background:" + (d.color || "#1a73e8") + ";'></span> " +
                         titleText + "</div>" +
@@ -2320,7 +2340,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:" + (d.pointColor || d.color || "#1a73e8") + ";'></span> " +
                         pTitle + "</div>" +
                         (pDesc ? ("<div style='color:#5f6368;font-size:11px;line-height:1.4;margin-bottom:4px;'>" + pDesc + "</div>") : "") +
-                        "<div style='color:#80868b;font-size:10px;font-family:monospace;'>" + pt.lat.toFixed(5) + ", " + pt.lon.toFixed(5) + "</div>" +
+                        "<div style='color:#80868b;font-size:10px;font-family:monospace;'>" + pt.lat.toFixed(6) + ", " + pt.lon.toFixed(6) + "</div>" +
                         "</div>";
                 }
 
@@ -2870,6 +2890,14 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var p = document.getElementById("measurePanel");
             p.classList.toggle("open");
             closeMenuDropdown();
+            var bmDist = document.getElementById("btnMeasureDist");
+            if (bmDist) bmDist.title = measureDistanceState.active ? (i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc)" : "Cancel measurement (Esc)")) : i18n[currentLang].btnMeasureDist;
+            var bmShow = document.getElementById("btnShowCoords");
+            if (bmShow) bmShow.title = showCoordsState.active ? (currentLang === "cs" ? "Skrýt souřadnice (Esc)" : "Hide coordinates (Esc)") : i18n[currentLang].btnShowCoords;
+            var bmPar = document.getElementById("btnParallel");
+            if (bmPar) bmPar.title = parallelState && parallelState.active ? (currentLang === "cs" ? "Zrušit rovnoběžku (Esc)" : "Cancel parallel (Esc)") : i18n[currentLang].btnParallel;
+            var bmMer = document.getElementById("btnMeridian");
+            if (bmMer) bmMer.title = meridianState && meridianState.active ? (currentLang === "cs" ? "Zrušit poledník (Esc)" : "Cancel meridian (Esc)") : i18n[currentLang].btnMeridian;
         }
 
         // Distance measurement tool
@@ -2879,12 +2907,15 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var measurePointCounter = 1;
         var measureLineCounter = 1;
         var measurePolygonCounter = 1;
+        var activeSnapPoint = null;
+        function isAnyDrawingActive(){ return (typeof measureDistanceState!=="undefined"&&measureDistanceState.active) || (typeof showCoordsState!=="undefined"&&showCoordsState.active) || (typeof parallelState!=="undefined"&&parallelState.active) || (typeof meridianState!=="undefined"&&meridianState.active); }
         var measureDistanceState = {
             active: false,
             points: [],
             markers: [],
             segmentLabels: [],
             line: null,
+            lineHit: null,
             polygon: null,
             areaLabel: null,
             tempLine: null,
@@ -2906,10 +2937,14 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
 function startMeasureDistance() {
             if (measureDistanceState.active) return;
+            if(showCoordsState.active) stopShowCoords();
+            if(parallelState.active) stopParallel();
+            if(meridianState.active) stopMeridian();
             measureDistanceState.active = true;
             measureDistanceState.points = [];
             measureDistanceState.markers = [];
-            measureDistanceState.line = null;
+                    measureDistanceState.lineHit = null;
+                    measureDistanceState.line = null;
             measureDistanceState.tempLine = null;
             measureDistanceState.tempLabel = null;
             
@@ -2921,14 +2956,27 @@ function startMeasureDistance() {
             
             // Add map mousemove handler for live preview
             measureDistanceState.mapMoveHandler = function(e) {
-                if (!measureDistanceState.active || measureDistanceState.points.length === 0) return;
+                if (!measureDistanceState.active) {
+                    map.getContainer().style.cursor = "";
+                    return;
+                }
+                if (measureDistanceState.points.length === 0) {
+                    // I před prvním bodem ukazuj ruku pokud je v dosahu bodu
+                    activeSnapPoint = snapToPoint(e.latlng); map.getContainer().style.cursor = "crosshair";
+                    return;
+                }
                 
                 var latLng = e.latlng;
                 
                 // Snap to nearby points
-                var snapped = snapToPoint(latLng);
+                activeSnapPoint = snapToPoint(latLng); var snapped = activeSnapPoint;
                 if (snapped) latLng = snapped;
                 
+                // Kurzor ruka pokud je v dosahu bodu, jinak křížek
+                activeSnapPoint = snapToPoint(e.latlng); map.getContainer().style.cursor = "crosshair";
+                
+                if (measureDistanceState._lastMove && Date.now() - measureDistanceState._lastMove < 30) return;
+                measureDistanceState._lastMove = Date.now();
                 // Update temporary line from last point (geodeticky lomená po 100 km)
                 if (measureDistanceState.tempLine) {
                     var __geoTempU = geodesicPoints([[measureDistanceState.points[measureDistanceState.points.length - 1].lat, measureDistanceState.points[measureDistanceState.points.length - 1].lng],[latLng.lat, latLng.lng]], false);
@@ -2940,7 +2988,9 @@ function startMeasureDistance() {
                         weight: 2,
                         dashArray: '6, 4',
                         opacity: 0.7,
-                        pane: 'measurePane'
+                        pane: 'measurePane',
+                        noClip: true,
+                        interactive: false
                     }).addTo(measureLayerGroup);
                 }
                 
@@ -2973,11 +3023,12 @@ function startMeasureDistance() {
                     closeButton: false,
                     closeOnClick: false,
                     autoClose: false,
+                    autoPan: false,
                     className: 'measure-distance-popup measure-temp-label',
                     offset: [0, -15]
                 })
                 .setLatLng([midLat, midLng])
-                .setContent('<div style="background:#e41e26;color:#fff;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);">' + formatDistance(distM) + '</div>')
+                .setContent('<div style="background:#e41e26;color:#fff;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.25);">' + formatDistance(distM).replace('.', ',') + ' | ' + calcAzimuth(measureDistanceState.points[measureDistanceState.points.length - 1].lat, measureDistanceState.points[measureDistanceState.points.length - 1].lng, latLng.lat, latLng.lng).toFixed(1).replace('.', ',') + '°' + '</div>')
                 .openOn(map);
             };
             
@@ -2989,7 +3040,7 @@ function startMeasureDistance() {
                 var latLng = e.latlng;
                 
                 // Snap to nearby points
-                var snapped = snapToPoint(latLng);
+                activeSnapPoint = snapToPoint(latLng); var snapped = activeSnapPoint;
                 if (snapped) latLng = snapped;
                 
                 addMeasurePoint(latLng);
@@ -3024,7 +3075,8 @@ function startMeasureDistance() {
                 measureDistanceState.markers = [];
                 measureDistanceState.tempLine = null;
                 measureDistanceState.tempLabel = null;
-                measureDistanceState.line = null;
+                        measureDistanceState.lineHit = null;
+                    measureDistanceState.line = null;
                 // Keep previous line/polygon in measureLayerGroup – zůstane vidět!
                 
                 // Update button tooltip
@@ -3033,6 +3085,18 @@ function startMeasureDistance() {
             };
             
             map.on("contextmenu", measureDistanceState.contextMenuHandler);
+
+            // Capture handler for clicks on markers (snap) – capture phase
+            measureDistanceState.captureHandler2 = function(e) {
+                if (!measureDistanceState.active) return;
+                var latlng = map.mouseEventToLatLng(e);
+                var snapped = snapToPoint(latlng);
+                if (snapped) {
+                    L.DomEvent.stop(e);
+                    addMeasurePoint(snapped);
+                }
+            };
+            map.getContainer().addEventListener("click", measureDistanceState.captureHandler2, true);
             
             // Escape / Enter handler
             measureDistanceState.escapeHandler = function(e) {
@@ -3053,22 +3117,20 @@ function startMeasureDistance() {
             if (!measureDistanceState.active) return;
             
             // Snap to nearby points
-            var snapped = snapToPoint(latLng);
+            activeSnapPoint = snapToPoint(latLng); var snapped = activeSnapPoint;
             if (snapped) latLng = snapped;
 
-            // Polygon closure - click on first point with >=3 points
+            // Polygon closure - simuluj Enter
             if (measureDistanceState.points.length >= 3) {
                 var first = measureDistanceState.points[0];
-                var fp = map.latLngToContainerPoint(first);
-                var cp = map.latLngToContainerPoint(latLng);
-                var dx = fp.x - cp.x, dy = fp.y - cp.y;
-                if (Math.sqrt(dx*dx + dy*dy) < 15) {
-                    closeMeasurePolygon();
+                if (latLng.lat === first.lat && latLng.lng === first.lng) {
+                    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true}));
                     return;
                 }
             }
             
             measureDistanceState.points.push(latLng);
+            measureDistanceState.snapPoints.push({lat: latLng.lat, lng: latLng.lng, name: "", type: "measure"});
             
             var pointIndex = measureDistanceState.points.length;
             
@@ -3087,16 +3149,40 @@ if (measureDistanceState.points.length === 1) {
 } else {
                     // Add segment to the line
                     if (measureDistanceState.line) {
-                        measureDistanceState.line.setLatLngs(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false));
+                        var _geo = geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false);
+                        measureDistanceState.line.setLatLngs(_geo);
+                        if (measureDistanceState.lineHit) measureDistanceState.lineHit.setLatLngs(_geo);
 } else {
                     measureDistanceState.line = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
                         color: '#e41e26',
                         weight: 3,
                         dashArray: '8, 6',
                         opacity: 0.9,
-                        pane: 'measurePane',
-                        zIndex: 850
+                        pane: 'overlayPane',
+                        noClip: true,
+                        interactive: false,
+                        zIndex: 851
                     }).addTo(measureLayerGroup);
+                    // Hit-area neviditelná širší čára pro snadné kliknutí
+                    measureDistanceState.lineHit = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
+                        color: '#e41e26',
+                        weight: 12,
+                        opacity: 0.01,
+                        pane: 'overlayPane',
+                        noClip: true,
+                        interactive: true,
+                        zIndex: 852
+                    }).addTo(measureLayerGroup);
+                    var showTotal = function(e){
+                        var totalM=0;
+                        for(var i=1;i<measureDistanceState.points.length;i++) totalM+=calcDistKm(measureDistanceState.points[i-1].lat,measureDistanceState.points[i-1].lng,measureDistanceState.points[i].lat,measureDistanceState.points[i].lng)*1000;
+                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>" + formatDistance(totalM) + "</div></div>").openOn(map);
+                        L.DomEvent.stopPropagation(e);
+                    };
+                    measureDistanceState.lineHit.on('click', showTotal);
+                    measureDistanceState.line.on('click', showTotal);
+                    measureDistanceState.lineHit.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
+                    measureDistanceState.line.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
                     }
                 
                 // Calculate segment distance
@@ -3117,16 +3203,17 @@ if (measureDistanceState.points.length === 1) {
             // Update button tooltip
             var btn = document.getElementById("btnMeasureDist");
             if (btn) btn.title = i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc/Pravé tlačítko)" : "Cancel measurement (Esc/Right-click)");
-        }
+}
         
         function addMeasurePoint(latLng) {
             if (!measureDistanceState.active) return;
             
             // Snap to nearby points
-            var snapped = snapToPoint(latLng);
+            activeSnapPoint = snapToPoint(latLng); var snapped = activeSnapPoint;
             if (snapped) latLng = snapped;
             
             measureDistanceState.points.push(latLng);
+            measureDistanceState.snapPoints.push({lat: latLng.lat, lng: latLng.lng, name: "", type: "measure"});
             
             var pointIndex = measureDistanceState.points.length;
             
@@ -3141,8 +3228,13 @@ if (measureDistanceState.points.length === 1) {
             var marker = L.marker(latLng, {icon: icon}).addTo(measureLayerGroup);
             (function(m, n, ll){
                 m.on('click', function(e){
-                    var lat = ll.lat.toFixed(5);
-                    var lng = ll.lng.toFixed(5);
+                    if (n === 1 && measureDistanceState.points.length >= 3) {
+                        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true}));
+                        L.DomEvent.stopPropagation(e);
+                        return;
+                    }
+                    var lat = ll.lat.toFixed(6);
+                    var lng = ll.lng.toFixed(6);
                     L.popup({closeButton:true, autoClose:true, className:'measure-coord-popup', offset:[0,-10]})
                      .setLatLng(ll)
                      .setContent("<div style='padding:6px 8px;font-size:12px;min-width:140px;'><div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'><span style='display:inline-block;width:8px;height:8px;border-radius:50%;background:#e41e26;'></span> " + n + "</div><div style='color:#80868b;font-size:10px;font-family:monospace;'>" + lat + ", " + lng + "</div></div>")
@@ -3152,26 +3244,43 @@ if (measureDistanceState.points.length === 1) {
             })(marker, ptNum, latLng);
             measureDistanceState.markers.push(marker);
             
-if (measureDistanceState.points.length === 1) {
+            if (measureDistanceState.points.length === 1) {
                 // First point - just show marker, no line yet
             } else {
                 // Add segment to the line
                 if (measureDistanceState.line) {
                     measureDistanceState.line.setLatLngs(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false));
-} else {
+                } else {
                     measureDistanceState.line = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
                         color: '#e41e26',
                         weight: 3,
                         dashArray: '8, 6',
                         opacity: 0.9,
-                        pane: 'measurePane',
-                        zIndex: 850
+                        pane: 'overlayPane',
+                        noClip: true,
+                        interactive: false,
+                        zIndex: 851
                     }).addTo(measureLayerGroup);
-                    
-                    // Prevent click/dblclick propagation to map
-                    measureDistanceState.line.on('click dblclick', function(e) {
+                    // Hit-area neviditelná širší čára pro snadné kliknutí
+                    measureDistanceState.lineHit = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
+                        color: '#e41e26',
+                        weight: 12,
+                        opacity: 0.01,
+                        pane: 'overlayPane',
+                        noClip: true,
+                        interactive: true,
+                        zIndex: 852
+                    }).addTo(measureLayerGroup);
+                    var showTotal = function(e){
+                        var totalM=0;
+                        for(var i=1;i<measureDistanceState.points.length;i++) totalM+=calcDistKm(measureDistanceState.points[i-1].lat,measureDistanceState.points[i-1].lng,measureDistanceState.points[i].lat,measureDistanceState.points[i].lng)*1000;
+                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>" + formatDistance(totalM) + "</div></div>").openOn(map);
                         L.DomEvent.stopPropagation(e);
-                    });
+                    };
+                    measureDistanceState.lineHit.on('click', showTotal);
+                    measureDistanceState.line.on('click', showTotal);
+                    measureDistanceState.lineHit.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
+                    measureDistanceState.line.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
                     
                     // Prevent click/dblclick propagation to map
                     measureDistanceState.line.on('click dblclick', function(e) {
@@ -3187,8 +3296,10 @@ if (measureDistanceState.points.length === 1) {
                     measureDistanceState.points[measureDistanceState.points.length - 1].lng
                 ) * 1000;
                 
-                // Show segment distance label
-                showSegmentLabel(distM, measureDistanceState.points[measureDistanceState.points.length - 2], measureDistanceState.points[measureDistanceState.points.length - 1]);
+                // Show segment distance label (skip zero-length)
+                if (distM >= 0.5) {
+                    showSegmentLabel(distM, measureDistanceState.points[measureDistanceState.points.length - 2], measureDistanceState.points[measureDistanceState.points.length - 1]);
+                }
             }
             
             // Update button tooltip
@@ -3219,6 +3330,10 @@ if (measureDistanceState.points.length === 1) {
             }
             if (measureDistanceState.containerClickHandler) {
                 map.getContainer().removeEventListener("click", measureDistanceState.containerClickHandler);
+            if (measureDistanceState.captureHandler2) {
+                map.getContainer().removeEventListener("click", measureDistanceState.captureHandler2, true);
+                measureDistanceState.captureHandler2 = null;
+            }
                 measureDistanceState.containerClickHandler = null;
             }
             if (measureDistanceState.mapMoveHandler) {
@@ -3255,33 +3370,48 @@ if (measureDistanceState.points.length === 1) {
             var btn = document.getElementById("btnMeasureDist");
             if (btn) {
                 btn.classList.remove("active");
-                btn.title = i18n[currentLang].btnMeasureDist || (currentLang === "cs" ? "Měřit vzdálenost" : "Measure distance");
             }
 }
         
         // Clear all measurements from map and memory
         function clearAllMeasurements() {
+            var btnClear = document.getElementById("btnClearMeasure");
+            if (btnClear) { btnClear.classList.add("flash"); setTimeout(function(){ btnClear.classList.remove("flash"); }, 600); }
+            // Odstraň zbylé handlery z předchozího měření (jinak se hromadí a násobí číslování)
+            try { if (measureDistanceState.mapClickHandler) { map.off("click", measureDistanceState.mapClickHandler); measureDistanceState.mapClickHandler = null; } } catch(e){}
+            try { if (measureDistanceState.mapMoveHandler) { map.off("mousemove", measureDistanceState.mapMoveHandler); measureDistanceState.mapMoveHandler = null; } } catch(e){}
+            try { if (measureDistanceState.contextMenuHandler) { map.off("contextmenu", measureDistanceState.contextMenuHandler); measureDistanceState.contextMenuHandler = null; } } catch(e){}
+            try { if (measureDistanceState.captureHandler2) { map.getContainer().removeEventListener("click", measureDistanceState.captureHandler2, true); measureDistanceState.captureHandler2 = null; } } catch(e){}
+            try { if (measureDistanceState.escapeHandler) { document.removeEventListener("keydown", measureDistanceState.escapeHandler); measureDistanceState.escapeHandler = null; } } catch(e){}
+            try { map.getContainer().style.cursor = ""; } catch(e){}
+            // Odstraň i popupy které nejsou v measureLayerGroup
+            try { if (measureDistanceState.label) map.removeLayer(measureDistanceState.label); } catch(e){}
+            try { if (measureDistanceState.areaLabel) map.removeLayer(measureDistanceState.areaLabel); } catch(e){}
+            try { if (measureDistanceState.tempLabel) map.removeLayer(measureDistanceState.tempLabel); } catch(e){}
+            try { if (measureDistanceState.segmentLabels) measureDistanceState.segmentLabels.forEach(function(l){ try{ map.removeLayer(l);}catch(e){} }); } catch(e){}
             measureLayerGroup.clearLayers();
             measureDistanceState.points = [];
             measureDistanceState.markers = [];
             measureDistanceState.segmentLabels = [];
-            measureDistanceState.line = null;
-            measureDistanceState.tempLine = null;
-            measureDistanceState.tempLabel = null;
-            measureDistanceState.points = [];
-            measureDistanceState.markers = [];
-            measureDistanceState.segmentLabels = [];
-            measureDistanceState.line = null;
+                    measureDistanceState.lineHit = null;
+                    measureDistanceState.line = null;
+            measureDistanceState.polygon = null;
+            measureDistanceState.areaLabel = null;
+            measureDistanceState.label = null;
             measureDistanceState.tempLine = null;
             measureDistanceState.tempLabel = null;
             measureDistanceState.snapPoints = [];
             measureDistanceState.completed = false;
             measureDistanceState.active = false;
+            measurePointCounter = 1;
+            measureLineCounter = 1;
+            measurePolygonCounter = 1;
+            activeSnapPoint = null;
             
             var btn = document.getElementById("btnMeasureDist");
             if (btn) {
                 btn.classList.remove("active");
-                btn.title = i18n[currentLang].btnMeasureDist || (currentLang === "cs" ? "Měřit vzdálenost" : "Measure distance");
+                btn.title = i18n[currentLang].btnMeasureDist || (currentLang === "cs" ? "Měřit" : "Measure");
             }
         }
         
@@ -3337,19 +3467,42 @@ if (measureDistanceState.points.length === 1) {
                     }
                 }
             }
+            // Body z měření (předchozí měření i aktivní)
+            if (typeof measureLayerGroup !== 'undefined' && measureLayerGroup.eachLayer) {
+                measureLayerGroup.eachLayer(function(l){
+                    if (l.getLatLng && l.options && l.options.icon && l.options.icon.options && l.options.icon.options.html) {
+                        var h = l.options.icon.options.html;
+                        if (h.indexOf('border-radius:50%') !== -1 && h.indexOf('background:#e41e26') !== -1) {
+                            var ll = l.getLatLng();
+                            points.push({lat: ll.lat, lng: ll.lng, name: "", type: "measure"});
+                        }
+                    }
+                });
+            }
+                // Polygon vertices – only lomové body, ne plocha
+                if (d.polygons && d.polygons.length > 0) {
+                    for (var pg = 0; pg < d.polygons.length; pg++) {
+                        var poly = d.polygons[pg];
+                        if (poly.outer) for (var o = 0; o < poly.outer.length; o++) points.push({lat: poly.outer[o][0], lng: poly.outer[o][1], name: poly.name || "", type: "polygon"});
+                        if (poly.holes) for (var h = 0; h < poly.holes.length; h++) for (var hi = 0; hi < poly.holes[h].length; hi++) points.push({lat: poly.holes[h][hi][0], lng: poly.holes[h][hi][1], name: poly.name || "", type: "polygon"});
+                    }
+                }
             return points;
         }
 
         // Snap to nearby point if within threshold (in pixels)
-function snapToPoint(latLng) {
-            if (!measureDistanceState.snapPoints || measureDistanceState.snapPoints.length === 0) return null;
-            
+        function snapToPoint(latLng) {
+            var points = null;
+            if (measureDistanceState.snapPoints && measureDistanceState.snapPoints.length > 0) points = measureDistanceState.snapPoints;
+            else if (showCoordsState.snapPoints && showCoordsState.snapPoints.length > 0) points = showCoordsState.snapPoints;
+            else if (parallelState.snapPoints && parallelState.snapPoints.length > 0) points = parallelState.snapPoints;
+            else if (meridianState.snapPoints && meridianState.snapPoints.length > 0) points = meridianState.snapPoints;
+            else return null;
             var containerPoint = map.latLngToContainerPoint(latLng);
             var bestPoint = null;
-            var bestDist = 20; // Snap threshold in pixels (20px)
-            
-            for (var i = 0; i < measureDistanceState.snapPoints.length; i++) {
-                var sp = measureDistanceState.snapPoints[i];
+            var bestDist = 20;
+            for (var i = 0; i < points.length; i++) {
+                var sp = points[i];
                 var spPoint = map.latLngToContainerPoint([sp.lat, sp.lng]);
                 var dx = containerPoint.x - spPoint.x;
                 var dy = containerPoint.y - spPoint.y;
@@ -3368,6 +3521,9 @@ function snapToPoint(latLng) {
         }
 
         function showSegmentLabel(distM, pointA, pointB) {
+            // Safety check: don't create label for zero/very short segments
+            if (!distM || distM < 0.5) return;
+            
             var __geoSeg = geodesicPoints([[pointA.lat, pointA.lng],[pointB.lat, pointB.lng]], false);
             var __nSeg = __geoSeg.length - 1;
             var midLat, midLng;
@@ -3434,8 +3590,8 @@ function snapToPoint(latLng) {
                 marker.on('click', function(e) {
                     var point = measureDistanceState.points[index];
                     if (!point) return;
-                    var lat = point.lat.toFixed(5);
-                    var lng = point.lng.toFixed(5);
+                    var lat = point.lat.toFixed(6);
+                    var lng = point.lng.toFixed(6);
                     var coordText = lat + ", " + lng;
                     
                     L.popup({
@@ -3504,6 +3660,7 @@ function snapToPoint(latLng) {
         }
 
         function closeMeasurePolygon() {
+            console.log("closeMeasurePolygon via", new Error().stack.split("\n")[2], "pts", measureDistanceState.points.length, "active", measureDistanceState.active);
             if (!measureDistanceState.active || measureDistanceState.points.length < 3) return;
             // Uzavři polygon
             var pts = measureDistanceState.points.slice();
@@ -3519,9 +3676,19 @@ function snapToPoint(latLng) {
                 opacity: 0.9,
                 fillColor: '#e41e26',
                 fillOpacity: 0.2,
-                pane: 'measurePane'
+                noClip: true,
+                pane: 'overlayPane',
+                interactive: true
             }).addTo(measureLayerGroup);
-            measureDistanceState.polygon.on('click dblclick', function(e){ L.DomEvent.stopPropagation(e); });
+            measureDistanceState.polygon.on('click', function(e){
+                var pts=measureDistanceState.points;
+                // Polygon points were cleared after close, use geoRing for perimeter
+                var totalM=0;
+                for(var i=1;i<geoRing.length;i++) totalM+=calcDistKm(geoRing[i-1][0],geoRing[i-1][1],geoRing[i][0],geoRing[i][1])*1000;
+                L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>Obvod: " + formatDistance(totalM) + "</div></div>").openOn(map);
+                L.DomEvent.stopPropagation(e);
+            });
+            measureDistanceState.polygon.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
             // Plocha
             var areaM2 = calcPolygonAreaM2(pts);
             var areaText = formatArea(areaM2);
@@ -3551,9 +3718,209 @@ function snapToPoint(latLng) {
             // Reset aktivní body pro případné další měření, ale polygon zůstane
             measureDistanceState.points = [];
             measureDistanceState.markers = [];
-            measureDistanceState.line = null;
+                    measureDistanceState.lineHit = null;
+                    measureDistanceState.line = null;
             measureDistanceState.tempLine = null;
             measureDistanceState.tempLabel = null;
+        }
+
+        // Zobrazit souřadnice – toggle
+        var showCoordsState = {active:false, popup:null, moveHandler:null, clickHandler:null, keyHandler:null};
+        function toggleShowCoords(){
+            if(showCoordsState.active) stopShowCoords();
+            else startShowCoords();
+            var b=document.getElementById("btnShowCoords");
+            if(b) b.classList.toggle("active", showCoordsState.active);
+        }
+        function startShowCoords(){
+            if(showCoordsState.active) return;
+            showCoordsState.active=true;
+            showCoordsState.snapPoints = collectSnapPoints();
+            map.getContainer().style.cursor="crosshair";
+            showCoordsState.moveHandler=function(e){
+                var ll=e.latlng;
+                var snapped=snapToPoint(ll);
+                if(snapped) ll=snapped;
+                var lat=ll.lat.toFixed(6), lng=ll.lng.toFixed(6);
+                var txt=lat+", "+lng;
+                if(showCoordsState.popup) map.removeLayer(showCoordsState.popup);
+                showCoordsState.popup=L.popup({closeButton:false, autoClose:false, closeOnClick:false, autoPan:false, className:'show-coords-popup', offset:[0,0]}).setLatLng(ll).setContent('<div style="background:#fff;color:#333;padding:2px 6px;border-radius:0;font-size:11px;font-family:monospace;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.25);border:1px solid #333;">'+txt+'</div>').openOn(map);
+                map.getContainer().style.cursor=snapped?"pointer":"crosshair";
+            };
+            map.on("mousemove", showCoordsState.moveHandler);
+            showCoordsState.clickHandler=function(e){
+                var ll=e.latlng;
+                var snapped=snapToPoint(ll);
+                if(snapped) ll=snapped;
+                var txt=ll.lat.toFixed(6)+", "+ll.lng.toFixed(6);
+                if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).catch(function(){});
+                else { var ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(ta); }
+                showToast((currentLang==="cs"?"Zkopírováno: ":"Copied: ")+txt);
+                L.DomEvent.stop(e);
+            };
+            map.on("click", showCoordsState.clickHandler);
+            showCoordsState.captureHandler=function(e){
+                if(!showCoordsState.active) return;
+                var latlng=map.mouseEventToLatLng(e);
+                var snapped=snapToPoint(latlng);
+                if(snapped){
+                    L.DomEvent.stop(e);
+                    var txt=snapped.lat.toFixed(6)+", "+snapped.lng.toFixed(6);
+                    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).catch(function(){});
+                    else { var ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(ta); }
+                    showToast((currentLang==="cs"?"Zkopírováno: ":"Copied: ")+txt);
+                }
+            };
+            map.getContainer().addEventListener("click", showCoordsState.captureHandler, true);
+            showCoordsState.keyHandler=function(e){ if(e.key==="Escape") stopShowCoords(); };
+            document.addEventListener("keydown", showCoordsState.keyHandler);
+            var b=document.getElementById("btnShowCoords"); if(b) b.classList.add("active");
+        }
+        function stopShowCoords(){
+            if(!showCoordsState.active) return;
+            showCoordsState.active=false;
+            map.getContainer().style.cursor="";
+            if(showCoordsState.moveHandler){ map.off("mousemove", showCoordsState.moveHandler); showCoordsState.moveHandler=null; }
+            if(showCoordsState.clickHandler){ map.off("click", showCoordsState.clickHandler); map.getContainer().removeEventListener("click", showCoordsState.clickHandler, true); showCoordsState.clickHandler=null; }
+            if(showCoordsState.captureHandler){ map.getContainer().removeEventListener("click", showCoordsState.captureHandler, true); showCoordsState.captureHandler=null; }
+            if(showCoordsState.keyHandler){ document.removeEventListener("keydown", showCoordsState.keyHandler); showCoordsState.keyHandler=null; }
+            if(showCoordsState.popup){ map.removeLayer(showCoordsState.popup); showCoordsState.popup=null; }
+            var b=document.getElementById("btnShowCoords"); if(b) b.classList.remove("active");
+        }
+
+        // Rovnoběžka / Poledník
+        var parallelState={active:false, lines:[], moveHandler:null, clickHandler:null, keyHandler:null};
+        var meridianState={active:false, lines:[], moveHandler:null, clickHandler:null, keyHandler:null};
+        function toggleParallel(){ if(parallelState.active) stopParallel(); else startParallel(); var b=document.getElementById("btnParallel"); if(b) b.classList.toggle("active", parallelState.active); }
+        function toggleMeridian(){ if(meridianState.active) stopMeridian(); else startMeridian(); var b=document.getElementById("btnMeridian"); if(b) b.classList.toggle("active", meridianState.active); }
+        function startParallel(){
+            if(parallelState.active) return;
+            if(measureDistanceState.active) stopMeasureDistance();
+            if(showCoordsState.active) stopShowCoords();
+            if(meridianState.active) stopMeridian();
+            parallelState.active=true;
+            parallelState.snapPoints = collectSnapPoints();
+            map.getContainer().style.cursor="crosshair";
+            parallelState.moveHandler=function(e){
+                var ll=e.latlng;
+                // Pokud klik přímo na marker, použij jeho souřadnice (pro - překrytí popupu)
+                var target = e.originalEvent ? e.originalEvent.target : e.target;
+                if (target && target.closest) {
+                    var icon = target.closest('.leaflet-marker-icon');
+                    if (icon && icon._leaflet_id && map._layers[icon._leaflet_id] && map._layers[icon._leaflet_id].getLatLng) {
+                        ll = map._layers[icon._leaflet_id].getLatLng();
+                    }
+                }
+                var s=snapToPoint(ll); if(s) ll=s;
+                map.getContainer().style.cursor=s?"pointer":"crosshair";
+                // Náhled rovnoběžky
+                if(parallelState.tempLine) map.removeLayer(parallelState.tempLine);
+                parallelState.tempLine=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:1,dashArray:'4,4',opacity:0.5,pane:'measurePane',noClip:true,interactive:false}).addTo(measureLayerGroup);
+            };
+            map.on("mousemove", parallelState.moveHandler);
+            parallelState.clickHandler=function(e){
+                var ll=e.latlng;
+                // Pokud klik přímo na marker, použij jeho souřadnice (pro - překrytí popupu)
+                var target = e.originalEvent ? e.originalEvent.target : e.target;
+                if (target && target.closest) {
+                    var icon = target.closest('.leaflet-marker-icon');
+                    if (icon && icon._leaflet_id && map._layers[icon._leaflet_id] && map._layers[icon._leaflet_id].getLatLng) {
+                        ll = map._layers[icon._leaflet_id].getLatLng();
+                    }
+                }
+                var s=snapToPoint(ll); if(s) ll=s;
+                if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
+                var line=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
+                line.on('click', function(ev){
+                    L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map);
+                    L.DomEvent.stopPropagation(ev);
+                });
+                parallelState.lines.push(line);
+                L.DomEvent.stop(e);
+            };
+            map.on("click", parallelState.clickHandler);
+            map.getContainer().addEventListener("click", parallelState.clickHandler, true);
+            parallelState.contextMenuHandler=function(e){
+                if(!parallelState.active) return;
+                if(e.originalEvent){ e.originalEvent.preventDefault(); e.originalEvent.stopPropagation(); } else { e.preventDefault(); e.stopPropagation(); }
+                stopParallel(); startMeridian();
+            };
+            map.on("contextmenu", parallelState.contextMenuHandler);
+            parallelState.keyHandler=function(e){ if(e.key==="Escape") stopParallel(); };
+            document.addEventListener("keydown", parallelState.keyHandler);
+            var b=document.getElementById("btnParallel"); if(b) b.classList.add("active");
+        }
+        function stopParallel(){
+            if(!parallelState.active) return; parallelState.active=false;
+            map.getContainer().style.cursor="";
+            if(parallelState.moveHandler){ map.off("mousemove", parallelState.moveHandler); parallelState.moveHandler=null; }
+            if(parallelState.clickHandler){ map.off("click", parallelState.clickHandler); map.getContainer().removeEventListener("click", parallelState.clickHandler, true); parallelState.clickHandler=null; }
+            if(parallelState.contextMenuHandler){ map.off("contextmenu", parallelState.contextMenuHandler); parallelState.contextMenuHandler=null; }
+            if(parallelState.keyHandler){ document.removeEventListener("keydown", parallelState.keyHandler); parallelState.keyHandler=null; }
+            var b=document.getElementById("btnParallel"); if(b) b.classList.remove("active");
+        }
+        function startMeridian(){
+            if(meridianState.active) return;
+            if(measureDistanceState.active) stopMeasureDistance();
+            if(showCoordsState.active) stopShowCoords();
+            if(parallelState.active) stopParallel();
+            meridianState.active=true;
+            meridianState.snapPoints = collectSnapPoints();
+            map.getContainer().style.cursor="crosshair";
+            meridianState.moveHandler=function(e){
+                var ll=e.latlng;
+                // Pokud klik přímo na marker, použij jeho souřadnice (pro - překrytí popupu)
+                var target = e.originalEvent ? e.originalEvent.target : e.target;
+                if (target && target.closest) {
+                    var icon = target.closest('.leaflet-marker-icon');
+                    if (icon && icon._leaflet_id && map._layers[icon._leaflet_id] && map._layers[icon._leaflet_id].getLatLng) {
+                        ll = map._layers[icon._leaflet_id].getLatLng();
+                    }
+                }
+                var s=snapToPoint(ll); if(s) ll=s;
+                map.getContainer().style.cursor=s?"pointer":"crosshair";
+                if(meridianState.tempLine) map.removeLayer(meridianState.tempLine);
+                meridianState.tempLine=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:1,dashArray:'4,4',opacity:0.5,pane:'measurePane',noClip:true,interactive:false}).addTo(measureLayerGroup);
+            };
+            map.on("mousemove", meridianState.moveHandler);
+            meridianState.clickHandler=function(e){
+                var ll=e.latlng;
+                // Pokud klik přímo na marker, použij jeho souřadnice (pro - překrytí popupu)
+                var target = e.originalEvent ? e.originalEvent.target : e.target;
+                if (target && target.closest) {
+                    var icon = target.closest('.leaflet-marker-icon');
+                    if (icon && icon._leaflet_id && map._layers[icon._leaflet_id] && map._layers[icon._leaflet_id].getLatLng) {
+                        ll = map._layers[icon._leaflet_id].getLatLng();
+                    }
+                }
+                var s=snapToPoint(ll); if(s) ll=s;
+                var line=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
+                line.on('click', function(ev){
+                    L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map);
+                    L.DomEvent.stopPropagation(ev);
+                });
+                parallelState.lines.push(line);
+            };
+            map.on("click", meridianState.clickHandler);
+            map.getContainer().addEventListener("click", meridianState.clickHandler, true);
+            meridianState.contextMenuHandler=function(e){
+                if(!meridianState.active) return;
+                if(e.originalEvent){ e.originalEvent.preventDefault(); e.originalEvent.stopPropagation(); } else { e.preventDefault(); e.stopPropagation(); }
+                stopMeridian(); startParallel();
+            };
+            map.on("contextmenu", meridianState.contextMenuHandler);
+            meridianState.keyHandler=function(e){ if(e.key==="Escape") stopMeridian(); };
+            document.addEventListener("keydown", meridianState.keyHandler);
+            var b=document.getElementById("btnMeridian"); if(b) b.classList.add("active");
+        }
+        function stopMeridian(){
+            if(!meridianState.active) return; meridianState.active=false;
+            map.getContainer().style.cursor="";
+            if(meridianState.moveHandler){ map.off("mousemove", meridianState.moveHandler); meridianState.moveHandler=null; }
+            if(meridianState.clickHandler){ map.off("click", meridianState.clickHandler); map.getContainer().removeEventListener("click", meridianState.clickHandler, true); meridianState.clickHandler=null; }
+            if(meridianState.contextMenuHandler){ map.off("contextmenu", meridianState.contextMenuHandler); meridianState.contextMenuHandler=null; }
+            if(meridianState.keyHandler){ document.removeEventListener("keydown", meridianState.keyHandler); meridianState.keyHandler=null; }
+            var b=document.getElementById("btnMeridian"); if(b) b.classList.remove("active");
         }
 
         function getGridInterval(zoom) {
@@ -5544,15 +5911,11 @@ function snapToPoint(latLng) {
                             var divIcon = L.divIcon({ html: svgStr, className: '', iconSize: [sz, sz], iconAnchor: [sz/2, sz/2] });
                             dm = L.marker([dp[0], dp[1]], { icon: divIcon });
                         } else {
-                            dm = L.circleMarker([dp[0], dp[1]], {
-                                renderer: fastCanvasRenderer,
-                                radius: dsRadius,
-                                fillColor: col.fill,
-                                color: col.border,
-                                weight: 0.5,
-                                opacity: Math.min(1.0, dop + 0.25),
-                                fillOpacity: dop
-                            });
+                            // Kolečko také jako divIcon pro snap
+                            var sz2 = Math.round(dsRadius * 4);
+                            var svgStr2 = '<svg viewBox="0 0 18 18" width="' + sz2 + '" height="' + sz2 + '"><circle cx="9" cy="9" r="5" fill="' + col.fill + '" opacity="' + dop + '"/></svg>';
+                            var divIcon2 = L.divIcon({ html: svgStr2, className: '', iconSize: [sz2, sz2], iconAnchor: [sz2/2, sz2/2] });
+                            dm = L.marker([dp[0], dp[1]], { icon: divIcon2 });
                         }
                         dm.bindPopup(createPopupContent(dp));
                         if (lg) { lg.addLayer(dm); } else { canvasLayerGroup.addLayer(dm); }
@@ -6371,7 +6734,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                         var scale = (w > maxW) ? maxW / w : 1;
                         canvas.width = Math.max(1, Math.round(w * scale));
                         canvas.height = Math.max(1, Math.round(h * scale));
-                        var ctx = canvas.getContext("2d");
+                        var ctx = canvas.getContext("2d", {willReadFrequently: true});
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         var dataUrl = "";
                         try { dataUrl = canvas.toDataURL("image/jpeg", 0.7); } catch(cve) { dataUrl = objUrl; }
@@ -6421,7 +6784,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
             savePhotoSource(name, JSON.stringify(items));
             rebuild();
             saveSourcesOrder();
-            showToast("📷 " + (currentLang === 'cs' ? "Fotka přidána: " : "Photo added: ") + name + " (" + lat.toFixed(5) + ", " + lon.toFixed(5) + ")");
+            showToast("📷 " + (currentLang === 'cs' ? "Fotka přidána: " : "Photo added: ") + name + " (" + lat.toFixed(6) + ", " + lon.toFixed(6) + ")");
         }
 
         // Perzistence fotky (JPG/PNG) - ukládá [lat,lon,dt,fn,sz,thumbUrl]
