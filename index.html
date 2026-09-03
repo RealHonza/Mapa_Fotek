@@ -605,7 +605,7 @@
     </div>
 
     <!-- Panel Měření -->
-    <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()">
+    <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()" title="Panel měření">
         <div class="measure-panel-content">
             <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg></button>
             <button class="measure-panel-btn icon-only-btn" onclick="toggleMeasureDistance()" id="btnMeasureDist" title="Měřit" style="width: 34px;">📏</button>
@@ -774,6 +774,11 @@ menuMeasureItem: "📏 Otevřít panel měření",
                 btnMeasureDistCancel: "Zrušit měření (Esc)",
                 btnSaveMeasure: "Uložit měření (GeoJSON)",
                 btnClearMeasure: "Smazat měřené",
+                btnBufferZone: "Obalová zóna",
+                btnBufCircleCenter: "Kružnice střed+poloměr",
+                btnBufCircle3p: "Kružnice 3 body",
+                btnBufZone: "Obalová zóna čáry/polygonu",
+                measurePanelTitle: "Panel měření",
                 menuPdfItem: "📄 Uložit mapu jako PDF",
                 btnAddMini: "+ Přidat",
                 btnExportGj: "⬇️",
@@ -881,6 +886,11 @@ menuMeasureItem: "📏 Otevřít panel měření",
                 btnMeasureDistCancel: "Cancel measurement (Esc)",
                 btnSaveMeasure: "Save measurements (GeoJSON)",
                 btnClearMeasure: "Clear measurements",
+                btnBufferZone: "Buffer zone",
+                btnBufCircleCenter: "Circle center+radius",
+                btnBufCircle3p: "Circle by 3 points",
+                btnBufZone: "Buffer around line/polygon",
+                measurePanelTitle: "Measurement panel",
                 menuPdfItem: "📄 Save map as PDF",
                 btnAddMini: "+ Add",
                 btnExportGj: "⬇️",
@@ -1342,6 +1352,11 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (bmSave) bmSave.title = t.btnSaveMeasure;
             var bmClear = document.getElementById("btnClearMeasure");
             if (bmClear) bmClear.title = t.btnClearMeasure;
+            var bBuf=document.getElementById("btnBufferZone"); if(bBuf) bBuf.title=t.btnBufferZone;
+            var bBC=document.getElementById("btnBufCircleCenter"); if(bBC) bBC.title=t.btnBufCircleCenter;
+            var bB3=document.getElementById("btnBufCircle3p"); if(bB3) bB3.title=t.btnBufCircle3p;
+            var bBZ=document.getElementById("btnBufZone"); if(bBZ) bBZ.title=t.btnBufZone;
+            var mp=document.getElementById("measurePanel"); if(mp) mp.title=t.measurePanelTitle;
             var bmClose = document.querySelector(".measure-panel-close");
             if (bmClose) bmClose.title = t.btnMeasureClose;
             document.getElementById("txtBtnAddMini").textContent = t.btnAddMini;
