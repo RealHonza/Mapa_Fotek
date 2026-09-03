@@ -293,6 +293,11 @@
         .measure-panel-btn .degree-badge { position: absolute; top: -4px; right: -4px; background: #c00; color: white; font-size: 9px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .measure-panel-close { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: #5f6368; font-size: 18px; cursor: pointer; border-radius: 4px; line-height: 1; }
         .measure-panel-close:hover { background: #f1f3f4; color: #202124; }
+        .buffer-dropdown { display:none; position:absolute; top:38px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.98); backdrop-filter:blur(10px); border:1px solid rgba(0,0,0,0.08); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); padding:6px; flex-direction:column; gap:6px; z-index:1000; min-width:40px; }
+        .buffer-dropdown.open { display:flex; }
+        .buffer-dropdown-item { width:34px; height:34px; display:flex; align-items:center; justify-content:center; background:transparent; border:1px solid rgba(0,0,0,0.08); border-radius:6px; cursor:pointer; color:#3c4043; }
+        .buffer-dropdown-item:hover { background:#ffffff; color:#1a73e8; }
+        .buffer-dropdown-item.active { background:#202124; color:#ffffff; border-color:#202124; }
         
         .layers-dropdown { display: none; position: absolute; top: 38px; right: 0; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,0.2); padding: 6px; width: 230px; max-width: calc(100vw - 20px); z-index: 1500; border: 1px solid rgba(0,0,0,0.08); }
         .layers-dropdown.open { display: block; }
@@ -607,6 +612,14 @@
             <button class="measure-panel-btn icon-only-btn" onclick="toggleShowCoords()" id="btnShowCoords" title="Zobrazit souřadnice" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
             <button class="measure-panel-btn icon-only-btn" onclick="toggleParallel()" id="btnParallel" title="Rovnoběžka" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="17" y1="8" x2="17" y2="16"/></svg></button>
             <button class="measure-panel-btn icon-only-btn" onclick="toggleMeridian()" id="btnMeridian" title="Poledník" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="17" x2="16" y2="17"/></svg></button>
+            <div style="position:relative;">
+                <button class="measure-panel-btn icon-only-btn" onclick="toggleBufferDropdown()" id="btnBufferZone" title="Obalová zóna" style="width:34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 5v2"/><path d="M12 17v2"/><path d="M5 12h2"/><path d="M17 12h2"/></svg></button>
+                <div id="bufferDropdown" class="buffer-dropdown" onclick="event.stopPropagation()">
+                    <button class="buffer-dropdown-item" onclick="startBufferCircleCenter()" id="btnBufCircleCenter" title="Kružnice střed+poloměr"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><line x1="12" y1="12" x2="16.5" y2="12"/></svg></button>
+                    <button class="buffer-dropdown-item" onclick="startBufferCircle3p()" id="btnBufCircle3p" title="Kružnice 3 body"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="8.5" cy="8" r="1" fill="currentColor"/><circle cx="15.5" cy="8" r="1" fill="currentColor"/><circle cx="12" cy="16.5" r="1" fill="currentColor"/></svg></button>
+                    <button class="buffer-dropdown-item" onclick="startBufferZone()" id="btnBufZone" title="Obalová zóna čáry/polygonu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12H18"/><rect x="4" y="9" width="16" height="6" rx="3" opacity="0.4" fill="currentColor" stroke="none"/><path d="M4 12h16"/></svg></button>
+                </div>
+            </div>
             <button class="measure-panel-btn icon-only-btn" onclick="exportMeasurementsGeoJSON()" id="btnSaveMeasure" title="Uložit měření (GeoJSON)" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
             <button class="measure-panel-btn icon-only-btn" onclick="clearAllMeasurements()" id="btnClearMeasure" title="Smazat měřené" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
             <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření">&times;</button>
@@ -656,11 +669,11 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblUpdated">Poslední aktualizace:</span>
-                    <span class="info-meta-val" id="valUpdated">2. 9. 2026</span>
+                    <span class="info-meta-val" id="valUpdated">3. 9. 2026</span>
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.34</span>
+                    <span class="info-meta-val">2.36</span>
                 </div>
             </div>
 
@@ -834,12 +847,12 @@ menuMeasureItem: "📏 Otevřít panel měření",
                 modalTitle: "Mapa fotek",
                 lblAuthor: "Autor:",
                 lblUpdated: "Poslední aktualizace:",
-                valUpdated: "2. 9. 2026",
+                valUpdated: "3. 9. 2026",
                 lblVersion: "Verze:",
                 guideTitle: "📖 Návod k použití:",
                 steps: [
                     "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong><br>Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript má <strong>3 funkce:</strong><div class=\"step-sub\"><br>① <strong>Generovat data fotek (celý archiv)</strong> – projde všechny složky a podsložky, vyčte GNSS z EXIF, Google JSON, Adobe XMP a DJI SRT titulků, deduplikuje a seřadí dle data<br>② <strong>Generovat data fotek (vybrat konkrétní podsložku)</strong><br>③ <strong>Statistika archivu</strong> – vygeneruje přehled složek do CSV (počty, velikosti, nejstarší/nejnovější soubory). Vygenerovaný soubor není pro tuto aplikaci</div><br><strong>Výstupní soubor:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – formát: JavaScriptový datový soubor (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Struktura řádků:</strong> hlavičkové komentáře (<code>//</code>) + záhlaví sloupců + data oddělená středníkem<div class=\"step-sub\"><br><strong>Povinné sloupce (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Nepovinné doplňkové sloupce: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Příklad řádku:</strong><br><code>20240815_143022; foto_z_vyletu.jpg; 49.123456; 16.654321; 5242880; DoCZ/2024/08/foto_z_vyletu.jpg</code><br><br><strong>Popis sloupců:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (z EXIF, názvu souboru nebo data úpravy)<br>• <strong>NAZEV_SOUBORU</strong> – název souboru včetně přípony<br>• <strong>LATITUDE</strong> – zeměpisná šířka (desetinné stupně, 6 desetinných míst)<br>• <strong>LONGITUDE</strong> – zeměpisná délka (desetinné stupně, 6 desetinných míst)<br>• <strong>VELIKOST_BAJTY</strong> – velikost souboru v bajtech <em>(nepovinné)</em><br>• <strong>RELATIVNI_CESTA</strong> – relativní cesta k souboru vůči kořenové složce <em>(nepovinné)</em></div>Soubor přetáhněte do mapy nebo nahrajte přes tlačítko +<br><em>⚠️ Soubory <code>Mapa_Fotky.html</code> a <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte v hlavní kořenové složce s fotografiemi. V opačném případě se nezobrazí miniatury fotek a nepůjde na ně prokliknout do plné velikosti.</em>",
-                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong><br>Otevře nabídku se čtyřmi volbami:<ul><li>🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou</li><li>📄 <strong>Uložit mapu</strong> – rozdělené tlačítko se dvěma volbami:<div class=\"step-sub\"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≅ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů</div></li><li>ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod</li><li>📐 <strong>Otevřít panel měření</strong> – otevře panel měření uprostřed horního okraje. V panelu:<ul><li>🌐 <strong>Mřížka</strong> – 3 stavy: vypnuto / zobrazení mřížky se zvýrazněnými hlavními rovnoběžkami (rovník, obratníky, polární kruhy) / mřížka s popisky souřadnic</li><li>📏 <strong>Měřit</strong> – měří vzdálenost a azimut v místě prvního bodu čáry (čáry aproximuje po 100 km úsecích na ortodromu), uzavřením čáry na polygon vypočte plochu</li><li>🎯 <strong>Zobrazit souřadnice</strong> – u kurzoru zobrazí souřadnice (6 des. míst), klik zkopíruje do schránky, snap na body</li><li>🧭 <strong>Rovnoběžka</strong> – kliknutím vykreslí rovnoběžku dané zeměpisné šířky (s přichycením na body)</li><li>🧭 <strong>Poledník</strong> – kliknutím vykreslí poledník dané zeměpisné délky (s přichycením na body)</li><li>💾 <strong>Uložit měření</strong> – uloží vše z měření do GeoJSON a načte jako nový zdroj</li><li>🗑️ <strong>Smazat měření</strong> – vymaže vše z měření</li></ul></li></ul>",
+                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong><br>Otevře nabídku se čtyřmi volbami:<ul><li>🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou</li><li>💾 <strong>Uložit mapu</strong> – rozdělené tlačítko se dvěma volbami:<div class=\"step-sub\"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≈ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů</div></li><li>ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod</li><li>📏 <strong>Otevřít panel měření</strong> – otevře panel měření uprostřed horního okraje. V panelu:<ul><li>🌐 <strong>Mřížka</strong> – 3 stavy: vypnuto / zobrazení mřížky se zvýrazněnými hlavními rovnoběžkami (rovník, obratníky, polární kruhy) / mřížka s popisky souřadnic</li><li>📐 <strong>Měřit</strong> – měří vzdálenost a azimut v místě prvního bodu čáry (čáry aproximuje po 100 km úsecích na ortodromu), uzavřením čáry na polygon vypočte plochu</li><li>🎯 <strong>Zobrazit souřadnice</strong> – u kurzoru zobrazí souřadnice (6 des. míst), klik zkopíruje do schránky, snap na body</li><li>🧭 <strong>Rovnoběžka</strong> – kliknutím vykreslí rovnoběžku dané zeměpisné šířky (s přichycením na body)</li><li>🧭 <strong>Poledník</strong> – kliknutím vykreslí poledník dané zeměpisné délky (s přichycením na body)</li><li>⭕ <strong>Obalová zóna</strong> – rozbalovací tlačítko s volbami (přichycení k existujícím bodům i liniím, kontinuální kreslení více prvků za sebou, krok zpět pravým tlačítkem, ukončení klávesou Esc):<div class=\"step-sub\"><br>⭕ <strong>Kružnice (střed + poloměr)</strong> – 1. klik střed, 2. klik poloměr. Vykreslí geodetickou kružnici se zobrazeným středem. Po dokončení je obvod klikatelný s oknem informací (přesný poloměr, obvod a plocha; vnitřní plocha zůstává propustná pro kliknutí do mapy).<br>⭕ <strong>Kružnice (3 body)</strong> – 3 body na obvodu. Vypočte a zobrazí střed i geodetickou kružnici. Obvod je klikatelný se zobrazením poloměru, obvodu a plochy.<br>〰️ <strong>Obalová zóna (linie / polygon)</strong> – zadání šířky v km a kliknutí na trasu, linii či polygon. Vytvoří souvislou hladkou obalovou plochu, která respektuje ortodromické zakřivení segmentů delších než 100 km.<br><em>Geodetická aproximace:</em> Všechny kružnice i kružnicové oblouky automaticky zvyšují počet vrcholů tak, aby žádná aproximační úsečka nebyla delší než 100 km.</div></li><li>💾 <strong>Uložit měření</strong> – uloží vše z měření do GeoJSON a načte jako nový zdroj</li><li>🗑️ <strong>Smazat měření</strong> – vymaže vše z měření</li></ul></li></ul>",
                     "<strong>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů:</strong><br>Číslo v závorce = počet aktivních souborů. Panel zdrojů:<br>• ☑️ Zapnout/vypnout, odebrat, přejmenovat soubor<br>• ↕️ Přetáhnout pro změnu pořadí vykreslování<br>• 🎛️ Ovládací pilulky pro styl, barvy a parametry (podrobně v kroku 4)<br>• ⬇️ <strong>GeoJSON export</strong> – uloží jeden zdroj samostatně jako GeoJSON (tlačítko pod křížkem zdroje)<br>• 🎨 <strong>Sjednotit</strong> – parametry podle posledně upraveného souboru<br>• ↩️ <strong>Zpět</strong> – vrátí poslední sjednocení nebo reset<br>• 🔍 Klik na název = přiblížení na souřadnice<br><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť:</strong><br>V panelu Zdroje je u každého souboru tlačítko stylu a sada ovládacích pilulek:<div class=\"step-sub\"><br><strong>Fotky – 5 režimů:</strong><br>• 🔥 <strong>Heatmapa</strong> – 🎨 8 palet, 💧 průhlednost, 🌙 rozostření (5–50 px)<br>• 🖼️ <strong>Foto-karty</strong> – 💧 průhlednost<br>• 📍 <strong>Špendlíky</strong> – 🎨 8 barev, 💧 průhlednost<br>• ⭐ <strong>Symbol</strong> – 🎨 8 barev, 💧 průhlednost, 📌 styl symbolu (8 stylů), 🔴 velikost (1–25 px)<br>• ⬤ <strong>Zóna výskytu</strong> – 🎨 8 barev, 💧 průhlednost, ⬤ poloměr (0–10 000 km)<br><br><strong>GNSS trasy a polygony:</strong><br>• 🟠 Barva bodů, 📌 styl ikony (8 stylů), 🔘 velikost bodů (4–30 px)<br>• 💧 Průhlednost čar, bodů i výplní<br>• ━━ Barva čáry a polygonu, 📏 tloušťka čáry (0,5–20 px)<br>• Pokud polygony: 🖌️ barva výplně, 💧 průhlednost výplně (0–100 %)<br>• 🌐 <strong>Geodetická interpolace:</strong> Úseky tras i hrany polygonů delší než 100 km se automaticky ortodromicky zakřivují podél povrchu Země.<br><br><strong>🎛️ Vyladěné posuvníky:</strong><br>• Plynulé dotykové ovládání pro mobily a tablety.<br>• Přímé psaní hodnot do číselného pole (s tečkou i čárkou, potvrzení <code>Enter</code>).<br>• Klávesové ovládání: šipky <strong>Doleva / Dolů</strong> snižují o 1 jednotku/krok, <strong>Doprava / Nahoru</strong> zvyšují o 1 jednotku/krok.</div><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>📅 Tlačítko [Vše (počet) ▼] – časový filtr (rok / měsíc / den):</strong><br>Otevírá časový filtr fotografií:<br>• 📅 Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok<br>• 🗓️ Po zvolení roku se nabídka rozbalí o mřížku měsíců<br>• 📆 U vybraného měsíce i o kalendář dnů<br>• ↩️ Opětovným kliknutím se vrátíte o úroveň výš",
@@ -941,12 +954,12 @@ menuMeasureItem: "📏 Otevřít panel měření",
                 modalTitle: "Photo Map",
                 lblAuthor: "Author:",
                 lblUpdated: "Last update:",
-                valUpdated: "Sep 2, 2026",
+                valUpdated: "Sep 3, 2026",
                 lblVersion: "Version:",
                 guideTitle: "📖 User Guide:",
                 steps: [
                     "<strong>⚡ Data File – First Run (ESSENTIAL):</strong><br>Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script has <strong>3 functions:</strong><div class=\"step-sub\"><br>① <strong>Generate photo data (full archive)</strong> – scans all folders and subfolders, reads GPS from EXIF, Google JSON, Adobe XMP, and DJI SRT subtitles, deduplicates, and sorts by date<br>② <strong>Generate photo data (select a specific subfolder)</strong><br>③ <strong>Archive statistics</strong> – generates a folder overview to CSV (file counts, sizes, oldest/newest files). The generated file is not for this application</div><br><strong>Output file:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – format: JavaScript data file (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Row structure:</strong> comment header (<code>//</code>) + column header + data rows separated by semicolons<div class=\"step-sub\"><br><strong>Required columns (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Optional columns: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Example row:</strong><br><code>20240815_143022; hike_photo.jpg; 49.123456; 16.654321; 5242880; trips/CZ/2024/08/hike_photo.jpg</code><br><br><strong>Column descriptions:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (from EXIF, filename, or file modification date)<br>• <strong>NAZEV_SOUBORU</strong> – filename with extension<br>• <strong>LATITUDE</strong> – latitude in decimal degrees (6 decimal places)<br>• <strong>LONGITUDE</strong> – longitude in decimal degrees (6 decimal places)<br>• <strong>VELIKOST_BAJTY</strong> – file size in bytes <em>(optional)</em><br>• <strong>RELATIVNI_CESTA</strong> – relative path to file from root folder <em>(optional)</em></div>Drag it into the map or upload via the + button<br><em>⚠️ Keep both <code>Mapa_Fotky.html</code> and <code>Mapa_Fotek_aktualizace_dat.bat</code> in the root photos folder. Otherwise thumbnails won't display and you can't click to full size.</em>",
-                    "<strong>☰ Menu button (top left corner):</strong><br>Opens a menu with four options:<ul><li>🌐 <strong>Language switch</strong> – toggles between Czech and English</li><li>📄 <strong>Save map</strong> – split button with two options:<div class=\"step-sub\"><br>📄 <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≅ 1.41), 3mm margins, <em>without</em> vectors<br>🖼️ <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors</div></li><li>ℹ️ <strong>About &amp; Help</strong> – opens this guide</li><li>📐 <strong>Open measurement panel</strong> – opens measurement panel at top center. Panel contains:<ul><li>🌐 <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels</li><li>📏 <strong>Measure</strong> – measures distance and azimuth from the start point (approximates great circle path every 100 km), closing the line into a polygon calculates the area</li><li>🎯 <strong>Show coordinates</strong> – displays cursor coordinates (6 decimals), click to copy, snap to points</li><li>🧭 <strong>Parallel</strong> – click to draw a latitude parallel line through the point (with snapping)</li><li>🧭 <strong>Meridian</strong> – click to draw a longitude meridian line through the point (with snapping)</li><li>💾 <strong>Save measurements</strong> – saves all measurements to GeoJSON and loads as new source</li><li>🗑️ <strong>Clear measurements</strong> – clears all measurements from the map</li></ul></li></ul>",
+                    "<strong>☰ Menu button (top left corner):</strong><br>Opens a menu with four options:<ul><li>🌐 <strong>Language switch</strong> – toggles between Czech and English</li><li>💾 <strong>Save map</strong> – split button with two options:<div class=\"step-sub\"><br>📄 <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≈ 1.41), 3mm margins, <em>without</em> vectors<br>🖼️ <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors</div></li><li>ℹ️ <strong>About &amp; Help</strong> – opens this guide</li><li>📏 <strong>Open measurement panel</strong> – opens measurement panel at top center. Panel contains:<ul><li>🌐 <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels</li><li>📐 <strong>Measure</strong> – measures distance and azimuth from the start point (approximates great circle path every 100 km), closing the line into a polygon calculates the area</li><li>🎯 <strong>Show coordinates</strong> – displays cursor coordinates (6 decimals), click to copy, snap to points</li><li>🧭 <strong>Parallel</strong> – click to draw a latitude parallel line through the point (with snapping)</li><li>🧭 <strong>Meridian</strong> – click to draw a longitude meridian line through the point (with snapping)</li><li>⭕ <strong>Buffer Zone</strong> – dropdown button with drawing modes (snapping to points and lines, continuous drawing of multiple features, right-click step back, Esc to cancel):<div class=\"step-sub\"><br>⭕ <strong>Circle (Center + Radius)</strong> – 1st click center, 2nd click radius. Draws a geodesic circle with its permanent center dot. The boundary stroke is clickable to view exact radius, perimeter, and spherical area (fill area allows click-through to map).<br>⭕ <strong>Circle (3 Points)</strong> – 3 points on the circumference. Computes and displays the circumcenter and geodesic circle. Stroke is clickable with radius, perimeter, and area info.<br>〰️ <strong>Buffer Zone (Line / Polygon)</strong> – specify width in km and click any track, line, or polygon. Creates a smooth, continuous buffer polygon following orthodromic curvature for segments longer than 100 km.<br><em>Geodesic approximation:</em> All circles and circular arcs automatically scale vertex count so that no approximating chord/segment exceeds 100 km.</div></li><li>💾 <strong>Save measurements</strong> – saves all measurements to GeoJSON and loads as new source</li><li>🗑️ <strong>Clear measurements</strong> – clears all measurements from the map</li></ul></li></ul>",
                     "<strong>📂 Button [Sources (count)] – data sources manager:</strong><br>Number = count of active files. Sources panel:<br>• Toggle on/off, remove, rename each file<br>• Drag to reorder rendering (top items draw on top)<br>• Control pills for style, colors and parameters (details in step 4)<br>• ⬇️ <strong>GeoJSON export</strong> – saves a single source as GeoJSON (button under the × close button)<br>• 🎨 <strong>Unify</strong> – sync parameters to match the last edited file<br>• ↩️ <strong>Undo</strong> – reverts last unify or reset<br>• Click a file name to zoom the map to its coordinates<br><br>All settings are automatically saved permanently in browser storage.",
                     "<strong>🎨 View Style – Selected independently for each dataset:</strong><br>In the Sources panel, each file has a style trigger and pills:<div class=\"step-sub\"><br><strong>Photos – 5 modes:</strong><br>• 🔥 <strong>Heatmap</strong> – 🎨 8 palettes, 💧 opacity, 🌙 blur (5–50 px)<br>• 🖼️ <strong>Photo Cards</strong> – 💧 opacity<br>• 📍 <strong>Pins</strong> – 🎨 8 colors, 💧 opacity<br>• ⭐ <strong>Symbol</strong> – 🎨 8 colors, 💧 opacity, 📌 symbol icon (8 styles), 🔴 size (1–25 px)<br>• ⬤ <strong>Coverage Zone</strong> – 🎨 8 colors, 💧 opacity, ⬤ radius (0–10,000 km)<br><br><strong>GNSS Tracks & Polygons:</strong><br>• 🟠 Point color, 📌 waypoint icon (8 styles), 🔘 point size (4–30 px)<br>• 💧 Line, point, and fill opacity<br>• ━━ Line & polygon color, 📏 line width (0.5–20 px)<br>• If polygons: 🖌️ fill color, 💧 fill opacity (0–100 %)<br>• 🌐 <strong>Geodetic Interpolation:</strong> Track segments and polygon edges longer than 100 km automatically bend along Earth's great circle curvature.<br><br><strong>🎛️ Fine-tuned Sliders:</strong><br>• Smooth touch controls for mobile & tablet.<br>• Direct typing into numeric fields (supports comma and period, press <code>Enter</code>).<br>• Keyboard navigation: <strong>Left / Down</strong> arrows decrease by 1 unit/step, <strong>Right / Up</strong> arrows increase by 1 unit/step.</div><br>All settings are automatically saved in the browser.",
                     "<strong>📅 Button [All (count) ▼] – time filter (year / month / day):</strong><br>Opens the photo time filter:<br>• 📅 Choose <em>All</em> for the complete archive or a specific year<br>• 🗓️ After selecting a year, a month grid appears<br>• 📆 For a selected month, also a day calendar<br>• ↩️ Clicking the active item steps back one level",
@@ -2291,7 +2304,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         interactive: true,
                         noClip: true
                     });
-                    lPoly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; } });
+                    lPoly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(e); return; } } });
                     lPoly.bindPopup("<div style='padding:6px 8px;font-size:12px;'>" + escapeHtml(poly.name || d.title || d.name) + "</div>");
                     lg.addLayer(lPoly);
                     // Hit-area pro snadne kliknuti na obrys polygonu - SVG nad Canvas
@@ -2301,7 +2314,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         for(var _hr=0; _hr<rings.length; _hr++){
                             (function(_ring, _poly){
                                 var hitPoly=L.polyline(_ring, {color:outlineColor, weight:hitW, opacity:0.01, interactive:true, pane:'overlayPane', renderer: svgR, noClip:true});
-                                hitPoly.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } _poly.openPopup(ev.latlng); L.DomEvent.stopPropagation(ev); });
+                                hitPoly.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } _poly.openPopup(ev.latlng); L.DomEvent.stopPropagation(ev); });
                                 lg.addLayer(hitPoly);
                             })(rings[_hr], lPoly);
                         }
@@ -2326,7 +2339,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         interactive: true,
                         noClip: true
                     });
-                    poly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; } });
+                    poly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(e); return; } } });
                     var distText = lineObj.distanceKm > 0 ? (lineObj.distanceKm.toFixed(2) + " km") : "";
                     var titleText = escapeHtml(lineObj.name || d.title || d.name);
                     var popupContent = "<div style='padding:6px 8px;font-size:12px;min-width:auto;'>" +
@@ -2344,7 +2357,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     // Hit-area pro snadne kliknuti na caru - SVG
                     try{
                         var hitLine=L.polyline(displayPoints, {color:d.color||"#1a73e8", weight:16, opacity:0.01, interactive:true, pane:'overlayPane', renderer: L.svg(), noClip:true});
-                        hitLine.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } poly.openPopup(ev.latlng); L.DomEvent.stopPropagation(ev); });
+                        hitLine.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } poly.openPopup(ev.latlng); L.DomEvent.stopPropagation(ev); });
                         lg.addLayer(hitLine);
                     }catch(e){}
                 }
@@ -2938,7 +2951,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var measureLineCounter = 1;
         var measurePolygonCounter = 1;
         var activeSnapPoint = null;
-        function isAnyDrawingActive(){ return (typeof measureDistanceState!=="undefined"&&measureDistanceState.active) || (typeof showCoordsState!=="undefined"&&showCoordsState.active) || (typeof parallelState!=="undefined"&&parallelState.active) || (typeof meridianState!=="undefined"&&meridianState.active); }
+        function isAnyDrawingActive(){ return (typeof measureDistanceState!=="undefined"&&measureDistanceState.active) || (typeof showCoordsState!=="undefined"&&showCoordsState.active) || (typeof parallelState!=="undefined"&&parallelState.active) || (typeof meridianState!=="undefined"&&meridianState.active) || (typeof bufferCircleCenterState!=="undefined"&&bufferCircleCenterState.active) || (typeof bufferCircle3pState!=="undefined"&&bufferCircle3pState.active) || (typeof bufferZoneState!=="undefined"&&bufferZoneState.active); }
         var measureDistanceState = {
             active: false,
             points: [],
@@ -2970,6 +2983,7 @@ function startMeasureDistance() {
             if(showCoordsState.active) stopShowCoords();
             if(parallelState.active) stopParallel();
             if(meridianState.active) stopMeridian();
+            if(typeof stopAllBuffers==="function") stopAllBuffers();
             measureDistanceState.active = true;
             measureDistanceState.points = [];
             measureDistanceState.markers = [];
@@ -3151,103 +3165,17 @@ function startMeasureDistance() {
             activeSnapPoint = snapToPoint(latLng); var snapped = activeSnapPoint;
             if (snapped) latLng = snapped;
 
-            // Polygon closure - simuluj Enter
+            // Polygon closure - kliknuti na 1. bod (nebo snap na nej) pri alespon 3 bodech uzavre polygon stejne jako Enter
             if (measureDistanceState.points.length >= 3) {
                 var first = measureDistanceState.points[0];
-                if (latLng.lat === first.lat && latLng.lng === first.lng) {
-                    document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true}));
+                var isFirst = (latLng.lat === first.lat && latLng.lng === first.lng) ||
+                              (map.latLngToContainerPoint(latLng).distanceTo(map.latLngToContainerPoint(first)) < 20);
+                if (isFirst) {
+                    closeMeasurePolygon();
                     return;
                 }
             }
-            
-            measureDistanceState.points.push(latLng);
-            measureDistanceState.snapPoints.push({lat: latLng.lat, lng: latLng.lng, name: "", type: "measure"});
-            
-            var pointIndex = measureDistanceState.points.length;
-            
-            // Add marker for this point
-            var icon = L.divIcon({
-                html: '<div style="width:16px;height:16px;background:#e41e26;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>',
-                className: '',
-                iconSize: [16, 16],
-                iconAnchor: [8, 8]
-            });
-            var marker = L.marker(latLng, {icon: icon, zIndexOffset: 100}).addTo(measureLayerGroup);
-            measureDistanceState.markers.push(marker);
-            
-if (measureDistanceState.points.length === 1) {
-                // First point - just show marker, no line yet
-} else {
-                    // Add segment to the line
-                    if (measureDistanceState.line) {
-                        var _geo = geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false);
-                        measureDistanceState.line.setLatLngs(_geo);
-                        if (measureDistanceState.lineHit) measureDistanceState.lineHit.setLatLngs(_geo);
-} else {
-                    measureDistanceState.line = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
-                        color: '#e41e26',
-                        weight: 3,
-                        dashArray: '8, 6',
-                        opacity: 0.9,
-                        pane: 'overlayPane',
-                        noClip: true,
-                        interactive: false,
-                        zIndex: 851
-                    }).addTo(measureLayerGroup);
-                    measureDistanceState.line._measureIdx = measureLineCounter;
-                    measureDistanceState.line._vertexCount = measureDistanceState.points.length;
-                    // Hit-area neviditelná širší čára pro snadné kliknutí
-                    measureDistanceState.lineHit = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
-                        color: '#e41e26',
-                        weight: 16,
-                        opacity: 0.01,
-                        pane: 'overlayPane',
-                        renderer: L.svg(),
-                        noClip: true,
-                        interactive: true,
-                        zIndex: 852
-                    }).addTo(measureLayerGroup);
-                    measureDistanceState.lineHit._measureIdx = measureLineCounter;
-                    measureDistanceState.lineHit._vertexCount = measureDistanceState.points.length;
-                    var showTotal = function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; }
-                        var lls=(measureDistanceState.line && measureDistanceState.line.getLatLngs().length>1 ? measureDistanceState.line.getLatLngs() : e.target.getLatLngs()); var totalM=0;
-                        for(var i=1;i<lls.length;i++) totalM+=calcDistKm(lls[i-1].lat,lls[i-1].lng,lls[i].lat,lls[i].lng)*1000;
-                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Čára ":"Line ") + (e.target._measureIdx||measureLineCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Délka: ":"Length: ") + "<strong>" + formatDistance(totalM) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + (e.target._vertexCount||measureDistanceState.points.length) + "</strong></div></div>").openOn(map);
-                        L.DomEvent.stopPropagation(e);
-                    };
-                    measureDistanceState.lineHit.on('click', showTotal);
-                    measureDistanceState.line.on('click', showTotal);
-                    measureDistanceState.lineHit.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
-                    measureDistanceState.line.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
-                    }
-                
-                // Calculate segment distance
-                var distM = calcDistKm(
-                    measureDistanceState.points[measureDistanceState.points.length - 2].lat,
-                    measureDistanceState.points[measureDistanceState.points.length - 2].lng,
-                    measureDistanceState.points[measureDistanceState.points.length - 1].lat,
-                    measureDistanceState.points[measureDistanceState.points.length - 1].lng
-                ) * 1000;
-                
-                // Show segment distance label
-                showSegmentLabel(distM, measureDistanceState.points[measureDistanceState.points.length - 2], measureDistanceState.points[measureDistanceState.points.length - 1]);
-                
-                // Mark as completed once we have at least one segment
-                measureDistanceState.completed = true;
-            }
-            
-            // Update button tooltip
-            var btn = document.getElementById("btnMeasureDist");
-            if (btn) btn.title = i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc/Pravé tlačítko)" : "Cancel measurement (Esc/Right-click)");
-}
-        
-        function addMeasurePoint(latLng) {
-            if (!measureDistanceState.active) return;
-            
-            // Snap to nearby points
-            activeSnapPoint = snapToPoint(latLng); var snapped = activeSnapPoint;
-            if (snapped) latLng = snapped;
-            
+
             measureDistanceState.points.push(latLng);
             measureDistanceState.snapPoints.push({lat: latLng.lat, lng: latLng.lng, name: "", type: "measure"});
             
@@ -3265,7 +3193,7 @@ if (measureDistanceState.points.length === 1) {
             (function(m, n, ll){
                 m.on('click', function(e){
                     if (n === 1 && measureDistanceState.points.length >= 3) {
-                        document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true}));
+                        closeMeasurePolygon();
                         L.DomEvent.stopPropagation(e);
                         return;
                     }
@@ -3315,7 +3243,7 @@ if (measureDistanceState.points.length === 1) {
                     }).addTo(measureLayerGroup);
                     measureDistanceState.lineHit._measureIdx = measureLineCounter;
                     measureDistanceState.lineHit._vertexCount = measureDistanceState.points.length;
-                    var showTotal = function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; }
+                    var showTotal = function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ return; } else { L.DomEvent.stopPropagation(e); return; } }
                         var lls=(measureDistanceState.line && measureDistanceState.line.getLatLngs().length>1 ? measureDistanceState.line.getLatLngs() : e.target.getLatLngs()); var totalM=0;
                         for(var i=1;i<lls.length;i++) totalM+=calcDistKm(lls[i-1].lat,lls[i-1].lng,lls[i].lat,lls[i].lng)*1000;
                         L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Čára ":"Line ") + (e.target._measureIdx||measureLineCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Délka: ":"Length: ") + "<strong>" + formatDistance(totalM) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + (e.target._vertexCount||measureDistanceState.points.length) + "</strong></div></div>").openOn(map);
@@ -3374,11 +3302,11 @@ if (measureDistanceState.points.length === 1) {
             }
             if (measureDistanceState.containerClickHandler) {
                 map.getContainer().removeEventListener("click", measureDistanceState.containerClickHandler);
+                measureDistanceState.containerClickHandler = null;
+            }
             if (measureDistanceState.captureHandler2) {
                 map.getContainer().removeEventListener("click", measureDistanceState.captureHandler2, true);
                 measureDistanceState.captureHandler2 = null;
-            }
-                measureDistanceState.containerClickHandler = null;
             }
             if (measureDistanceState.mapMoveHandler) {
                 map.off("mousemove", measureDistanceState.mapMoveHandler);
@@ -3421,6 +3349,7 @@ if (measureDistanceState.points.length === 1) {
         function clearAllMeasurements() {
             var btnClear = document.getElementById("btnClearMeasure");
             if (btnClear) { btnClear.classList.add("flash"); setTimeout(function(){ btnClear.classList.remove("flash"); }, 600); }
+            try{ if(typeof stopAllBuffers==="function") stopAllBuffers(); }catch(e){}
             // Odstraň zbylé handlery z předchozího měření (jinak se hromadí a násobí číslování)
             try { if (measureDistanceState.mapClickHandler) { map.off("click", measureDistanceState.mapClickHandler); measureDistanceState.mapClickHandler = null; } } catch(e){}
             try { if (measureDistanceState.mapMoveHandler) { map.off("mousemove", measureDistanceState.mapMoveHandler); measureDistanceState.mapMoveHandler = null; } } catch(e){}
@@ -3472,6 +3401,7 @@ if (measureDistanceState.points.length === 1) {
                     }
                     return;
                 }
+                if(l instanceof L.Circle){ var cc=l.getLatLng(); var rr=l.getRadius(); if(rr>0 && l.options.opacity>0.05){ features.push({type:"Feature", geometry:{type:"Point", coordinates:[cc.lng, cc.lat]}, properties:{name:"Kružnice "+(ptIdx++), type:"buffer_circle", radius_m:Math.round(rr), radius_km:+(rr/1000).toFixed(3), lat:cc.lat, lng:cc.lng}}); } return; }
                 if(l instanceof L.Polygon){
                     var rings=l.getLatLngs();
                     var outerR=rings[0]||rings;
@@ -3570,6 +3500,14 @@ if (measureDistanceState.points.length === 1) {
                         }
                     }
                 }
+                // Polygon vertices – only lomové body, ne plocha
+                if (d.polygons && d.polygons.length > 0) {
+                    for (var pg = 0; pg < d.polygons.length; pg++) {
+                        var poly = d.polygons[pg];
+                        if (poly.outer) for (var o = 0; o < poly.outer.length; o++) points.push({lat: poly.outer[o][0], lng: poly.outer[o][1], name: poly.name || "", type: "polygon"});
+                        if (poly.holes) for (var h = 0; h < poly.holes.length; h++) for (var hi = 0; hi < poly.holes[h].length; hi++) points.push({lat: poly.holes[h][hi][0], lng: poly.holes[h][hi][1], name: poly.name || "", type: "polygon"});
+                    }
+                }
             }
             // Body z měření (předchozí měření i aktivní)
             if (typeof measureLayerGroup !== 'undefined' && measureLayerGroup.eachLayer) {
@@ -3583,14 +3521,6 @@ if (measureDistanceState.points.length === 1) {
                     }
                 });
             }
-                // Polygon vertices – only lomové body, ne plocha
-                if (d.polygons && d.polygons.length > 0) {
-                    for (var pg = 0; pg < d.polygons.length; pg++) {
-                        var poly = d.polygons[pg];
-                        if (poly.outer) for (var o = 0; o < poly.outer.length; o++) points.push({lat: poly.outer[o][0], lng: poly.outer[o][1], name: poly.name || "", type: "polygon"});
-                        if (poly.holes) for (var h = 0; h < poly.holes.length; h++) for (var hi = 0; hi < poly.holes[h].length; hi++) points.push({lat: poly.holes[h][hi][0], lng: poly.holes[h][hi][1], name: poly.name || "", type: "polygon"});
-                    }
-                }
             return points;
         }
 
@@ -3601,6 +3531,9 @@ if (measureDistanceState.points.length === 1) {
             else if (showCoordsState.snapPoints && showCoordsState.snapPoints.length > 0) points = showCoordsState.snapPoints;
             else if (parallelState.snapPoints && parallelState.snapPoints.length > 0) points = parallelState.snapPoints;
             else if (meridianState.snapPoints && meridianState.snapPoints.length > 0) points = meridianState.snapPoints;
+            else if (bufferCircleCenterState.snapPoints && bufferCircleCenterState.snapPoints.length > 0) points = bufferCircleCenterState.snapPoints;
+            else if (bufferCircle3pState.snapPoints && bufferCircle3pState.snapPoints.length > 0) points = bufferCircle3pState.snapPoints;
+            else if (bufferZoneState.snapPoints && bufferZoneState.snapPoints.length > 0) points = bufferZoneState.snapPoints;
             else return null;
             var containerPoint = map.latLngToContainerPoint(latLng);
             var bestPoint = null;
@@ -3786,7 +3719,7 @@ if (measureDistanceState.points.length === 1) {
             }).addTo(measureLayerGroup);
             measureDistanceState.polygon._measureIdx = measurePolygonCounter;
             measureDistanceState.polygon._vertexCount = pts.length;
-            measureDistanceState.polygon.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; }
+            measureDistanceState.polygon.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(e); return; } }
                 var pts=measureDistanceState.points;
                 // Polygon points were cleared after close, use geoRing for perimeter
                 var totalM=0;
@@ -3845,6 +3778,7 @@ if (measureDistanceState.points.length === 1) {
         }
         function startShowCoords(){
             if(showCoordsState.active) return;
+            if(typeof stopAllBuffers==="function") stopAllBuffers();
             showCoordsState.active=true;
             showCoordsState.snapPoints = collectSnapPoints();
             map.getContainer().style.cursor="crosshair";
@@ -3909,6 +3843,7 @@ if (measureDistanceState.points.length === 1) {
             if(measureDistanceState.active) stopMeasureDistance();
             if(showCoordsState.active) stopShowCoords();
             if(meridianState.active) stopMeridian();
+            if(typeof stopAllBuffers==="function") stopAllBuffers();
             parallelState.active=true;
             parallelState.snapPoints = collectSnapPoints();
             map.getContainer().style.cursor="crosshair";
@@ -3924,9 +3859,9 @@ if (measureDistanceState.points.length === 1) {
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
                 var line=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                 var hit=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
-                hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                 parallelState.lines.push(line);
                 L.DomEvent.stop(e);
             };
@@ -3940,9 +3875,9 @@ if (measureDistanceState.points.length === 1) {
                     L.DomEvent.stop(e);
                     if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
                     var line=L.polyline([[snapped.lat,-180],[snapped.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                    line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                    line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                     var hit=L.polyline([[snapped.lat,-180],[snapped.lat,180]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
-                    hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                    hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                     parallelState.lines.push(line);
                 }
             };
@@ -3973,6 +3908,7 @@ if (measureDistanceState.points.length === 1) {
             if(measureDistanceState.active) stopMeasureDistance();
             if(showCoordsState.active) stopShowCoords();
             if(parallelState.active) stopParallel();
+            if(typeof stopAllBuffers==="function") stopAllBuffers();
             meridianState.active=true;
             meridianState.snapPoints = collectSnapPoints();
             map.getContainer().style.cursor="crosshair";
@@ -3987,9 +3923,9 @@ if (measureDistanceState.points.length === 1) {
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
                 var line=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                 var hit=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
-                hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                 meridianState.lines.push(line);
                 L.DomEvent.stop(e);
             };
@@ -4003,9 +3939,9 @@ if (measureDistanceState.points.length === 1) {
                     L.DomEvent.stop(e);
                     if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
                     var line=L.polyline([[-85,snapped.lng],[85,snapped.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                    line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                    line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                     var hit=L.polyline([[-85,snapped.lng],[85,snapped.lng]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
-                    hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                    hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                     meridianState.lines.push(line);
                 }
             };
@@ -4031,6 +3967,770 @@ if (measureDistanceState.points.length === 1) {
             if(meridianState.keyHandler){ document.removeEventListener("keydown", meridianState.keyHandler); meridianState.keyHandler=null; }
             var b=document.getElementById("btnMeridian"); if(b) b.classList.remove("active");
         }
+        // Obalova zona - dropdown a 3 rezimy
+        function toggleBufferDropdown(){ var dd=document.getElementById("bufferDropdown"); if(dd) dd.classList.toggle("open"); }
+        function closeBufferDropdown(){ var dd=document.getElementById("bufferDropdown"); if(dd) dd.classList.remove("open"); }
+        function stopAllBuffers(){ stopBufferCircleCenter(); stopBufferCircle3p(); stopBufferZone(); closeBufferDropdown(); }
+        document.addEventListener("click", function(e){ var dd=document.getElementById("bufferDropdown"); var btn=document.getElementById("btnBufferZone"); if(dd && dd.classList.contains("open") && !dd.contains(e.target) && btn && !btn.contains(e.target) && e.target!==btn) dd.classList.remove("open"); });
+        var bufferCircleCenterState={active:false, center:null, tempCircle:null, tempLabel:null, markers:[], snapPoints:[], moveHandler:null, clickHandler:null, captureHandler:null, contextMenuHandler:null, keyHandler:null};
+        var bufferCircle3pState={active:false, points:[], markers:[], tempCircle:null, tempCenterDot:null, tempLabel:null, snapPoints:[], moveHandler:null, clickHandler:null, captureHandler:null, contextMenuHandler:null, keyHandler:null};
+        var bufferZoneState={active:false, distKm:1, snapPoints:[], moveHandler:null, clickHandler:null, captureHandler:null, contextMenuHandler:null, keyHandler:null};
+        function destinationPoint(lat, lng, bearing, distKm){ var R=6371; var d=distKm/R; var lat1=lat*Math.PI/180, lng1=lng*Math.PI/180, br=bearing*Math.PI/180; var lat2=Math.asin(Math.sin(lat1)*Math.cos(d)+Math.cos(lat1)*Math.sin(d)*Math.cos(br)); var lng2=lng1+Math.atan2(Math.sin(br)*Math.sin(d)*Math.cos(lat1), Math.cos(d)-Math.sin(lat1)*Math.sin(lat2)); return {lat: lat2*180/Math.PI, lng: lng2*180/Math.PI}; }
+        function calcCircumcenter(p1,p2,p3){ function toVec(lat,lng){ var la=lat*Math.PI/180, lo=lng*Math.PI/180, cl=Math.cos(la); return {x:cl*Math.cos(lo), y:cl*Math.sin(lo), z:Math.sin(la)}; } function fromVec(v){ var hyp=Math.sqrt(v.x*v.x+v.y*v.y); return {lat: Math.atan2(v.z,hyp)*180/Math.PI, lng: Math.atan2(v.y,v.x)*180/Math.PI}; } var a=toVec(p1.lat,p1.lng), b=toVec(p2.lat,p2.lng), c=toVec(p3.lat,p3.lng); var v1={x:a.x-b.x,y:a.y-b.y,z:a.z-b.z}, v2={x:a.x-c.x,y:a.y-c.y,z:a.z-c.z}; var cx=v1.y*v2.z - v1.z*v2.y, cy=v1.z*v2.x - v1.x*v2.z, cz=v1.x*v2.y - v1.y*v2.x; var len=Math.sqrt(cx*cx+cy*cy+cz*cz); if(len<1e-12) return null; cx/=len; cy/=len; cz/=len; if(cx*a.x+cy*a.y+cz*a.z<0){ cx=-cx; cy=-cy; cz=-cz; } return fromVec({x:cx,y:cy,z:cz}); }
+        function bufferLineSimple(latlngs, distKm, isPolygon){
+            if(!latlngs || latlngs.length < 2) return null;
+            // Geodetické zhuštění: pokud jsou úseky delší než 100 km, vložit mezilehlé ortodromické body
+            if(typeof geodesicPoints === 'function'){
+                var rawArr = latlngs.map(function(p){
+                    return [p.lat !== undefined ? p.lat : p[0], p.lng !== undefined ? p.lng : p[1]];
+                });
+                var denseArr = geodesicPoints(rawArr, !!isPolygon);
+                latlngs = denseArr.map(function(p){ return { lat: p[0], lng: p[1] }; });
+            }
+            var R = 6371.0;
+            var dRad = distKm / R;
+
+            function toRad(d){ return d * Math.PI / 180; }
+            function toDeg(r){ return r * 180 / Math.PI; }
+
+            function destPt(lat, lon, brngDeg){
+                var th = toRad(brngDeg);
+                var p1 = toRad(lat), l1 = toRad(lon);
+                var p2 = Math.asin(Math.sin(p1)*Math.cos(dRad) + Math.cos(p1)*Math.sin(dRad)*Math.cos(th));
+                var l2 = l1 + Math.atan2(Math.sin(th)*Math.sin(dRad)*Math.cos(p1), Math.cos(dRad) - Math.sin(p1)*Math.sin(p2));
+                return { lat: toDeg(p2), lng: ((toDeg(l2) + 540) % 360) - 180 };
+            }
+
+            function az(p1, p2){
+                return calcAzimuth(p1.lat, p1.lng, p2.lat, p2.lng);
+            }
+
+            // Normalizovat body (odstranit duplicity těsně za sebou)
+            var pts = [];
+            for(var i = 0; i < latlngs.length; i++){
+                var cur = latlngs[i];
+                if(pts.length === 0 || calcDistKm(pts[pts.length-1].lat, pts[pts.length-1].lng, cur.lat, cur.lng) > 0.0005){
+                    pts.push({ lat: cur.lat, lng: cur.lng });
+                }
+            }
+            if(pts.length < 2) return null;
+
+            if(isPolygon){
+                // Zajistit uzavření polygonu
+                if(calcDistKm(pts[0].lat, pts[0].lng, pts[pts.length-1].lat, pts[pts.length-1].lng) < 0.001){
+                    pts.pop();
+                }
+                var m = pts.length;
+                if(m < 3) return null;
+
+                // Určit orientaci (CW vs CCW)
+                var signedArea = 0;
+                for(var i = 0; i < m; i++){
+                    var j = (i + 1) % m;
+                    signedArea += (pts[i].lng * pts[j].lat) - (pts[j].lng * pts[i].lat);
+                }
+                // V kartézských souřadnicích (lng=x, lat=y):
+                // signedArea > 0 => CCW => outward normál je +90 stupňů
+                // signedArea < 0 => CW  => outward normál je -90 stupňů
+                var normOffset = signedArea >= 0 ? 90 : -90;
+
+                var polyRing = [];
+                var edgeAz = [];
+                for(var i = 0; i < m; i++){
+                    edgeAz.push(az(pts[i], pts[(i + 1) % m]));
+                }
+
+                for(var i = 0; i < m; i++){
+                    var prevEdge = (i - 1 + m) % m;
+                    var curEdge = i;
+                    var azIn = edgeAz[prevEdge];
+                    var azOut = edgeAz[curEdge];
+                    var diff = ((azOut - azIn + 540) % 360) - 180;
+                    // Vnější roh závisí na orientaci
+                    var isConvex = (signedArea >= 0 && diff < 0) || (signedArea < 0 && diff > 0);
+
+                    var n1 = (azIn + normOffset + 360) % 360;
+                    var n2 = (azOut + normOffset + 360) % 360;
+
+                    if(isConvex){
+                        var sweepLenKm = (Math.abs(diff) * Math.PI / 180.0) * R * Math.sin(dRad);
+                        var arcSteps = Math.max(3, Math.max(Math.ceil(Math.abs(diff) / 18), Math.ceil(sweepLenKm / 100.0)));
+                        var sweep = signedArea >= 0 ? -((n1 - n2 + 360) % 360) : ((n2 - n1 + 360) % 360);
+                        if(sweep === 0) sweep = 360;
+                        for(var s = 0; s <= arcSteps; s++){
+                            var ang = n1 + s * sweep / arcSteps;
+                            var dp = destPt(pts[i].lat, pts[i].lng, ang);
+                            polyRing.push([dp.lat, dp.lng]);
+                        }
+                    } else {
+                        // Vnitřní roh: spojíme oba posunuté body
+                        var pIn = destPt(pts[i].lat, pts[i].lng, n1);
+                        var pOut = destPt(pts[i].lat, pts[i].lng, n2);
+                        polyRing.push([pIn.lat, pIn.lng]);
+                        polyRing.push([pOut.lat, pOut.lng]);
+                    }
+                }
+                if(polyRing.length > 0) polyRing.push(polyRing[0].slice());
+                return [polyRing];
+            } else {
+                // ==================== OPEN POLYLINE BUFFER ====================
+                var n = pts.length;
+                var segAz = [];
+                for(var i = 0; i < n - 1; i++){
+                    segAz.push(az(pts[i], pts[i + 1]));
+                }
+
+                var leftSide = [];
+                var rightSide = [];
+
+                // 1. Levá strana (od začátku klesá k n-1)
+                // Počáteční bod levé strany
+                var startL = destPt(pts[0].lat, pts[0].lng, segAz[0] - 90);
+                leftSide.push([startL.lat, startL.lng]);
+
+                for(var i = 1; i < n - 1; i++){
+                    var azIn = segAz[i - 1];
+                    var azOut = segAz[i];
+                    var diff = ((azOut - azIn + 540) % 360) - 180;
+
+                    if(diff > 2){
+                        // Zatáčí doprava: levá strana je VNĚJŠÍ roh -> hladký oblouk
+                        var arcLenKm = (diff * Math.PI / 180.0) * R * Math.sin(dRad);
+                        var steps = Math.max(2, Math.max(Math.ceil(diff / 20), Math.ceil(arcLenKm / 100.0)));
+                        for(var s = 0; s <= steps; s++){
+                            var ang = (azIn - 90) + s * diff / steps;
+                            var dp = destPt(pts[i].lat, pts[i].lng, ang);
+                            leftSide.push([dp.lat, dp.lng]);
+                        }
+                    } else if(diff < -2){
+                        // Zatáčí doleva: levá strana je vnitřní roh -> zkosení
+                        var pA = destPt(pts[i].lat, pts[i].lng, azIn - 90);
+                        var pB = destPt(pts[i].lat, pts[i].lng, azOut - 90);
+                        leftSide.push([pA.lat, pA.lng]);
+                        leftSide.push([pB.lat, pB.lng]);
+                    } else {
+                        var pMid = destPt(pts[i].lat, pts[i].lng, (azIn + azOut) / 2 - 90);
+                        leftSide.push([pMid.lat, pMid.lng]);
+                    }
+                }
+                // Koncový bod levé strany
+                var endL = destPt(pts[n - 1].lat, pts[n - 1].lng, segAz[n - 2] - 90);
+                leftSide.push([endL.lat, endL.lng]);
+
+                // 2. Koncové zaoblení (End Cap) v pts[n-1]
+                var endCap = [];
+                var semiKm = Math.PI * R * Math.sin(dRad);
+                var capSteps = Math.max(16, Math.ceil(semiKm / 100.0));
+                var baseEndAz = segAz[n - 2];
+                for(var s = 1; s < capSteps; s++){
+                    var ang = (baseEndAz - 90) + s * 180 / capSteps;
+                    var cp = destPt(pts[n - 1].lat, pts[n - 1].lng, ang);
+                    endCap.push([cp.lat, cp.lng]);
+                }
+                var endR = destPt(pts[n - 1].lat, pts[n - 1].lng, baseEndAz + 90);
+                endCap.push([endR.lat, endR.lng]);
+
+                // 3. Pravá strana (jde zpět od n-1 do 0)
+                for(var i = n - 2; i >= 1; i--){
+                    var azIn = segAz[i - 1];
+                    var azOut = segAz[i];
+                    var diff = ((azOut - azIn + 540) % 360) - 180;
+
+                    if(diff < -2){
+                        // Zatáčelo doleva: pravá strana je VNĚJŠÍ roh -> hladký oblouk
+                        var arcLenKmR = (-diff * Math.PI / 180.0) * R * Math.sin(dRad);
+                        var steps = Math.max(2, Math.max(Math.ceil(-diff / 20), Math.ceil(arcLenKmR / 100.0)));
+                        for(var s = 0; s <= steps; s++){
+                            var ang = (azOut + 90) - s * (-diff) / steps;
+                            var dp = destPt(pts[i].lat, pts[i].lng, ang);
+                            rightSide.push([dp.lat, dp.lng]);
+                        }
+                    } else if(diff > 2){
+                        // Zatáčelo doprava: pravá strana je vnitřní roh -> zkosení
+                        var pA = destPt(pts[i].lat, pts[i].lng, azOut + 90);
+                        var pB = destPt(pts[i].lat, pts[i].lng, azIn + 90);
+                        rightSide.push([pA.lat, pA.lng]);
+                        rightSide.push([pB.lat, pB.lng]);
+                    } else {
+                        var pMid = destPt(pts[i].lat, pts[i].lng, (azIn + azOut) / 2 + 90);
+                        rightSide.push([pMid.lat, pMid.lng]);
+                    }
+                }
+                var startR = destPt(pts[0].lat, pts[0].lng, segAz[0] + 90);
+                rightSide.push([startR.lat, startR.lng]);
+
+                // 4. Počáteční zaoblení (Start Cap) v pts[0]
+                var startCap = [];
+                var baseStartAz = segAz[0];
+                for(var s = 1; s < capSteps; s++){
+                    var ang = (baseStartAz + 90) + s * 180 / capSteps;
+                    var cp = destPt(pts[0].lat, pts[0].lng, ang);
+                    startCap.push([cp.lat, cp.lng]);
+                }
+
+                // 5. Spojení celého obvodu do jedné souvislé křivky:
+                // levá strana -> oblouk na konci -> pravá strana pozpátku -> oblouk na začátku -> uzavření
+                var ring = leftSide.concat(endCap).concat(rightSide).concat(startCap);
+                ring.push(ring[0].slice());
+                return [ring];
+            }
+        }
+                function getGeodesicCirclePoints(center, rKm){
+            var R = 6371.0;
+            var rRad = rKm / R;
+            var perimKm = 2 * Math.PI * R * Math.sin(rRad);
+            // Zvýšit počet vrcholů tak, aby žádná aproximující úsečka nebyla delší než 100 km
+            var n = Math.max(72, Math.ceil(perimKm / 100.0));
+            var pts = [];
+            for(var i = 0; i < n; i++){
+                var brng = i * 360.0 / n;
+                var p = destinationPoint(center.lat, center.lng, brng, rKm);
+                pts.push([p.lat, p.lng]);
+            }
+            pts.push(pts[0].slice());
+            return pts;
+        }
+
+function addCircleToMeasure(center, rKm) {
+            var R = 6371000;
+            var rM = rKm * 1000;
+            var rRad = rM / R;
+            var perimM = 2 * Math.PI * R * Math.sin(rRad);
+            var areaM2 = 2 * Math.PI * R * R * (1 - Math.cos(rRad));
+
+            var circlePts = getGeodesicCirclePoints(center, rKm);
+            // 1. Vizualni kruznice s vyplni - NEINTERAKTIVNI (plocha nereaguje na kliknuti)
+            var circle = L.polygon(circlePts, {
+                color: '#e41e26',
+                weight: 2,
+                opacity: 0.9,
+                fillColor: '#e41e26',
+                fillOpacity: 0.15,
+                pane: 'overlayPane',
+                interactive: false
+            }).addTo(measureLayerGroup);
+
+            // 2. Klikatelny obrys kruznice (pouze obvod, bez vyplne)
+            var hit = L.polygon(circlePts, {
+                color: '#e41e26',
+                weight: 16,
+                opacity: 0.001,
+                fill: false,
+                interactive: true,
+                pane: 'overlayPane',
+                renderer: L.svg()
+            }).addTo(measureLayerGroup);
+
+            function applyStrokeStyle() {
+                if (hit._path) {
+                    hit._path.style.pointerEvents = 'stroke';
+                    hit._path.style.cursor = 'pointer';
+                }
+            }
+            applyStrokeStyle();
+            hit.on('add', applyStrokeStyle);
+
+            hit.on('click', function(ev) {
+                if (typeof isAnyDrawingActive === 'function' && isAnyDrawingActive()) {
+                    L.DomEvent.stopPropagation(ev);
+                    return;
+                }
+                var isCs = currentLang === 'cs';
+                var rStr = rKm >= 1 ? (rKm.toFixed(3).replace('.', ',') + ' km') : (Math.round(rM) + ' m');
+                var content = "<div style='padding:6px 8px;font-size:12px;min-width:170px;'>" +
+                    "<div style='font-weight:700;color:#202124;margin-bottom:5px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
+                    "<span style='display:inline-block;width:9px;height:9px;border-radius:50%;background:#e41e26;'></span> " +
+                    (isCs ? 'Kru\u017Enice' : 'Circle') + '</div>' +
+                    "<div style='color:#5f6368;font-size:11px;line-height:1.6;'>" +
+                    (isCs ? '\uD83D\uDCCD St\u0159ed: ' : '\uD83D\uDCCD Center: ') + '<strong>' + center.lat.toFixed(6) + '\u00B0, ' + center.lng.toFixed(6) + '\u00B0</strong><br>' +
+                    (isCs ? '\uD83D\uDCCF Polom\u011Br: ' : '\uD83D\uDCCF Radius: ') + '<strong>' + rStr + '</strong><br>' +
+                    (isCs ? '\u2B55 Obvod: ' : '\u2B55 Perimeter: ') + '<strong>' + formatDistance(perimM) + '</strong><br>' +
+                    (isCs ? '\uD83D\uDCD0 Plocha: ' : '\uD83D\uDCD0 Area: ') + '<strong>' + formatArea(areaM2) + '</strong>' +
+                    '</div></div>';
+                L.popup({ closeButton: true, autoClose: true, offset: [0, -10] })
+                 .setLatLng(ev.latlng)
+                 .setContent(content)
+                 .openOn(map);
+                L.DomEvent.stopPropagation(ev);
+            });
+
+            // 3. Stredovy bod kruznice - vzdy viditelny
+            var centerDot = L.marker([center.lat, center.lng], {
+                icon: L.divIcon({
+                    html: '<div style="width:6px;height:6px;background:#e41e26;border:1.5px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>',
+                    iconSize: [6, 6],
+                    iconAnchor: [3, 3]
+                }),
+                pane: 'markerPane',
+                interactive: false
+            }).addTo(measureLayerGroup);
+
+            return { circle: circle, hit: hit, centerDot: centerDot };
+        }
+
+        function startBufferCircleCenter(){
+            closeBufferDropdown();
+            if(bufferCircleCenterState.active){ stopBufferCircleCenter(); return; }
+            stopAllBuffers();
+            if(measureDistanceState.active) stopMeasureDistance();
+            if(showCoordsState.active) stopShowCoords();
+            if(parallelState.active) stopParallel();
+            if(meridianState.active) stopMeridian();
+            bufferCircleCenterState.active=true;
+            bufferCircleCenterState.center=null;
+            bufferCircleCenterState.markers=[];
+            bufferCircleCenterState.snapPoints=collectSnapPoints();
+            map.getContainer().style.cursor='crosshair';
+            bufferCircleCenterState.moveHandler=function(e){
+                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                map.getContainer().style.cursor=s?'pointer':'crosshair';
+                if(bufferCircleCenterState.center){
+                    var r=calcDistKm(bufferCircleCenterState.center.lat,bufferCircleCenterState.center.lng,ll.lat,ll.lng);
+                    if(bufferCircleCenterState.tempCircle) try{map.removeLayer(bufferCircleCenterState.tempCircle);}catch(e){}
+                    var tempPts = getGeodesicCirclePoints(bufferCircleCenterState.center, r);
+                    bufferCircleCenterState.tempCircle=L.polygon(tempPts,{
+                        color:'#e41e26',weight:2,opacity:0.7,fillColor:'#e41e26',fillOpacity:0.1,dashArray:'4,4',pane:'overlayPane',interactive:false
+                    }).addTo(measureLayerGroup);
+                    if(bufferCircleCenterState.tempLabel) try{map.removeLayer(bufferCircleCenterState.tempLabel);}catch(e){}
+                    var midLat=(bufferCircleCenterState.center.lat+ll.lat)/2;
+                    var midLng=(bufferCircleCenterState.center.lng+ll.lng)/2;
+                    var rText=r>=1?(r.toFixed(3).replace('.',',')+' km'):Math.round(r*1000)+' m';
+                    bufferCircleCenterState.tempLabel=L.marker([midLat,midLng],{
+                        icon:L.divIcon({className:'measure-label-bg',html:'<div style="background:#fff;border:1px solid #e41e26;color:#e41e26;padding:2px 6px;font-size:11px;font-weight:700;border-radius:3px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,0.2);">r = '+rText+'</div>',iconSize:[null,null],iconAnchor:[0,0]}),
+                        pane:'markerPane',interactive:false
+                    }).addTo(measureLayerGroup);
+                }
+            };
+            map.on('mousemove', bufferCircleCenterState.moveHandler);
+
+            function onPointSelected(ll){
+                if(!bufferCircleCenterState.center){
+                    bufferCircleCenterState.center=ll;
+                    var m=L.marker(ll,{
+                        icon:L.divIcon({html:'<div style="width:10px;height:10px;background:#e41e26;border:2px solid #fff;border-radius:50%;"></div>',iconSize:[10,10],iconAnchor:[5,5]}),
+                        pane:'markerPane'
+                    }).addTo(measureLayerGroup);
+                    bufferCircleCenterState.markers=[m];
+                } else {
+                    var r=calcDistKm(bufferCircleCenterState.center.lat,bufferCircleCenterState.center.lng,ll.lat,ll.lng);
+                    if(bufferCircleCenterState.tempCircle){ try{map.removeLayer(bufferCircleCenterState.tempCircle);}catch(e){} bufferCircleCenterState.tempCircle=null; }
+                    if(bufferCircleCenterState.tempLabel){ try{map.removeLayer(bufferCircleCenterState.tempLabel);}catch(e){} bufferCircleCenterState.tempLabel=null; }
+                    if(bufferCircleCenterState.markers) bufferCircleCenterState.markers.forEach(function(m){try{map.removeLayer(m);}catch(e){}});
+                    bufferCircleCenterState.markers=[];
+                    addCircleToMeasure(bufferCircleCenterState.center, r);
+                    bufferCircleCenterState.center=null;
+                    bufferCircleCenterState.snapPoints=collectSnapPoints();
+                }
+            }
+
+            bufferCircleCenterState.clickHandler=function(e){
+                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                onPointSelected(ll);
+                L.DomEvent.stop(e);
+            };
+            map.on('click', bufferCircleCenterState.clickHandler);
+
+            bufferCircleCenterState.captureHandler=function(e){
+                if(!bufferCircleCenterState.active) return;
+                var latlng=map.mouseEventToLatLng(e);
+                var s=snapToPoint(latlng);
+                var ll=s||latlng;
+                L.DomEvent.stop(e);
+                onPointSelected(ll);
+            };
+            map.getContainer().addEventListener('click', bufferCircleCenterState.captureHandler, true);
+
+            bufferCircleCenterState.contextMenuHandler=function(e){
+                if(!bufferCircleCenterState.active) return;
+                if(e.originalEvent){ e.originalEvent.preventDefault(); e.originalEvent.stopPropagation(); }
+                else if(e.preventDefault){ e.preventDefault(); e.stopPropagation(); }
+                if(bufferCircleCenterState.center){
+                    if(bufferCircleCenterState.tempCircle){ try{map.removeLayer(bufferCircleCenterState.tempCircle);}catch(err){} bufferCircleCenterState.tempCircle=null; }
+                    if(bufferCircleCenterState.tempLabel){ try{map.removeLayer(bufferCircleCenterState.tempLabel);}catch(err){} bufferCircleCenterState.tempLabel=null; }
+                    if(bufferCircleCenterState.markers){ bufferCircleCenterState.markers.forEach(function(m){try{map.removeLayer(m);}catch(err){}}); bufferCircleCenterState.markers=[]; }
+                    bufferCircleCenterState.center=null;
+                } else {
+                    stopBufferCircleCenter();
+                }
+            };
+            map.on('contextmenu', bufferCircleCenterState.contextMenuHandler);
+            map.getContainer().addEventListener('contextmenu', bufferCircleCenterState.contextMenuHandler, true);
+            bufferCircleCenterState.keyHandler=function(e){ if(e.key==='Escape') stopBufferCircleCenter(); };
+            document.addEventListener('keydown', bufferCircleCenterState.keyHandler);
+            var b=document.getElementById('btnBufferZone'); if(b) b.classList.add('active');
+            var b2=document.getElementById('btnBufCircleCenter'); if(b2) b2.classList.add('active');
+        }
+
+        function stopBufferCircleCenter(){
+            if(!bufferCircleCenterState.active) return;
+            bufferCircleCenterState.active=false;
+            map.getContainer().style.cursor='';
+            if(bufferCircleCenterState.tempCircle) try{map.removeLayer(bufferCircleCenterState.tempCircle);}catch(e){} bufferCircleCenterState.tempCircle=null;
+            if(bufferCircleCenterState.tempLabel) try{map.removeLayer(bufferCircleCenterState.tempLabel);}catch(e){} bufferCircleCenterState.tempLabel=null;
+            if(bufferCircleCenterState.moveHandler) map.off('mousemove', bufferCircleCenterState.moveHandler);
+            bufferCircleCenterState.moveHandler=null;
+            if(bufferCircleCenterState.clickHandler) map.off('click', bufferCircleCenterState.clickHandler);
+            bufferCircleCenterState.clickHandler=null;
+            if(bufferCircleCenterState.captureHandler) map.getContainer().removeEventListener('click', bufferCircleCenterState.captureHandler, true);
+            bufferCircleCenterState.captureHandler=null;
+            if(bufferCircleCenterState.contextMenuHandler){
+                map.off('contextmenu', bufferCircleCenterState.contextMenuHandler);
+                try{ map.getContainer().removeEventListener('contextmenu', bufferCircleCenterState.contextMenuHandler, true); }catch(err){}
+                bufferCircleCenterState.contextMenuHandler=null;
+            }
+            if(bufferCircleCenterState.keyHandler) document.removeEventListener('keydown', bufferCircleCenterState.keyHandler);
+            bufferCircleCenterState.keyHandler=null;
+            if(bufferCircleCenterState.markers) bufferCircleCenterState.markers.forEach(function(m){try{map.removeLayer(m);}catch(e){}});
+            bufferCircleCenterState.markers=[];
+            bufferCircleCenterState.center=null;
+            var b=document.getElementById('btnBufferZone'); if(b) b.classList.remove('active');
+            var b2=document.getElementById('btnBufCircleCenter'); if(b2) b2.classList.remove('active');
+        }
+
+        function startBufferCircle3p(){
+            closeBufferDropdown();
+            if(bufferCircle3pState.active){ stopBufferCircle3p(); return; }
+            stopAllBuffers();
+            if(measureDistanceState.active) stopMeasureDistance();
+            if(showCoordsState.active) stopShowCoords();
+            if(parallelState.active) stopParallel();
+            if(meridianState.active) stopMeridian();
+            bufferCircle3pState.active=true;
+            bufferCircle3pState.points=[];
+            bufferCircle3pState.markers=[];
+            bufferCircle3pState.snapPoints=collectSnapPoints();
+            map.getContainer().style.cursor='crosshair';
+            bufferCircle3pState.moveHandler=function(e){
+                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                map.getContainer().style.cursor=s?'pointer':'crosshair';
+                if(bufferCircle3pState.points.length===2){
+                    var p1=bufferCircle3pState.points[0], p2=bufferCircle3pState.points[1];
+                    var cc=calcCircumcenter(p1,p2,ll);
+                    if(cc){
+                        var r=calcDistKm(cc.lat,cc.lng,p1.lat,p1.lng);
+                        if(bufferCircle3pState.tempCircle) try{map.removeLayer(bufferCircle3pState.tempCircle);}catch(e){}
+                        var tempPts3 = getGeodesicCirclePoints(cc, r);
+                        bufferCircle3pState.tempCircle=L.polygon(tempPts3,{
+                            color:'#e41e26',weight:2,opacity:0.7,fillColor:'#e41e26',fillOpacity:0.1,dashArray:'4,4',pane:'overlayPane',interactive:false
+                        }).addTo(measureLayerGroup);
+                        if(bufferCircle3pState.tempCenterDot) try{map.removeLayer(bufferCircle3pState.tempCenterDot);}catch(e){}
+                        bufferCircle3pState.tempCenterDot=L.marker([cc.lat,cc.lng],{
+                            icon:L.divIcon({html:'<div style="width:6px;height:6px;background:#e41e26;border:1.5px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>',iconSize:[6,6],iconAnchor:[3,3]}),
+                            pane:'markerPane',interactive:false
+                        }).addTo(measureLayerGroup);
+                        // Zivý popisek poloměru
+                        if(bufferCircle3pState.tempLabel) try{map.removeLayer(bufferCircle3pState.tempLabel);}catch(e){}
+                        var rText3=r>=1?(r.toFixed(3).replace('.',',')+' km'):Math.round(r*1000)+' m';
+                        bufferCircle3pState.tempLabel=L.marker([cc.lat,cc.lng],{
+                            icon:L.divIcon({className:'measure-label-bg',html:'<div style="background:#fff;border:1px solid #e41e26;color:#e41e26;padding:2px 6px;font-size:11px;font-weight:700;border-radius:3px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,0.2);margin-top:8px;">r = '+rText3+'</div>',iconSize:[null,null],iconAnchor:[0,0]}),
+                            pane:'markerPane',interactive:false
+                        }).addTo(measureLayerGroup);
+                    }
+                }
+            };
+            map.on('mousemove', bufferCircle3pState.moveHandler);
+
+            function on3pPointSelected(ll){
+                bufferCircle3pState.points.push(ll);
+                var ptIdx=bufferCircle3pState.points.length;
+                var m=L.marker(ll,{
+                    icon:L.divIcon({html:'<div style="width:14px;height:14px;background:#e41e26;border:2px solid #fff;border-radius:50%;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;">'+ptIdx+'</div>',iconSize:[14,14],iconAnchor:[7,7]}),
+                    pane:'markerPane'
+                }).addTo(measureLayerGroup);
+                bufferCircle3pState.markers.push(m);
+                if(bufferCircle3pState.points.length===3){
+                    var p1=bufferCircle3pState.points[0], p2=bufferCircle3pState.points[1], p3=bufferCircle3pState.points[2];
+                    var cc=calcCircumcenter(p1,p2,p3);
+                    if(!cc){
+                        showToast(currentLang==='cs'?'Body le\u017E\u00ED v p\u0159\u00EDmce':'Points are collinear');
+                        bufferCircle3pState.points.pop();
+                        var lastColM=bufferCircle3pState.markers.pop();
+                        if(lastColM) try{map.removeLayer(lastColM);}catch(e){}
+                        return;
+                    }
+                    var r=calcDistKm(cc.lat,cc.lng,p1.lat,p1.lng);
+                    if(bufferCircle3pState.tempCircle){ try{map.removeLayer(bufferCircle3pState.tempCircle);}catch(e){} bufferCircle3pState.tempCircle=null; }
+                    if(bufferCircle3pState.tempCenterDot){ try{map.removeLayer(bufferCircle3pState.tempCenterDot);}catch(e){} bufferCircle3pState.tempCenterDot=null; }
+                    if(bufferCircle3pState.tempLabel){ try{map.removeLayer(bufferCircle3pState.tempLabel);}catch(e){} bufferCircle3pState.tempLabel=null; }
+                    bufferCircle3pState.markers.forEach(function(mm){try{map.removeLayer(mm);}catch(e){}});
+                    bufferCircle3pState.markers=[];
+                    bufferCircle3pState.points=[];
+                    addCircleToMeasure(cc, r);
+                    bufferCircle3pState.snapPoints=collectSnapPoints();
+                }
+            }
+
+            bufferCircle3pState.clickHandler=function(e){
+                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                on3pPointSelected(ll);
+                L.DomEvent.stop(e);
+            };
+            map.on('click', bufferCircle3pState.clickHandler);
+
+            bufferCircle3pState.captureHandler=function(e){
+                if(!bufferCircle3pState.active) return;
+                var latlng=map.mouseEventToLatLng(e);
+                var s=snapToPoint(latlng);
+                var ll=s||latlng;
+                L.DomEvent.stop(e);
+                on3pPointSelected(ll);
+            };
+            map.getContainer().addEventListener('click', bufferCircle3pState.captureHandler, true);
+
+            bufferCircle3pState.contextMenuHandler=function(e){
+                if(!bufferCircle3pState.active) return;
+                if(e.originalEvent){ e.originalEvent.preventDefault(); e.originalEvent.stopPropagation(); }
+                else if(e.preventDefault){ e.preventDefault(); e.stopPropagation(); }
+                if(bufferCircle3pState.points.length===2){
+                    bufferCircle3pState.points.pop();
+                    var m2=bufferCircle3pState.markers.pop();
+                    if(m2) try{map.removeLayer(m2);}catch(err){}
+                    if(bufferCircle3pState.tempCircle){ try{map.removeLayer(bufferCircle3pState.tempCircle);}catch(err){} bufferCircle3pState.tempCircle=null; }
+                    if(bufferCircle3pState.tempCenterDot){ try{map.removeLayer(bufferCircle3pState.tempCenterDot);}catch(err){} bufferCircle3pState.tempCenterDot=null; }
+                    if(bufferCircle3pState.tempLabel){ try{map.removeLayer(bufferCircle3pState.tempLabel);}catch(err){} bufferCircle3pState.tempLabel=null; }
+                } else if(bufferCircle3pState.points.length===1){
+                    bufferCircle3pState.points.pop();
+                    var m1=bufferCircle3pState.markers.pop();
+                    if(m1) try{map.removeLayer(m1);}catch(err){}
+                } else {
+                    stopBufferCircle3p();
+                }
+            };
+            map.on('contextmenu', bufferCircle3pState.contextMenuHandler);
+            map.getContainer().addEventListener('contextmenu', bufferCircle3pState.contextMenuHandler, true);
+            bufferCircle3pState.keyHandler=function(e){ if(e.key==='Escape') stopBufferCircle3p(); };
+            document.addEventListener('keydown', bufferCircle3pState.keyHandler);
+            var b=document.getElementById('btnBufferZone'); if(b) b.classList.add('active');
+            var b2=document.getElementById('btnBufCircle3p'); if(b2) b2.classList.add('active');
+        }
+
+        function stopBufferCircle3p(){
+            if(!bufferCircle3pState.active) return;
+            bufferCircle3pState.active=false;
+            map.getContainer().style.cursor='';
+            if(bufferCircle3pState.tempCircle) try{map.removeLayer(bufferCircle3pState.tempCircle);}catch(e){} bufferCircle3pState.tempCircle=null;
+            if(bufferCircle3pState.tempCenterDot) try{map.removeLayer(bufferCircle3pState.tempCenterDot);}catch(e){} bufferCircle3pState.tempCenterDot=null;
+            if(bufferCircle3pState.tempLabel) try{map.removeLayer(bufferCircle3pState.tempLabel);}catch(e){} bufferCircle3pState.tempLabel=null;
+            if(bufferCircle3pState.moveHandler) map.off('mousemove', bufferCircle3pState.moveHandler);
+            bufferCircle3pState.moveHandler=null;
+            if(bufferCircle3pState.clickHandler) map.off('click', bufferCircle3pState.clickHandler);
+            bufferCircle3pState.clickHandler=null;
+            if(bufferCircle3pState.captureHandler) map.getContainer().removeEventListener('click', bufferCircle3pState.captureHandler, true);
+            bufferCircle3pState.captureHandler=null;
+            if(bufferCircle3pState.contextMenuHandler){
+                map.off('contextmenu', bufferCircle3pState.contextMenuHandler);
+                try{ map.getContainer().removeEventListener('contextmenu', bufferCircle3pState.contextMenuHandler, true); }catch(err){}
+                bufferCircle3pState.contextMenuHandler=null;
+            }
+            if(bufferCircle3pState.keyHandler) document.removeEventListener('keydown', bufferCircle3pState.keyHandler);
+            bufferCircle3pState.keyHandler=null;
+            bufferCircle3pState.markers.forEach(function(m){try{map.removeLayer(m);}catch(e){}});
+            bufferCircle3pState.markers=[];
+            bufferCircle3pState.points=[];
+            var b=document.getElementById('btnBufferZone'); if(b) b.classList.remove('active');
+            var b2=document.getElementById('btnBufCircle3p'); if(b2) b2.classList.remove('active');
+        }
+
+        function startBufferZone(){ closeBufferDropdown(); if(bufferZoneState.active){ stopBufferZone(); return; } stopAllBuffers(); if(measureDistanceState.active) stopMeasureDistance(); if(showCoordsState.active) stopShowCoords(); if(parallelState.active) stopParallel(); if(meridianState.active) stopMeridian(); bufferZoneState.active=true; map.getContainer().style.cursor="crosshair"; var distStr=prompt(currentLang==='cs'?"Zadej šířku obalové zóny v km:":"Enter buffer width in km:", "1"); if(distStr===null){ stopBufferZone(); return; } var distKm=parseFloat(distStr.replace(',','.')); if(isNaN(distKm)||distKm<=0){ showToast("Neplatná šířka"); stopBufferZone(); return; } bufferZoneState.distKm=distKm; bufferZoneState.clickHandler=function(e){
+                var clickLl = e.latlng;
+                var clickPx = map.latLngToContainerPoint(clickLl);
+                var found = null, isPoly = false;
+                var bestDistPx = 35;
+
+                // Přímá detekce kliku na SVG prvek Leaflet vrstvy (linie/polygon)
+                if(e.originalEvent && e.originalEvent.target){
+                    var tgt = e.originalEvent.target;
+                    var lid = tgt._leaflet_id || (tgt.parentNode && tgt.parentNode._leaflet_id);
+                    var dLay = (lid && map._layers) ? map._layers[lid] : null;
+                    if(dLay && dLay.getLatLngs && !(dLay.options && dLay.options.opacity <= 0.05)){
+                        var dLls = dLay.getLatLngs();
+                        var dFlat = Array.isArray(dLls[0]) ? dLls[0] : dLls;
+                        if(dFlat && dFlat.length >= 2){
+                            found = dFlat.map(function(pt){
+                                return { lat: pt.lat !== undefined ? pt.lat : pt[0], lng: pt.lng !== undefined ? pt.lng : pt[1] };
+                            });
+                            isPoly = (dLay instanceof L.Polygon);
+                            bestDistPx = 0;
+                        }
+                    }
+                }
+                if(e.originalEvent && map.mouseEventToContainerPoint) clickPx = map.mouseEventToContainerPoint(e.originalEvent); // Tolerance kliknutí v pixelech na obrazovce
+
+                function distToSeg(p, a, b){
+                    var dx = b.x - a.x, dy = b.y - a.y;
+                    var l2 = dx * dx + dy * dy;
+                    if(l2 === 0) return Math.sqrt((p.x - a.x)*(p.x - a.x) + (p.y - a.y)*(p.y - a.y));
+                    var t = Math.max(0, Math.min(1, ((p.x - a.x)*dx + (p.y - a.y)*dy) / l2));
+                    var px = a.x + t * dx, py = a.y + t * dy;
+                    return Math.sqrt((p.x - px)*(p.x - px) + (p.y - py)*(p.y - py));
+                }
+
+                function ptInPoly(p, polyPts){
+                    var ins = false;
+                    for(var i = 0, j = polyPts.length - 1; i < polyPts.length; j = i++){
+                        var xi = polyPts[i].x, yi = polyPts[i].y;
+                        var xj = polyPts[j].x, yj = polyPts[j].y;
+                        var it = ((yi > p.y) !== (yj > p.y)) && (p.x < (xj - xi) * (p.y - yi) / (yj - yi) + xi);
+                        if(it) ins = !ins;
+                    }
+                    return ins;
+                }
+
+                // 1. Zkontrolovat linie v aktivních datasetech
+                var ks = Object.keys(datasets);
+                for(var i = 0; i < ks.length; i++){
+                    var d = datasets[ks[i]];
+                    if(!d.active) continue;
+                    if(d.lines){
+                        for(var li = 0; li < d.lines.length; li++){
+                            var pts = (typeof geodesicPoints === 'function') ? geodesicPoints(d.lines[li].points, false) : d.lines[li].points;
+                            if(!pts || pts.length < 2) continue;
+                            for(var p = 0; p < pts.length - 1; p++){
+                                var pA = map.latLngToContainerPoint([pts[p][0], pts[p][1]]);
+                                var pB = map.latLngToContainerPoint([pts[p+1][0], pts[p+1][1]]);
+                                var dPx = distToSeg(clickPx, pA, pB);
+                                if(dPx < bestDistPx){
+                                    bestDistPx = dPx;
+                                    found = pts.map(function(pt){ return { lat: pt[0], lng: pt[1] }; });
+                                    isPoly = false;
+                                }
+                            }
+                        }
+                    }
+                    if(d.polygons){
+                        for(var pi = 0; pi < d.polygons.length; pi++){
+                            var poly = d.polygons[pi];
+                            var ring = (typeof geodesicPoints === 'function') ? geodesicPoints(poly.outer, true) : poly.outer;
+                            if(!ring || ring.length < 3) continue;
+                            var ringPx = [];
+                            for(var r = 0; r < ring.length; r++){
+                                ringPx.push(map.latLngToContainerPoint([ring[r][0], ring[r][1]]));
+                            }
+                            // Kontrola kliku uvnitř polygonu
+                            if(ptInPoly(clickPx, ringPx)){
+                                bestDistPx = 0;
+                                found = ring.map(function(pt){ return { lat: pt[0], lng: pt[1] }; });
+                                isPoly = true;
+                                break;
+                            }
+                            // Kontrola kliku blízko hrany polygonu
+                            for(var r = 0; r < ringPx.length; r++){
+                                var nextR = (r + 1) % ringPx.length;
+                                var dPx = distToSeg(clickPx, ringPx[r], ringPx[nextR]);
+                                if(dPx < bestDistPx){
+                                    bestDistPx = dPx;
+                                    found = ring.map(function(pt){ return { lat: pt[0], lng: pt[1] }; });
+                                    isPoly = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 2. Zkontrolovat měřené čáry a polygony v measureLayerGroup
+                if(typeof measureLayerGroup !== 'undefined' && measureLayerGroup.getLayers){
+                    var layers = measureLayerGroup.getLayers();
+                    for(var li = 0; li < layers.length; li++){
+                        var lay = layers[li];
+                        if(lay && lay.getLatLngs){
+                            var lls = lay.getLatLngs();
+                            var flat = Array.isArray(lls[0]) ? lls[0] : lls;
+                            if(!flat || flat.length < 2) continue;
+                            var isPolygonLayer = (lay instanceof L.Polygon);
+                            var layerPx = [];
+                            for(var p = 0; p < flat.length; p++){
+                                layerPx.push(map.latLngToContainerPoint(flat[p]));
+                            }
+                            if(isPolygonLayer && ptInPoly(clickPx, layerPx)){
+                                bestDistPx = 0;
+                                found = flat.map(function(c){ return { lat: c.lat, lng: c.lng }; });
+                                isPoly = true;
+                                break;
+                            }
+                            var limit = isPolygonLayer ? layerPx.length : layerPx.length - 1;
+                            for(var p = 0; p < limit; p++){
+                                var nextP = (p + 1) % layerPx.length;
+                                var dPx = distToSeg(clickPx, layerPx[p], layerPx[nextP]);
+                                if(dPx < bestDistPx){
+                                    bestDistPx = dPx;
+                                    found = flat.map(function(c){ return { lat: c.lat, lng: c.lng }; });
+                                    isPoly = isPolygonLayer;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(!found){
+                    showToast(currentLang === 'cs' ? 'Klikni na čáru nebo polygon' : 'Click a line or polygon');
+                    return;
+                }
+
+                var buf = bufferLineSimple(found, bufferZoneState.distKm, isPoly);
+                if(!buf){
+                    showToast('Chyba výpočtu bufferu');
+                    return;
+                }
+
+                var poly = L.polygon(buf, {
+                    color: '#e41e26',
+                    weight: 2,
+                    opacity: 0.9,
+                    fillColor: '#e41e26',
+                    fillOpacity: 0.15,
+                    pane: 'overlayPane',
+                    renderer: L.svg(),
+                    interactive: true
+                }).addTo(measureLayerGroup);
+
+                var area = 0;
+                for(var r = 0; r < buf.length; r++){
+                    area += calcPolygonAreaM2(buf[r].map(function(c){ return { lat: c[0], lng: c[1] }; }));
+                }
+
+                poly.on('click', function(ev){
+                    if(isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; }
+                    L.popup({ closeButton: true })
+                        .setLatLng(ev.latlng)
+                        .setContent('<div style="padding:6px 8px;font-size:12px;"><div style="font-weight:700;">' + (currentLang==='cs'?'Obalová zóna':'Buffer Zone') + '</div>' + (currentLang==='cs'?'Šířka':'Width') + ': ' + bufferZoneState.distKm + ' km<br>' + (currentLang==='cs'?'Plocha':'Area') + ': ' + formatArea(area) + '</div>')
+                        .openOn(map);
+                    L.DomEvent.stopPropagation(ev);
+                });
+
+                var hit = L.polygon(buf, {
+                    color: '#e41e26',
+                    weight: 16,
+                    opacity: 0.01,
+                    fillOpacity: 0.01,
+                    interactive: true,
+                    pane: 'overlayPane',
+                    renderer: L.svg()
+                }).addTo(measureLayerGroup);
+
+                hit.on('click', function(ev){
+                    if(isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; }
+                    L.popup({ closeButton: true })
+                        .setLatLng(ev.latlng)
+                        .setContent('<div style="padding:6px 8px;font-size:12px;"><div style="font-weight:700;">' + (currentLang==='cs'?'Obalová zóna':'Buffer Zone') + '</div>' + (currentLang==='cs'?'Šířka':'Width') + ': ' + bufferZoneState.distKm + ' km<br>' + (currentLang==='cs'?'Plocha':'Area') + ': ' + formatArea(area) + '</div>')
+                        .openOn(map);
+                    L.DomEvent.stopPropagation(ev);
+                });
+
+                bufferZoneState.snapPoints=collectSnapPoints(); L.DomEvent.stop(e); }; map.on("click", bufferZoneState.clickHandler);             bufferZoneState.captureHandler=function(e){ if(!bufferZoneState.active) return; var latlng=map.mouseEventToLatLng(e); var s=snapToPoint(latlng); if(s) latlng=s; var fake={latlng: latlng, originalEvent:e}; L.DomEvent.stop(e); bufferZoneState.clickHandler(fake); }; map.getContainer().addEventListener("click", bufferZoneState.captureHandler, true); bufferZoneState.contextMenuHandler=function(e){
+    if(!bufferZoneState.active) return;
+    if(e.originalEvent){ e.originalEvent.preventDefault(); e.originalEvent.stopPropagation(); }
+    else if(e.preventDefault){ e.preventDefault(); e.stopPropagation(); }
+    stopBufferZone();
+};
+map.on('contextmenu', bufferZoneState.contextMenuHandler);
+map.getContainer().addEventListener('contextmenu', bufferZoneState.contextMenuHandler, true);
+bufferZoneState.keyHandler=function(e){ if(e.key==="Escape") stopBufferZone(); }; document.addEventListener("keydown", bufferZoneState.keyHandler); var b=document.getElementById("btnBufferZone"); if(b) b.classList.add("active"); var b2=document.getElementById("btnBufZone"); if(b2) b2.classList.add("active"); }
+        function stopBufferZone(){ if(!bufferZoneState.active) return; bufferZoneState.active=false; map.getContainer().style.cursor=""; if(bufferZoneState.clickHandler) map.off("click", bufferZoneState.clickHandler); bufferZoneState.clickHandler=null; if(bufferZoneState.captureHandler) map.getContainer().removeEventListener("click", bufferZoneState.captureHandler, true); bufferZoneState.captureHandler=null; if(bufferZoneState.contextMenuHandler){
+    map.off('contextmenu', bufferZoneState.contextMenuHandler);
+    try{ map.getContainer().removeEventListener('contextmenu', bufferZoneState.contextMenuHandler, true); }catch(err){}
+    bufferZoneState.contextMenuHandler=null;
+}
+if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZoneState.keyHandler); bufferZoneState.keyHandler=null; var b=document.getElementById("btnBufferZone"); if(b) b.classList.remove("active"); var b2=document.getElementById("btnBufZone"); if(b2) b2.classList.remove("active"); }
 
         function getGridInterval(zoom) {
             if (zoom < 3) return 30;
@@ -6072,18 +6772,21 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                 heatLayers.push({ layer: hl, palette: d.heatPalette || "classic", opacity: op, heatBlur: d.heatBlur });
             }
             
-            map.on("zoomend", function() {
-            if (heatLayers && heatLayers.length > 0) {
-                var h = hpZ(map.getZoom());
-                for (var i = 0; i < heatLayers.length; i++) {
-                    var item = heatLayers[i];
-                    var grad = heatPalettes[item.palette] || heatPalettes.classic;
-                    var op = item.opacity !== undefined ? item.opacity : 0.75;
-                    var blur = item.heatBlur !== undefined ? item.heatBlur : h.b;
-                    item.layer.setOptions({ radius: h.r, blur: blur, minOpacity: h.o * op, gradient: grad });
-                }
-}
-        });
+            if (!window._heatZoomEndAttached) {
+                window._heatZoomEndAttached = true;
+                map.on("zoomend", function() {
+                    if (heatLayers && heatLayers.length > 0) {
+                        var h = hpZ(map.getZoom());
+                        for (var i = 0; i < heatLayers.length; i++) {
+                            var item = heatLayers[i];
+                            var grad = heatPalettes[item.palette] || heatPalettes.classic;
+                            var op = item.opacity !== undefined ? item.opacity : 0.75;
+                            var blur = item.heatBlur !== undefined ? item.heatBlur : h.b;
+                            item.layer.setOptions({ radius: h.r, blur: blur, minOpacity: h.o * op, gradient: grad });
+                        }
+                    }
+                });
+            }
     }
 
         // PARSOVÁNÍ GPX
