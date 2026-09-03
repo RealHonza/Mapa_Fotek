@@ -3388,66 +3388,217 @@ function startMeasureDistance() {
             }
         }
         function exportMeasurementsGeoJSON(){
-            var t=i18n[currentLang];
-            if(!measureLayerGroup || measureLayerGroup.getLayers().length===0){ showToast(t.toastNoData||"Žádná data k exportu"); return; }
-            var features=[]; var ptIdx=1, lineIdx=1, polyIdx=1, parIdx=1, merIdx=1;
+            var t = i18n[currentLang];
+            if (!measureLayerGroup || measureLayerGroup.getLayers().length === 0) {
+                showToast(t.toastNoData || (currentLang === 'cs' ? 'Žádná data k exportu' : 'No data to export'));
+                return;
+            }
+            var features = [];
+            var ptIdx = 1, lineIdx = 1, polyIdx = 1, circleIdx = 1, parIdx = 1, merIdx = 1;
+
             measureLayerGroup.eachLayer(function(l){
-                if(l===measureDistanceState.tempLine || l===parallelState.tempLine || l===meridianState.tempLine) return;
-                if(l.getLatLng && l.options && l.options.icon && l.options.icon.options && l.options.icon.options.html){
-                    var h=l.options.icon.options.html;
-                    if(h.indexOf('border-radius:50%')!==-1 && h.indexOf('background:#e41e26')!==-1){
-                        var ll=l.getLatLng();
-                        features.push({type:"Feature", geometry:{type:"Point", coordinates:[ll.lng, ll.lat]}, properties:{name:"Bod "+(ptIdx++), type:"measure_point", lat:ll.lat, lng:ll.lng}});
+                // 1. Přeskočit dočasné navigační a náhledové prvky
+                if (l === measureDistanceState.tempLine || l === parallelState.tempLine || l === meridianState.tempLine) return;
+                // Vyloučit tempCircle a dočasné čáry (vše s dashArray)
+                if (l.options && l.options.dashArray) return;
+                // Vyloučit neviditelné / transparentní hit vrstvy (opacity 0.001 / 0.01)
+                if (l.options && l.options.opacity !== undefined && l.options.opacity <= 0.05) return;
+                // Vyloučit neinteraktivní středy kružnic (centerDot)
+                if (l.options && l.options.interactive === false && (l instanceof L.Marker || (l.getLatLng && !l.getRadius && !l.getLatLngs))) return;
+
+                // 2. Měřené body (červené tečky měření vzdálenosti)
+                if (l.getLatLng && l.options && l.options.icon && l.options.icon.options && l.options.icon.options.html) {
+                    var h = l.options.icon.options.html;
+                    if (h.indexOf('border-radius:50%') !== -1 && h.indexOf('background:#e41e26') !== -1 && l.options.interactive !== false) {
+                        var ll = l.getLatLng();
+                        features.push({
+                            type: "Feature",
+                            geometry: { type: "Point", coordinates: [ll.lng, ll.lat] },
+                            properties: {
+                                name: (currentLang === 'cs' ? 'Bod ' : 'Point ') + (ptIdx++),
+                                type: "measure_point",
+                                lat: ll.lat,
+                                lng: ll.lng
+                            }
+                        });
                     }
                     return;
                 }
-                if(l instanceof L.Circle){ var cc=l.getLatLng(); var rr=l.getRadius(); if(rr>0 && l.options.opacity>0.05){ features.push({type:"Feature", geometry:{type:"Point", coordinates:[cc.lng, cc.lat]}, properties:{name:"Kružnice "+(ptIdx++), type:"buffer_circle", radius_m:Math.round(rr), radius_km:+(rr/1000).toFixed(3), lat:cc.lat, lng:cc.lng}}); } return; }
-                if(l instanceof L.Polygon){
-                    var rings=l.getLatLngs();
-                    var outerR=rings[0]||rings;
-                    if(outerR.length<3) return;
-                    var outerPts=outerR.map(function(ll){ return {lat:ll.lat, lng:ll.lng}; });
-                    var perimM=0; for(var i=0;i<outerPts.length;i++){ var a=outerPts[i], b=outerPts[(i+1)%outerPts.length]; perimM+=calcDistKm(a.lat,a.lng,b.lat,b.lng)*1000; }
-                    var areaM2=calcPolygonAreaM2(outerPts);
-                    var coords=[ outerR.map(function(ll){ return [ll.lng, ll.lat]; }) ];
-                    if(rings.length>1){ for(var r=1;r<rings.length;r++) coords.push(rings[r].map(function(ll){ return [ll.lng, ll.lat]; })); }
+
+                // 3. Kružnice (L.Circle) – exportovat jako geodetický Polygon (nikoli Point)
+                if (l instanceof L.Circle) {
+                    var cc = l.getLatLng();
+                    var rr = l.getRadius();
+                    if (rr > 0) {
+                        var rKm = rr / 1000.0;
+                        var R = 6371.0;
+                        var rRad = rKm / R;
+                        var perimM = 2 * Math.PI * R * Math.sin(rRad) * 1000;
+                        var areaM2 = 2 * Math.PI * R * R * (1 - Math.cos(rRad)) * 1000000;
+                        // n: minimálně 64 vrcholů, škálováno tak aby žádná úsečka nepřekročila 100 km
+                        var n = Math.max(64, Math.ceil(2 * Math.PI * rKm / 100.0));
+                        var coords = [];
+                        for (var a = 0; a < n; a++) {
+                            var ang = a * 360.0 / n;
+                            var p = destinationPoint(cc.lat, cc.lng, ang, rKm);
+                            coords.push([p.lng, p.lat]);
+                        }
+                        coords.push(coords[0].slice());
+                        features.push({
+                            type: "Feature",
+                            geometry: { type: "Polygon", coordinates: [coords] },
+                            properties: {
+                                name: (currentLang === 'cs' ? 'Kružnice ' : 'Circle ') + (circleIdx++),
+                                type: "buffer_circle",
+                                radius_m: Math.round(rr),
+                                radius_km: +(rr / 1000).toFixed(3),
+                                lat: cc.lat,
+                                lng: cc.lng,
+                                perimeter_m: Math.round(perimM),
+                                area_m2: Math.round(areaM2)
+                            }
+                        });
+                    }
+                    return;
+                }
+
+                // 4. Polygony (včetně kružnic vytvořených jako L.polygon a obalových zón)
+                if (l instanceof L.Polygon) {
+                    var rings = l.getLatLngs();
+                    var outerR = rings[0] || rings;
+                    if (outerR.length < 3) return;
+                    var outerPts = outerR.map(function(ll){ return { lat: ll.lat, lng: ll.lng }; });
+                    var perimM = 0;
+                    for (var i = 0; i < outerPts.length; i++) {
+                        var a = outerPts[i], b = outerPts[(i + 1) % outerPts.length];
+                        perimM += calcDistKm(a.lat, a.lng, b.lat, b.lng) * 1000;
+                    }
+                    var areaM2 = calcPolygonAreaM2(outerPts);
+                    var coords = [ outerR.map(function(ll){ return [ll.lng, ll.lat]; }) ];
+                    if (rings.length > 1) {
+                        for (var r = 1; r < rings.length; r++) {
+                            coords.push(rings[r].map(function(ll){ return [ll.lng, ll.lat]; }));
+                        }
+                    }
                     coords[0].push(coords[0][0].slice());
-                    features.push({type:"Feature", geometry:{type:"Polygon", coordinates:coords}, properties:{name:"Polygon "+(polyIdx++), type:"measure_polygon", perimeter_m: Math.round(perimM), perimeter_km: +(perimM/1000).toFixed(3), area_m2: Math.round(areaM2), area_km2: +(areaM2/1000000).toFixed(4)}});
+
+                    // Pokud má polygon metadata kružnice (_circleMeta), exportovat jako buffer_circle s přesným poloměrem
+                    var cm = l._circleMeta || (l.options && l.options._circleMeta);
+                    if (cm) {
+                        features.push({
+                            type: "Feature",
+                            geometry: { type: "Polygon", coordinates: coords },
+                            properties: {
+                                name: (currentLang === 'cs' ? 'Kružnice ' : 'Circle ') + (circleIdx++),
+                                type: "buffer_circle",
+                                radius_m: cm.radius_m,
+                                radius_km: +cm.rKm.toFixed(3),
+                                lat: cm.center.lat,
+                                lng: cm.center.lng,
+                                perimeter_m: cm.perim_m || Math.round(perimM),
+                                area_m2: cm.area_m2 || Math.round(areaM2)
+                            }
+                        });
+                    } else {
+                        features.push({
+                            type: "Feature",
+                            geometry: { type: "Polygon", coordinates: coords },
+                            properties: {
+                                name: (currentLang === 'cs' ? 'Polygon ' : 'Polygon ') + (polyIdx++),
+                                type: "measure_polygon",
+                                perimeter_m: Math.round(perimM),
+                                perimeter_km: +(perimM / 1000).toFixed(3),
+                                area_m2: Math.round(areaM2),
+                                area_km2: +(areaM2 / 1000000).toFixed(4)
+                            }
+                        });
+                    }
                     return;
                 }
-                if(l instanceof L.Polyline){
-                    var lls=l.getLatLngs();
-                    if(!lls || lls.length<2) return;
-                    var isPar=parallelState.lines.indexOf(l)!==-1;
-                    var isMer=meridianState.lines.indexOf(l)!==-1;
-                    if(l.options && l.options.dashArray && l.options.opacity===0.5) return;
-                    if(isPar){
-                        var lat=lls[0].lat;
-                        features.push({type:"Feature", geometry:{type:"LineString", coordinates:[[-180,lat],[180,lat]]}, properties:{name:"Rovnabezka "+(parIdx++), type:"parallel", lat:lat}});
+
+                // 5. Polyline (měřené linie, rovnoběžky, poledníky)
+                if (l instanceof L.Polyline) {
+                    var lls = l.getLatLngs();
+                    if (!lls || lls.length < 2) return;
+                    var isPar = parallelState.lines.indexOf(l) !== -1;
+                    var isMer = meridianState.lines.indexOf(l) !== -1;
+                    if (isPar) {
+                        var lat = lls[0].lat;
+                        features.push({
+                            type: "Feature",
+                            geometry: { type: "LineString", coordinates: [[-180, lat], [180, lat]] },
+                            properties: {
+                                name: (currentLang === 'cs' ? 'Rovnoběžka ' : 'Parallel ') + (parIdx++),
+                                type: "parallel",
+                                lat: lat
+                            }
+                        });
                         return;
                     }
-                    if(isMer){
-                        var lng=lls[0].lng;
-                        features.push({type:"Feature", geometry:{type:"LineString", coordinates:[[lng,-85],[lng,85]]}, properties:{name:"Polednik "+(merIdx++), type:"meridian", lng:lng}});
+                    if (isMer) {
+                        var lng = lls[0].lng;
+                        features.push({
+                            type: "Feature",
+                            geometry: { type: "LineString", coordinates: [[lng, -85], [lng, 85]] },
+                            properties: {
+                                name: (currentLang === 'cs' ? 'Poledník ' : 'Meridian ') + (merIdx++),
+                                type: "meridian",
+                                lng: lng
+                            }
+                        });
                         return;
                     }
-                    var totM=0; for(var i=1;i<lls.length;i++){ totM+=calcDistKm(lls[i-1].lat,lls[i-1].lng,lls[i].lat,lls[i].lng)*1000; }
-                    var coords=lls.map(function(ll){ return [ll.lng, ll.lat]; });
-                    features.push({type:"Feature", geometry:{type:"LineString", coordinates:coords}, properties:{name:"Cara "+(lineIdx++), type:"measure_line", length_m: Math.round(totM), length_km: +(totM/1000).toFixed(3)}});
+                    var totM = 0;
+                    for (var i = 1; i < lls.length; i++) {
+                        totM += calcDistKm(lls[i - 1].lat, lls[i - 1].lng, lls[i].lat, lls[i].lng) * 1000;
+                    }
+                    var coords = lls.map(function(ll){ return [ll.lng, ll.lat]; });
+                    features.push({
+                        type: "Feature",
+                        geometry: { type: "LineString", coordinates: coords },
+                        properties: {
+                            name: (currentLang === 'cs' ? 'Čára ' : 'Line ') + (lineIdx++),
+                            type: "measure_line",
+                            length_m: Math.round(totM),
+                            length_km: +(totM / 1000).toFixed(3)
+                        }
+                    });
                 }
             });
-            if(features.length===0){ showToast(t.toastNoData||"Žádná data k exportu"); return; }
-            var fc={type:"FeatureCollection", features:features};
-            var blob=new Blob([JSON.stringify(fc,null,2)],{type:"application/geo+json"});
-            var now=new Date(); var ts=now.getFullYear()+("0"+(now.getMonth()+1)).slice(-2)+("0"+now.getDate()).slice(-2)+"_"+("0"+now.getHours()).slice(-2)+("0"+now.getMinutes()).slice(-2)+("0"+now.getSeconds()).slice(-2);
-            var fname="Mereni_"+ts+".geojson";
-            downloadBlob(blob,fname);
-            try{
-                var base=fname.replace(/\.[^/.]+$/,""); var uniq=base, c=1; while(datasets[uniq]) uniq=base+"_"+(c++);
-                var trk=parseGeoJson(JSON.stringify(fc), uniq+".geojson");
-                if(trk){ trk.name=uniq; trk.title=uniq; datasets[uniq]=trk; try{ saveStoredSource(uniq+".geojson", JSON.stringify(fc)); }catch(e){} try{ rebuild(); }catch(e){} showToast(t.toastGeoJsonExported||"GeoJSON export dokoncen"); }
-            }catch(e){ console.error(e); }
+
+            if (features.length === 0) {
+                showToast(t.toastNoData || (currentLang === 'cs' ? 'Žádná data k exportu' : 'No data to export'));
+                return;
+            }
+            var fc = { type: "FeatureCollection", features: features };
+            var blob = new Blob([JSON.stringify(fc, null, 2)], { type: "application/geo+json" });
+            var now = new Date();
+            var ts = now.getFullYear() +
+                ("0" + (now.getMonth() + 1)).slice(-2) +
+                ("0" + now.getDate()).slice(-2) + "_" +
+                ("0" + now.getHours()).slice(-2) +
+                ("0" + now.getMinutes()).slice(-2) +
+                ("0" + now.getSeconds()).slice(-2);
+            var fname = "Mereni_" + ts + ".geojson";
+            downloadBlob(blob, fname);
+            try {
+                var base = fname.replace(/\.[^/.]+$/, "");
+                var uniq = base, c = 1;
+                while (datasets[uniq]) uniq = base + "_" + (c++);
+                var trk = parseGeoJson(JSON.stringify(fc), uniq + ".geojson");
+                if (trk) {
+                    trk.name = uniq;
+                    trk.title = uniq;
+                    datasets[uniq] = trk;
+                    try { saveStoredSource(uniq + ".geojson", JSON.stringify(fc)); } catch(e){}
+                    try { rebuild(); } catch(e){}
+                    showToast(t.toastGeoJsonExported || (currentLang === 'cs' ? 'GeoJSON export dokončen' : 'GeoJSON export completed'));
+                }
+            } catch(e) {
+                console.error(e);
+            }
         }
+
         
         // Collect all snappable points from active datasets
         function collectSnapPoints() {
@@ -4201,6 +4352,7 @@ function addCircleToMeasure(center, rKm) {
             var circlePts = getGeodesicCirclePoints(center, rKm);
             // 1. Vizualni kruznice s vyplni - NEINTERAKTIVNI (plocha nereaguje na kliknuti)
             var circle = L.polygon(circlePts, {
+                _circleMeta: { center: center, rKm: rKm, radius_m: Math.round(rM), perim_m: Math.round(perimM), area_m2: Math.round(areaM2) },
                 color: '#e41e26',
                 weight: 2,
                 opacity: 0.9,
@@ -4317,6 +4469,8 @@ function addCircleToMeasure(center, rKm) {
                     if(bufferCircleCenterState.tempLabel){ try{map.removeLayer(bufferCircleCenterState.tempLabel);}catch(e){} bufferCircleCenterState.tempLabel=null; }
                     if(bufferCircleCenterState.markers) bufferCircleCenterState.markers.forEach(function(m){try{map.removeLayer(m);}catch(e){}});
                     bufferCircleCenterState.markers=[];
+                    if(bufferCircleCenterState.tempCircle){ try{ measureLayerGroup.removeLayer(bufferCircleCenterState.tempCircle); }catch(e){} bufferCircleCenterState.tempCircle=null; }
+                    if(bufferCircleCenterState.tempLabel){ try{ map.removeLayer(bufferCircleCenterState.tempLabel); }catch(e){} bufferCircleCenterState.tempLabel=null; }
                     addCircleToMeasure(bufferCircleCenterState.center, r);
                     bufferCircleCenterState.center=null;
                     bufferCircleCenterState.snapPoints=collectSnapPoints();
@@ -4455,6 +4609,8 @@ function addCircleToMeasure(center, rKm) {
                     bufferCircle3pState.markers.forEach(function(mm){try{map.removeLayer(mm);}catch(e){}});
                     bufferCircle3pState.markers=[];
                     bufferCircle3pState.points=[];
+                    if(bufferCircle3pState.tempCircle){ try{ measureLayerGroup.removeLayer(bufferCircle3pState.tempCircle); }catch(e){} bufferCircle3pState.tempCircle=null; }
+                    if(bufferCircle3pState.tempCenterDot){ try{ map.removeLayer(bufferCircle3pState.tempCenterDot); }catch(e){} bufferCircle3pState.tempCenterDot=null; }
                     addCircleToMeasure(cc, r);
                     bufferCircle3pState.snapPoints=collectSnapPoints();
                 }
