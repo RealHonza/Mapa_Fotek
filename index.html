@@ -287,7 +287,7 @@
         .measure-panel-content { display: flex; align-items: center; gap: 8px; height: 100%; }
         .measure-panel-btn { height: 28px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.15s; user-select: none; white-space: nowrap; }
         .measure-panel-btn:hover { background: #ffffff; color: #1a73e8; }
-        .measure-panel-btn.active { background: #1a73e8; color: #ffffff; border-color: #1a73e8; }
+        .measure-panel-btn.active { background: #202124; color: #ffffff; border-color: #202124; }
         .measure-panel-btn.flash { background: #fce8e6 !important; color: #d93025 !important; border-color: #f5c6c2 !important; }
         .measure-panel-btn.icon-only-btn { width: 34px; padding: 0; font-size: 16px; }
         .measure-panel-btn .degree-badge { position: absolute; top: -4px; right: -4px; background: #c00; color: white; font-size: 9px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; line-height: 1; }
@@ -561,8 +561,7 @@
                     
                 </div>
                 <div class="dropdown-item" onclick="menuOpenInfo()"><span id="menuInfoItem">ℹ️ Informace o aplikaci</span></div>
-                <div class="dropdown-item" onclick="toggleMeasurePanel()"><span id="menuMeasureItem">📏 Spustit měření</span></div>
-                <div class="dropdown-item" onclick="spustitEditor()"><span id="menuEditorItem">✏️ Spustit editor</span></div>
+                <div class="dropdown-item" onclick="toggleMeasurePanel()"><span id="menuMeasureItem">📏 Otevřít panel měření</span></div>
             </div>
         </div>
         <!-- 1. Tlačítko: Seznam a správa zdrojů + malé plus -->
@@ -603,11 +602,12 @@
     <!-- Panel Měření -->
     <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()">
         <div class="measure-panel-content">
-            <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;">🌐</button>
+            <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg></button>
             <button class="measure-panel-btn icon-only-btn" onclick="toggleMeasureDistance()" id="btnMeasureDist" title="Měřit" style="width: 34px;">📏</button>
             <button class="measure-panel-btn icon-only-btn" onclick="toggleShowCoords()" id="btnShowCoords" title="Zobrazit souřadnice" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
             <button class="measure-panel-btn icon-only-btn" onclick="toggleParallel()" id="btnParallel" title="Rovnoběžka" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="17" y1="8" x2="17" y2="16"/></svg></button>
             <button class="measure-panel-btn icon-only-btn" onclick="toggleMeridian()" id="btnMeridian" title="Poledník" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="17" x2="16" y2="17"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="exportMeasurementsGeoJSON()" id="btnSaveMeasure" title="Uložit měření (GeoJSON)" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
             <button class="measure-panel-btn icon-only-btn" onclick="clearAllMeasurements()" id="btnClearMeasure" title="Smazat měřené" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
             <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření">&times;</button>
         </div>
@@ -660,7 +660,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.33</span>
+                    <span class="info-meta-val">2.34</span>
                 </div>
             </div>
 
@@ -751,7 +751,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tfMonths: "Měsíce",
                 tfDays: "Dny",
                 menuInfoItem: "ℹ️ Informace o aplikaci",
-menuMeasureItem: "📏 Spustit měření",
+menuMeasureItem: "📏 Otevřít panel měření",
                 btnMeasureGrid: "Mřížka souřadnic",
                 btnMeasureDist: "Měřit",
                 btnShowCoords: "Zobrazit souřadnice",
@@ -759,8 +759,8 @@ menuMeasureItem: "📏 Spustit měření",
                 btnMeridian: "Poledník",
                 btnMeasureClose: "Zavřít panel měření",
                 btnMeasureDistCancel: "Zrušit měření (Esc)",
+                btnSaveMeasure: "Uložit měření (GeoJSON)",
                 btnClearMeasure: "Smazat měřené",
-                menuEditorItem: "✏️ Spustit editor",
                 menuPdfItem: "📄 Uložit mapu jako PDF",
                 btnAddMini: "+ Přidat",
                 btnExportGj: "⬇️",
@@ -839,7 +839,7 @@ menuMeasureItem: "📏 Spustit měření",
                 guideTitle: "📖 Návod k použití:",
                 steps: [
                     "<strong>⚡ Datový soubor – první spuštění (ZÁKLAD):</strong><br>Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript má <strong>3 funkce:</strong><div class=\"step-sub\"><br>① <strong>Generovat data fotek (celý archiv)</strong> – projde všechny složky a podsložky, vyčte GNSS z EXIF, Google JSON, Adobe XMP a DJI SRT titulků, deduplikuje a seřadí dle data<br>② <strong>Generovat data fotek (vybrat konkrétní podsložku)</strong><br>③ <strong>Statistika archivu</strong> – vygeneruje přehled složek do CSV (počty, velikosti, nejstarší/nejnovější soubory). Vygenerovaný soubor není pro tuto aplikaci</div><br><strong>Výstupní soubor:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – formát: JavaScriptový datový soubor (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Struktura řádků:</strong> hlavičkové komentáře (<code>//</code>) + záhlaví sloupců + data oddělená středníkem<div class=\"step-sub\"><br><strong>Povinné sloupce (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Nepovinné doplňkové sloupce: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Příklad řádku:</strong><br><code>20240815_143022; foto_z_vyletu.jpg; 49.123456; 16.654321; 5242880; DoCZ/2024/08/foto_z_vyletu.jpg</code><br><br><strong>Popis sloupců:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (z EXIF, názvu souboru nebo data úpravy)<br>• <strong>NAZEV_SOUBORU</strong> – název souboru včetně přípony<br>• <strong>LATITUDE</strong> – zeměpisná šířka (desetinné stupně, 6 desetinných míst)<br>• <strong>LONGITUDE</strong> – zeměpisná délka (desetinné stupně, 6 desetinných míst)<br>• <strong>VELIKOST_BAJTY</strong> – velikost souboru v bajtech <em>(nepovinné)</em><br>• <strong>RELATIVNI_CESTA</strong> – relativní cesta k souboru vůči kořenové složce <em>(nepovinné)</em></div>Soubor přetáhněte do mapy nebo nahrajte přes tlačítko +<br><em>⚠️ Soubory <code>Mapa_Fotky.html</code> a <code>Mapa_Fotek_aktualizace_dat.bat</code> mějte v hlavní kořenové složce s fotografiemi. V opačném případě se nezobrazí miniatury fotek a nepůjde na ně prokliknout do plné velikosti.</em>",
-                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong><br>Otevře nabídku s pěti volbami:<ul><li>🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou</li><li>📄 <strong>Uložit mapu</strong> – rozdělené tlačítko se dvěma volbami:<div class=\"step-sub\"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≅ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů</div></li><li>ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod</li><li>📐 <strong>Spustit měření</strong> – otevře panel měření uprostřed horního okraje. V panelu:<ul><li>🌐 <strong>Mřížka</strong> – 3 stavy: vypnuto / zobrazení mřížky se zvýrazněnými hlavními rovnoběžkami (rovník, obratníky, polární kruhy) / mřížka s popisky souřadnic</li><li>📏 <strong>Měřit</strong> – měří vzdálenost a azimut v místě prvního bodu čáry (čáry aproximuje po 100 km úsecích na ortodromu), uzavřením čáry na polygon vypočte plochu</li><li>🎯 <strong>Zobrazit souřadnice</strong> – u kurzoru zobrazí souřadnice (6 des. míst), klik zkopíruje do schránky, snap na body</li><li>🧭 <strong>Rovnoběžka</strong> – kliknutím vykreslí rovnoběžku dané zeměpisné šířky (s přichycením na body)</li><li>🧭 <strong>Poledník</strong> – kliknutím vykreslí poledník dané zeměpisné délky (s přichycením na body)</li><li>🗑️ <strong>Smazat měření</strong> – vymaže vše z měření</li></ul></li><li>✏️ <strong>Spustit editor</strong> – otevře postranní panel editoru. Editor je externí nadstavba a nemusí být ve vaší verzi aplikace dostupný.</li></ul>",
+                    "<strong>☰ Tlačítko ☰ – menu (úplně vlevo nahoře):</strong><br>Otevře nabídku se čtyřmi volbami:<ul><li>🌐 <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou</li><li>📄 <strong>Uložit mapu</strong> – rozdělené tlačítko se dvěma volbami:<div class=\"step-sub\"><br>📄 <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≅ 1,41), 3mm okraje, <em>bez</em> vektorů<br>🖼️ <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů</div></li><li>ℹ️ <strong>Informace o aplikaci</strong> – otevře tento návod</li><li>📐 <strong>Otevřít panel měření</strong> – otevře panel měření uprostřed horního okraje. V panelu:<ul><li>🌐 <strong>Mřížka</strong> – 3 stavy: vypnuto / zobrazení mřížky se zvýrazněnými hlavními rovnoběžkami (rovník, obratníky, polární kruhy) / mřížka s popisky souřadnic</li><li>📏 <strong>Měřit</strong> – měří vzdálenost a azimut v místě prvního bodu čáry (čáry aproximuje po 100 km úsecích na ortodromu), uzavřením čáry na polygon vypočte plochu</li><li>🎯 <strong>Zobrazit souřadnice</strong> – u kurzoru zobrazí souřadnice (6 des. míst), klik zkopíruje do schránky, snap na body</li><li>🧭 <strong>Rovnoběžka</strong> – kliknutím vykreslí rovnoběžku dané zeměpisné šířky (s přichycením na body)</li><li>🧭 <strong>Poledník</strong> – kliknutím vykreslí poledník dané zeměpisné délky (s přichycením na body)</li><li>💾 <strong>Uložit měření</strong> – uloží vše z měření do GeoJSON a načte jako nový zdroj</li><li>🗑️ <strong>Smazat měření</strong> – vymaže vše z měření</li></ul></li></ul>",
                     "<strong>📂 Tlačítko [Zdroje (počet)] – seznam a správa zdrojů:</strong><br>Číslo v závorce = počet aktivních souborů. Panel zdrojů:<br>• ☑️ Zapnout/vypnout, odebrat, přejmenovat soubor<br>• ↕️ Přetáhnout pro změnu pořadí vykreslování<br>• 🎛️ Ovládací pilulky pro styl, barvy a parametry (podrobně v kroku 4)<br>• ⬇️ <strong>GeoJSON export</strong> – uloží jeden zdroj samostatně jako GeoJSON (tlačítko pod křížkem zdroje)<br>• 🎨 <strong>Sjednotit</strong> – parametry podle posledně upraveného souboru<br>• ↩️ <strong>Zpět</strong> – vrátí poslední sjednocení nebo reset<br>• 🔍 Klik na název = přiblížení na souřadnice<br><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>🎨 Styl zobrazení – volí se pro každý datový soubor zvlášť:</strong><br>V panelu Zdroje je u každého souboru tlačítko stylu a sada ovládacích pilulek:<div class=\"step-sub\"><br><strong>Fotky – 5 režimů:</strong><br>• 🔥 <strong>Heatmapa</strong> – 🎨 8 palet, 💧 průhlednost, 🌙 rozostření (5–50 px)<br>• 🖼️ <strong>Foto-karty</strong> – 💧 průhlednost<br>• 📍 <strong>Špendlíky</strong> – 🎨 8 barev, 💧 průhlednost<br>• ⭐ <strong>Symbol</strong> – 🎨 8 barev, 💧 průhlednost, 📌 styl symbolu (8 stylů), 🔴 velikost (1–25 px)<br>• ⬤ <strong>Zóna výskytu</strong> – 🎨 8 barev, 💧 průhlednost, ⬤ poloměr (0–10 000 km)<br><br><strong>GNSS trasy a polygony:</strong><br>• 🟠 Barva bodů, 📌 styl ikony (8 stylů), 🔘 velikost bodů (4–30 px)<br>• 💧 Průhlednost čar, bodů i výplní<br>• ━━ Barva čáry a polygonu, 📏 tloušťka čáry (0,5–20 px)<br>• Pokud polygony: 🖌️ barva výplně, 💧 průhlednost výplně (0–100 %)<br>• 🌐 <strong>Geodetická interpolace:</strong> Úseky tras i hrany polygonů delší než 100 km se automaticky ortodromicky zakřivují podél povrchu Země.<br><br><strong>🎛️ Vyladěné posuvníky:</strong><br>• Plynulé dotykové ovládání pro mobily a tablety.<br>• Přímé psaní hodnot do číselného pole (s tečkou i čárkou, potvrzení <code>Enter</code>).<br>• Klávesové ovládání: šipky <strong>Doleva / Dolů</strong> snižují o 1 jednotku/krok, <strong>Doprava / Nahoru</strong> zvyšují o 1 jednotku/krok.</div><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.",
                     "<strong>📅 Tlačítko [Vše (počet) ▼] – časový filtr (rok / měsíc / den):</strong><br>Otevírá časový filtr fotografií:<br>• 📅 Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok<br>• 🗓️ Po zvolení roku se nabídka rozbalí o mřížku měsíců<br>• 📆 U vybraného měsíce i o kalendář dnů<br>• ↩️ Opětovným kliknutím se vrátíte o úroveň výš",
@@ -858,7 +858,7 @@ menuMeasureItem: "📏 Spustit měření",
                 tfMonths: "Months",
                 tfDays: "Days",
                 menuInfoItem: "ℹ️ About & Help",
-                menuMeasureItem: "📏 Start Measurement",
+                menuMeasureItem: "📏 Open measurement panel",
                 btnMeasureGrid: "Coordinate grid",
                 btnMeasureDist: "Measure",
                 btnShowCoords: "Show coordinates",
@@ -866,8 +866,8 @@ menuMeasureItem: "📏 Spustit měření",
                 btnMeridian: "Meridian",
                 btnMeasureClose: "Close measurement panel",
                 btnMeasureDistCancel: "Cancel measurement (Esc)",
+                btnSaveMeasure: "Save measurements (GeoJSON)",
                 btnClearMeasure: "Clear measurements",
-                menuEditorItem: "✏️ Launch Editor",
                 menuPdfItem: "📄 Save map as PDF",
                 btnAddMini: "+ Add",
                 btnExportGj: "⬇️",
@@ -946,7 +946,7 @@ menuMeasureItem: "📏 Spustit měření",
                 guideTitle: "📖 User Guide:",
                 steps: [
                     "<strong>⚡ Data File – First Run (ESSENTIAL):</strong><br>Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script has <strong>3 functions:</strong><div class=\"step-sub\"><br>① <strong>Generate photo data (full archive)</strong> – scans all folders and subfolders, reads GPS from EXIF, Google JSON, Adobe XMP, and DJI SRT subtitles, deduplicates, and sorts by date<br>② <strong>Generate photo data (select a specific subfolder)</strong><br>③ <strong>Archive statistics</strong> – generates a folder overview to CSV (file counts, sizes, oldest/newest files). The generated file is not for this application</div><br><strong>Output file:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – format: JavaScript data file (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Row structure:</strong> comment header (<code>//</code>) + column header + data rows separated by semicolons<div class=\"step-sub\"><br><strong>Required columns (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Optional columns: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Example row:</strong><br><code>20240815_143022; hike_photo.jpg; 49.123456; 16.654321; 5242880; trips/CZ/2024/08/hike_photo.jpg</code><br><br><strong>Column descriptions:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (from EXIF, filename, or file modification date)<br>• <strong>NAZEV_SOUBORU</strong> – filename with extension<br>• <strong>LATITUDE</strong> – latitude in decimal degrees (6 decimal places)<br>• <strong>LONGITUDE</strong> – longitude in decimal degrees (6 decimal places)<br>• <strong>VELIKOST_BAJTY</strong> – file size in bytes <em>(optional)</em><br>• <strong>RELATIVNI_CESTA</strong> – relative path to file from root folder <em>(optional)</em></div>Drag it into the map or upload via the + button<br><em>⚠️ Keep both <code>Mapa_Fotky.html</code> and <code>Mapa_Fotek_aktualizace_dat.bat</code> in the root photos folder. Otherwise thumbnails won't display and you can't click to full size.</em>",
-                    "<strong>☰ Menu button (top left corner):</strong><br>Opens a menu with five options:<ul><li>🌐 <strong>Language switch</strong> – toggles between Czech and English</li><li>📄 <strong>Save map</strong> – split button with two options:<div class=\"step-sub\"><br>📄 <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≅ 1.41), 3mm margins, <em>without</em> vectors<br>🖼️ <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors</div></li><li>ℹ️ <strong>About &amp; Help</strong> – opens this guide</li><li>📐 <strong>Start Measurement</strong> – opens measurement panel at top center. Panel contains:<ul><li>🌐 <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels</li><li>📏 <strong>Measure</strong> – measures distance and azimuth from the start point (approximates great circle path every 100 km), closing the line into a polygon calculates the area</li><li>🎯 <strong>Show coordinates</strong> – displays cursor coordinates (6 decimals), click to copy, snap to points</li><li>🧭 <strong>Parallel</strong> – click to draw a latitude parallel line through the point (with snapping)</li><li>🧭 <strong>Meridian</strong> – click to draw a longitude meridian line through the point (with snapping)</li><li>🗑️ <strong>Clear measurements</strong> – clears all measurements from the map</li></ul></li><li>✏️ <strong>Launch Editor</strong> – opens editor side panel. The editor is an external add-on and may not be available in your version of the application.</li></ul>",
+                    "<strong>☰ Menu button (top left corner):</strong><br>Opens a menu with four options:<ul><li>🌐 <strong>Language switch</strong> – toggles between Czech and English</li><li>📄 <strong>Save map</strong> – split button with two options:<div class=\"step-sub\"><br>📄 <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≅ 1.41), 3mm margins, <em>without</em> vectors<br>🖼️ <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors</div></li><li>ℹ️ <strong>About &amp; Help</strong> – opens this guide</li><li>📐 <strong>Open measurement panel</strong> – opens measurement panel at top center. Panel contains:<ul><li>🌐 <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels</li><li>📏 <strong>Measure</strong> – measures distance and azimuth from the start point (approximates great circle path every 100 km), closing the line into a polygon calculates the area</li><li>🎯 <strong>Show coordinates</strong> – displays cursor coordinates (6 decimals), click to copy, snap to points</li><li>🧭 <strong>Parallel</strong> – click to draw a latitude parallel line through the point (with snapping)</li><li>🧭 <strong>Meridian</strong> – click to draw a longitude meridian line through the point (with snapping)</li><li>💾 <strong>Save measurements</strong> – saves all measurements to GeoJSON and loads as new source</li><li>🗑️ <strong>Clear measurements</strong> – clears all measurements from the map</li></ul></li></ul>",
                     "<strong>📂 Button [Sources (count)] – data sources manager:</strong><br>Number = count of active files. Sources panel:<br>• Toggle on/off, remove, rename each file<br>• Drag to reorder rendering (top items draw on top)<br>• Control pills for style, colors and parameters (details in step 4)<br>• ⬇️ <strong>GeoJSON export</strong> – saves a single source as GeoJSON (button under the × close button)<br>• 🎨 <strong>Unify</strong> – sync parameters to match the last edited file<br>• ↩️ <strong>Undo</strong> – reverts last unify or reset<br>• Click a file name to zoom the map to its coordinates<br><br>All settings are automatically saved permanently in browser storage.",
                     "<strong>🎨 View Style – Selected independently for each dataset:</strong><br>In the Sources panel, each file has a style trigger and pills:<div class=\"step-sub\"><br><strong>Photos – 5 modes:</strong><br>• 🔥 <strong>Heatmap</strong> – 🎨 8 palettes, 💧 opacity, 🌙 blur (5–50 px)<br>• 🖼️ <strong>Photo Cards</strong> – 💧 opacity<br>• 📍 <strong>Pins</strong> – 🎨 8 colors, 💧 opacity<br>• ⭐ <strong>Symbol</strong> – 🎨 8 colors, 💧 opacity, 📌 symbol icon (8 styles), 🔴 size (1–25 px)<br>• ⬤ <strong>Coverage Zone</strong> – 🎨 8 colors, 💧 opacity, ⬤ radius (0–10,000 km)<br><br><strong>GNSS Tracks & Polygons:</strong><br>• 🟠 Point color, 📌 waypoint icon (8 styles), 🔘 point size (4–30 px)<br>• 💧 Line, point, and fill opacity<br>• ━━ Line & polygon color, 📏 line width (0.5–20 px)<br>• If polygons: 🖌️ fill color, 💧 fill opacity (0–100 %)<br>• 🌐 <strong>Geodetic Interpolation:</strong> Track segments and polygon edges longer than 100 km automatically bend along Earth's great circle curvature.<br><br><strong>🎛️ Fine-tuned Sliders:</strong><br>• Smooth touch controls for mobile & tablet.<br>• Direct typing into numeric fields (supports comma and period, press <code>Enter</code>).<br>• Keyboard navigation: <strong>Left / Down</strong> arrows decrease by 1 unit/step, <strong>Right / Up</strong> arrows increase by 1 unit/step.</div><br>All settings are automatically saved in the browser.",
                     "<strong>📅 Button [All (count) ▼] – time filter (year / month / day):</strong><br>Opens the photo time filter:<br>• 📅 Choose <em>All</em> for the complete archive or a specific year<br>• 🗓️ After selecting a year, a month grid appears<br>• 📆 For a selected month, also a day calendar<br>• ↩️ Clicking the active item steps back one level",
@@ -1313,8 +1313,6 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (optEn) optEn.classList.toggle("active", l === "en");
             var miInfo = document.getElementById("menuInfoItem");
             if (miInfo) miInfo.textContent = t.menuInfoItem;
-            var miEditor = document.getElementById("menuEditorItem");
-            if (miEditor) miEditor.textContent = t.menuEditorItem;
             var miMeasure = document.getElementById("menuMeasureItem");
             if (miMeasure) miMeasure.textContent = t.menuMeasureItem;
             var bmGrid = document.getElementById("btnMeasureGrid");
@@ -1327,6 +1325,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (bmPar) bmPar.title = t.btnParallel;
             var bmMer = document.getElementById("btnMeridian");
             if (bmMer) bmMer.title = t.btnMeridian;
+            var bmSave = document.getElementById("btnSaveMeasure");
+            if (bmSave) bmSave.title = t.btnSaveMeasure;
             var bmClear = document.getElementById("btnClearMeasure");
             if (bmClear) bmClear.title = t.btnClearMeasure;
             var bmClose = document.querySelector(".measure-panel-close");
@@ -1372,7 +1372,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             document.getElementById("txtModalTitle").textContent = t.modalTitle;
             document.getElementById("lblAuthor").textContent = t.lblAuthor;
             document.getElementById("lblUpdated").textContent = t.lblUpdated;
-            document.getElementById("valUpdated").textContent = t.valUpdated;
+            try{ var _lm=new Date(document.lastModified); if(!isNaN(_lm)){ var _cs=_lm.toLocaleDateString('cs-CZ'); var _en=_lm.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); if(_cs) i18n.cs.valUpdated=_cs; if(_en) i18n.en.valUpdated=_en; document.getElementById("valUpdated").textContent=currentLang==='cs'?_cs:_en; } else { document.getElementById("valUpdated").textContent=t.valUpdated; } }catch(e){ document.getElementById("valUpdated").textContent=t.valUpdated; }
             document.getElementById("lblVersion").textContent = t.lblVersion;
             document.getElementById("txtGuideTitle").textContent = t.guideTitle;
             var guideSearchEl = document.getElementById("guideSearch");
@@ -3417,6 +3417,66 @@ if (measureDistanceState.points.length === 1) {
                 btn.classList.remove("active");
                 btn.title = i18n[currentLang].btnMeasureDist || (currentLang === "cs" ? "Měřit" : "Measure");
             }
+        }
+        function exportMeasurementsGeoJSON(){
+            var t=i18n[currentLang];
+            if(!measureLayerGroup || measureLayerGroup.getLayers().length===0){ showToast(t.toastNoData||"Žádná data k exportu"); return; }
+            var features=[]; var ptIdx=1, lineIdx=1, polyIdx=1, parIdx=1, merIdx=1;
+            measureLayerGroup.eachLayer(function(l){
+                if(l===measureDistanceState.tempLine || l===parallelState.tempLine || l===meridianState.tempLine) return;
+                if(l.getLatLng && l.options && l.options.icon && l.options.icon.options && l.options.icon.options.html){
+                    var h=l.options.icon.options.html;
+                    if(h.indexOf('border-radius:50%')!==-1 && h.indexOf('background:#e41e26')!==-1){
+                        var ll=l.getLatLng();
+                        features.push({type:"Feature", geometry:{type:"Point", coordinates:[ll.lng, ll.lat]}, properties:{name:"Bod "+(ptIdx++), type:"measure_point", lat:ll.lat, lng:ll.lng}});
+                    }
+                    return;
+                }
+                if(l instanceof L.Polygon){
+                    var rings=l.getLatLngs();
+                    var outerR=rings[0]||rings;
+                    if(outerR.length<3) return;
+                    var outerPts=outerR.map(function(ll){ return {lat:ll.lat, lng:ll.lng}; });
+                    var perimM=0; for(var i=0;i<outerPts.length;i++){ var a=outerPts[i], b=outerPts[(i+1)%outerPts.length]; perimM+=calcDistKm(a.lat,a.lng,b.lat,b.lng)*1000; }
+                    var areaM2=calcPolygonAreaM2(outerPts);
+                    var coords=[ outerR.map(function(ll){ return [ll.lng, ll.lat]; }) ];
+                    if(rings.length>1){ for(var r=1;r<rings.length;r++) coords.push(rings[r].map(function(ll){ return [ll.lng, ll.lat]; })); }
+                    coords[0].push(coords[0][0].slice());
+                    features.push({type:"Feature", geometry:{type:"Polygon", coordinates:coords}, properties:{name:"Polygon "+(polyIdx++), type:"measure_polygon", perimeter_m: Math.round(perimM), perimeter_km: +(perimM/1000).toFixed(3), area_m2: Math.round(areaM2), area_km2: +(areaM2/1000000).toFixed(4)}});
+                    return;
+                }
+                if(l instanceof L.Polyline){
+                    var lls=l.getLatLngs();
+                    if(!lls || lls.length<2) return;
+                    var isPar=parallelState.lines.indexOf(l)!==-1;
+                    var isMer=meridianState.lines.indexOf(l)!==-1;
+                    if(l.options && l.options.dashArray && l.options.opacity===0.5) return;
+                    if(isPar){
+                        var lat=lls[0].lat;
+                        features.push({type:"Feature", geometry:{type:"LineString", coordinates:[[-180,lat],[180,lat]]}, properties:{name:"Rovnabezka "+(parIdx++), type:"parallel", lat:lat}});
+                        return;
+                    }
+                    if(isMer){
+                        var lng=lls[0].lng;
+                        features.push({type:"Feature", geometry:{type:"LineString", coordinates:[[lng,-85],[lng,85]]}, properties:{name:"Polednik "+(merIdx++), type:"meridian", lng:lng}});
+                        return;
+                    }
+                    var totM=0; for(var i=1;i<lls.length;i++){ totM+=calcDistKm(lls[i-1].lat,lls[i-1].lng,lls[i].lat,lls[i].lng)*1000; }
+                    var coords=lls.map(function(ll){ return [ll.lng, ll.lat]; });
+                    features.push({type:"Feature", geometry:{type:"LineString", coordinates:coords}, properties:{name:"Cara "+(lineIdx++), type:"measure_line", length_m: Math.round(totM), length_km: +(totM/1000).toFixed(3)}});
+                }
+            });
+            if(features.length===0){ showToast(t.toastNoData||"Žádná data k exportu"); return; }
+            var fc={type:"FeatureCollection", features:features};
+            var blob=new Blob([JSON.stringify(fc,null,2)],{type:"application/geo+json"});
+            var now=new Date(); var ts=now.getFullYear()+("0"+(now.getMonth()+1)).slice(-2)+("0"+now.getDate()).slice(-2)+"_"+("0"+now.getHours()).slice(-2)+("0"+now.getMinutes()).slice(-2)+("0"+now.getSeconds()).slice(-2);
+            var fname="Mereni_"+ts+".geojson";
+            downloadBlob(blob,fname);
+            try{
+                var base=fname.replace(/\.[^/.]+$/,""); var uniq=base, c=1; while(datasets[uniq]) uniq=base+"_"+(c++);
+                var trk=parseGeoJson(JSON.stringify(fc), uniq+".geojson");
+                if(trk){ trk.name=uniq; trk.title=uniq; datasets[uniq]=trk; try{ saveStoredSource(uniq+".geojson", JSON.stringify(fc)); }catch(e){} try{ rebuild(); }catch(e){} showToast(t.toastGeoJsonExported||"GeoJSON export dokoncen"); }
+            }catch(e){ console.error(e); }
         }
         
         // Collect all snappable points from active datasets
