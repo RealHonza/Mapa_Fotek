@@ -2286,10 +2286,26 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         weight: d.lineWidth || 4.5,
                         opacity: trackOp,
                         fillColor: fColor || "transparent",
-                        fillOpacity: fOp
+                        fillOpacity: fOp,
+                        pane: 'overlayPane',
+                        interactive: true,
+                        noClip: true
                     });
+                    lPoly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; } });
                     lPoly.bindPopup("<div style='padding:6px 8px;font-size:12px;'>" + escapeHtml(poly.name || d.title || d.name) + "</div>");
                     lg.addLayer(lPoly);
+                    // Hit-area pro snadne kliknuti na obrys polygonu - SVG nad Canvas
+                    try{
+                        var hitW=16;
+                        var svgR=L.svg();
+                        for(var _hr=0; _hr<rings.length; _hr++){
+                            (function(_ring, _poly){
+                                var hitPoly=L.polyline(_ring, {color:outlineColor, weight:hitW, opacity:0.01, interactive:true, pane:'overlayPane', renderer: svgR, noClip:true});
+                                hitPoly.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } _poly.openPopup(ev.latlng); L.DomEvent.stopPropagation(ev); });
+                                lg.addLayer(hitPoly);
+                            })(rings[_hr], lPoly);
+                        }
+                    }catch(e){}
                 }
             }
 
@@ -2305,8 +2321,12 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         weight: lineWeight,
                         opacity: trackOp,
                         lineJoin: "round",
-                        lineCap: "round"
+                        lineCap: "round",
+                        pane: 'overlayPane',
+                        interactive: true,
+                        noClip: true
                     });
+                    poly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; } });
                     var distText = lineObj.distanceKm > 0 ? (lineObj.distanceKm.toFixed(2) + " km") : "";
                     var titleText = escapeHtml(lineObj.name || d.title || d.name);
                     var popupContent = "<div style='padding:6px 8px;font-size:12px;min-width:auto;'>" +
@@ -2321,6 +2341,12 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "</div>";
                     poly.bindPopup(popupContent);
                     lg.addLayer(poly);
+                    // Hit-area pro snadne kliknuti na caru - SVG
+                    try{
+                        var hitLine=L.polyline(displayPoints, {color:d.color||"#1a73e8", weight:16, opacity:0.01, interactive:true, pane:'overlayPane', renderer: L.svg(), noClip:true});
+                        hitLine.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } poly.openPopup(ev.latlng); L.DomEvent.stopPropagation(ev); });
+                        lg.addLayer(hitLine);
+                    }catch(e){}
                 }
             }
 
@@ -3075,6 +3101,7 @@ function startMeasureDistance() {
                 }
                 
                 // Reset only the active measurement state
+                if(measureDistanceState.points.length>=2) measureLineCounter++;
                 measureDistanceState.points = [];
                 measureDistanceState.markers = [];
                 measureDistanceState.tempLine = null;
@@ -3167,20 +3194,25 @@ if (measureDistanceState.points.length === 1) {
                         interactive: false,
                         zIndex: 851
                     }).addTo(measureLayerGroup);
+                    measureDistanceState.line._measureIdx = measureLineCounter;
+                    measureDistanceState.line._vertexCount = measureDistanceState.points.length;
                     // Hit-area neviditelná širší čára pro snadné kliknutí
                     measureDistanceState.lineHit = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
                         color: '#e41e26',
-                        weight: 12,
+                        weight: 16,
                         opacity: 0.01,
                         pane: 'overlayPane',
+                        renderer: L.svg(),
                         noClip: true,
                         interactive: true,
                         zIndex: 852
                     }).addTo(measureLayerGroup);
-                    var showTotal = function(e){
-                        var totalM=0;
-                        for(var i=1;i<measureDistanceState.points.length;i++) totalM+=calcDistKm(measureDistanceState.points[i-1].lat,measureDistanceState.points[i-1].lng,measureDistanceState.points[i].lat,measureDistanceState.points[i].lng)*1000;
-                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>" + formatDistance(totalM) + "</div></div>").openOn(map);
+                    measureDistanceState.lineHit._measureIdx = measureLineCounter;
+                    measureDistanceState.lineHit._vertexCount = measureDistanceState.points.length;
+                    var showTotal = function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; }
+                        var lls=(measureDistanceState.line && measureDistanceState.line.getLatLngs().length>1 ? measureDistanceState.line.getLatLngs() : e.target.getLatLngs()); var totalM=0;
+                        for(var i=1;i<lls.length;i++) totalM+=calcDistKm(lls[i-1].lat,lls[i-1].lng,lls[i].lat,lls[i].lng)*1000;
+                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Čára ":"Line ") + (e.target._measureIdx||measureLineCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Délka: ":"Length: ") + "<strong>" + formatDistance(totalM) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + (e.target._vertexCount||measureDistanceState.points.length) + "</strong></div></div>").openOn(map);
                         L.DomEvent.stopPropagation(e);
                     };
                     measureDistanceState.lineHit.on('click', showTotal);
@@ -3253,7 +3285,10 @@ if (measureDistanceState.points.length === 1) {
             } else {
                 // Add segment to the line
                 if (measureDistanceState.line) {
-                    measureDistanceState.line.setLatLngs(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false));
+                    var _geoUpd=geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false);
+                    measureDistanceState.line.setLatLngs(_geoUpd);
+                    measureDistanceState.line._vertexCount = measureDistanceState.points.length;
+                    if(measureDistanceState.lineHit){ measureDistanceState.lineHit.setLatLngs(_geoUpd); measureDistanceState.lineHit._vertexCount = measureDistanceState.points.length; }
                 } else {
                     measureDistanceState.line = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
                         color: '#e41e26',
@@ -3265,20 +3300,25 @@ if (measureDistanceState.points.length === 1) {
                         interactive: false,
                         zIndex: 851
                     }).addTo(measureLayerGroup);
+                    measureDistanceState.line._measureIdx = measureLineCounter;
+                    measureDistanceState.line._vertexCount = measureDistanceState.points.length;
                     // Hit-area neviditelná širší čára pro snadné kliknutí
                     measureDistanceState.lineHit = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
                         color: '#e41e26',
-                        weight: 12,
+                        weight: 16,
                         opacity: 0.01,
                         pane: 'overlayPane',
+                        renderer: L.svg(),
                         noClip: true,
                         interactive: true,
                         zIndex: 852
                     }).addTo(measureLayerGroup);
-                    var showTotal = function(e){
-                        var totalM=0;
-                        for(var i=1;i<measureDistanceState.points.length;i++) totalM+=calcDistKm(measureDistanceState.points[i-1].lat,measureDistanceState.points[i-1].lng,measureDistanceState.points[i].lat,measureDistanceState.points[i].lng)*1000;
-                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>" + formatDistance(totalM) + "</div></div>").openOn(map);
+                    measureDistanceState.lineHit._measureIdx = measureLineCounter;
+                    measureDistanceState.lineHit._vertexCount = measureDistanceState.points.length;
+                    var showTotal = function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; }
+                        var lls=(measureDistanceState.line && measureDistanceState.line.getLatLngs().length>1 ? measureDistanceState.line.getLatLngs() : e.target.getLatLngs()); var totalM=0;
+                        for(var i=1;i<lls.length;i++) totalM+=calcDistKm(lls[i-1].lat,lls[i-1].lng,lls[i].lat,lls[i].lng)*1000;
+                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Čára ":"Line ") + (e.target._measureIdx||measureLineCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Délka: ":"Length: ") + "<strong>" + formatDistance(totalM) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + (e.target._vertexCount||measureDistanceState.points.length) + "</strong></div></div>").openOn(map);
                         L.DomEvent.stopPropagation(e);
                     };
                     measureDistanceState.lineHit.on('click', showTotal);
@@ -3744,15 +3784,20 @@ if (measureDistanceState.points.length === 1) {
                 pane: 'overlayPane',
                 interactive: true
             }).addTo(measureLayerGroup);
-            measureDistanceState.polygon.on('click', function(e){
+            measureDistanceState.polygon._measureIdx = measurePolygonCounter;
+            measureDistanceState.polygon._vertexCount = pts.length;
+            measureDistanceState.polygon.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; }
                 var pts=measureDistanceState.points;
                 // Polygon points were cleared after close, use geoRing for perimeter
                 var totalM=0;
                 for(var i=1;i<geoRing.length;i++) totalM+=calcDistKm(geoRing[i-1][0],geoRing[i-1][1],geoRing[i][0],geoRing[i][1])*1000;
-                L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>Obvod: " + formatDistance(totalM) + "</div></div>").openOn(map);
+                var vCnt=e.target._vertexCount||pts?pts.length:geoRing.length; var aM2=calcPolygonAreaM2(pts&&pts.length?pts:geoRing.map(function(c){return {lat:c[0], lng:c[1]}; }));
+                L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Polygon ":"Polygon ") + (e.target._measureIdx||measurePolygonCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Obvod: ":"Perimeter: ") + "<strong>" + formatDistance(totalM) + "</strong><br>⬜ " + (currentLang==='cs'?"Plocha: ":"Area: ") + "<strong>" + formatArea(aM2) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + vCnt + "</strong></div></div>").openOn(map);
                 L.DomEvent.stopPropagation(e);
             });
             measureDistanceState.polygon.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
+            // Hit-area pro snadne kliknuti na obrys merene plochy
+            try{ var hitPoly=L.polyline(geoRing, {color:'#e41e26', weight:16, opacity:0.01, interactive:true, pane:'overlayPane', renderer: L.svg(), noClip:true}).addTo(measureLayerGroup); hitPoly._measureIdx = measurePolygonCounter; hitPoly._vertexCount = pts.length; hitPoly.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } var totalM=0; for(var i=1;i<geoRing.length;i++) totalM+=calcDistKm(geoRing[i-1][0],geoRing[i-1][1],geoRing[i][0],geoRing[i][1])*1000; var vCnt2=ev.target._vertexCount||pts?pts.length:geoRing.length; var aM2b=calcPolygonAreaM2(pts&&pts.length?pts:geoRing.map(function(c){return {lat:c[0], lng:c[1]}; })); L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Polygon ":"Polygon ") + (ev.target._measureIdx||measurePolygonCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Obvod: ":"Perimeter: ") + "<strong>" + formatDistance(totalM) + "</strong><br>⬜ " + (currentLang==='cs'?"Plocha: ":"Area: ") + "<strong>" + formatArea(aM2b) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + vCnt2 + "</strong></div></div>").openOn(map); L.DomEvent.stopPropagation(ev); }); }catch(e){}
             // Plocha
             var areaM2 = calcPolygonAreaM2(pts);
             var areaText = formatArea(areaM2);
@@ -3779,6 +3824,8 @@ if (measureDistanceState.points.length === 1) {
             }
             // Ulož stav jako dokončený
             measureDistanceState.completed = true;
+            measurePolygonCounter++;
+            measureLineCounter++;
             // Reset aktivní body pro případné další měření, ale polygon zůstane
             measureDistanceState.points = [];
             measureDistanceState.markers = [];
@@ -3877,10 +3924,9 @@ if (measureDistanceState.points.length === 1) {
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
                 var line=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                line.on('click', function(ev){
-                    L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map);
-                    L.DomEvent.stopPropagation(ev);
-                });
+                line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                var hit=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
+                hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                 parallelState.lines.push(line);
                 L.DomEvent.stop(e);
             };
@@ -3894,10 +3940,9 @@ if (measureDistanceState.points.length === 1) {
                     L.DomEvent.stop(e);
                     if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
                     var line=L.polyline([[snapped.lat,-180],[snapped.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                    line.on('click', function(ev){
-                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map);
-                        L.DomEvent.stopPropagation(ev);
-                    });
+                    line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                    var hit=L.polyline([[snapped.lat,-180],[snapped.lat,180]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
+                    hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                     parallelState.lines.push(line);
                 }
             };
@@ -3942,10 +3987,9 @@ if (measureDistanceState.points.length === 1) {
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
                 var line=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                line.on('click', function(ev){
-                    L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map);
-                    L.DomEvent.stopPropagation(ev);
-                });
+                line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                var hit=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
+                hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                 meridianState.lines.push(line);
                 L.DomEvent.stop(e);
             };
@@ -3959,10 +4003,9 @@ if (measureDistanceState.points.length === 1) {
                     L.DomEvent.stop(e);
                     if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
                     var line=L.polyline([[-85,snapped.lng],[85,snapped.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                    line.on('click', function(ev){
-                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map);
-                        L.DomEvent.stopPropagation(ev);
-                    });
+                    line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                    var hit=L.polyline([[-85,snapped.lng],[85,snapped.lng]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
+                    hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
                     meridianState.lines.push(line);
                 }
             };
