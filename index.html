@@ -1,4 +1,4 @@
-﻿﻿﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
@@ -656,7 +656,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblUpdated">Poslední aktualizace:</span>
-                    <span class="info-meta-val" id="valUpdated">Srpen 2026</span>
+                    <span class="info-meta-val" id="valUpdated">2. 9. 2026</span>
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
@@ -834,7 +834,7 @@ menuMeasureItem: "📏 Spustit měření",
                 modalTitle: "Mapa fotek",
                 lblAuthor: "Autor:",
                 lblUpdated: "Poslední aktualizace:",
-                valUpdated: "Srpen 2026",
+                valUpdated: "2. 9. 2026",
                 lblVersion: "Verze:",
                 guideTitle: "📖 Návod k použití:",
                 steps: [
@@ -941,7 +941,7 @@ menuMeasureItem: "📏 Spustit měření",
                 modalTitle: "Photo Map",
                 lblAuthor: "Author:",
                 lblUpdated: "Last update:",
-                valUpdated: "August 2026",
+                valUpdated: "Sep 2, 2026",
                 lblVersion: "Version:",
                 guideTitle: "📖 User Guide:",
                 steps: [
@@ -3793,8 +3793,8 @@ if (measureDistanceState.points.length === 1) {
         }
 
         // Rovnoběžka / Poledník
-        var parallelState={active:false, lines:[], moveHandler:null, clickHandler:null, keyHandler:null};
-        var meridianState={active:false, lines:[], moveHandler:null, clickHandler:null, keyHandler:null};
+        var parallelState={active:false, lines:[], tempLine:null, moveHandler:null, clickHandler:null, captureHandler:null, keyHandler:null};
+        var meridianState={active:false, lines:[], tempLine:null, moveHandler:null, clickHandler:null, captureHandler:null, keyHandler:null};
         function toggleParallel(){ if(parallelState.active) stopParallel(); else startParallel(); var b=document.getElementById("btnParallel"); if(b) b.classList.toggle("active", parallelState.active); }
         function toggleMeridian(){ if(meridianState.active) stopMeridian(); else startMeridian(); var b=document.getElementById("btnMeridian"); if(b) b.classList.toggle("active", meridianState.active); }
         function startParallel(){
@@ -3814,11 +3814,6 @@ if (measureDistanceState.points.length === 1) {
             };
             map.on("mousemove", parallelState.moveHandler);
             parallelState.clickHandler=function(e){
-                var _t=e.originalEvent?e.originalEvent.target:e.target;
-                if(_t&&_t.closest){
-                    var _ic=_t.closest('.leaflet-marker-icon');
-                    if(_ic&&_ic._leaflet_id&&map._layers[_ic._leaflet_id]&&map._layers[_ic._leaflet_id].getLatLng) e.latlng=map._layers[_ic._leaflet_id].getLatLng();
-                }
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
                 var line=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
@@ -3830,7 +3825,23 @@ if (measureDistanceState.points.length === 1) {
                 L.DomEvent.stop(e);
             };
             map.on("click", parallelState.clickHandler);
-            map.getContainer().addEventListener("click", parallelState.clickHandler, true);
+            // Oddeleny capture handler - nativni MouseEvent -> latlng (jako measureDistance captureHandler2)
+            parallelState.captureHandler=function(e){
+                if(!parallelState.active) return;
+                var latlng=map.mouseEventToLatLng(e);
+                var snapped=snapToPoint(latlng);
+                if(snapped){
+                    L.DomEvent.stop(e);
+                    if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
+                    var line=L.polyline([[snapped.lat,-180],[snapped.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
+                    line.on('click', function(ev){
+                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map);
+                        L.DomEvent.stopPropagation(ev);
+                    });
+                    parallelState.lines.push(line);
+                }
+            };
+            map.getContainer().addEventListener("click", parallelState.captureHandler, true);
             parallelState.contextMenuHandler=function(e){
                 if(!parallelState.active) return;
                 if(e.originalEvent){ e.originalEvent.preventDefault(); e.originalEvent.stopPropagation(); } else { e.preventDefault(); e.stopPropagation(); }
@@ -3844,8 +3855,10 @@ if (measureDistanceState.points.length === 1) {
         function stopParallel(){
             if(!parallelState.active) return; parallelState.active=false;
             map.getContainer().style.cursor="";
+            if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
             if(parallelState.moveHandler){ map.off("mousemove", parallelState.moveHandler); parallelState.moveHandler=null; }
-            if(parallelState.clickHandler){ map.off("click", parallelState.clickHandler); map.getContainer().removeEventListener("click", parallelState.clickHandler, true); parallelState.clickHandler=null; }
+            if(parallelState.clickHandler){ map.off("click", parallelState.clickHandler); parallelState.clickHandler=null; }
+            if(parallelState.captureHandler){ map.getContainer().removeEventListener("click", parallelState.captureHandler, true); parallelState.captureHandler=null; }
             if(parallelState.contextMenuHandler){ map.off("contextmenu", parallelState.contextMenuHandler); parallelState.contextMenuHandler=null; }
             if(parallelState.keyHandler){ document.removeEventListener("keydown", parallelState.keyHandler); parallelState.keyHandler=null; }
             var b=document.getElementById("btnParallel"); if(b) b.classList.remove("active");
@@ -3866,21 +3879,34 @@ if (measureDistanceState.points.length === 1) {
             };
             map.on("mousemove", meridianState.moveHandler);
             meridianState.clickHandler=function(e){
-                var _t2=e.originalEvent?e.originalEvent.target:e.target;
-                if(_t2&&_t2.closest){
-                    var _ic2=_t2.closest('.leaflet-marker-icon');
-                    if(_ic2&&_ic2._leaflet_id&&map._layers[_ic2._leaflet_id]&&map._layers[_ic2._leaflet_id].getLatLng) e.latlng=map._layers[_ic2._leaflet_id].getLatLng();
-                }
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
                 var line=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
                 line.on('click', function(ev){
                     L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map);
                     L.DomEvent.stopPropagation(ev);
                 });
-                parallelState.lines.push(line);
+                meridianState.lines.push(line);
+                L.DomEvent.stop(e);
             };
             map.on("click", meridianState.clickHandler);
-            map.getContainer().addEventListener("click", meridianState.clickHandler, true);
+            // Oddeleny capture handler - nativni MouseEvent -> latlng (jako measureDistance captureHandler2)
+            meridianState.captureHandler=function(e){
+                if(!meridianState.active) return;
+                var latlng=map.mouseEventToLatLng(e);
+                var snapped=snapToPoint(latlng);
+                if(snapped){
+                    L.DomEvent.stop(e);
+                    if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
+                    var line=L.polyline([[-85,snapped.lng],[85,snapped.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
+                    line.on('click', function(ev){
+                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map);
+                        L.DomEvent.stopPropagation(ev);
+                    });
+                    meridianState.lines.push(line);
+                }
+            };
+            map.getContainer().addEventListener("click", meridianState.captureHandler, true);
             meridianState.contextMenuHandler=function(e){
                 if(!meridianState.active) return;
                 if(e.originalEvent){ e.originalEvent.preventDefault(); e.originalEvent.stopPropagation(); } else { e.preventDefault(); e.stopPropagation(); }
@@ -3894,8 +3920,10 @@ if (measureDistanceState.points.length === 1) {
         function stopMeridian(){
             if(!meridianState.active) return; meridianState.active=false;
             map.getContainer().style.cursor="";
+            if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
             if(meridianState.moveHandler){ map.off("mousemove", meridianState.moveHandler); meridianState.moveHandler=null; }
-            if(meridianState.clickHandler){ map.off("click", meridianState.clickHandler); map.getContainer().removeEventListener("click", meridianState.clickHandler, true); meridianState.clickHandler=null; }
+            if(meridianState.clickHandler){ map.off("click", meridianState.clickHandler); meridianState.clickHandler=null; }
+            if(meridianState.captureHandler){ map.getContainer().removeEventListener("click", meridianState.captureHandler, true); meridianState.captureHandler=null; }
             if(meridianState.contextMenuHandler){ map.off("contextmenu", meridianState.contextMenuHandler); meridianState.contextMenuHandler=null; }
             if(meridianState.keyHandler){ document.removeEventListener("keydown", meridianState.keyHandler); meridianState.keyHandler=null; }
             var b=document.getElementById("btnMeridian"); if(b) b.classList.remove("active");
