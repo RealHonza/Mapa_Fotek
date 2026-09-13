@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
@@ -279,12 +279,12 @@
         .close-all-btn { background: #fce8e6; color: #d93025; border: 1px solid #f5c6c2; padding: 2.5px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; cursor: pointer; touch-action: manipulation; white-space: nowrap; transition: all 0.15s; }
         .close-all-btn:hover { background: #fad2cf; border-color: #d93025; }
         
-        .measure-panel { display: none; position: static; transform: none; order: 2; margin: 0 auto; pointer-events: auto; flex: 0 1 auto; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 32px; padding: 0 8px; }
+        .measure-panel { display: none; position: static; transform: none; order: 2; margin: 0 auto; pointer-events: auto; flex: 0 1 auto; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 32px; padding: 0 8px; max-width: calc(100vw - 16px); }
         .measure-panel.open { display: flex; align-items: center; }
         @media (max-width: 600px) {
-            .measure-panel { width: 100%; justify-content: center; order: 4; margin-top: 4px; flex: 0 0 100%; }
+            .measure-panel { width: 100%; justify-content: flex-start; order: 4; margin-top: 4px; flex: 0 0 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         }
-        .measure-panel-content { display: flex; align-items: center; gap: 8px; height: 100%; }
+        .measure-panel-content { display: flex; align-items: center; gap: 8px; height: 100%; flex-shrink: 0; }
         .measure-panel-btn { height: 28px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.15s; user-select: none; white-space: nowrap; }
         .measure-panel-btn:hover { background: #ffffff; color: #1a73e8; }
         .measure-panel-btn.active { background: #202124; color: #ffffff; border-color: #202124; }
@@ -293,7 +293,7 @@
         .measure-panel-btn .degree-badge { position: absolute; top: -4px; right: -4px; background: #c00; color: white; font-size: 9px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .measure-panel-close { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: #5f6368; font-size: 18px; cursor: pointer; border-radius: 4px; line-height: 1; }
         .measure-panel-close:hover { background: #f1f3f4; color: #202124; }
-        .buffer-dropdown { display:none; position:absolute; top:38px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.98); backdrop-filter:blur(10px); border:1px solid rgba(0,0,0,0.08); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); padding:6px; flex-direction:column; gap:6px; z-index:1000; min-width:40px; }
+        .buffer-dropdown { display:none; position:absolute; top:38px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.98); backdrop-filter:blur(10px); border:1px solid rgba(0,0,0,0.08); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); padding:6px; flex-direction:column; gap:6px; z-index:1600; min-width:44px; }
         .buffer-dropdown.open { display:flex; }
         .buffer-dropdown-item { width:34px; height:34px; display:flex; align-items:center; justify-content:center; background:transparent; border:1px solid rgba(0,0,0,0.08); border-radius:6px; cursor:pointer; color:#3c4043; }
         .buffer-dropdown-item:hover { background:#ffffff; color:#1a73e8; }
@@ -353,11 +353,6 @@
         .cluster-l { background: #f4b400; color: #202124; }
         .cluster-xl { background: #d93025; }
         
-        .grid-panel { display: none; position: absolute; top: 60px; left: 50%; transform: translateX(-50%); z-index: 1500; background: rgba(255,255,255,0.98); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); padding: 10px; border: 1px solid rgba(0,0,0,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        .grid-panel.open { display: block; }
-        .grid-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: #3c4043; }
-        .grid-panel-btns { display: flex; gap: 8px; }
-        .close-btn { cursor: pointer; border: none; background: none; font-size: 16px; color: #5f6368; }
         .grid-label { font-size: 10px; color: #333; font-weight: bold; background: rgba(255,255,255,0.7); border-radius: 3px; padding: 1px 2px; }
         @media (max-width: 768px) {
             .top-bar-left {
@@ -605,24 +600,26 @@
     </div>
 
     <!-- Panel Měření -->
-    <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()" title="Panel měření">
+    <div id="measurePanel" class="measure-panel" onclick="event.stopPropagation()" title="Panel měření" role="toolbar" aria-label="Panel měření">
         <div class="measure-panel-content">
-            <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" style="width: 34px; position: relative;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg></button>
-            <button class="measure-panel-btn icon-only-btn" onclick="toggleMeasureDistance()" id="btnMeasureDist" title="Měřit" style="width: 34px;">📏</button>
-            <button class="measure-panel-btn icon-only-btn" onclick="toggleShowCoords()" id="btnShowCoords" title="Zobrazit souřadnice" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
-            <button class="measure-panel-btn icon-only-btn" onclick="toggleParallel()" id="btnParallel" title="Rovnoběžka" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="17" y1="8" x2="17" y2="16"/></svg></button>
-            <button class="measure-panel-btn icon-only-btn" onclick="toggleMeridian()" id="btnMeridian" title="Poledník" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="17" x2="16" y2="17"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="cycleGrid()" id="btnMeasureGrid" title="Mřížka souřadnic" aria-label="Mřížka souřadnic" aria-pressed="false" style="position: relative;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleMeasureDistance()" id="btnMeasureDist" title="Měřit vzdálenost a plochu" aria-label="Měřit vzdálenost a plochu" aria-pressed="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="19" r="2"/><circle cx="20" cy="5" r="2"/><line x1="5.5" y1="17.5" x2="18.5" y2="6.5"/><line x1="9" y1="11" x2="11" y2="13"/><line x1="13" y1="7" x2="15" y2="9"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleShowCoords()" id="btnShowCoords" title="Zobrazit souřadnice" aria-label="Zobrazit souřadnice" aria-pressed="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleParallel()" id="btnParallel" title="Rovnoběžka" aria-label="Rovnoběžka" aria-pressed="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="17" y1="8" x2="17" y2="16"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="toggleMeridian()" id="btnMeridian" title="Poledník" aria-label="Poledník" aria-pressed="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="3" x2="12" y2="21"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="17" x2="16" y2="17"/></svg></button>
             <div style="position:relative;">
-                <button class="measure-panel-btn icon-only-btn" onclick="toggleBufferDropdown()" id="btnBufferZone" title="Obalová zóna" style="width:34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 5v2"/><path d="M12 17v2"/><path d="M5 12h2"/><path d="M17 12h2"/></svg></button>
+                <button class="measure-panel-btn icon-only-btn" onclick="toggleBufferDropdown()" id="btnBufferZone" title="Obalová zóna" aria-label="Obalová zóna" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1" fill="currentColor"/><path d="M12 5v2"/><path d="M12 17v2"/><path d="M5 12h2"/><path d="M17 12h2"/></svg></button>
                 <div id="bufferDropdown" class="buffer-dropdown" onclick="event.stopPropagation()">
-                    <button class="buffer-dropdown-item" onclick="startBufferCircleCenter()" id="btnBufCircleCenter" title="Kružnice střed+poloměr"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><line x1="12" y1="12" x2="16.5" y2="12"/></svg></button>
-                    <button class="buffer-dropdown-item" onclick="startBufferCircle3p()" id="btnBufCircle3p" title="Kružnice 3 body"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="8.5" cy="8" r="1" fill="currentColor"/><circle cx="15.5" cy="8" r="1" fill="currentColor"/><circle cx="12" cy="16.5" r="1" fill="currentColor"/></svg></button>
-                    <button class="buffer-dropdown-item" onclick="startBufferZone()" id="btnBufZone" title="Obalová zóna čáry/polygonu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12H18"/><rect x="4" y="9" width="16" height="6" rx="3" opacity="0.4" fill="currentColor" stroke="none"/><path d="M4 12h16"/></svg></button>
+                    <button class="buffer-dropdown-item" onclick="startBufferCircleCenter()" id="btnBufCircleCenter" title="Kružnice střed+poloměr" aria-label="Kružnice střed a poloměr"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><line x1="12" y1="12" x2="16.5" y2="12"/></svg></button>
+                    <button class="buffer-dropdown-item" onclick="startBufferCircle3p()" id="btnBufCircle3p" title="Kružnice 3 body" aria-label="Kružnice ze 3 bodů"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="8.5" cy="8" r="1" fill="currentColor"/><circle cx="15.5" cy="8" r="1" fill="currentColor"/><circle cx="12" cy="16.5" r="1" fill="currentColor"/></svg></button>
+                    <button class="buffer-dropdown-item" onclick="startBufferZone()" id="btnBufZone" title="Obalová zóna čáry/polygonu" aria-label="Obalová zóna čáry nebo polygonu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12H18"/><rect x="4" y="9" width="16" height="6" rx="3" opacity="0.4" fill="currentColor" stroke="none"/><path d="M4 12h16"/></svg></button>
                 </div>
             </div>
-            <button class="measure-panel-btn icon-only-btn" onclick="exportMeasurementsGeoJSON()" id="btnSaveMeasure" title="Uložit měření (GeoJSON)" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
-            <button class="measure-panel-btn icon-only-btn" onclick="clearAllMeasurements()" id="btnClearMeasure" title="Smazat měřené" style="width: 34px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
-            <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření">&times;</button>
+            <button class="measure-panel-btn icon-only-btn" onclick="undoMeasure()" id="btnUndoMeasure" title="Zpět (Ctrl+Z)" aria-label="Zpět" style="opacity: 0.35; pointer-events: none;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="redoMeasure()" id="btnRedoMeasure" title="Vpřed (Ctrl+Y)" aria-label="Vpřed" style="opacity: 0.35; pointer-events: none;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="exportMeasurementsGeoJSON()" id="btnSaveMeasure" title="Uložit měření (GeoJSON)" aria-label="Uložit měření"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></button>
+            <button class="measure-panel-btn icon-only-btn" onclick="clearAllMeasurements()" id="btnClearMeasure" title="Smazat měřené" aria-label="Smazat všechna měření"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
+            <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření" aria-label="Zavřít panel měření">&times;</button>
         </div>
     </div>
 
@@ -669,11 +666,11 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblUpdated">Poslední aktualizace:</span>
-                    <span class="info-meta-val" id="valUpdated">3. 9. 2026</span>
+                    <span class="info-meta-val" id="valUpdated">13. 9. 2026</span>
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.36</span>
+                    <span class="info-meta-val">2.37</span>
                 </div>
             </div>
 
@@ -704,7 +701,7 @@
  simpleheat, a tiny JavaScript library for drawing heatmaps with Canvas
  https://github.com/mourner/simpleheat
 */
-!function(){"use strict";function t(i){return this instanceof t?(this._canvas=i="string"==typeof i?document.getElementById(i):i,this._ctx=i.getContext("2d"),this._width=i.width,this._height=i.height,this._max=1,void this.clear()):new t(i)}t.prototype={defaultRadius:25,defaultGradient:{.4:"blue",.6:"cyan",.7:"lime",.8:"yellow",1:"red"},data:function(t,i){return this._data=t,this},max:function(t){return this._max=t,this},add:function(t){return this._data.push(t),this},clear:function(){return this._data=[],this},radius:function(t,i){i=i||15;var a=this._circle=document.createElement("canvas"),s=a.getContext("2d"),e=this._r=t+i;return a.width=a.height=2*e,s.shadowOffsetX=s.shadowOffsetY=200,s.shadowBlur=i,s.shadowColor="black",s.beginPath(),s.arc(e-200,e-200,t,0,2*Math.PI,!0),s.closePath(),s.fill(),this},gradient:function(t){var i=document.createElement("canvas"),a=i.getContext("2d"),s=a.createLinearGradient(0,0,0,256);i.width=1,i.height=256;for(var e in t)s.addColorStop(e,t[e]);return a.fillStyle=s,a.fillRect(0,0,1,256),this._grad=a.getImageData(0,0,1,256).data,this},draw:function(t){this._circle||this.radius(this.defaultRadius),this._grad||this.gradient(this.defaultGradient);var i=this._ctx;i.clearRect(0,0,this._width,this._height);for(var a,s=0,e=this._data.length;e>s;s++)a=this._data[s],i.globalAlpha=Math.max(a[2]/this._max,t||.05),i.drawImage(this._circle,a[0]-this._r,a[1]-this._r);var n=i.getImageData(0,0,this._width,this._height);return this._colorize(n.data,this._grad),i.putImageData(n,0,0),this},_colorize:function(t,i){for(var a,s=3,e=t.length;e>s;s+=4)a=4*t[s],a&&(t[s-3]=i[a],t[s-2]=i[a+1],t[s-1]=i[a+2])}},window.simpleheat=t}(),/*
+!function(){"use strict";function t(i){return this instanceof t?(this._canvas=i="string"==typeof i?document.getElementById(i):i,this._ctx=i.getContext("2d",{willReadFrequently:true}),this._width=i.width,this._height=i.height,this._max=1,void this.clear()):new t(i)}t.prototype={defaultRadius:25,defaultGradient:{.4:"blue",.6:"cyan",.7:"lime",.8:"yellow",1:"red"},data:function(t,i){return this._data=t,this},max:function(t){return this._max=t,this},add:function(t){return this._data.push(t),this},clear:function(){return this._data=[],this},radius:function(t,i){i=i||15;var a=this._circle=document.createElement("canvas"),s=a.getContext("2d"),e=this._r=t+i;return a.width=a.height=2*e,s.shadowOffsetX=s.shadowOffsetY=200,s.shadowBlur=i,s.shadowColor="black",s.beginPath(),s.arc(e-200,e-200,t,0,2*Math.PI,!0),s.closePath(),s.fill(),this},gradient:function(t){var i=document.createElement("canvas"),a=i.getContext("2d"),s=a.createLinearGradient(0,0,0,256);i.width=1,i.height=256;for(var e in t)s.addColorStop(e,t[e]);return a.fillStyle=s,a.fillRect(0,0,1,256),this._grad=a.getImageData(0,0,1,256).data,this},draw:function(t){this._circle||this.radius(this.defaultRadius),this._grad||this.gradient(this.defaultGradient);var i=this._ctx;i.clearRect(0,0,this._width,this._height);for(var a,s=0,e=this._data.length;e>s;s++)a=this._data[s],i.globalAlpha=Math.max(a[2]/this._max,t||.05),i.drawImage(this._circle,a[0]-this._r,a[1]-this._r);var n=i.getImageData(0,0,this._width,this._height);return this._colorize(n.data,this._grad),i.putImageData(n,0,0),this},_colorize:function(t,i){for(var a,s=3,e=t.length;e>s;s+=4)a=4*t[s],a&&(t[s-3]=i[a],t[s-2]=i[a+1],t[s-1]=i[a+2])}},window.simpleheat=t}(),/*
  (c) 2014, Vladimir Agafonkin
  Leaflet.heat, a tiny and fast heatmap plugin for Leaflet.
  https://github.com/Leaflet/Leaflet.heat
@@ -774,6 +771,8 @@ menuMeasureItem: "📏 Otevřít panel měření",
                 btnMeasureDistCancel: "Zrušit měření (Esc)",
                 btnSaveMeasure: "Uložit měření (GeoJSON)",
                 btnClearMeasure: "Smazat měřené",
+                btnUndoMeasure: "Zpět (Ctrl+Z)",
+                btnRedoMeasure: "Vpřed (Ctrl+Y)",
                 btnBufferZone: "Obalová zóna",
                 btnBufCircleCenter: "Kružnice střed+poloměr",
                 btnBufCircle3p: "Kružnice 3 body",
@@ -852,7 +851,7 @@ menuMeasureItem: "📏 Otevřít panel měření",
                 modalTitle: "Mapa fotek",
                 lblAuthor: "Autor:",
                 lblUpdated: "Poslední aktualizace:",
-                valUpdated: "3. 9. 2026",
+                valUpdated: "13. 9. 2026",
                 lblVersion: "Verze:",
                 guideTitle: "📖 Návod k použití:",
                 steps: [
@@ -886,6 +885,8 @@ menuMeasureItem: "📏 Otevřít panel měření",
                 btnMeasureDistCancel: "Cancel measurement (Esc)",
                 btnSaveMeasure: "Save measurements (GeoJSON)",
                 btnClearMeasure: "Clear measurements",
+                btnUndoMeasure: "Undo (Ctrl+Z)",
+                btnRedoMeasure: "Redo (Ctrl+Y)",
                 btnBufferZone: "Buffer zone",
                 btnBufCircleCenter: "Circle center+radius",
                 btnBufCircle3p: "Circle by 3 points",
@@ -964,7 +965,7 @@ menuMeasureItem: "📏 Otevřít panel měření",
                 modalTitle: "Photo Map",
                 lblAuthor: "Author:",
                 lblUpdated: "Last update:",
-                valUpdated: "Sep 3, 2026",
+                valUpdated: "Sep 13, 2026",
                 lblVersion: "Version:",
                 guideTitle: "📖 User Guide:",
                 steps: [
@@ -1352,6 +1353,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (bmSave) bmSave.title = t.btnSaveMeasure;
             var bmClear = document.getElementById("btnClearMeasure");
             if (bmClear) bmClear.title = t.btnClearMeasure;
+            var bmUndo = document.getElementById("btnUndoMeasure"); if (bmUndo) bmUndo.title = t.btnUndoMeasure || (currentLang === 'cs' ? 'Zpět (Ctrl+Z)' : 'Undo (Ctrl+Z)');
+            var bmRedo = document.getElementById("btnRedoMeasure"); if (bmRedo) bmRedo.title = t.btnRedoMeasure || (currentLang === 'cs' ? 'Vpřed (Ctrl+Y)' : 'Redo (Ctrl+Y)');
             var bBuf=document.getElementById("btnBufferZone"); if(bBuf) bBuf.title=t.btnBufferZone;
             var bBC=document.getElementById("btnBufCircleCenter"); if(bBC) bBC.title=t.btnBufCircleCenter;
             var bB3=document.getElementById("btnBufCircle3p"); if(bB3) bB3.title=t.btnBufCircle3p;
@@ -2147,31 +2150,6 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             updView();
         }
 
-        // Grid
-        var gridLayer = null;
-        function generateGrid() {
-            var geojson = { type: "FeatureCollection", features: [] };
-            for (var lng = -180; lng <= 180; lng += 10) {
-                 var coords = [];
-                 for (var lat = -89.9; lat <= 89.9; lat += 0.5) coords.push([lng, lat]);
-                 geojson.features.push({ type: "Feature", geometry: { type: "LineString", coordinates: coords } });
-            }
-            for (var lat = -80; lat <= 80; lat += 10) {
-                 var coords = [];
-                 for (var lng = -180; lng <= 180; lng += 0.5) coords.push([lng, lat]);
-                 geojson.features.push({ type: "Feature", geometry: { type: "LineString", coordinates: coords } });
-            }
-            return geojson;
-        }
-        function toggleGrid() {
-            closeMenuDropdown();
-            if (gridLayer) {
-                map.removeLayer(gridLayer);
-                gridLayer = null;
-            } else {
-                gridLayer = L.geoJSON(generateGrid(), { style: { color: '#666', weight: 0.5, opacity: 0.5, dashArray: '5, 5' } }).addTo(map);
-            }
-        }
 
         function escapeHtml(str) {
             if (!str) return "";
@@ -2297,12 +2275,12 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             // 0. Vykreslení polygonů (obrysy vždy, výplň volitelná) – pod čarami
             if (d.polygons && d.polygons.length > 0) {
                 for (var pg = 0; pg < d.polygons.length; pg++) {
-                    var poly = d.polygons[pg];
-                    if (!poly.outer || poly.outer.length < 3) continue;
+                    (function(poly) {
+                    if (!poly.outer || poly.outer.length < 3) return;
                     var fColor = d.fillColor !== undefined ? d.fillColor : poly.fillColor;
                     var fOp = d.fillOpacity !== undefined ? d.fillOpacity : (poly.fillOpacity !== null && poly.fillOpacity !== undefined ? poly.fillOpacity : 0);
                     var outlineColor = d.color || "#1a73e8";
-                    // GeodetickĂˇ interpolace stran polygonu delĹˇĂ­ch neĹľ 100 km (vÄŤetnÄ› obvodovĂ˝ch i vnitĹ™nĂ­ch dÄ›r)
+                    // Geodetická interpolace stran polygonu delších než 100 km (včetně obvodových i vnitřních děr)
                     var rings = [geodesicRing(poly.outer)];
                     if (poly.holes) {
                         for (var h = 0; h < poly.holes.length; h++) {
@@ -2320,7 +2298,93 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         noClip: true
                     });
                     lPoly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(e); return; } } });
-                    lPoly.bindPopup("<div style='padding:6px 8px;font-size:12px;'>" + escapeHtml(poly.name || d.title || d.name) + "</div>");
+
+                    // --- Rich popup podle typu ---
+                    var popupHtml;
+                    var gtype = poly.geojsonType;
+                    var cs = (typeof currentLang !== 'undefined' && currentLang === 'cs');
+
+                    if (gtype === 'buffer_circle') {
+                        // Kružnice
+                        var cLat  = poly.centerLat  != null ? poly.centerLat  : (poly.outer[0] ? poly.outer[0][0] : '?');
+                        var cLng  = poly.centerLng  != null ? poly.centerLng  : (poly.outer[0] ? poly.outer[0][1] : '?');
+                        var rFmt  = poly.radiusFormatted;
+                        if (!rFmt && poly.radiusM  != null) rFmt = (typeof formatDistance === 'function' ? formatDistance(poly.radiusM) : poly.radiusM.toFixed(0) + ' m');
+                        if (!rFmt && poly.radiusKm != null) rFmt = (poly.radiusKm * 1000 >= 1000 ? poly.radiusKm.toFixed(3) + ' km' : (poly.radiusKm * 1000).toFixed(1) + ' m');
+                        var pFmt  = poly.perimeterFormatted;
+                        if (!pFmt && poly.perimeterM != null && typeof formatDistance === 'function') pFmt = formatDistance(poly.perimeterM);
+                        var aFmt  = poly.areaFormatted;
+                        if (!aFmt && poly.areaM2 != null && typeof formatArea === 'function') aFmt = formatArea(poly.areaM2);
+                        if (!aFmt && poly.areaM2 != null) aFmt = (poly.areaM2 >= 1e6 ? (poly.areaM2/1e6).toFixed(4)+' km²' : poly.areaM2.toFixed(0)+' m²');
+                        var cIdx  = poly.circleIndex != null ? poly.circleIndex : '';
+                        var title = cs ? ('● Kružnice' + (cIdx !== '' ? ' ' + cIdx : '')) : ('● Circle' + (cIdx !== '' ? ' ' + cIdx : ''));
+                        popupHtml = "<div style='padding:6px 8px;font-size:12px;'>"
+                            + "<b>" + escapeHtml(title) + "</b><br>"
+                            + "📍 " + (cs ? "Střed" : "Center") + ": " + (typeof cLat === 'number' ? cLat.toFixed(6) : cLat) + "°, " + (typeof cLng === 'number' ? cLng.toFixed(6) : cLng) + "°<br>"
+                            + (rFmt ? "📏 " + (cs ? "Poloměr" : "Radius") + ": " + escapeHtml(rFmt) + "<br>" : "")
+                            + (pFmt ? "⭕ " + (cs ? "Obvod" : "Perimeter") + ": " + escapeHtml(pFmt) + "<br>" : "")
+                            + (aFmt ? "📐 " + (cs ? "Plocha" : "Area") + ": " + escapeHtml(aFmt) : "")
+                            + "</div>";
+
+                    } else if (gtype === 'buffer_zone') {
+                        // Obalová zóna
+                        var bIdx  = poly.bufferIndex != null ? poly.bufferIndex : '';
+                        var wKm   = poly.widthKm;
+                        var aFmtZ = poly.areaFormatted;
+                        if (!aFmtZ && poly.areaM2 != null && typeof formatArea === 'function') aFmtZ = formatArea(poly.areaM2);
+                        if (!aFmtZ && poly.areaM2 != null) aFmtZ = (poly.areaM2 >= 1e6 ? (poly.areaM2/1e6).toFixed(4)+' km²' : poly.areaM2.toFixed(0)+' m²');
+                        var pFmtZ = poly.perimeterFormatted;
+                        if (!pFmtZ && poly.perimeterM != null && typeof formatDistance === 'function') pFmtZ = formatDistance(poly.perimeterM);
+                        var titleZ = cs
+                            ? ('Obalová zóna' + (bIdx !== '' ? ' ' + bIdx : ''))
+                            : ('Buffer Zone'  + (bIdx !== '' ? ' ' + bIdx : ''));
+                        popupHtml = "<div style='padding:6px 8px;font-size:12px;'>"
+                            + "<b>" + escapeHtml(titleZ) + "</b><br>"
+                            + (wKm != null ? (cs ? "Šířka" : "Width") + ": " + wKm + " km<br>" : "")
+                            + (pFmtZ ? "📏 " + (cs ? "Obvod" : "Perimeter") + ": " + escapeHtml(pFmtZ) + "<br>" : "")
+                            + (aFmtZ ? "⬜ " + (cs ? "Plocha" : "Area") + ": " + escapeHtml(aFmtZ) : "")
+                            + "</div>";
+
+                    } else if (gtype === 'measure_polygon') {
+                        // Měřený polygon
+                        var pIdx2  = poly.polygonIndex != null ? poly.polygonIndex : '';
+                        var vCount = poly.vertexCount  != null ? poly.vertexCount  : poly.outer.length;
+                        var pFmtP  = poly.perimeterFormatted;
+                        if (!pFmtP && poly.perimeterM != null && typeof formatDistance === 'function') pFmtP = formatDistance(poly.perimeterM);
+                        if (!pFmtP && poly.perimeterM != null) pFmtP = poly.perimeterM.toFixed(0) + ' m';
+                        var aFmtP  = poly.areaFormatted;
+                        if (!aFmtP && poly.areaM2 != null && typeof formatArea === 'function') aFmtP = formatArea(poly.areaM2);
+                        if (!aFmtP && poly.areaM2 != null) aFmtP = (poly.areaM2 >= 1e6 ? (poly.areaM2/1e6).toFixed(4)+' km²' : poly.areaM2.toFixed(0)+' m²');
+                        // Výpočet z geometrie jako záloha
+                        if (!pFmtP || !aFmtP) {
+                            try {
+                                var pts2d = poly.outer.map(function(p){ return L.latLng(p[0], p[1]); });
+                                if (!pFmtP && typeof formatDistance === 'function') {
+                                    var periM = 0;
+                                    for (var pi = 0; pi < pts2d.length; pi++) periM += pts2d[pi].distanceTo(pts2d[(pi+1) % pts2d.length]);
+                                    pFmtP = formatDistance(periM);
+                                }
+                                if (!aFmtP && typeof calcPolygonAreaM2 === 'function' && typeof formatArea === 'function') {
+                                    aFmtP = formatArea(calcPolygonAreaM2(poly.outer));
+                                }
+                            } catch(e2) {}
+                        }
+                        var titleP = cs
+                            ? ('Polygon' + (pIdx2 !== '' ? ' ' + pIdx2 : ''))
+                            : ('Polygon' + (pIdx2 !== '' ? ' ' + pIdx2 : ''));
+                        popupHtml = "<div style='padding:6px 8px;font-size:12px;'>"
+                            + "<b>" + escapeHtml(poly.name || titleP) + "</b><br>"
+                            + (pFmtP ? "📏 " + (cs ? "Obvod" : "Perimeter") + ": " + escapeHtml(pFmtP) + "<br>" : "")
+                            + (aFmtP ? "⬜ " + (cs ? "Plocha" : "Area") + ": " + escapeHtml(aFmtP) + "<br>" : "")
+                            + "📍 " + (cs ? "Vrcholy" : "Vertices") + ": " + vCount
+                            + "</div>";
+
+                    } else {
+                        // Obecný GeoJSON polygon – jen název
+                        popupHtml = "<div style='padding:6px 8px;font-size:12px;'>" + escapeHtml(poly.name || d.title || d.name) + "</div>";
+                    }
+
+                    lPoly.bindPopup(popupHtml);
                     lg.addLayer(lPoly);
                     // Hit-area pro snadne kliknuti na obrys polygonu - SVG nad Canvas
                     try{
@@ -2334,47 +2398,59 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                             })(rings[_hr], lPoly);
                         }
                     }catch(e){}
+                    })(d.polygons[pg]);
                 }
             }
 
             // 1. Vykreslení linií (tras / úseků)
             if (d.lines && d.lines.length > 0) {
                 for (var l = 0; l < d.lines.length; l++) {
-                    var lineObj = d.lines[l];
-                    if (!lineObj.points || lineObj.points.length === 0) continue;
-                    // Geodetická interpolace: pro segmenty > 100 km vloží mezilehlé body po 100 km
-                    var displayPoints = geodesicPoints(lineObj.points);
-                    var poly = L.polyline(displayPoints, {
-                        color: d.color || "#1a73e8",
-                        weight: lineWeight,
-                        opacity: trackOp,
-                        lineJoin: "round",
-                        lineCap: "round",
-                        pane: 'overlayPane',
-                        interactive: true,
-                        noClip: true
-                    });
-                    poly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(e); return; } } });
-                    var distText = lineObj.distanceKm > 0 ? (lineObj.distanceKm.toFixed(2) + " km") : "";
-                    var titleText = escapeHtml(lineObj.name || d.title || d.name);
-                    var popupContent = "<div style='padding:6px 8px;font-size:12px;min-width:auto;'>" +
-                        "<div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
-                        "<span style='display:inline-block;width:10px;height:10px;border-radius:50%;background:" + (d.color || "#1a73e8") + ";'></span> " +
-                        titleText + "</div>" +
-                        "<div style='color:#5f6368;font-size:11px;line-height:1.5;margin-bottom:6px;'>" +
-                        (distText ? ("📏 " + (currentLang === 'cs' ? "Délka trasy: " : "Length: ") + "<strong>" + distText + "</strong><br>") : "") +
-                        "📍 " + (currentLang === 'cs' ? "Počet bodů: " : "Track points: ") + "<strong>" + lineObj.points.length.toLocaleString(currentLang === 'cs' ? "cs-CZ" : "en-US") + "</strong>" +
-                        "</div>" +
-                        "<button onclick='zoomToTrack(\"" + encodeURIComponent(d.name) + "\")' class='c-btn c-btn-primary' style='display:block;width:100%;border:none;cursor:pointer;padding:4px 0;margin-top:4px;'>" + (currentLang === 'cs' ? "🔍 Přiblížit celou trasu" : "🔍 Zoom to track") + "</button>" +
-                        "</div>";
-                    poly.bindPopup(popupContent);
-                    lg.addLayer(poly);
-                    // Hit-area pro snadne kliknuti na caru - SVG
-                    try{
-                        var hitLine=L.polyline(displayPoints, {color:d.color||"#1a73e8", weight:16, opacity:0.01, interactive:true, pane:'overlayPane', renderer: L.svg(), noClip:true});
-                        hitLine.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } poly.openPopup(ev.latlng); L.DomEvent.stopPropagation(ev); });
-                        lg.addLayer(hitLine);
-                    }catch(e){}
+                    (function(lineObj){
+                        if (!lineObj.points || lineObj.points.length === 0) return;
+                        // Geodetická interpolace: pro segmenty > 100 km vloží mezilehlé body po 100 km
+                        var displayPoints = geodesicPoints(lineObj.points);
+                        var poly = L.polyline(displayPoints, {
+                            color: d.color || "#1a73e8",
+                            weight: lineWeight,
+                            opacity: trackOp,
+                            lineJoin: "round",
+                            lineCap: "round",
+                            pane: 'overlayPane',
+                            interactive: true,
+                            noClip: true
+                        });
+                        poly.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(e); return; } } });
+                        var distText = lineObj.distanceKm > 0 ? (lineObj.distanceKm.toFixed(2) + " km") : "";
+                        var titleText = escapeHtml(lineObj.name || d.title || d.name);
+                        var popupContent = "<div style='padding:6px 8px;font-size:12px;min-width:auto;'>" +
+                            "<div style='font-weight:700;color:#202124;margin-bottom:4px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
+                            "<span style='display:inline-block;width:10px;height:10px;border-radius:50%;background:" + (d.color || "#1a73e8") + ";'></span> " +
+                            titleText + "</div>" +
+                            "<div style='color:#5f6368;font-size:11px;line-height:1.5;margin-bottom:6px;'>" +
+                            (distText ? ("📏 " + (currentLang === 'cs' ? "Délka trasy: " : "Length: ") + "<strong>" + distText + "</strong><br>") : "") +
+                            (lineObj.points.length >= 2 ? "🧭 " + (currentLang === 'cs' ? "Azimut: " : "Azimuth: ") + "<strong>" + calcAzimuth(lineObj.points[0][0], lineObj.points[0][1], lineObj.points[lineObj.points.length-1][0], lineObj.points[lineObj.points.length-1][1]).toFixed(1).replace('.', ',') + '°' + "</strong><br>" : "") +
+                            "📍 " + (currentLang === 'cs' ? "Počet bodů: " : "Track points: ") + "<strong>" + lineObj.points.length.toLocaleString(currentLang === 'cs' ? "cs-CZ" : "en-US") + "</strong>" +
+                            "</div>" +
+                            "<button onclick='zoomToTrack(\"" + encodeURIComponent(d.name) + "\")' class='c-btn c-btn-primary' style='display:block;width:100%;border:none;cursor:pointer;padding:4px 0;margin-top:4px;'>" + (currentLang === 'cs' ? "🔍 Přiblížit celou trasu" : "🔍 Zoom to track") + "</button>" +
+                            "</div>";
+                        poly.bindPopup(popupContent);
+                        lg.addLayer(poly);
+                        // Hit-area pro snadne kliknuti na caru - SVG
+                        try{
+                            var hitLine=L.polyline(displayPoints, {color:d.color||"#1a73e8", weight:16, opacity:0.01, interactive:true, pane:'overlayPane', renderer: L.svg(), noClip:true});
+                            (function(_p, _h){
+                                _h.on('click', function(ev){
+                                    if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){
+                                        if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ }
+                                        else { L.DomEvent.stopPropagation(ev); return; }
+                                    }
+                                    _p.openPopup(ev.latlng);
+                                    L.DomEvent.stopPropagation(ev);
+                                });
+                            })(poly, hitLine);
+                            lg.addLayer(hitLine);
+                        }catch(e){}
+                    })(d.lines[l]);
                 }
             }
 
@@ -2946,16 +3022,26 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
         function toggleMeasurePanel() {
             var p = document.getElementById("measurePanel");
-            p.classList.toggle("open");
+            if (p) {
+                p.classList.toggle("open");
+                if (!p.classList.contains("open")) {
+                    if (typeof measureDistanceState !== "undefined" && measureDistanceState.active) stopMeasureDistance();
+                    if (typeof showCoordsState !== "undefined" && showCoordsState.active) stopShowCoords();
+                    if (typeof parallelState !== "undefined" && parallelState.active) stopParallel();
+                    if (typeof meridianState !== "undefined" && meridianState.active) stopMeridian();
+                    if (typeof stopAllBuffers === "function") stopAllBuffers();
+                    try { if (map && map.getContainer()) map.getContainer().style.cursor = ""; } catch(e){}
+                }
+            }
             closeMenuDropdown();
             var bmDist = document.getElementById("btnMeasureDist");
-            if (bmDist) bmDist.title = measureDistanceState.active ? (i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc)" : "Cancel measurement (Esc)")) : i18n[currentLang].btnMeasureDist;
+            if (bmDist) bmDist.title = (typeof measureDistanceState !== "undefined" && measureDistanceState.active) ? (i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc)" : "Cancel measurement (Esc)")) : i18n[currentLang].btnMeasureDist;
             var bmShow = document.getElementById("btnShowCoords");
-            if (bmShow) bmShow.title = showCoordsState.active ? (currentLang === "cs" ? "Skrýt souřadnice (Esc)" : "Hide coordinates (Esc)") : i18n[currentLang].btnShowCoords;
+            if (bmShow) bmShow.title = (typeof showCoordsState !== "undefined" && showCoordsState.active) ? (currentLang === "cs" ? "Skrýt souřadnice (Esc)" : "Hide coordinates (Esc)") : i18n[currentLang].btnShowCoords;
             var bmPar = document.getElementById("btnParallel");
-            if (bmPar) bmPar.title = parallelState && parallelState.active ? (currentLang === "cs" ? "Zrušit rovnoběžku (Esc)" : "Cancel parallel (Esc)") : i18n[currentLang].btnParallel;
+            if (bmPar) bmPar.title = (typeof parallelState !== "undefined" && parallelState.active) ? (currentLang === "cs" ? "Zrušit rovnoběžku (Esc)" : "Cancel parallel (Esc)") : i18n[currentLang].btnParallel;
             var bmMer = document.getElementById("btnMeridian");
-            if (bmMer) bmMer.title = meridianState && meridianState.active ? (currentLang === "cs" ? "Zrušit poledník (Esc)" : "Cancel meridian (Esc)") : i18n[currentLang].btnMeridian;
+            if (bmMer) bmMer.title = (typeof meridianState !== "undefined" && meridianState.active) ? (currentLang === "cs" ? "Zrušit poledník (Esc)" : "Cancel meridian (Esc)") : i18n[currentLang].btnMeridian;
         }
 
         // Distance measurement tool
@@ -2965,6 +3051,10 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var measurePointCounter = 1;
         var measureLineCounter = 1;
         var measurePolygonCounter = 1;
+        var measureCircleCounter = 1;
+        var measureParallelCounter = 1;
+        var measureMeridianCounter = 1;
+        var measureBufferZoneCounter = 1;
         var activeSnapPoint = null;
         function isAnyDrawingActive(){ return (typeof measureDistanceState!=="undefined"&&measureDistanceState.active) || (typeof showCoordsState!=="undefined"&&showCoordsState.active) || (typeof parallelState!=="undefined"&&parallelState.active) || (typeof meridianState!=="undefined"&&meridianState.active) || (typeof bufferCircleCenterState!=="undefined"&&bufferCircleCenterState.active) || (typeof bufferCircle3pState!=="undefined"&&bufferCircle3pState.active) || (typeof bufferZoneState!=="undefined"&&bufferZoneState.active); }
         var measureDistanceState = {
@@ -2981,6 +3071,79 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             snapPoints: [],
             completed: false
         };
+
+        
+        // --- MEASUREMENT UNDO / REDO ENGINE ---
+        var measureUndoStack = [];
+        var measureRedoStack = [];
+
+        function updateMeasureUndoRedoBtns() {
+            var btnU = document.getElementById('btnUndoMeasure');
+            var btnR = document.getElementById('btnRedoMeasure');
+            if (btnU) {
+                if (measureUndoStack.length > 0) {
+                    btnU.style.opacity = '1';
+                    btnU.style.pointerEvents = 'auto';
+                } else {
+                    btnU.style.opacity = '0.35';
+                    btnU.style.pointerEvents = 'none';
+                }
+            }
+            if (btnR) {
+                if (measureRedoStack.length > 0) {
+                    btnR.style.opacity = '1';
+                    btnR.style.pointerEvents = 'auto';
+                } else {
+                    btnR.style.opacity = '0.35';
+                    btnR.style.pointerEvents = 'none';
+                }
+            }
+        }
+
+        function recordMeasureAction(action) {
+            measureUndoStack.push(action);
+            measureRedoStack = [];
+            updateMeasureUndoRedoBtns();
+        }
+
+        function undoMeasure() {
+            if (measureUndoStack.length === 0) return;
+            var action = measureUndoStack.pop();
+            try {
+                if (typeof action.undo === 'function') action.undo();
+            } catch(e) { console.error('Undo error:', e); }
+            measureRedoStack.push(action);
+            updateMeasureUndoRedoBtns();
+        }
+
+        function redoMeasure() {
+            if (measureRedoStack.length === 0) return;
+            var action = measureRedoStack.pop();
+            try {
+                if (typeof action.redo === 'function') action.redo();
+            } catch(e) { console.error('Redo error:', e); }
+            measureUndoStack.push(action);
+            updateMeasureUndoRedoBtns();
+        }
+
+        document.addEventListener('keydown', function(e) {
+            var p = document.getElementById('measurePanel');
+            var isMeasureOpen = p && p.classList.contains('open');
+            var isDrawing = (typeof isAnyDrawingActive === 'function' && isAnyDrawingActive());
+            if (!isMeasureOpen && !isDrawing) return;
+
+            var tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+            if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
+
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && !e.shiftKey) {
+                e.preventDefault();
+                undoMeasure();
+            } else if ((e.ctrlKey || e.metaKey) && ((e.key === 'y' || e.key === 'Y') || ((e.key === 'z' || e.key === 'Z') && e.shiftKey))) {
+                e.preventDefault();
+                redoMeasure();
+            }
+        });
+        // --------------------------------------
 
         function toggleMeasureDistance() {
             var btn = document.getElementById("btnMeasureDist");
@@ -3002,10 +3165,13 @@ function startMeasureDistance() {
             measureDistanceState.active = true;
             measureDistanceState.points = [];
             measureDistanceState.markers = [];
-                    measureDistanceState.lineHit = null;
-                    measureDistanceState.line = null;
+            measureDistanceState.segmentLabels = [];
+            measureDistanceState.lineHit = null;
+            measureDistanceState.line = null;
             measureDistanceState.tempLine = null;
             measureDistanceState.tempLabel = null;
+            var bDist = document.getElementById("btnMeasureDist");
+            if (bDist) { bDist.classList.add("active"); bDist.setAttribute("aria-pressed", "true"); }
             
             // Change cursor to crosshair
             map.getContainer().style.cursor = "crosshair";
@@ -3043,6 +3209,7 @@ function startMeasureDistance() {
                 } else {
                     var __geoTempC = geodesicPoints([[measureDistanceState.points[measureDistanceState.points.length - 1].lat, measureDistanceState.points[measureDistanceState.points.length - 1].lng],[latLng.lat, latLng.lng]], false);
                     measureDistanceState.tempLine = L.polyline(__geoTempC, {
+                        _isTemp: true,
                         color: '#e41e26',
                         weight: 2,
                         dashArray: '6, 4',
@@ -3106,7 +3273,6 @@ function startMeasureDistance() {
             };
             
             map.on("click", measureDistanceState.mapClickHandler);
-            map.on("mousemove", measureDistanceState.mapMoveHandler);
             
 // Right-click to start new measurement (keep existing lines/markers visible)
             measureDistanceState.contextMenuHandler = function(e) {
@@ -3129,15 +3295,16 @@ function startMeasureDistance() {
                     measureDistanceState.tempLabel = null;
                 }
                 
-                // Reset only the active measurement state
+                // Reset only the active measurement state (keep existing visuals & labels on map)
                 if(measureDistanceState.points.length>=2) measureLineCounter++;
                 measureDistanceState.points = [];
                 measureDistanceState.markers = [];
+                measureDistanceState.segmentLabels = [];
                 measureDistanceState.tempLine = null;
                 measureDistanceState.tempLabel = null;
-                        measureDistanceState.lineHit = null;
-                    measureDistanceState.line = null;
-                // Keep previous line/polygon in measureLayerGroup – zůstane vidět!
+                measureDistanceState.lineHit = null;
+                measureDistanceState.line = null;
+                // Keep previous line/polygon and their segmentLabels in measureLayerGroup
                 
                 // Update button tooltip
                 var btn = document.getElementById("btnMeasureDist");
@@ -3205,6 +3372,8 @@ function startMeasureDistance() {
                 iconAnchor: [10, 10]
             });
             var marker = L.marker(latLng, {icon: icon}).addTo(measureLayerGroup);
+            marker._measureType = 'measure_point';
+            marker._measureIdx = ptNum;
             (function(m, n, ll){
                 m.on('click', function(e){
                     if (n === 1 && measureDistanceState.points.length >= 3) {
@@ -3231,7 +3400,8 @@ function startMeasureDistance() {
                     var _geoUpd=geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false);
                     measureDistanceState.line.setLatLngs(_geoUpd);
                     measureDistanceState.line._vertexCount = measureDistanceState.points.length;
-                    if(measureDistanceState.lineHit){ measureDistanceState.lineHit.setLatLngs(_geoUpd); measureDistanceState.lineHit._vertexCount = measureDistanceState.points.length; }
+                    measureDistanceState.line._measurePoints = measureDistanceState.points.slice();
+                    if(measureDistanceState.lineHit){ measureDistanceState.lineHit.setLatLngs(_geoUpd); measureDistanceState.lineHit._vertexCount = measureDistanceState.points.length; measureDistanceState.lineHit._measurePoints = measureDistanceState.points.slice(); }
                 } else {
                     measureDistanceState.line = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
                         color: '#e41e26',
@@ -3243,8 +3413,10 @@ function startMeasureDistance() {
                         interactive: false,
                         zIndex: 851
                     }).addTo(measureLayerGroup);
+                    measureDistanceState.line._measureType = 'measure_line';
                     measureDistanceState.line._measureIdx = measureLineCounter;
                     measureDistanceState.line._vertexCount = measureDistanceState.points.length;
+                    measureDistanceState.line._measurePoints = measureDistanceState.points.slice();
                     // Hit-area neviditelná širší čára pro snadné kliknutí
                     measureDistanceState.lineHit = L.polyline(geodesicPoints(measureDistanceState.points.map(function(p){return [p.lat,p.lng];}), false), {
                         color: '#e41e26',
@@ -3256,18 +3428,55 @@ function startMeasureDistance() {
                         interactive: true,
                         zIndex: 852
                     }).addTo(measureLayerGroup);
+                    measureDistanceState.lineHit._measureType = 'line_hit';
                     measureDistanceState.lineHit._measureIdx = measureLineCounter;
                     measureDistanceState.lineHit._vertexCount = measureDistanceState.points.length;
-                    var showTotal = function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ return; } else { L.DomEvent.stopPropagation(e); return; } }
-                        var lls=(measureDistanceState.line && measureDistanceState.line.getLatLngs().length>1 ? measureDistanceState.line.getLatLngs() : e.target.getLatLngs()); var totalM=0;
-                        for(var i=1;i<lls.length;i++) totalM+=calcDistKm(lls[i-1].lat,lls[i-1].lng,lls[i].lat,lls[i].lng)*1000;
-                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Čára ":"Line ") + (e.target._measureIdx||measureLineCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Délka: ":"Length: ") + "<strong>" + formatDistance(totalM) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + (e.target._vertexCount||measureDistanceState.points.length) + "</strong></div></div>").openOn(map);
-                        L.DomEvent.stopPropagation(e);
-                    };
-                    measureDistanceState.lineHit.on('click', showTotal);
-                    measureDistanceState.line.on('click', showTotal);
-                    measureDistanceState.lineHit.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
-                    measureDistanceState.line.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
+                    measureDistanceState.lineHit._measurePoints = measureDistanceState.points.slice();
+                    (function(curLine, curHit, curIdx){
+                        var showTotal = function(e){
+                            if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){
+                                if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ return; }
+                                else { L.DomEvent.stopPropagation(e); return; }
+                            }
+                            var pts = curLine._measurePoints || curHit._measurePoints;
+                            var totalM = 0;
+                            var azText = "";
+                            var vCount = 0;
+                            if (pts && pts.length >= 2) {
+                                vCount = pts.length;
+                                for (var i = 1; i < pts.length; i++) {
+                                    totalM += calcDistKm(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng) * 1000;
+                                }
+                                var azVal = calcAzimuth(pts[0].lat, pts[0].lng, pts[pts.length - 1].lat, pts[pts.length - 1].lng);
+                                azText = azVal.toFixed(1).replace('.', ',') + '°';
+                            } else {
+                                var lls = curLine.getLatLngs();
+                                var flat = Array.isArray(lls[0]) ? lls[0] : lls;
+                                vCount = curLine._vertexCount || flat.length;
+                                for (var i = 1; i < flat.length; i++) {
+                                    totalM += calcDistKm(flat[i-1].lat, flat[i-1].lng, flat[i].lat, flat[i].lng) * 1000;
+                                }
+                                if (flat.length >= 2) {
+                                    var azVal = calcAzimuth(flat[0].lat, flat[0].lng, flat[flat.length - 1].lat, flat[flat.length - 1].lng);
+                                    azText = azVal.toFixed(1).replace('.', ',') + '°';
+                                }
+                            }
+                            var lineNum = curLine._measureIdx || curHit._measureIdx || curIdx;
+                            L.popup({closeButton:true, autoClose:true, offset:[0,-10]})
+                                .setLatLng(e.latlng)
+                                .setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" +
+                                    (currentLang==='cs'?"Čára ":"Line ") + lineNum + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " +
+                                    (currentLang==='cs'?"Délka: ":"Length: ") + "<strong>" + formatDistance(totalM) + "</strong><br>🧭 " +
+                                    (currentLang==='cs'?"Azimut: ":"Azimuth: ") + "<strong>" + azText + "</strong><br>📍 " +
+                                    (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + vCount + "</strong></div></div>")
+                                .openOn(map);
+                            L.DomEvent.stopPropagation(e);
+                        };
+                        curHit.on('click', showTotal);
+                        curLine.on('click', showTotal);
+                        curHit.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
+                        curLine.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
+                    })(measureDistanceState.line, measureDistanceState.lineHit, measureLineCounter);
                     
                     // Prevent click/dblclick propagation to map
                     measureDistanceState.line.on('click dblclick', function(e) {
@@ -3285,13 +3494,89 @@ function startMeasureDistance() {
                 
                 // Show segment distance label (skip zero-length)
                 if (distM >= 0.5) {
-                    showSegmentLabel(distM, measureDistanceState.points[measureDistanceState.points.length - 2], measureDistanceState.points[measureDistanceState.points.length - 1]);
+                    var curSegLabel = showSegmentLabel(distM, measureDistanceState.points[measureDistanceState.points.length - 2], measureDistanceState.points[measureDistanceState.points.length - 1]);
                 }
             }
             
             // Update button tooltip
             var btn = document.getElementById("btnMeasureDist");
             if (btn) btn.title = i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc/Pravé tlačítko)" : "Cancel measurement (Esc/Right-click)");
+        
+            // Record Undo Action for point / polyline
+            (function(ptMarker, ptCoords, hadLineBefore, lineObj, lineHitObj, segLabelObj){
+                recordMeasureAction({
+                    undo: function() {
+                        // 1. Odeber marker
+                        try { measureLayerGroup.removeLayer(ptMarker); } catch(e){}
+                        var mIdx = measureDistanceState.markers.indexOf(ptMarker);
+                        if (mIdx >= 0) measureDistanceState.markers.splice(mIdx, 1);
+                        var pIdx = measureDistanceState.points.indexOf(ptCoords);
+                        if (pIdx >= 0) measureDistanceState.points.splice(pIdx, 1);
+
+                        // 2. Uprav nebo smaž čáru
+                        if (!hadLineBefore) {
+                            // Byl to 2. bod, který vytvořil čáru -> smazat čáru!
+                            if (lineObj) { try { measureLayerGroup.removeLayer(lineObj); } catch(e){} }
+                            if (lineHitObj) { try { measureLayerGroup.removeLayer(lineHitObj); } catch(e){} }
+                            if (measureDistanceState.line === lineObj) measureDistanceState.line = null;
+                            if (measureDistanceState.lineHit === lineHitObj) measureDistanceState.lineHit = null;
+                        } else {
+                            // Čára už existovala dříve -> zkrátit na zbývající body
+                            if (lineObj && measureDistanceState.points.length >= 2) {
+                                var _pts = measureDistanceState.points.map(function(p){ return [p.lat, p.lng]; });
+                                var _geo = geodesicPoints(_pts, false);
+                                lineObj.setLatLngs(_geo);
+                                if (lineHitObj) lineHitObj.setLatLngs(_geo);
+                            }
+                        }
+
+                        // 3. Odeber popisek úseku
+                        if (segLabelObj) {
+                            try { measureLayerGroup.removeLayer(segLabelObj); } catch(e){}
+                            if (measureDistanceState.segmentLabels) {
+                                var sIdx = measureDistanceState.segmentLabels.indexOf(segLabelObj);
+                                if (sIdx >= 0) measureDistanceState.segmentLabels.splice(sIdx, 1);
+                            }
+                        }
+
+                        // 4. Pokud už je aktivní měření, aktualizuj náhled
+                        if (measureDistanceState.points.length === 0 && measureDistanceState.tempLine) {
+                            try { map.removeLayer(measureDistanceState.tempLine); } catch(e){}
+                            measureDistanceState.tempLine = null;
+                            if (measureDistanceState.tempLabel) { try { map.removeLayer(measureDistanceState.tempLabel); } catch(e){} measureDistanceState.tempLabel = null; }
+                        }
+                    },
+                    redo: function() {
+                        // 1. Obnov marker
+                        try { ptMarker.addTo(measureLayerGroup); } catch(e){}
+                        measureDistanceState.markers.push(ptMarker);
+                        measureDistanceState.points.push(ptCoords);
+
+                        // 2. Obnov nebo rozšiř čáru
+                        if (!hadLineBefore) {
+                            if (lineObj) {
+                                lineObj.addTo(measureLayerGroup);
+                                measureDistanceState.line = lineObj;
+                            }
+                            if (lineHitObj) {
+                                lineHitObj.addTo(measureLayerGroup);
+                                measureDistanceState.lineHit = lineHitObj;
+                            }
+                        } else if (lineObj) {
+                            var _pts = measureDistanceState.points.map(function(p){ return [p.lat, p.lng]; });
+                            var _geo = geodesicPoints(_pts, false);
+                            lineObj.setLatLngs(_geo);
+                            if (lineHitObj) lineHitObj.setLatLngs(_geo);
+                        }
+
+                        // 3. Obnov popisek úseku
+                        if (segLabelObj) {
+                            try { segLabelObj.addTo(measureLayerGroup); } catch(e){}
+                            if (measureDistanceState.segmentLabels) measureDistanceState.segmentLabels.push(segLabelObj);
+                        }
+                    }
+                });
+            })(marker, latLng, measureDistanceState.points.length > 2, measureDistanceState.line, measureDistanceState.lineHit, (typeof curSegLabel !== 'undefined' ? curSegLabel : null));
         }
 
         function stopMeasureDistance() {
@@ -3337,19 +3622,20 @@ function startMeasureDistance() {
             }
             
             // 3. Resetuje pouze aktivní stav měření (body, dočasné prvky)
+            if (measureDistanceState.line && measureDistanceState.points.length >= 2) {
+                measureLineCounter++;
+            }
             measureDistanceState.points = [];
             measureDistanceState.markers = [];
+            measureDistanceState.segmentLabels = [];
+            measureDistanceState.line = null;
+            measureDistanceState.lineHit = null;
             measureDistanceState.tempLine = null;
             measureDistanceState.tempLabel = null;
             measureDistanceState.snapPoints = [];
             measureDistanceState.completed = false;
             
-            // 3. NESMAŽE permanentní prvky (markery, čáry, popisky) - ty zůstanou na mapě do F5!
-            // measureDistanceState.line, .markers, .labels, .labels se NESMAŽOU
-            
             // 4. Reset aktivního stavu
-            measureDistanceState.active = false;
-            measureDistanceState.completed = false;
             measureDistanceState.active = false;
             
             // 4. Obnoví kurzor a tlačítko
@@ -3357,11 +3643,19 @@ function startMeasureDistance() {
             var btn = document.getElementById("btnMeasureDist");
             if (btn) {
                 btn.classList.remove("active");
+                btn.setAttribute("aria-pressed", "false");
             }
 }
         
         // Clear all measurements from map and memory
         function clearAllMeasurements() {
+            var layerCount = measureLayerGroup ? measureLayerGroup.getLayers().length : 0;
+            if (layerCount > 5) {
+                var confirmMsg = (currentLang === "cs")
+                    ? "Opravdu chcete smazat všechna naměřená data a kresby z mapy?"
+                    : "Are you sure you want to delete all measurement data and drawings from the map?";
+                if (!confirm(confirmMsg)) return;
+            }
             var btnClear = document.getElementById("btnClearMeasure");
             if (btnClear) { btnClear.classList.add("flash"); setTimeout(function(){ btnClear.classList.remove("flash"); }, 600); }
             try{ if(typeof stopAllBuffers==="function") stopAllBuffers(); }catch(e){}
@@ -3394,7 +3688,14 @@ function startMeasureDistance() {
             measurePointCounter = 1;
             measureLineCounter = 1;
             measurePolygonCounter = 1;
+            measureCircleCounter = 1;
+            measureParallelCounter = 1;
+            measureMeridianCounter = 1;
+            measureBufferZoneCounter = 1;
             activeSnapPoint = null;
+            measureUndoStack = [];
+            measureRedoStack = [];
+            updateMeasureUndoRedoBtns();
             
             var btn = document.getElementById("btnMeasureDist");
             if (btn) {
@@ -3409,173 +3710,332 @@ function startMeasureDistance() {
                 return;
             }
             var features = [];
-            var ptIdx = 1, lineIdx = 1, polyIdx = 1, circleIdx = 1, parIdx = 1, merIdx = 1;
+            var ptIdx = 1, lineIdx = 1, polyIdx = 1, circleIdx = 1, parIdx = 1, merIdx = 1, bufIdx = 1;
+
+            function fmtDMS(val, isLat) {
+                var pos = val >= 0;
+                var abs = Math.abs(val);
+                var deg = Math.floor(abs);
+                var minFloat = (abs - deg) * 60;
+                var min = Math.floor(minFloat);
+                var sec = ((minFloat - min) * 60).toFixed(1);
+                var dir = isLat ? (pos ? 'N' : 'S') : (pos ? 'E' : 'W');
+                return deg + '° ' + (min < 10 ? '0' : '') + min + '\' ' + (sec < 10 ? '0' : '') + sec + '" ' + dir;
+            }
 
             measureLayerGroup.eachLayer(function(l){
                 // 1. Přeskočit dočasné navigační a náhledové prvky
+                if (l._isTemp || l._isConstructionMarker) return;
                 if (l === measureDistanceState.tempLine || l === parallelState.tempLine || l === meridianState.tempLine) return;
-                // Vyloučit tempCircle a dočasné čáry (vše s dashArray)
-                if (l.options && l.options.dashArray) return;
-                // Vyloučit neviditelné / transparentní hit vrstvy (opacity 0.001 / 0.01)
-                if (l.options && l.options.opacity !== undefined && l.options.opacity <= 0.05) return;
-                // Vyloučit neinteraktivní středy kružnic (centerDot)
-                if (l.options && l.options.interactive === false && (l instanceof L.Marker || (l.getLatLng && !l.getRadius && !l.getLatLngs))) return;
+                if (typeof bufferCircleCenterState !== 'undefined' && (l === bufferCircleCenterState.tempCircle || l === bufferCircleCenterState.tempLabel)) return;
+                if (typeof bufferCircle3pState !== 'undefined' && (l === bufferCircle3pState.tempCircle || l === bufferCircle3pState.tempLabel || l === bufferCircle3pState.tempCenterDot)) return;
 
-                // 2. Měřené body (červené tečky měření vzdálenosti)
+                // Vyloučit hit vrstvy
+                if (l._measureType === 'polygon_hit' || l._measureType === 'line_hit' || l._measureType === 'circle_hit' || l._measureType === 'parallel_hit' || l._measureType === 'meridian_hit' || l._measureType === 'buffer_zone_hit') return;
+                if (l.options && l.options.opacity !== undefined && l.options.opacity <= 0.05) return;
+
+                // Vyloučit dočasné preview linie s jemným čárkováním
+                if (l.options && l.options.dashArray && (l.options.dashArray === '4,4' || l.options.dashArray === '6, 4' || l.options.dashArray === '5, 5') && l.options.opacity <= 0.75) return;
+
+                // Vyloučit popisky
+                if (l._measureType === 'area_label') return;
+                if (l instanceof L.Marker && l.options && l.options.icon && l.options.icon.options && l.options.icon.options.className) {
+                    var cls = l.options.icon.options.className;
+                    if (cls.indexOf('measure-segment-label') !== -1 || cls.indexOf('measure-area-label') !== -1 || cls.indexOf('measure-label-bg') !== -1) {
+                        return;
+                    }
+                }
+
+                // 2. Středový bod kružnice (circle_center) - Ukládáme vždy střed s parametry: poloměr, obvod, plocha
+                var cm = l._circleMeta || (l.options && l.options._circleMeta);
+                if (l._measureType === 'circle_center' || (l.getLatLng && cm && l.options && l.options.icon && l.options.icon.options && l.options.icon.options.html && l.options.icon.options.html.indexOf('width:6px;height:6px') !== -1)) {
+                    var cDotLl = l.getLatLng();
+                    var cNum = (cm && cm.index) || l._measureIdx || circleIdx++;
+                    var props = {
+                        name: (currentLang === 'cs' ? 'Střed kružnice ' : 'Circle Center ') + cNum,
+                        type: 'circle_center',
+                        circle_index: cNum,
+                        lat: +cDotLl.lat.toFixed(6),
+                        lng: +cDotLl.lng.toFixed(6),
+                        lat_dms: fmtDMS(cDotLl.lat, true),
+                        lng_dms: fmtDMS(cDotLl.lng, false),
+                        coordinates_formatted: cDotLl.lat.toFixed(6) + '°, ' + cDotLl.lng.toFixed(6) + '°'
+                    };
+                    if (cm) {
+                        props.radius_m = cm.radius_m;
+                        props.radius_km = cm.radius_km;
+                        props.radius_formatted = cm.radius_formatted;
+                        props.perimeter_m = cm.perimeter_m;
+                        props.perimeter_km = cm.perimeter_km;
+                        props.perimeter_formatted = cm.perimeter_formatted;
+                        props.area_m2 = cm.area_m2;
+                        props.area_ha = cm.area_ha;
+                        props.area_km2 = cm.area_km2;
+                        props.area_formatted = cm.area_formatted;
+                    }
+                    features.push({
+                        type: 'Feature',
+                        geometry: { type: 'Point', coordinates: [cDotLl.lng, cDotLl.lat] },
+                        properties: props
+                    });
+                    return;
+                }
+
+                // 3. Měřené body (červené tečky měření vzdálenosti a body polygonů) - POUZE dokliknuté body, ne konstrukční
                 if (l.getLatLng && l.options && l.options.icon && l.options.icon.options && l.options.icon.options.html) {
                     var h = l.options.icon.options.html;
-                    if (h.indexOf('border-radius:50%') !== -1 && h.indexOf('background:#e41e26') !== -1 && l.options.interactive !== false) {
+                    if (h.indexOf('border-radius:50%') !== -1 && h.indexOf('background:#e41e26') !== -1 && l.options.interactive !== false && !l._isConstructionMarker) {
                         var ll = l.getLatLng();
+                        var pNum = l._measureIdx || ptIdx++;
                         features.push({
-                            type: "Feature",
-                            geometry: { type: "Point", coordinates: [ll.lng, ll.lat] },
+                            type: 'Feature',
+                            geometry: { type: 'Point', coordinates: [ll.lng, ll.lat] },
                             properties: {
-                                name: (currentLang === 'cs' ? 'Bod ' : 'Point ') + (ptIdx++),
-                                type: "measure_point",
-                                lat: ll.lat,
-                                lng: ll.lng
+                                name: (currentLang === 'cs' ? 'Bod ' : 'Point ') + pNum,
+                                type: 'measure_point',
+                                point_index: pNum,
+                                lat: +ll.lat.toFixed(6),
+                                lng: +ll.lng.toFixed(6),
+                                lat_dms: fmtDMS(ll.lat, true),
+                                lng_dms: fmtDMS(ll.lng, false),
+                                coordinates_formatted: ll.lat.toFixed(6) + '°, ' + ll.lng.toFixed(6) + '°'
                             }
                         });
+                        return;
                     }
-                    return;
                 }
 
-                // 3. Kružnice (L.Circle) – exportovat jako geodetický Polygon (nikoli Point)
-                if (l instanceof L.Circle) {
-                    var cc = l.getLatLng();
-                    var rr = l.getRadius();
-                    if (rr > 0) {
-                        var rKm = rr / 1000.0;
-                        var R = 6371.0;
-                        var rRad = rKm / R;
-                        var perimM = 2 * Math.PI * R * Math.sin(rRad) * 1000;
-                        var areaM2 = 2 * Math.PI * R * R * (1 - Math.cos(rRad)) * 1000000;
-                        // n: minimálně 64 vrcholů, škálováno tak aby žádná úsečka nepřekročila 100 km
-                        var n = Math.max(64, Math.ceil(2 * Math.PI * rKm / 100.0));
-                        var coords = [];
-                        for (var a = 0; a < n; a++) {
-                            var ang = a * 360.0 / n;
-                            var p = destinationPoint(cc.lat, cc.lng, ang, rKm);
-                            coords.push([p.lng, p.lat]);
-                        }
-                        coords.push(coords[0].slice());
-                        features.push({
-                            type: "Feature",
-                            geometry: { type: "Polygon", coordinates: [coords] },
-                            properties: {
-                                name: (currentLang === 'cs' ? 'Kružnice ' : 'Circle ') + (circleIdx++),
-                                type: "buffer_circle",
-                                radius_m: Math.round(rr),
-                                radius_km: +(rr / 1000).toFixed(3),
-                                lat: cc.lat,
-                                lng: cc.lng,
-                                perimeter_m: Math.round(perimM),
-                                area_m2: Math.round(areaM2)
-                            }
-                        });
-                    }
-                    return;
-                }
-
-                // 4. Polygony (včetně kružnic vytvořených jako L.polygon a obalových zón)
+                // 4. Polygony (kružnice jako polygon, uzavřený polygon z měření plochy, obalové zóny)
                 if (l instanceof L.Polygon) {
                     var rings = l.getLatLngs();
-                    var outerR = rings[0] || rings;
+                    var outerR = Array.isArray(rings[0]) ? rings[0] : rings;
                     if (outerR.length < 3) return;
                     var outerPts = outerR.map(function(ll){ return { lat: ll.lat, lng: ll.lng }; });
                     var perimM = 0;
                     for (var i = 0; i < outerPts.length; i++) {
-                        var a = outerPts[i], b = outerPts[(i + 1) % outerPts.length];
-                        perimM += calcDistKm(a.lat, a.lng, b.lat, b.lng) * 1000;
+                        var aPt = outerPts[i], bPt = outerPts[(i + 1) % outerPts.length];
+                        perimM += calcDistKm(aPt.lat, aPt.lng, bPt.lat, bPt.lng) * 1000;
                     }
                     var areaM2 = calcPolygonAreaM2(outerPts);
                     var coords = [ outerR.map(function(ll){ return [ll.lng, ll.lat]; }) ];
-                    if (rings.length > 1) {
+                    if (Array.isArray(rings) && rings.length > 1 && Array.isArray(rings[1])) {
                         for (var r = 1; r < rings.length; r++) {
                             coords.push(rings[r].map(function(ll){ return [ll.lng, ll.lat]; }));
                         }
                     }
                     coords[0].push(coords[0][0].slice());
 
-                    // Pokud má polygon metadata kružnice (_circleMeta), exportovat jako buffer_circle s přesným poloměrem
-                    var cm = l._circleMeta || (l.options && l.options._circleMeta);
-                    if (cm) {
+                    if (cm || l._measureType === 'buffer_circle') {
+                        var curCircleIdx = (cm && cm.index) || l._measureIdx || (circleIdx++);
+                        var cProps = {
+                            name: (currentLang === 'cs' ? 'Kružnice ' : 'Circle ') + curCircleIdx,
+                            type: 'buffer_circle',
+                            circle_index: curCircleIdx,
+                            perimeter_m: (cm && cm.perimeter_m) || Math.round(perimM),
+                            perimeter_km: +(((cm && cm.perimeter_m) || perimM) / 1000).toFixed(3),
+                            perimeter_formatted: formatDistance((cm && cm.perimeter_m) || perimM),
+                            area_m2: (cm && cm.area_m2) || Math.round(areaM2),
+                            area_ha: +(((cm && cm.area_m2) || areaM2) / 10000).toFixed(2),
+                            area_km2: +(((cm && cm.area_m2) || areaM2) / 1000000).toFixed(4),
+                            area_formatted: formatArea((cm && cm.area_m2) || areaM2)
+                        };
+                        if (cm) {
+                            cProps.radius_m = cm.radius_m;
+                            cProps.radius_km = cm.radius_km;
+                            cProps.radius_formatted = cm.radius_formatted;
+                            cProps.center_lat = +cm.center.lat.toFixed(6);
+                            cProps.center_lng = +cm.center.lng.toFixed(6);
+                            cProps.center_dms = fmtDMS(cm.center.lat, true) + ', ' + fmtDMS(cm.center.lng, false);
+                        }
                         features.push({
-                            type: "Feature",
-                            geometry: { type: "Polygon", coordinates: coords },
+                            type: 'Feature',
+                            geometry: { type: 'Polygon', coordinates: coords },
+                            properties: cProps
+                        });
+                    } else if (l._measureType === 'buffer_zone' || l._isBufferZone || (l.options && l.options._isBufferZone)) {
+                        var bNum = l._measureIdx || bufIdx++;
+                        features.push({
+                            type: 'Feature',
+                            geometry: { type: 'Polygon', coordinates: coords },
                             properties: {
-                                name: (currentLang === 'cs' ? 'Kružnice ' : 'Circle ') + (circleIdx++),
-                                type: "buffer_circle",
-                                radius_m: cm.radius_m,
-                                radius_km: +cm.rKm.toFixed(3),
-                                lat: cm.center.lat,
-                                lng: cm.center.lng,
-                                perimeter_m: cm.perim_m || Math.round(perimM),
-                                area_m2: cm.area_m2 || Math.round(areaM2)
+                                name: (currentLang === 'cs' ? 'Obalová zóna ' : 'Buffer Zone ') + bNum,
+                                type: 'buffer_zone',
+                                buffer_index: bNum,
+                                width_km: l._bufferDistKm || null,
+                                perimeter_m: Math.round(perimM),
+                                perimeter_km: +(perimM / 1000).toFixed(3),
+                                perimeter_formatted: formatDistance(perimM),
+                                area_m2: Math.round(areaM2),
+                                area_ha: +(areaM2 / 10000).toFixed(2),
+                                area_km2: +(areaM2 / 1000000).toFixed(4),
+                                area_formatted: formatArea(areaM2)
                             }
                         });
                     } else {
+                        // Běžný uzavřený polygon z měření plochy - POUZE obvod a plocha
+                        var pNum = l._measureIdx || polyIdx++;
+                        var vCount = l._vertexCount || outerPts.length;
                         features.push({
-                            type: "Feature",
-                            geometry: { type: "Polygon", coordinates: coords },
+                            type: 'Feature',
+                            geometry: { type: 'Polygon', coordinates: coords },
                             properties: {
-                                name: (currentLang === 'cs' ? 'Polygon ' : 'Polygon ') + (polyIdx++),
-                                type: "measure_polygon",
+                                name: (currentLang === 'cs' ? 'Polygon ' : 'Polygon ') + pNum,
+                                type: 'measure_polygon',
+                                polygon_index: pNum,
+                                vertex_count: vCount,
                                 perimeter_m: Math.round(perimM),
                                 perimeter_km: +(perimM / 1000).toFixed(3),
+                                perimeter_formatted: formatDistance(perimM),
                                 area_m2: Math.round(areaM2),
-                                area_km2: +(areaM2 / 1000000).toFixed(4)
+                                area_ha: +(areaM2 / 10000).toFixed(2),
+                                area_km2: +(areaM2 / 1000000).toFixed(4),
+                                area_formatted: formatArea(areaM2)
                             }
                         });
                     }
                     return;
                 }
 
-                // 5. Polyline (měřené linie, rovnoběžky, poledníky)
+                // 5. Polyline (měřené čáry, rovnoběžky, poledníky)
                 if (l instanceof L.Polyline) {
                     var lls = l.getLatLngs();
                     if (!lls || lls.length < 2) return;
-                    var isPar = parallelState.lines.indexOf(l) !== -1;
-                    var isMer = meridianState.lines.indexOf(l) !== -1;
+
+                    // Striktní a jednoznačná detekce typu čáry
+                    var isExplicitMeasureLine = (l._measureType === 'measure_line') || (l === measureDistanceState.line);
+
+                    // Rovnoběžka: musí být buď explicitně označena, nebo v poli rovnoběžek, nebo mít souřadnice [-180..180] s konstantní šířkou
+                    var isPar = false;
+                    if (!isExplicitMeasureLine) {
+                        if (l._measureType === 'parallel') {
+                            isPar = true;
+                        } else if (parallelState && parallelState.lines && parallelState.lines.indexOf(l) !== -1) {
+                            isPar = true;
+                        } else if (lls.length === 2) {
+                            var p0 = lls[0], p1 = lls[1];
+                            var lng0 = p0.lng !== undefined ? p0.lng : p0[1];
+                            var lng1 = p1.lng !== undefined ? p1.lng : p1[1];
+                            var lat0 = p0.lat !== undefined ? p0.lat : p0[0];
+                            var lat1 = p1.lat !== undefined ? p1.lat : p1[0];
+                            if (Math.abs(Math.abs(lng0) - 180) < 0.01 && Math.abs(Math.abs(lng1) - 180) < 0.01 && Math.abs(lat0 - lat1) < 0.0001) {
+                                isPar = true;
+                            }
+                        }
+                    }
+
+                    // Poledník: musí být buď explicitně označen, nebo v poli poledníků, nebo mít souřadnice [-85..85] s konstantní délkou
+                    var isMer = false;
+                    if (!isExplicitMeasureLine && !isPar) {
+                        if (l._measureType === 'meridian') {
+                            isMer = true;
+                        } else if (meridianState && meridianState.lines && meridianState.lines.indexOf(l) !== -1) {
+                            isMer = true;
+                        } else if (lls.length === 2) {
+                            var m0 = lls[0], m1 = lls[1];
+                            var mlng0 = m0.lng !== undefined ? m0.lng : m0[1];
+                            var mlng1 = m1.lng !== undefined ? m1.lng : m1[1];
+                            var mlat0 = m0.lat !== undefined ? m0.lat : m0[0];
+                            var mlat1 = m1.lat !== undefined ? m1.lat : m1[0];
+                            if (Math.abs(Math.abs(mlat0) - 85) < 0.01 && Math.abs(Math.abs(mlat1) - 85) < 0.01 && Math.abs(mlng0 - mlng1) < 0.0001) {
+                                isMer = true;
+                            }
+                        }
+                    }
+
+                    // Rovnoběžka - POUZE zeměpisná šířka (latitude)
                     if (isPar) {
-                        var lat = lls[0].lat;
+                        var latVal = (l._lat !== undefined) ? l._lat : lls[0].lat;
+                        var pNum = l._measureIdx || parIdx++;
                         features.push({
-                            type: "Feature",
-                            geometry: { type: "LineString", coordinates: [[-180, lat], [180, lat]] },
+                            type: 'Feature',
+                            geometry: { type: 'LineString', coordinates: [[-180, latVal], [180, latVal]] },
                             properties: {
-                                name: (currentLang === 'cs' ? 'Rovnoběžka ' : 'Parallel ') + (parIdx++),
-                                type: "parallel",
-                                lat: lat
+                                name: (currentLang === 'cs' ? 'Rovnoběžka ' : 'Parallel ') + pNum + ' (' + latVal.toFixed(6) + '°)',
+                                type: 'parallel',
+                                latitude: +latVal.toFixed(6),
+                                latitude_dms: fmtDMS(latVal, true),
+                                coordinates_formatted: latVal.toFixed(6) + '° ' + (latVal >= 0 ? 'N' : 'S')
                             }
                         });
                         return;
                     }
+
+                    // Poledník - POUZE zeměpisná délka (longitude)
                     if (isMer) {
-                        var lng = lls[0].lng;
+                        var lngVal = (l._lng !== undefined) ? l._lng : lls[0].lng;
+                        var mNum = l._measureIdx || merIdx++;
                         features.push({
-                            type: "Feature",
-                            geometry: { type: "LineString", coordinates: [[lng, -85], [lng, 85]] },
+                            type: 'Feature',
+                            geometry: { type: 'LineString', coordinates: [[lngVal, -85], [lngVal, 85]] },
                             properties: {
-                                name: (currentLang === 'cs' ? 'Poledník ' : 'Meridian ') + (merIdx++),
-                                type: "meridian",
-                                lng: lng
+                                name: (currentLang === 'cs' ? 'Poledník ' : 'Meridian ') + mNum + ' (' + lngVal.toFixed(6) + '°)',
+                                type: 'meridian',
+                                longitude: +lngVal.toFixed(6),
+                                longitude_dms: fmtDMS(lngVal, false),
+                                coordinates_formatted: lngVal.toFixed(6) + '° ' + (lngVal >= 0 ? 'E' : 'W')
                             }
                         });
                         return;
                     }
-                    var totM = 0;
-                    for (var i = 1; i < lls.length; i++) {
-                        totM += calcDistKm(lls[i - 1].lat, lls[i - 1].lng, lls[i].lat, lls[i].lng) * 1000;
+
+                    // Pokud je čára z měření a měření stále probíhá, použít VÝHRADNĚ dokliknuté body
+                    var validPts = lls;
+                    if (l._measurePoints && l._measurePoints.length >= 2) {
+                        validPts = l._measurePoints;
+                    } else if (l === measureDistanceState.line && !measureDistanceState.completed && measureDistanceState.points && measureDistanceState.points.length >= 2) {
+                        validPts = measureDistanceState.points;
                     }
-                    var coords = lls.map(function(ll){ return [ll.lng, ll.lat]; });
+                    if (validPts.length < 2) return;
+
+                    // Standardní měřená čára - POUZE délka a azimut (žádné parametry rovnoběžky či poledníku!)
+                    var totM = 0;
+                    var segments = [];
+                    for (var s = 1; s < validPts.length; s++) {
+                        var pA = validPts[s - 1], pB = validPts[s];
+                        var latA = pA.lat !== undefined ? pA.lat : pA[0], lngA = pA.lng !== undefined ? pA.lng : pA[1];
+                        var latB = pB.lat !== undefined ? pB.lat : pB[0], lngB = pB.lng !== undefined ? pB.lng : pB[1];
+                        var segDist = calcDistKm(latA, lngA, latB, lngB) * 1000;
+                        var segAz = calcAzimuth(latA, lngA, latB, lngB);
+                        totM += segDist;
+                        segments.push({
+                            segment: s,
+                            from: [+latA.toFixed(6), +lngA.toFixed(6)],
+                            to: [+latB.toFixed(6), +lngB.toFixed(6)],
+                            length_m: Math.round(segDist * 10) / 10,
+                            length_formatted: formatDistance(segDist),
+                            azimuth: +segAz.toFixed(1),
+                            azimuth_deg: +segAz.toFixed(1),
+                            azimuth_formatted: segAz.toFixed(1).replace('.', ',') + '°',
+                            azimut: +segAz.toFixed(1)
+                        });
+                    }
+
+                    var pStart = validPts[0], pEnd = validPts[validPts.length - 1];
+                    var startLat = pStart.lat !== undefined ? pStart.lat : pStart[0], startLng = pStart.lng !== undefined ? pStart.lng : pStart[1];
+                    var endLat = pEnd.lat !== undefined ? pEnd.lat : pEnd[0], endLng = pEnd.lng !== undefined ? pEnd.lng : pEnd[1];
+                    var overallAz = calcAzimuth(startLat, startLng, endLat, endLng);
+                    var lCoords = validPts.map(function(pt){
+                        var plat = pt.lat !== undefined ? pt.lat : pt[0];
+                        var plng = pt.lng !== undefined ? pt.lng : pt[1];
+                        return [plng, plat];
+                    });
+                    var lNum = lineIdx++;
+
                     features.push({
-                        type: "Feature",
-                        geometry: { type: "LineString", coordinates: coords },
+                        type: 'Feature',
+                        geometry: { type: 'LineString', coordinates: lCoords },
                         properties: {
-                            name: (currentLang === 'cs' ? 'Čára ' : 'Line ') + (lineIdx++),
-                            type: "measure_line",
-                            length_m: Math.round(totM),
-                            length_km: +(totM / 1000).toFixed(3)
+                            name: (currentLang === 'cs' ? 'Čára ' : 'Line ') + lNum,
+                            type: 'measure_line',
+                            vertex_count: validPts.length,
+                            length_m: Math.round(totM * 10) / 10,
+                            length_km: +(totM / 1000).toFixed(3),
+                            length_formatted: formatDistance(totM),
+                            azimuth: +overallAz.toFixed(1),
+                            azimut: +overallAz.toFixed(1),
+                            azimuth_deg: +overallAz.toFixed(1),
+                            azimuth_formatted: overallAz.toFixed(1).replace('.', ',') + '°',
+                            segments: segments
                         }
                     });
                 }
@@ -3585,27 +4045,27 @@ function startMeasureDistance() {
                 showToast(t.toastNoData || (currentLang === 'cs' ? 'Žádná data k exportu' : 'No data to export'));
                 return;
             }
-            var fc = { type: "FeatureCollection", features: features };
-            var blob = new Blob([JSON.stringify(fc, null, 2)], { type: "application/geo+json" });
+            var fc = { type: 'FeatureCollection', features: features };
+            var blob = new Blob([JSON.stringify(fc, null, 2)], { type: 'application/geo+json' });
             var now = new Date();
             var ts = now.getFullYear() +
-                ("0" + (now.getMonth() + 1)).slice(-2) +
-                ("0" + now.getDate()).slice(-2) + "_" +
-                ("0" + now.getHours()).slice(-2) +
-                ("0" + now.getMinutes()).slice(-2) +
-                ("0" + now.getSeconds()).slice(-2);
-            var fname = "Mereni_" + ts + ".geojson";
+                ('0' + (now.getMonth() + 1)).slice(-2) +
+                ('0' + now.getDate()).slice(-2) + '_' +
+                ('0' + now.getHours()).slice(-2) +
+                ('0' + now.getMinutes()).slice(-2) +
+                ('0' + now.getSeconds()).slice(-2);
+            var fname = 'Mereni_' + ts + '.geojson';
             downloadBlob(blob, fname);
             try {
-                var base = fname.replace(/\.[^/.]+$/, "");
+                var base = fname.replace(/\.[^/.]+$/, '');
                 var uniq = base, c = 1;
-                while (datasets[uniq]) uniq = base + "_" + (c++);
-                var trk = parseGeoJson(JSON.stringify(fc), uniq + ".geojson");
+                while (datasets[uniq]) uniq = base + '_' + (c++);
+                var trk = parseGeoJson(JSON.stringify(fc), uniq + '.geojson');
                 if (trk) {
                     trk.name = uniq;
                     trk.title = uniq;
                     datasets[uniq] = trk;
-                    try { saveStoredSource(uniq + ".geojson", JSON.stringify(fc)); } catch(e){}
+                    try { saveStoredSource(uniq + '.geojson', JSON.stringify(fc)); } catch(e){}
                     try { rebuild(); } catch(e){}
                     showToast(t.toastGeoJsonExported || (currentLang === 'cs' ? 'GeoJSON export dokončen' : 'GeoJSON export completed'));
                 }
@@ -3785,6 +4245,8 @@ function startMeasureDistance() {
             
             if (!measureDistanceState.segmentLabels) measureDistanceState.segmentLabels = [];
             measureDistanceState.segmentLabels.push(label);
+        
+            return label;
         }
 
         function addCoordinateClickHandlers() {
@@ -3870,8 +4332,22 @@ function startMeasureDistance() {
             // Geodeticky lomený polygon
             var geoRing = geodesicPoints(pts.map(function(p){ return [p.lat, p.lng]; }), true);
             // Odstraň dočasnou čáru
-            if (measureDistanceState.tempLine) { map.removeLayer(measureDistanceState.tempLine); measureDistanceState.tempLine = null; }
-            if (measureDistanceState.tempLabel) { map.removeLayer(measureDistanceState.tempLabel); measureDistanceState.tempLabel = null; }
+            if (measureDistanceState.tempLine) { try{measureLayerGroup.removeLayer(measureDistanceState.tempLine);}catch(e){} try{map.removeLayer(measureDistanceState.tempLine);}catch(e){} measureDistanceState.tempLine = null; }
+            if (measureDistanceState.tempLabel) { try{measureLayerGroup.removeLayer(measureDistanceState.tempLabel);}catch(e){} try{map.removeLayer(measureDistanceState.tempLabel);}catch(e){} measureDistanceState.tempLabel = null; }
+            
+            // Odstraň starou otevřenou čáru a její hit vrstvu z measureLayerGroup
+            var savedLine = measureDistanceState.line;
+            var savedLineHit = measureDistanceState.lineHit;
+            var savedMarkers = measureDistanceState.markers ? measureDistanceState.markers.slice() : [];
+            var savedSegLabels = measureDistanceState.segmentLabels ? measureDistanceState.segmentLabels.slice() : [];
+            if (measureDistanceState.line) { try{measureLayerGroup.removeLayer(measureDistanceState.line);}catch(e){} }
+            if (measureDistanceState.lineHit) { try{measureLayerGroup.removeLayer(measureDistanceState.lineHit);}catch(e){} }
+            // Odstraň popisky segmentů (délky mezi body)
+            if (measureDistanceState.segmentLabels) { measureDistanceState.segmentLabels.forEach(function(sl){ try{measureLayerGroup.removeLayer(sl);}catch(e){} }); }
+            
+            // DŮLEŽITÉ: Bodové značky (markery) PONECHÁVÁME ve skupině measureLayerGroup i na mapě!
+            // Zůstávají viditelné a exportují se jako body polygonu se souřadnicemi.
+
             // Vytvoř polygon 20% červená
             measureDistanceState.polygon = L.polygon(geoRing, {
                 color: '#e41e26',
@@ -3883,20 +4359,21 @@ function startMeasureDistance() {
                 pane: 'overlayPane',
                 interactive: true
             }).addTo(measureLayerGroup);
+            measureDistanceState.polygon._measureType = 'measure_polygon';
             measureDistanceState.polygon._measureIdx = measurePolygonCounter;
             measureDistanceState.polygon._vertexCount = pts.length;
+            measureDistanceState.polygon._closedPts = pts.slice();
             measureDistanceState.polygon.on('click', function(e){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(e); return; } }
-                var pts=measureDistanceState.points;
-                // Polygon points were cleared after close, use geoRing for perimeter
+                var polyPts=e.target._closedPts||[];
                 var totalM=0;
                 for(var i=1;i<geoRing.length;i++) totalM+=calcDistKm(geoRing[i-1][0],geoRing[i-1][1],geoRing[i][0],geoRing[i][1])*1000;
-                var vCnt=e.target._vertexCount||pts?pts.length:geoRing.length; var aM2=calcPolygonAreaM2(pts&&pts.length?pts:geoRing.map(function(c){return {lat:c[0], lng:c[1]}; }));
+                var vCnt=e.target._vertexCount||geoRing.length; var aM2=calcPolygonAreaM2(polyPts.length?polyPts:geoRing.map(function(c){return {lat:c[0], lng:c[1]}; }));
                 L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(e.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Polygon ":"Polygon ") + (e.target._measureIdx||measurePolygonCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Obvod: ":"Perimeter: ") + "<strong>" + formatDistance(totalM) + "</strong><br>⬜ " + (currentLang==='cs'?"Plocha: ":"Area: ") + "<strong>" + formatArea(aM2) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + vCnt + "</strong></div></div>").openOn(map);
                 L.DomEvent.stopPropagation(e);
             });
             measureDistanceState.polygon.on('dblclick', function(e){ L.DomEvent.stopPropagation(e); });
-            // Hit-area pro snadne kliknuti na obrys merene plochy
-            try{ var hitPoly=L.polyline(geoRing, {color:'#e41e26', weight:16, opacity:0.01, interactive:true, pane:'overlayPane', renderer: L.svg(), noClip:true}).addTo(measureLayerGroup); hitPoly._measureIdx = measurePolygonCounter; hitPoly._vertexCount = pts.length; hitPoly.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } var totalM=0; for(var i=1;i<geoRing.length;i++) totalM+=calcDistKm(geoRing[i-1][0],geoRing[i-1][1],geoRing[i][0],geoRing[i][1])*1000; var vCnt2=ev.target._vertexCount||pts?pts.length:geoRing.length; var aM2b=calcPolygonAreaM2(pts&&pts.length?pts:geoRing.map(function(c){return {lat:c[0], lng:c[1]}; })); L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Polygon ":"Polygon ") + (ev.target._measureIdx||measurePolygonCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Obvod: ":"Perimeter: ") + "<strong>" + formatDistance(totalM) + "</strong><br>⬜ " + (currentLang==='cs'?"Plocha: ":"Area: ") + "<strong>" + formatArea(aM2b) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + vCnt2 + "</strong></div></div>").openOn(map); L.DomEvent.stopPropagation(ev); }); }catch(e){}
+            // Hit-area pro snadné kliknutí na obrys měřené plochy
+            var hitPoly; try{ hitPoly=L.polyline(geoRing, {color:'#e41e26', weight:16, opacity:0.01, interactive:true, pane:'overlayPane', renderer: L.svg(), noClip:true}).addTo(measureLayerGroup); hitPoly._measureType = 'polygon_hit'; hitPoly._measureIdx = measurePolygonCounter; hitPoly._vertexCount = pts.length; hitPoly.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; } var totalM=0; for(var i=1;i<geoRing.length;i++) totalM+=calcDistKm(geoRing[i-1][0],geoRing[i-1][1],geoRing[i][0],geoRing[i][1])*1000; var vCnt2=ev.target._vertexCount||geoRing.length; var aM2b=calcPolygonAreaM2(geoRing.map(function(c){return {lat:c[0], lng:c[1]}; })); L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124; margin-bottom:4px;'>" + (currentLang==='cs'?"Polygon ":"Polygon ") + (ev.target._measureIdx||measurePolygonCounter||1) + "</div><div style='color:#5f6368;font-size:11px;line-height:1.5;'>📏 " + (currentLang==='cs'?"Obvod: ":"Perimeter: ") + "<strong>" + formatDistance(totalM) + "</strong><br>⬜ " + (currentLang==='cs'?"Plocha: ":"Area: ") + "<strong>" + formatArea(aM2b) + "</strong><br>📍 " + (currentLang==='cs'?"Vrcholy: ":"Vertices: ") + "<strong>" + vCnt2 + "</strong></div></div>").openOn(map); L.DomEvent.stopPropagation(ev); }); }catch(e){}
             // Plocha
             var areaM2 = calcPolygonAreaM2(pts);
             var areaText = formatArea(areaM2);
@@ -3912,6 +4389,7 @@ function startMeasureDistance() {
                     iconAnchor: [40, 12]
                 })
             }).addTo(measureLayerGroup);
+            measureDistanceState.areaLabel._measureType = 'area_label';
             var alDiv = measureDistanceState.areaLabel.getElement();
             if (alDiv) {
                 var inner = alDiv.querySelector('div');
@@ -3921,15 +4399,44 @@ function startMeasureDistance() {
                     L.DomEvent.stopPropagation(e);
                 };
             }
+            // Record Undo Action for closed polygon
+            (function(polyObj, hitObj, areaLblObj, closedPts, closedMarkers, closedLine, closedLineHit, closedSegLabels){
+                recordMeasureAction({
+                    undo: function() {
+                        if (polyObj) try { measureLayerGroup.removeLayer(polyObj); } catch(e){}
+                        if (hitObj) try { measureLayerGroup.removeLayer(hitObj); } catch(e){}
+                        if (areaLblObj) try { measureLayerGroup.removeLayer(areaLblObj); } catch(e){}
+                        measureDistanceState.points = closedPts.slice();
+                        measureDistanceState.markers = closedMarkers.slice();
+                        if (closedLine) { try { closedLine.addTo(measureLayerGroup); } catch(e){} measureDistanceState.line = closedLine; }
+                        if (closedLineHit) { try { closedLineHit.addTo(measureLayerGroup); } catch(e){} measureDistanceState.lineHit = closedLineHit; }
+                        if (closedSegLabels) { closedSegLabels.forEach(function(l){ try { l.addTo(measureLayerGroup); } catch(e){} }); }
+                        measureDistanceState.completed = false;
+                    },
+                    redo: function() {
+                        if (closedLine) try { measureLayerGroup.removeLayer(closedLine); } catch(e){}
+                        if (closedLineHit) try { measureLayerGroup.removeLayer(closedLineHit); } catch(e){}
+                        if (closedSegLabels) { closedSegLabels.forEach(function(l){ try { measureLayerGroup.removeLayer(l); } catch(e){} }); }
+                        measureDistanceState.points = [];
+                        measureDistanceState.line = null;
+                        measureDistanceState.lineHit = null;
+                        if (polyObj) try { polyObj.addTo(measureLayerGroup); } catch(e){}
+                        if (hitObj) try { hitObj.addTo(measureLayerGroup); } catch(e){}
+                        if (areaLblObj) try { areaLblObj.addTo(measureLayerGroup); } catch(e){}
+                        measureDistanceState.completed = true;
+                    }
+                });
+            })(measureDistanceState.polygon, hitPoly, measureDistanceState.areaLabel, pts, savedMarkers, savedLine, savedLineHit, savedSegLabels);
             // Ulož stav jako dokončený
             measureDistanceState.completed = true;
             measurePolygonCounter++;
             measureLineCounter++;
-            // Reset aktivní body pro případné další měření, ale polygon zůstane
+            // Reset aktivní body pro případné další měření, ale polygon a body zůstávají na mapě
             measureDistanceState.points = [];
             measureDistanceState.markers = [];
-                    measureDistanceState.lineHit = null;
-                    measureDistanceState.line = null;
+            measureDistanceState.lineHit = null;
+            measureDistanceState.line = null;
+            measureDistanceState.segmentLabels = [];
             measureDistanceState.tempLine = null;
             measureDistanceState.tempLabel = null;
         }
@@ -3985,7 +4492,7 @@ function startMeasureDistance() {
             map.getContainer().addEventListener("click", showCoordsState.captureHandler, true);
             showCoordsState.keyHandler=function(e){ if(e.key==="Escape") stopShowCoords(); };
             document.addEventListener("keydown", showCoordsState.keyHandler);
-            var b=document.getElementById("btnShowCoords"); if(b) b.classList.add("active");
+            var b=document.getElementById("btnShowCoords"); if(b) { b.classList.add("active"); b.setAttribute("aria-pressed", "true"); }
         }
         function stopShowCoords(){
             if(!showCoordsState.active) return;
@@ -3996,7 +4503,7 @@ function startMeasureDistance() {
             if(showCoordsState.captureHandler){ map.getContainer().removeEventListener("click", showCoordsState.captureHandler, true); showCoordsState.captureHandler=null; }
             if(showCoordsState.keyHandler){ document.removeEventListener("keydown", showCoordsState.keyHandler); showCoordsState.keyHandler=null; }
             if(showCoordsState.popup){ map.removeLayer(showCoordsState.popup); showCoordsState.popup=null; }
-            var b=document.getElementById("btnShowCoords"); if(b) b.classList.remove("active");
+            var b=document.getElementById("btnShowCoords"); if(b) { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); }
         }
 
         // Rovnoběžka / Poledník
@@ -4024,10 +4531,44 @@ function startMeasureDistance() {
             parallelState.clickHandler=function(e){
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
+                var pIdx = measureParallelCounter++;
                 var line=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                line._measureType = 'parallel'; line._lat = ll.lat; line._measureIdx = pIdx;
                 var hit=L.polyline([[ll.lat,-180],[ll.lat,180]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
-                hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                hit._measureType = 'parallel_hit'; hit._lat = ll.lat; hit._measureIdx = pIdx;
+                
+                (function(pLine, pHit, latVal, idxVal){
+                    var clickFn = function(ev){
+                        if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){
+                            if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ }
+                            else { L.DomEvent.stopPropagation(ev); return; }
+                        }
+                        var title = (currentLang === "cs" ? "Rovnoběžka " : "Parallel ") + idxVal + " (" + latVal.toFixed(6) + "°)";
+                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]})
+                            .setLatLng(ev.latlng)
+                            .setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>" + title + "</div></div>")
+                            .openOn(map);
+                        L.DomEvent.stopPropagation(ev);
+                    };
+                    pLine.on('click', clickFn);
+                    pHit.on('click', clickFn);
+                })(line, hit, ll.lat, pIdx);
+                
+                (function(pLine, pHit){
+                    recordMeasureAction({
+                        undo: function() {
+                            try { measureLayerGroup.removeLayer(pLine); } catch(e){}
+                            try { measureLayerGroup.removeLayer(pHit); } catch(e){}
+                            var idx = parallelState.lines.indexOf(pLine);
+                            if (idx >= 0) parallelState.lines.splice(idx, 1);
+                        },
+                        redo: function() {
+                            try { pLine.addTo(measureLayerGroup); } catch(e){}
+                            try { pHit.addTo(measureLayerGroup); } catch(e){}
+                            parallelState.lines.push(pLine);
+                        }
+                    });
+                })(line, hit);
                 parallelState.lines.push(line);
                 L.DomEvent.stop(e);
             };
@@ -4040,11 +4581,45 @@ function startMeasureDistance() {
                 if(snapped){
                     L.DomEvent.stop(e);
                     if(parallelState.tempLine){ map.removeLayer(parallelState.tempLine); parallelState.tempLine=null; }
+                    var pIdx = measureParallelCounter++;
                     var line=L.polyline([[snapped.lat,-180],[snapped.lat,180]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                    line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                    line._measureType = 'parallel'; line._lat = snapped.lat; line._measureIdx = pIdx;
                     var hit=L.polyline([[snapped.lat,-180],[snapped.lat,180]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
-                    hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lat.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
-                    parallelState.lines.push(line);
+                    hit._measureType = 'parallel_hit'; hit._lat = snapped.lat; hit._measureIdx = pIdx;
+                    
+                    (function(pLine, pHit, latVal, idxVal){
+                        var clickFn = function(ev){
+                            if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){
+                                if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ }
+                                else { L.DomEvent.stopPropagation(ev); return; }
+                            }
+                            var title = (currentLang === "cs" ? "Rovnoběžka " : "Parallel ") + idxVal + " (" + latVal.toFixed(6) + "°)";
+                            L.popup({closeButton:true, autoClose:true, offset:[0,-10]})
+                                .setLatLng(ev.latlng)
+                                .setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>" + title + "</div></div>")
+                                .openOn(map);
+                            L.DomEvent.stopPropagation(ev);
+                        };
+                        pLine.on('click', clickFn);
+                        pHit.on('click', clickFn);
+                    })(line, hit, snapped.lat, pIdx);
+                    
+                (function(pLine, pHit){
+                    recordMeasureAction({
+                        undo: function() {
+                            try { measureLayerGroup.removeLayer(pLine); } catch(e){}
+                            try { measureLayerGroup.removeLayer(pHit); } catch(e){}
+                            var idx = parallelState.lines.indexOf(pLine);
+                            if (idx >= 0) parallelState.lines.splice(idx, 1);
+                        },
+                        redo: function() {
+                            try { pLine.addTo(measureLayerGroup); } catch(e){}
+                            try { pHit.addTo(measureLayerGroup); } catch(e){}
+                            parallelState.lines.push(pLine);
+                        }
+                    });
+                })(line, hit);
+                parallelState.lines.push(line);
                 }
             };
             map.getContainer().addEventListener("click", parallelState.captureHandler, true);
@@ -4056,7 +4631,7 @@ function startMeasureDistance() {
             map.on("contextmenu", parallelState.contextMenuHandler);
             parallelState.keyHandler=function(e){ if(e.key==="Escape") stopParallel(); };
             document.addEventListener("keydown", parallelState.keyHandler);
-            var b=document.getElementById("btnParallel"); if(b) b.classList.add("active");
+            var b=document.getElementById("btnParallel"); if(b) { b.classList.add("active"); b.setAttribute("aria-pressed", "true"); }
         }
         function stopParallel(){
             if(!parallelState.active) return; parallelState.active=false;
@@ -4067,7 +4642,7 @@ function startMeasureDistance() {
             if(parallelState.captureHandler){ map.getContainer().removeEventListener("click", parallelState.captureHandler, true); parallelState.captureHandler=null; }
             if(parallelState.contextMenuHandler){ map.off("contextmenu", parallelState.contextMenuHandler); parallelState.contextMenuHandler=null; }
             if(parallelState.keyHandler){ document.removeEventListener("keydown", parallelState.keyHandler); parallelState.keyHandler=null; }
-            var b=document.getElementById("btnParallel"); if(b) b.classList.remove("active");
+            var b=document.getElementById("btnParallel"); if(b) { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); }
         }
         function startMeridian(){
             if(meridianState.active) return;
@@ -4088,10 +4663,44 @@ function startMeasureDistance() {
             meridianState.clickHandler=function(e){
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
+                var mIdx = measureMeridianCounter++;
                 var line=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                line._measureType = 'meridian'; line._lng = ll.lng; line._measureIdx = mIdx;
                 var hit=L.polyline([[-85,ll.lng],[85,ll.lng]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
-                hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+ll.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                hit._measureType = 'meridian_hit'; hit._lng = ll.lng; hit._measureIdx = mIdx;
+                
+                (function(mLine, mHit, lngVal, idxVal){
+                    var clickFn = function(ev){
+                        if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){
+                            if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ }
+                            else { L.DomEvent.stopPropagation(ev); return; }
+                        }
+                        var title = (currentLang === "cs" ? "Poledník " : "Meridian ") + idxVal + " (" + lngVal.toFixed(6) + "°)";
+                        L.popup({closeButton:true, autoClose:true, offset:[0,-10]})
+                            .setLatLng(ev.latlng)
+                            .setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>" + title + "</div></div>")
+                            .openOn(map);
+                        L.DomEvent.stopPropagation(ev);
+                    };
+                    mLine.on('click', clickFn);
+                    mHit.on('click', clickFn);
+                })(line, hit, ll.lng, mIdx);
+                
+                (function(mLine, mHit){
+                    recordMeasureAction({
+                        undo: function() {
+                            try { measureLayerGroup.removeLayer(mLine); } catch(e){}
+                            try { measureLayerGroup.removeLayer(mHit); } catch(e){}
+                            var idx = meridianState.lines.indexOf(mLine);
+                            if (idx >= 0) meridianState.lines.splice(idx, 1);
+                        },
+                        redo: function() {
+                            try { mLine.addTo(measureLayerGroup); } catch(e){}
+                            try { mHit.addTo(measureLayerGroup); } catch(e){}
+                            meridianState.lines.push(mLine);
+                        }
+                    });
+                })(line, hit);
                 meridianState.lines.push(line);
                 L.DomEvent.stop(e);
             };
@@ -4104,11 +4713,45 @@ function startMeasureDistance() {
                 if(snapped){
                     L.DomEvent.stop(e);
                     if(meridianState.tempLine){ map.removeLayer(meridianState.tempLine); meridianState.tempLine=null; }
+                    var mIdx = measureMeridianCounter++;
                     var line=L.polyline([[-85,snapped.lng],[85,snapped.lng]],{color:'#e41e26',weight:2,opacity:0.9,pane:'overlayPane',noClip:true,interactive:true}).addTo(measureLayerGroup);
-                    line.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
+                    line._measureType = 'meridian'; line._lng = snapped.lng; line._measureIdx = mIdx;
                     var hit=L.polyline([[-85,snapped.lng],[85,snapped.lng]],{color:'#e41e26',weight:16,opacity:0.01,interactive:true,pane:'overlayPane',renderer: L.svg(),noClip:true}).addTo(measureLayerGroup);
-                    hit.on('click', function(ev){ if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){ if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ } else { L.DomEvent.stopPropagation(ev); return; } } L.popup({closeButton:true, autoClose:true, offset:[0,-10]}).setLatLng(ev.latlng).setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>"+snapped.lng.toFixed(6)+"°</div></div>").openOn(map); L.DomEvent.stopPropagation(ev); });
-                    meridianState.lines.push(line);
+                    hit._measureType = 'meridian_hit'; hit._lng = snapped.lng; hit._measureIdx = mIdx;
+                    
+                    (function(mLine, mHit, lngVal, idxVal){
+                        var clickFn = function(ev){
+                            if(typeof isAnyDrawingActive==="function" && isAnyDrawingActive()){
+                                if(typeof bufferCircleCenterState!=="undefined" && (bufferCircleCenterState.active||bufferCircle3pState.active||bufferZoneState.active)){ }
+                                else { L.DomEvent.stopPropagation(ev); return; }
+                            }
+                            var title = (currentLang === "cs" ? "Poledník " : "Meridian ") + idxVal + " (" + lngVal.toFixed(6) + "°)";
+                            L.popup({closeButton:true, autoClose:true, offset:[0,-10]})
+                                .setLatLng(ev.latlng)
+                                .setContent("<div style='padding:6px 8px;font-size:12px;'><div style='font-weight:700;color:#202124;'>" + title + "</div></div>")
+                                .openOn(map);
+                            L.DomEvent.stopPropagation(ev);
+                        };
+                        mLine.on('click', clickFn);
+                        mHit.on('click', clickFn);
+                    })(line, hit, snapped.lng, mIdx);
+                    
+                (function(mLine, mHit){
+                    recordMeasureAction({
+                        undo: function() {
+                            try { measureLayerGroup.removeLayer(mLine); } catch(e){}
+                            try { measureLayerGroup.removeLayer(mHit); } catch(e){}
+                            var idx = meridianState.lines.indexOf(mLine);
+                            if (idx >= 0) meridianState.lines.splice(idx, 1);
+                        },
+                        redo: function() {
+                            try { mLine.addTo(measureLayerGroup); } catch(e){}
+                            try { mHit.addTo(measureLayerGroup); } catch(e){}
+                            meridianState.lines.push(mLine);
+                        }
+                    });
+                })(line, hit);
+                meridianState.lines.push(line);
                 }
             };
             map.getContainer().addEventListener("click", meridianState.captureHandler, true);
@@ -4120,7 +4763,7 @@ function startMeasureDistance() {
             map.on("contextmenu", meridianState.contextMenuHandler);
             meridianState.keyHandler=function(e){ if(e.key==="Escape") stopMeridian(); };
             document.addEventListener("keydown", meridianState.keyHandler);
-            var b=document.getElementById("btnMeridian"); if(b) b.classList.add("active");
+            var b=document.getElementById("btnMeridian"); if(b) { b.classList.add("active"); b.setAttribute("aria-pressed", "true"); }
         }
         function stopMeridian(){
             if(!meridianState.active) return; meridianState.active=false;
@@ -4131,11 +4774,23 @@ function startMeasureDistance() {
             if(meridianState.captureHandler){ map.getContainer().removeEventListener("click", meridianState.captureHandler, true); meridianState.captureHandler=null; }
             if(meridianState.contextMenuHandler){ map.off("contextmenu", meridianState.contextMenuHandler); meridianState.contextMenuHandler=null; }
             if(meridianState.keyHandler){ document.removeEventListener("keydown", meridianState.keyHandler); meridianState.keyHandler=null; }
-            var b=document.getElementById("btnMeridian"); if(b) b.classList.remove("active");
+            var b=document.getElementById("btnMeridian"); if(b) { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); }
         }
         // Obalova zona - dropdown a 3 rezimy
-        function toggleBufferDropdown(){ var dd=document.getElementById("bufferDropdown"); if(dd) dd.classList.toggle("open"); }
-        function closeBufferDropdown(){ var dd=document.getElementById("bufferDropdown"); if(dd) dd.classList.remove("open"); }
+        function toggleBufferDropdown(){
+            var dd=document.getElementById("bufferDropdown");
+            var btn=document.getElementById("btnBufferZone");
+            if(dd){
+                var isOpen = dd.classList.toggle("open");
+                if(btn) btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            }
+        }
+        function closeBufferDropdown(){
+            var dd=document.getElementById("bufferDropdown");
+            var btn=document.getElementById("btnBufferZone");
+            if(dd) dd.classList.remove("open");
+            if(btn) btn.setAttribute("aria-expanded", "false");
+        }
         function stopAllBuffers(){ stopBufferCircleCenter(); stopBufferCircle3p(); stopBufferZone(); closeBufferDropdown(); }
         document.addEventListener("click", function(e){ var dd=document.getElementById("bufferDropdown"); var btn=document.getElementById("btnBufferZone"); if(dd && dd.classList.contains("open") && !dd.contains(e.target) && btn && !btn.contains(e.target) && e.target!==btn) dd.classList.remove("open"); });
         var bufferCircleCenterState={active:false, center:null, tempCircle:null, tempLabel:null, markers:[], snapPoints:[], moveHandler:null, clickHandler:null, captureHandler:null, contextMenuHandler:null, keyHandler:null};
@@ -4363,11 +5018,27 @@ function addCircleToMeasure(center, rKm) {
             var rRad = rM / R;
             var perimM = 2 * Math.PI * R * Math.sin(rRad);
             var areaM2 = 2 * Math.PI * R * R * (1 - Math.cos(rRad));
+            var rStr = rKm >= 1 ? (rKm.toFixed(3).replace('.', ',') + ' km') : (Math.round(rM) + ' m');
+
+            var meta = {
+                center: center,
+                rKm: rKm,
+                radius_m: Math.round(rM),
+                radius_km: +rKm.toFixed(3),
+                radius_formatted: rStr,
+                perimeter_m: Math.round(perimM),
+                perimeter_km: +(perimM / 1000).toFixed(3),
+                perimeter_formatted: formatDistance(perimM),
+                area_m2: Math.round(areaM2),
+                area_ha: +(areaM2 / 10000).toFixed(2),
+                area_km2: +(areaM2 / 1000000).toFixed(4),
+                area_formatted: formatArea(areaM2)
+            };
 
             var circlePts = getGeodesicCirclePoints(center, rKm);
             // 1. Vizualni kruznice s vyplni - NEINTERAKTIVNI (plocha nereaguje na kliknuti)
             var circle = L.polygon(circlePts, {
-                _circleMeta: { center: center, rKm: rKm, radius_m: Math.round(rM), perim_m: Math.round(perimM), area_m2: Math.round(areaM2) },
+                _circleMeta: meta,
                 color: '#e41e26',
                 weight: 2,
                 opacity: 0.9,
@@ -4376,6 +5047,9 @@ function addCircleToMeasure(center, rKm) {
                 pane: 'overlayPane',
                 interactive: false
             }).addTo(measureLayerGroup);
+            circle._measureType = 'buffer_circle';
+            circle._circleMeta = meta;
+            circle._measureIdx = measureCircleCounter;
 
             // 2. Klikatelny obrys kruznice (pouze obvod, bez vyplne)
             var hit = L.polygon(circlePts, {
@@ -4387,6 +5061,8 @@ function addCircleToMeasure(center, rKm) {
                 pane: 'overlayPane',
                 renderer: L.svg()
             }).addTo(measureLayerGroup);
+            hit._measureType = 'circle_hit';
+            hit._measureIdx = measureCircleCounter;
 
             function applyStrokeStyle() {
                 if (hit._path) {
@@ -4403,16 +5079,15 @@ function addCircleToMeasure(center, rKm) {
                     return;
                 }
                 var isCs = currentLang === 'cs';
-                var rStr = rKm >= 1 ? (rKm.toFixed(3).replace('.', ',') + ' km') : (Math.round(rM) + ' m');
                 var content = "<div style='padding:6px 8px;font-size:12px;min-width:170px;'>" +
                     "<div style='font-weight:700;color:#202124;margin-bottom:5px;font-size:13px;display:flex;align-items:center;gap:5px;'>" +
                     "<span style='display:inline-block;width:9px;height:9px;border-radius:50%;background:#e41e26;'></span> " +
-                    (isCs ? 'Kru\u017Enice' : 'Circle') + '</div>' +
+                    (isCs ? 'Kružnice' : 'Circle') + '</div>' +
                     "<div style='color:#5f6368;font-size:11px;line-height:1.6;'>" +
-                    (isCs ? '\uD83D\uDCCD St\u0159ed: ' : '\uD83D\uDCCD Center: ') + '<strong>' + center.lat.toFixed(6) + '\u00B0, ' + center.lng.toFixed(6) + '\u00B0</strong><br>' +
-                    (isCs ? '\uD83D\uDCCF Polom\u011Br: ' : '\uD83D\uDCCF Radius: ') + '<strong>' + rStr + '</strong><br>' +
-                    (isCs ? '\u2B55 Obvod: ' : '\u2B55 Perimeter: ') + '<strong>' + formatDistance(perimM) + '</strong><br>' +
-                    (isCs ? '\uD83D\uDCD0 Plocha: ' : '\uD83D\uDCD0 Area: ') + '<strong>' + formatArea(areaM2) + '</strong>' +
+                    (isCs ? '📍 Střed: ' : '📍 Center: ') + '<strong>' + center.lat.toFixed(6) + '°, ' + center.lng.toFixed(6) + '°</strong><br>' +
+                    (isCs ? '📏 Poloměr: ' : '📏 Radius: ') + '<strong>' + rStr + '</strong><br>' +
+                    (isCs ? '⭕ Obvod: ' : '⭕ Perimeter: ') + '<strong>' + formatDistance(perimM) + '</strong><br>' +
+                    (isCs ? '📐 Plocha: ' : '📐 Area: ') + '<strong>' + formatArea(areaM2) + '</strong>' +
                     '</div></div>';
                 L.popup({ closeButton: true, autoClose: true, offset: [0, -10] })
                  .setLatLng(ev.latlng)
@@ -4421,7 +5096,7 @@ function addCircleToMeasure(center, rKm) {
                 L.DomEvent.stopPropagation(ev);
             });
 
-            // 3. Stredovy bod kruznice - vzdy viditelny
+            // 3. Stredovy bod kruznice - vzdy viditelny se vsemi parametry kruznice
             var centerDot = L.marker([center.lat, center.lng], {
                 icon: L.divIcon({
                     html: '<div style="width:6px;height:6px;background:#e41e26;border:1.5px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>',
@@ -4431,7 +5106,25 @@ function addCircleToMeasure(center, rKm) {
                 pane: 'markerPane',
                 interactive: false
             }).addTo(measureLayerGroup);
+            centerDot._measureType = 'circle_center';
+            centerDot._circleMeta = meta;
+            centerDot._measureIdx = measureCircleCounter;
+            measureCircleCounter++;
 
+            (function(cCircle, cHit, cDot){
+                recordMeasureAction({
+                    undo: function() {
+                        if (cCircle) try { measureLayerGroup.removeLayer(cCircle); } catch(e){}
+                        if (cHit) try { measureLayerGroup.removeLayer(cHit); } catch(e){}
+                        if (cDot) try { measureLayerGroup.removeLayer(cDot); } catch(e){}
+                    },
+                    redo: function() {
+                        if (cCircle) try { cCircle.addTo(measureLayerGroup); } catch(e){}
+                        if (cHit) try { cHit.addTo(measureLayerGroup); } catch(e){}
+                        if (cDot) try { cDot.addTo(measureLayerGroup); } catch(e){}
+                    }
+                });
+            })(circle, hit, centerDot);
             return { circle: circle, hit: hit, centerDot: centerDot };
         }
 
@@ -4606,22 +5299,23 @@ function addCircleToMeasure(center, rKm) {
                     icon:L.divIcon({html:'<div style="width:14px;height:14px;background:#e41e26;border:2px solid #fff;border-radius:50%;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;">'+ptIdx+'</div>',iconSize:[14,14],iconAnchor:[7,7]}),
                     pane:'markerPane'
                 }).addTo(measureLayerGroup);
+                m._isConstructionMarker = true;
                 bufferCircle3pState.markers.push(m);
                 if(bufferCircle3pState.points.length===3){
                     var p1=bufferCircle3pState.points[0], p2=bufferCircle3pState.points[1], p3=bufferCircle3pState.points[2];
                     var cc=calcCircumcenter(p1,p2,p3);
                     if(!cc){
-                        showToast(currentLang==='cs'?'Body le\u017E\u00ED v p\u0159\u00EDmce':'Points are collinear');
+                        showToast(currentLang==='cs'?'Body leží v přímce':'Points are collinear');
                         bufferCircle3pState.points.pop();
                         var lastColM=bufferCircle3pState.markers.pop();
-                        if(lastColM) try{map.removeLayer(lastColM);}catch(e){}
+                        if(lastColM) try{measureLayerGroup.removeLayer(lastColM);map.removeLayer(lastColM);}catch(e){}
                         return;
                     }
                     var r=calcDistKm(cc.lat,cc.lng,p1.lat,p1.lng);
                     if(bufferCircle3pState.tempCircle){ try{map.removeLayer(bufferCircle3pState.tempCircle);}catch(e){} bufferCircle3pState.tempCircle=null; }
                     if(bufferCircle3pState.tempCenterDot){ try{map.removeLayer(bufferCircle3pState.tempCenterDot);}catch(e){} bufferCircle3pState.tempCenterDot=null; }
                     if(bufferCircle3pState.tempLabel){ try{map.removeLayer(bufferCircle3pState.tempLabel);}catch(e){} bufferCircle3pState.tempLabel=null; }
-                    bufferCircle3pState.markers.forEach(function(mm){try{map.removeLayer(mm);}catch(e){}});
+                    bufferCircle3pState.markers.forEach(function(mm){try{measureLayerGroup.removeLayer(mm);map.removeLayer(mm);}catch(e){}});
                     bufferCircle3pState.markers=[];
                     bufferCircle3pState.points=[];
                     if(bufferCircle3pState.tempCircle){ try{ measureLayerGroup.removeLayer(bufferCircle3pState.tempCircle); }catch(e){} bufferCircle3pState.tempCircle=null; }
@@ -4655,14 +5349,14 @@ function addCircleToMeasure(center, rKm) {
                 if(bufferCircle3pState.points.length===2){
                     bufferCircle3pState.points.pop();
                     var m2=bufferCircle3pState.markers.pop();
-                    if(m2) try{map.removeLayer(m2);}catch(err){}
+                    if(m2) try{measureLayerGroup.removeLayer(m2);map.removeLayer(m2);}catch(err){}
                     if(bufferCircle3pState.tempCircle){ try{map.removeLayer(bufferCircle3pState.tempCircle);}catch(err){} bufferCircle3pState.tempCircle=null; }
                     if(bufferCircle3pState.tempCenterDot){ try{map.removeLayer(bufferCircle3pState.tempCenterDot);}catch(err){} bufferCircle3pState.tempCenterDot=null; }
                     if(bufferCircle3pState.tempLabel){ try{map.removeLayer(bufferCircle3pState.tempLabel);}catch(err){} bufferCircle3pState.tempLabel=null; }
                 } else if(bufferCircle3pState.points.length===1){
                     bufferCircle3pState.points.pop();
                     var m1=bufferCircle3pState.markers.pop();
-                    if(m1) try{map.removeLayer(m1);}catch(err){}
+                    if(m1) try{measureLayerGroup.removeLayer(m1);map.removeLayer(m1);}catch(err){}
                 } else {
                     stopBufferCircle3p();
                 }
@@ -4843,6 +5537,8 @@ function addCircleToMeasure(center, rKm) {
                     return;
                 }
 
+                var bzIdx = measureBufferZoneCounter++;
+
                 var poly = L.polygon(buf, {
                     color: '#e41e26',
                     weight: 2,
@@ -4853,6 +5549,9 @@ function addCircleToMeasure(center, rKm) {
                     renderer: L.svg(),
                     interactive: true
                 }).addTo(measureLayerGroup);
+                poly._measureType = 'buffer_zone';
+                poly._measureIdx = bzIdx;
+                poly._bufferDistKm = bufferZoneState.distKm;
 
                 var area = 0;
                 for(var r = 0; r < buf.length; r++){
@@ -4861,9 +5560,10 @@ function addCircleToMeasure(center, rKm) {
 
                 poly.on('click', function(ev){
                     if(isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; }
+                    var idx = ev.target._measureIdx || bzIdx;
                     L.popup({ closeButton: true })
                         .setLatLng(ev.latlng)
-                        .setContent('<div style="padding:6px 8px;font-size:12px;"><div style="font-weight:700;">' + (currentLang==='cs'?'Obalová zóna':'Buffer Zone') + '</div>' + (currentLang==='cs'?'Šířka':'Width') + ': ' + bufferZoneState.distKm + ' km<br>' + (currentLang==='cs'?'Plocha':'Area') + ': ' + formatArea(area) + '</div>')
+                        .setContent('<div style="padding:6px 8px;font-size:12px;"><div style="font-weight:700;">' + (currentLang==='cs'?'Obalová zóna ':'Buffer Zone ') + idx + '</div>' + (currentLang==='cs'?'Šířka':'Width') + ': ' + bufferZoneState.distKm + ' km<br>' + (currentLang==='cs'?'Plocha':'Area') + ': ' + formatArea(area) + '</div>')
                         .openOn(map);
                     L.DomEvent.stopPropagation(ev);
                 });
@@ -4877,16 +5577,32 @@ function addCircleToMeasure(center, rKm) {
                     pane: 'overlayPane',
                     renderer: L.svg()
                 }).addTo(measureLayerGroup);
+                hit._measureType = 'buffer_zone_hit';
+                hit._measureIdx = bzIdx;
 
                 hit.on('click', function(ev){
                     if(isAnyDrawingActive()){ L.DomEvent.stopPropagation(ev); return; }
+                    var idx = ev.target._measureIdx || bzIdx;
                     L.popup({ closeButton: true })
                         .setLatLng(ev.latlng)
-                        .setContent('<div style="padding:6px 8px;font-size:12px;"><div style="font-weight:700;">' + (currentLang==='cs'?'Obalová zóna':'Buffer Zone') + '</div>' + (currentLang==='cs'?'Šířka':'Width') + ': ' + bufferZoneState.distKm + ' km<br>' + (currentLang==='cs'?'Plocha':'Area') + ': ' + formatArea(area) + '</div>')
+                        .setContent('<div style="padding:6px 8px;font-size:12px;"><div style="font-weight:700;">' + (currentLang==='cs'?'Obalová zóna ':'Buffer Zone ') + idx + '</div>' + (currentLang==='cs'?'Šířka':'Width') + ': ' + bufferZoneState.distKm + ' km<br>' + (currentLang==='cs'?'Plocha':'Area') + ': ' + formatArea(area) + '</div>')
                         .openOn(map);
                     L.DomEvent.stopPropagation(ev);
                 });
 
+                
+                (function(bPoly, bHit){
+                    recordMeasureAction({
+                        undo: function() {
+                            try { measureLayerGroup.removeLayer(bPoly); } catch(e){}
+                            try { measureLayerGroup.removeLayer(bHit); } catch(e){}
+                        },
+                        redo: function() {
+                            try { bPoly.addTo(measureLayerGroup); } catch(e){}
+                            try { bHit.addTo(measureLayerGroup); } catch(e){}
+                        }
+                    });
+                })(poly, hit);
                 bufferZoneState.snapPoints=collectSnapPoints(); L.DomEvent.stop(e); }; map.on("click", bufferZoneState.clickHandler);             bufferZoneState.captureHandler=function(e){ if(!bufferZoneState.active) return; var latlng=map.mouseEventToLatLng(e); var s=snapToPoint(latlng); if(s) latlng=s; var fake={latlng: latlng, originalEvent:e}; L.DomEvent.stop(e); bufferZoneState.clickHandler(fake); }; map.getContainer().addEventListener("click", bufferZoneState.captureHandler, true); bufferZoneState.contextMenuHandler=function(e){
     if(!bufferZoneState.active) return;
     if(e.originalEvent){ e.originalEvent.preventDefault(); e.originalEvent.stopPropagation(); }
@@ -5031,7 +5747,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                         }
                         return { color: '#444', weight: 1, opacity: 0.6, dashArray: '5, 5' };
                     }
-}).addTo(measureLayerGroup);
+                }).addTo(map);
                 if (gridState === 2) {
                     gridLabelsLayer = L.layerGroup();
                     data.labels.forEach(function(lbl) {
@@ -5051,21 +5767,11 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                 if (oldBadge) oldBadge.remove();
                 
                 btn.classList.toggle("active", gridState !== 0);
+                btn.setAttribute("aria-pressed", gridState !== 0 ? "true" : "false");
                 
-                if (gridState === 0) {
-                    // Off - monochromatic
-                    btn.textContent = "🌐";
-                    btn.style.filter = "grayscale(100%)";
-                } else if (gridState === 1) {
-                    // Grid on - colored
-                    btn.textContent = "🌐";
-                    btn.style.filter = "none";
-                } else {
-                    // Grid + labels - colored with degree badge (7°)
-                    btn.textContent = "🌐";
-                    btn.style.filter = "none";
-                    var badge = document.createElement('span');
-                    badge.className = 'degree-badge';
+                if (gridState === 2) {
+                    var badge = document.createElement("span");
+                    badge.className = "degree-badge";
                     badge.style.background = "rgba(0,0,0,0.5)";
                     badge.style.color = "white";
                     badge.textContent = "7°";
@@ -5982,7 +6688,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                         var curBlur = d.heatBlur !== undefined ? d.heatBlur : 25;
                         var blurPill = document.createElement("button");
                         blurPill.className = "source-pill-btn";
-                        blurPill.innerHTML = "\uD83C\uDF2B\uFE0F " + curBlur + "px";
+                        blurPill.innerHTML = "🌫️ " + curBlur + "px";
                         blurPill.title = t.lblBlur || "Rozmazání";
                         blurPill.onclick = function(e) {
                             if (e) e.stopPropagation();
@@ -6000,7 +6706,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 function applyTPBlur(v, syncNum) {
                                     var n = parseInt(v, 10); if (isNaN(n)) n = 25; if (n < 5) n = 5; if (n > 50) n = 50;
                                     d.heatBlur = n; lastEditedDataset = k; curBlur = n;
-                                    blurPill.innerHTML = "\uD83C\uDF2B\uFE0F " + n + "px"; slider.value = n;
+                                    blurPill.innerHTML = "🌫️ " + n + "px"; slider.value = n;
                                     if (syncNum !== false) numInput.value = n;
                                     scheduleStyleApply("tpblur:" + k, function() { saveDatasetStyles(); rebuild(); });
                                 }
@@ -6014,7 +6720,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     var clean = this.value.replace(/[^0-9]/g, "");
                                     if (clean !== "") {
                                         var n = parseInt(clean, 10); if (n < 5) n = 5; if (n > 50) n = 50;
-                                        slider.value = n; d.heatBlur = n; lastEditedDataset = k; curBlur = n; blurPill.innerHTML = "\uD83C\uDF2B\uFE0F " + n + "px";
+                                        slider.value = n; d.heatBlur = n; lastEditedDataset = k; curBlur = n; blurPill.innerHTML = "🌫️ " + n + "px";
                                         clearTimeout(_tpBlurT);
                                         _tpBlurT = setTimeout(function() { scheduleStyleApply("tpblur:" + k, function() { saveDatasetStyles(); rebuild(); }); }, 500);
                                     }
@@ -6040,7 +6746,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                         var curZk = parseZoneKm(d.zoneKm, 10);
                         var tpZkPill = document.createElement("button");
                         tpZkPill.className = "source-pill-btn";
-                        tpZkPill.innerHTML = "\u2B24 " + fmtZoneKm(curZk) + "km";
+                        tpZkPill.innerHTML = "⬤ " + fmtZoneKm(curZk) + "km";
                         tpZkPill.title = t.lblZoneRadius || "Poloměr zóny";
                         tpZkPill.onclick = function(e) {
                             if (e) e.stopPropagation();
@@ -6058,7 +6764,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 function applyTPZk(v, syncNum) {
                                     var n = zoneKmFromSlider(parseInt(v, 10));
                                     d.zoneKm = n; lastEditedDataset = k; curZk = n;
-                                    tpZkPill.innerHTML = "\u2B24 " + fmtZoneKm(n) + "km"; slider.value = zoneSliderFromKm(n);
+                                    tpZkPill.innerHTML = "⬤ " + fmtZoneKm(n) + "km"; slider.value = zoneSliderFromKm(n);
                                     if (syncNum !== false) numInput.value = fmtZoneKm(n);
                                     scheduleStyleApply("tpzone:" + k, function() { saveDatasetStyles(); rebuild(); });
                                 }
@@ -6072,7 +6778,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     var raw = this.value.replace(",", "."); var n = parseFloat(raw);
                                     if (!isNaN(n)) {
                                         if (n < 0) n = 0; if (n > 10000) n = 10000;
-                                        d.zoneKm = n; lastEditedDataset = k; curZk = n; tpZkPill.innerHTML = "\u2B24 " + fmtZoneKm(n) + "km";
+                                        d.zoneKm = n; lastEditedDataset = k; curZk = n; tpZkPill.innerHTML = "⬤ " + fmtZoneKm(n) + "km";
                                         clearTimeout(_tpZkT);
                                         _tpZkT = setTimeout(function() { scheduleStyleApply("tpzone:" + k, function() { saveDatasetStyles(); rebuild(); }); }, 500);
                                     }
@@ -6604,9 +7310,9 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
             if (pfx.length <= 4) return y;
             var mi = parseInt(pfx.substring(4, 6), 10) - 1;
             var mn = t.monthsShort[mi] || "";
-            if (pfx.length <= 6) return mn + "\u00A0" + y;
+            if (pfx.length <= 6) return mn + " " + y;
             var day = parseInt(pfx.substring(6, 8), 10);
-            return (currentLang === "cs") ? (day + ".\u00A0" + (mi + 1) + ".\u00A0" + y) : (mn + "\u00A0" + day + ",\u00A0" + y);
+            return (currentLang === "cs") ? (day + ". " + (mi + 1) + ". " + y) : (mn + " " + day + ", " + y);
         }
 
         function renderYearDropdown() {
@@ -7293,7 +7999,24 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                     if (outer.length < 3) return;
                     var fc = props.fill || (props.style && props.style.fill) || null;
                     var fo = props["fill-opacity"] !== undefined ? parseFloat(props["fill-opacity"]) : ((props.style && props.style.fillOpacity !== undefined) ? parseFloat(props.style.fillOpacity) : null);
-                    polygons.push({ name: label || docName, outer: outer, holes: holes, fillColor: fc, fillOpacity: fo });
+                    polygons.push({
+                        name: label || docName, outer: outer, holes: holes, fillColor: fc, fillOpacity: fo,
+                        geojsonType:        props.type              || null,
+                        polygonIndex:       props.polygon_index     != null ? props.polygon_index    : null,
+                        vertexCount:        props.vertex_count      != null ? props.vertex_count     : null,
+                        perimeterM:         props.perimeter_m       != null ? props.perimeter_m      : null,
+                        perimeterFormatted: props.perimeter_formatted|| null,
+                        areaM2:             props.area_m2           != null ? props.area_m2          : null,
+                        areaFormatted:      props.area_formatted    || null,
+                        circleIndex:        props.circle_index      != null ? props.circle_index     : null,
+                        radiusM:            props.radius_m          != null ? props.radius_m         : null,
+                        radiusKm:           props.radius_km         != null ? props.radius_km        : null,
+                        radiusFormatted:    props.radius_formatted  || null,
+                        centerLat:          props.center_lat        != null ? props.center_lat       : null,
+                        centerLng:          props.center_lng        != null ? props.center_lng       : null,
+                        bufferIndex:        props.buffer_index      != null ? props.buffer_index     : null,
+                        widthKm:            props.width_km          != null ? props.width_km         : null
+                    });
                 }
                 function pushPoint(c, props) {
                     if (!c || c.length < 2) return;
