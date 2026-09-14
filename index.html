@@ -309,7 +309,7 @@
         @media (max-width: 768px) {
             .measure-input-popup {
                 position: fixed !important;
-                top: calc(52px + var(--sat, 0px)) !important;
+                top: calc(90px + var(--sat, 0px)) !important;
                 left: 50% !important;
                 right: auto !important;
                 bottom: auto !important;
@@ -3234,7 +3234,7 @@ function startMeasureDistance() {
             
             // Change cursor to crosshair
             map.getContainer().style.cursor = "crosshair";
-            setTimeout(function(){ if(measureDistanceState.active && measureDistanceState.points.length===0) showMeasureInput("coord", currentLang==='cs'?"Zadej souřadnice lat,lng":"Enter lat,lng", "50.1234, 14.5678", map.getCenter()); }, 100);
+            if (typeof dynamicInputEnabled !== 'undefined' && dynamicInputEnabled) { updateDynamicInputState('line-start', null, null); }
             
             // Collect all snappable points from active datasets
             measureDistanceState.snapPoints = collectSnapPoints();
@@ -5351,7 +5351,7 @@ function addCircleToMeasure(center, rKm) {
             bufferCircleCenterState.active=true;
             bufferCircleCenterState.center=null;
             bufferCircleCenterState.markers=[];
-            bufferCircleCenterState.snapPoints=collectSnapPoints(); setTimeout(function(){ if(bufferCircleCenterState.active && !bufferCircleCenterState.center) showMeasureInput("coord", currentLang==="cs"?"Zadej souĹ™adnice stĹ™edu lat,lng":"Enter center lat,lng", "50.1234, 14.5678", map.getCenter()); }, 100);
+            bufferCircleCenterState.snapPoints=collectSnapPoints(); if (typeof dynamicInputEnabled !== 'undefined' && dynamicInputEnabled) { updateDynamicInputState('circle-center', null, null); }
             map.getContainer().style.cursor='crosshair';
             bufferCircleCenterState.moveHandler=function(e){
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
@@ -5397,7 +5397,7 @@ function addCircleToMeasure(center, rKm) {
                     if(bufferCircleCenterState.tempLabel){ try{ map.removeLayer(bufferCircleCenterState.tempLabel); }catch(e){} bufferCircleCenterState.tempLabel=null; }
                     addCircleToMeasure(bufferCircleCenterState.center, r);
                     bufferCircleCenterState.center=null;
-                    bufferCircleCenterState.snapPoints=collectSnapPoints(); setTimeout(function(){ if(bufferCircleCenterState.active && !bufferCircleCenterState.center) showMeasureInput("coord", currentLang==="cs"?"Zadej souĹ™adnice stĹ™edu lat,lng":"Enter center lat,lng", "50.1234, 14.5678", map.getCenter()); }, 100);
+                    bufferCircleCenterState.snapPoints=collectSnapPoints(); if (typeof dynamicInputEnabled !== 'undefined' && dynamicInputEnabled) { updateDynamicInputState('circle-center', null, null); }
                 }
             }
 
