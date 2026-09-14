@@ -3242,7 +3242,7 @@ function startMeasureDistance() {
             if (bDist) { bDist.classList.add("active"); bDist.setAttribute("aria-pressed", "true"); }
             
             // Change cursor to crosshair
-            map.getContainer().style.cursor = "crosshair";
+            map.getContainer().style.cursor = "crosshair"; setTimeout(function(){ if(measureDistanceState.active && measureDistanceState.points.length===0) showMeasureInput("coord", currentLang==="cs"?"Zadej souřadnice lat,lng":"Enter lat,lng", "50.1234, 14.5678", map.getCenter()); }, 100);
             if (typeof dynamicInputEnabled !== 'undefined' && dynamicInputEnabled) { updateDynamicInputState('line-start', null, null); }
             
             // Collect all snappable points from active datasets
@@ -4540,7 +4540,7 @@ function startMeasureDistance() {
             showCoordsState.snapPoints = collectSnapPoints();
             map.getContainer().style.cursor="crosshair";
             showCoordsState.moveHandler=function(e){
-                var ll=e.latlng;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng);
                 var snapped=snapToPoint(ll);
                 if(snapped) ll=snapped;
                 var lat=ll.lat.toFixed(6), lng=ll.lng.toFixed(6);
@@ -4551,7 +4551,7 @@ function startMeasureDistance() {
             };
             map.on("mousemove", showCoordsState.moveHandler); map.on("touchmove", showCoordsState.moveHandler); map.on("touchmove", showCoordsState.moveHandler);
             showCoordsState.clickHandler=function(e){
-                var ll=e.latlng;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng);
                 var snapped=snapToPoint(ll);
                 if(snapped) ll=snapped;
                 var txt=ll.lat.toFixed(6)+", "+ll.lng.toFixed(6);
@@ -4699,7 +4699,7 @@ function startMeasureDistance() {
                 updateDynamicInputState('parallel', null, null);
             }
             parallelState.moveHandler=function(e){
-                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 map.getContainer().style.cursor=s?"pointer":"crosshair";
                 var field = document.getElementById('measureInputField');
                 var hasCustomVal = (typeof dynamicInputState !== 'undefined' && dynamicInputState.active && field && trimStr(field.value).length > 0);
@@ -4713,7 +4713,7 @@ function startMeasureDistance() {
             };
             map.on("mousemove", parallelState.moveHandler); map.on("touchmove", parallelState.moveHandler); map.on("touchmove", parallelState.moveHandler);
             parallelState.clickHandler=function(e){
-                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 addParallelLine(ll.lat);
                 L.DomEvent.stop(e);
             };
@@ -4765,7 +4765,7 @@ function startMeasureDistance() {
                 updateDynamicInputState('meridian', null, null);
             }
             meridianState.moveHandler=function(e){
-                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 map.getContainer().style.cursor=s?"pointer":"crosshair";
                 var field = document.getElementById('measureInputField');
                 var hasCustomVal = (typeof dynamicInputState !== 'undefined' && dynamicInputState.active && field && trimStr(field.value).length > 0);
@@ -4779,7 +4779,7 @@ function startMeasureDistance() {
             };
             map.on("mousemove", meridianState.moveHandler); map.on("touchmove", meridianState.moveHandler); map.on("touchmove", meridianState.moveHandler);
             meridianState.clickHandler=function(e){
-                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 addMeridianLine(ll.lng);
                 L.DomEvent.stop(e);
             };
@@ -5360,7 +5360,7 @@ function addCircleToMeasure(center, rKm) {
             bufferCircleCenterState.snapPoints=collectSnapPoints(); if (typeof dynamicInputEnabled !== 'undefined' && dynamicInputEnabled) { updateDynamicInputState('circle-center', null, null); }
             map.getContainer().style.cursor='crosshair';
             bufferCircleCenterState.moveHandler=function(e){
-                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 map.getContainer().style.cursor=s?'pointer':'crosshair';
                 if(bufferCircleCenterState.center){
                     var r=calcDistKm(bufferCircleCenterState.center.lat,bufferCircleCenterState.center.lng,ll.lat,ll.lng);
@@ -5408,7 +5408,7 @@ function addCircleToMeasure(center, rKm) {
             }
 
             bufferCircleCenterState.clickHandler=function(e){
-                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 onPointSelected(ll);
                 L.DomEvent.stop(e);
             };
@@ -5485,7 +5485,7 @@ function addCircleToMeasure(center, rKm) {
             bufferCircle3pState.snapPoints=collectSnapPoints();
             map.getContainer().style.cursor='crosshair';
             bufferCircle3pState.moveHandler=function(e){
-                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 map.getContainer().style.cursor=s?'pointer':'crosshair';
                 if(bufferCircle3pState.points.length===2){
                     var p1=bufferCircle3pState.points[0], p2=bufferCircle3pState.points[1];
@@ -5548,7 +5548,7 @@ function addCircleToMeasure(center, rKm) {
             }
 
             bufferCircle3pState.clickHandler=function(e){
-                var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
+                var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 on3pPointSelected(ll);
                 L.DomEvent.stop(e);
             };
