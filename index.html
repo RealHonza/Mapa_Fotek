@@ -736,7 +736,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.39</span>
+                    <span class="info-meta-val">2.40</span>
                 </div>
             </div>
 
@@ -3336,6 +3336,19 @@ function startMeasureDistance() {
             };
             
             map.on("mousemove", measureDistanceState.mapMoveHandler);
+            // Mobil: touchmove — aktualizace currentLatLng i bez pohybu myši
+            measureDistanceState.touchMoveHandler = function(e) {
+                if (!measureDistanceState.active) return;
+                var touch = e.touches && e.touches[0];
+                if (!touch) return;
+                var rect = map.getContainer().getBoundingClientRect();
+                var ll = map.containerPointToLatLng(L.point(touch.clientX - rect.left, touch.clientY - rect.top));
+                dynamicInputState.currentLatLng = ll;
+                if (typeof dynamicInputEnabled !== 'undefined' && dynamicInputEnabled && measureDistanceState.points.length >= 1) {
+                    updateDynamicInputState('line-segment', measureDistanceState.points[measureDistanceState.points.length - 1], ll);
+                }
+            };
+            map.getContainer().addEventListener("touchmove", measureDistanceState.touchMoveHandler, {passive: true});
             
             // Click handler for map (background clicks)
             measureDistanceState.mapClickHandler = function(e) {
@@ -3688,6 +3701,10 @@ function startMeasureDistance() {
             if (measureDistanceState.mapMoveHandler) {
                 map.off("mousemove", measureDistanceState.mapMoveHandler);
                 measureDistanceState.mapMoveHandler = null;
+            }
+            if (measureDistanceState.touchMoveHandler) {
+                map.getContainer().removeEventListener("touchmove", measureDistanceState.touchMoveHandler);
+                measureDistanceState.touchMoveHandler = null;
             }
             if (measureDistanceState.escapeHandler) {
                 document.removeEventListener("keydown", measureDistanceState.escapeHandler);
@@ -6076,6 +6093,12 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                 if(coord){
                     field.value = '';
                     addMeasurePoint(coord);
+                    // Na mobilu mapMoveHandler neběží bez pohybu prstu — přepnout na line-segment explicitně
+                    if(typeof dynamicInputEnabled !== 'undefined' && dynamicInputEnabled &&
+                       measureDistanceState.points && measureDistanceState.points.length >= 1) {
+                        var _lastPt = measureDistanceState.points[measureDistanceState.points.length - 1];
+                        updateDynamicInputState('line-segment', _lastPt, dynamicInputState.currentLatLng || _lastPt);
+                    }
                 } else {
                     field.className = 'hud-invalid';
                     if(typeof showToast === 'function') showToast(isCs ? 'Neplatn\u00e9 sou\u0159adnice' : 'Invalid coordinates');
