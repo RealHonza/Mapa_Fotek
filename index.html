@@ -282,7 +282,7 @@
         .measure-panel { display: none; position: static; transform: none; order: 2; margin: 0 auto; pointer-events: auto; flex: 0 1 auto; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: 32px; padding: 0 4px; max-width: calc(100vw - 16px); }
         .measure-panel.open { display: flex; align-items: center; }
         @media (max-width: 600px) {
-            .measure-panel { width: 100%; justify-content: flex-start; order: 4; margin-top: 4px; flex: 0 0 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .measure-panel { width: 100%; justify-content: flex-start; order: 4; margin-top: 4px; flex: 0 0 100%; overflow: visible; }
         }
         .measure-panel-content { display: flex; align-items: center; gap: 4px; height: 100%; flex-shrink: 0; }
         .measure-panel-btn { height: 26px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid rgba(0,0,0,0.08); color: #3c4043; padding: 0 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.15s; user-select: none; white-space: nowrap; }
@@ -339,18 +339,27 @@
             }
         }
         .buffer-dropdown { display:none; position:absolute; top:38px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.98); backdrop-filter:blur(10px); border:1px solid rgba(0,0,0,0.08); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); padding:6px; flex-direction:column; gap:6px; z-index:1600; min-width:44px; }
-        @media (max-width: 600px) {
-            .buffer-dropdown { position: fixed; z-index: 10005; flex-direction: row; gap: 8px; }
+        .buffer-dropdown.open { display: flex; }
+        @media (max-width: 900px) {
+            .buffer-dropdown {
+                position: absolute;
+                top: 38px;
+                left: 50%;
+                transform: translateX(-50%);
+                flex-direction: row;
+                gap: 8px;
+                padding: 6px 8px;
+                min-width: auto;
+                z-index: 10005;
+            }
         }
-        .buffer-dropdown.open { display:flex; }
-        @media (max-width:900px){ .buffer-dropdown{ position:fixed; top:60px; left:50%; transform:translateX(-50%); flex-direction:row; gap:8px; padding:8px 10px; min-width:120px; max-width:calc(100vw - 20px); } }
         details.step { margin: 2px 0; }
         details.step > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 5px; font-weight: inherit; user-select: none; padding: 2px 0; }
         details.step > summary::-webkit-details-marker { display: none; }
         details.step > summary::before { content: '▶'; font-size: 9px; color: #5f6368; flex-shrink: 0; transition: transform 0.18s; display: inline-block; }
         details.step[open] > summary::before { transform: rotate(90deg); }
         .step-body { margin-top: 4px; padding-left: 12px; }
-        @media (max-width:600px){ .buffer-dropdown{ position:fixed; top:60px; left:50%; transform:translateX(-50%); max-width:calc(100vw - 20px); } }
+        
         .buffer-dropdown-item { width:26px; height:26px; display:flex; align-items:center; justify-content:center; background:transparent; border:1px solid rgba(0,0,0,0.08); border-radius:6px; cursor:pointer; color:#3c4043; }
         .buffer-dropdown-item:hover { background:#ffffff; color:#1a73e8; }
         .buffer-dropdown-item.active { background:#202124; color:#ffffff; border-color:#202124; }
@@ -4815,14 +4824,11 @@ function startMeasureDistance() {
             var dd = document.getElementById("bufferDropdown");
             var btn = document.getElementById("btnBufferZone");
             if(!dd || !btn || !dd.classList.contains("open")) return;
-            if(window.innerWidth <= 600){
-                var rect = btn.getBoundingClientRect();
-                dd.style.position = "fixed";
-                dd.style.top = (rect.bottom + 6) + "px";
-                var ddWidth = dd.offsetWidth || 132;
-                var leftPos = Math.max(8, Math.min(window.innerWidth - ddWidth - 8, rect.left + rect.width / 2 - ddWidth / 2));
-                dd.style.left = leftPos + "px";
-                dd.style.transform = "none";
+            if(window.innerWidth <= 900){
+                dd.style.position = "absolute";
+                dd.style.top = "38px";
+                dd.style.left = "50%";
+                dd.style.transform = "translateX(-50%)";
                 dd.style.flexDirection = "row";
                 dd.style.zIndex = "10005";
             } else {
@@ -4831,7 +4837,7 @@ function startMeasureDistance() {
                 dd.style.left = "50%";
                 dd.style.transform = "translateX(-50%)";
                 dd.style.flexDirection = "column";
-                dd.style.zIndex = "1600";
+                dd.style.zIndex = "10005";
             }
         }
         function toggleBufferDropdown(e){
