@@ -343,6 +343,7 @@
             .buffer-dropdown { position: fixed; z-index: 10005; flex-direction: row; gap: 8px; }
         }
         .buffer-dropdown.open { display:flex; }
+        @media (max-width:600px){ .buffer-dropdown{ position:fixed; top:60px; left:50%; transform:translateX(-50%); flex-direction:row; gap:8px; padding:8px 10px; min-width:120px; max-width:calc(100vw - 20px); } }
         details.step { margin: 2px 0; }
         details.step > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 5px; font-weight: inherit; user-select: none; padding: 2px 0; }
         details.step > summary::-webkit-details-marker { display: none; }
@@ -3234,6 +3235,7 @@ function startMeasureDistance() {
             
             // Change cursor to crosshair
             map.getContainer().style.cursor = "crosshair";
+            setTimeout(function(){ if(measureDistanceState.active && measureDistanceState.points.length===0) showMeasureInput("coord", currentLang==='cs'?"Zadej souřadnice lat,lng":"Enter lat,lng", "50.1234, 14.5678", map.getCenter()); }, 100);
             
             // Collect all snappable points from active datasets
             measureDistanceState.snapPoints = collectSnapPoints();
@@ -5350,7 +5352,7 @@ function addCircleToMeasure(center, rKm) {
             bufferCircleCenterState.active=true;
             bufferCircleCenterState.center=null;
             bufferCircleCenterState.markers=[];
-            bufferCircleCenterState.snapPoints=collectSnapPoints();
+            bufferCircleCenterState.snapPoints=collectSnapPoints(); setTimeout(function(){ if(bufferCircleCenterState.active && !bufferCircleCenterState.center) showMeasureInput("coord", currentLang==="cs"?"Zadej souĹ™adnice stĹ™edu lat,lng":"Enter center lat,lng", "50.1234, 14.5678", map.getCenter()); }, 100);
             map.getContainer().style.cursor='crosshair';
             bufferCircleCenterState.moveHandler=function(e){
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
@@ -5396,7 +5398,7 @@ function addCircleToMeasure(center, rKm) {
                     if(bufferCircleCenterState.tempLabel){ try{ map.removeLayer(bufferCircleCenterState.tempLabel); }catch(e){} bufferCircleCenterState.tempLabel=null; }
                     addCircleToMeasure(bufferCircleCenterState.center, r);
                     bufferCircleCenterState.center=null;
-                    bufferCircleCenterState.snapPoints=collectSnapPoints();
+                    bufferCircleCenterState.snapPoints=collectSnapPoints(); setTimeout(function(){ if(bufferCircleCenterState.active && !bufferCircleCenterState.center) showMeasureInput("coord", currentLang==="cs"?"Zadej souĹ™adnice stĹ™edu lat,lng":"Enter center lat,lng", "50.1234, 14.5678", map.getCenter()); }, 100);
                 }
             }
 
