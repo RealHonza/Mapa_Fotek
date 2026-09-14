@@ -293,20 +293,19 @@
         .measure-panel-btn .degree-badge { position: absolute; top: -4px; right: -4px; background: #c00; color: white; font-size: 9px; font-weight: bold; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; line-height: 1; }
         .measure-panel-close { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; color: #5f6368; font-size: 18px; cursor: pointer; border-radius: 4px; line-height: 1; }
         .measure-panel-close:hover { background: #f1f3f4; color: #202124; }
-        .measure-input-popup { position: absolute; z-index: 10002; background: rgba(32, 33, 36, 0.94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 8px; padding: 4px 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.35); pointer-events: none; transform: translate(22px, -115%); display: none; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; user-select: none; min-width: 220px; }
-        .measure-input-popup .hud-label { font-size: 11px; font-weight: 600; color: #8ab4f8; letter-spacing: 0.2px; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
-        .measure-input-popup .hud-row { display: flex; align-items: center; gap: 6px; position:relative; padding-right:36px; }
+        .measure-input-popup { position: absolute; z-index: 10002; background: rgba(32, 33, 36, 0.94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 8px; padding: 6px 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.35); pointer-events: none; transform: translate(22px, -115%); display: none; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; user-select: none; min-width: 180px; }
+        .measure-input-popup .hud-label { font-size: 11px; font-weight: 600; color: #8ab4f8; letter-spacing: 0.2px; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
+        .measure-input-popup .hud-row { display: flex; align-items: center; gap: 6px; }
         .measure-input-popup input { pointer-events: auto; border: 1px solid rgba(255,255,255,0.28); outline: none; font-size: 13px; font-weight: 700; width: 170px; flex: 1; min-width: 0; text-align: left; font-family: Consolas, Monaco, 'Courier New', monospace; color: #fff; background: rgba(255,255,255,0.12); border-radius: 4px; padding: 4px 6px; box-sizing: border-box; }
         .measure-input-popup input:focus { border-color: #8ab4f8; box-shadow: 0 0 0 2px rgba(138,180,248,0.3); background: rgba(255,255,255,0.18); }
         .measure-input-popup input.hud-valid { border-color: #81c995; }
         .measure-input-popup input.hud-invalid { border-color: #f28b82; }
-        .measure-input-popup .hud-btns { display:flex; flex-direction:column; gap:4px; position:absolute; right:0; top:50%; transform:translateY(-50%); }
         .measure-input-popup .hud-btn { pointer-events: auto; width: 28px; height: 28px; min-width: 28px; border: none; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
-        .measure-input-popup .hud-btn-confirm { background: #1e8e3e; color: #fff; order:2; }
+        .measure-input-popup .hud-btn-confirm { background: #1e8e3e; color: #fff; }
         .measure-input-popup .hud-btn-confirm:hover, .measure-input-popup .hud-btn-confirm:active { background: #188038; }
-        .measure-input-popup .hud-btn-cancel { background: rgba(255, 255, 255, 0.16); color: #dadce0; order:1; }
+        .measure-input-popup .hud-btn-cancel { background: rgba(255, 255, 255, 0.16); color: #dadce0; }
         .measure-input-popup .hud-btn-cancel:hover, .measure-input-popup .hud-btn-cancel:active { background: rgba(255, 255, 255, 0.28); color: #fff; }
-        .measure-input-popup .hud-hint { font-size: 9.5px; color: #9aa0a6; margin-top: 2px; }
+        .measure-input-popup .hud-hint { font-size: 9.5px; color: #9aa0a6; margin-top: 3px; }
         @media (max-width: 768px) {
             .measure-input-popup {
                 position: fixed !important;
@@ -326,8 +325,7 @@
                 height: 36px !important;
                 padding: 4px 8px !important;
             }
-            .measure-input-popup .hud-btns { display:flex; flex-direction:column; gap:4px; position:absolute; right:0; top:50%; transform:translateY(-50%); }
-        .measure-input-popup .hud-btn {
+            .measure-input-popup .hud-btn {
                 width: 36px !important;
                 height: 36px !important;
                 min-width: 36px !important;
@@ -689,7 +687,7 @@
             <button class="measure-panel-close" onclick="toggleMeasurePanel()" title="Zavřít panel měření" aria-label="Zavřít panel měření">&times;</button>
         </div>
     </div>
-    <div id="measureInputPopup" class="measure-input-popup" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()"><div id="measureInputLabel" class="hud-label"></div><div class="hud-row"><input id="measureInputField" type="text" autocomplete="off" spellcheck="false" inputmode="text"><div class="hud-btns"><button type="button" id="hudBtnConfirm" class="hud-btn hud-btn-confirm" onclick="handleDynamicInputEnter()" title="Potvrdit (Enter)" aria-label="Potvrdit">&#x2713;</button><button type="button" id="hudBtnCancel" class="hud-btn hud-btn-cancel" onclick="handleDynamicInputCancel()" title="Zru&#x161;it (Esc)" aria-label="Zru&#x161;it">&#x2715;</button></div></div><div id="measureInputHint" class="hud-hint"></div></div>
+    <div id="measureInputPopup" class="measure-input-popup" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()" ontouchend="event.stopPropagation()"><div id="measureInputLabel" class="hud-label"></div><div class="hud-row"><input id="measureInputField" type="text" autocomplete="off" spellcheck="false" inputmode="text"><button type="button" id="hudBtnConfirm" class="hud-btn hud-btn-confirm" onclick="handleDynamicInputEnter()" title="Potvrdit (Enter)" aria-label="Potvrdit">&#x2713;</button><button type="button" id="hudBtnCancel" class="hud-btn hud-btn-cancel" onclick="handleDynamicInputCancel()" title="Zru&#x161;it (Esc)" aria-label="Zru&#x161;it">&#x2715;</button></div><div id="measureInputHint" class="hud-hint"></div></div>
 
     <div class="top-bar-right">
         <!-- Přepínač mapových podkladů (pouze ikona, 34px) -->
@@ -3114,7 +3112,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (bmMer) bmMer.title = (typeof meridianState !== "undefined" && meridianState.active) ? (currentLang === "cs" ? "Zrušit poledník (Esc)" : "Cancel meridian (Esc)") : i18n[currentLang].btnMeridian;
         }
 
-        // Distanceeasurement tool
+        // Distance measurement tool
         // Dedicated layer group for all measurement elements (persists across sessions)
         var measureLayerGroup = L.layerGroup().addTo(map);
         
@@ -4551,7 +4549,7 @@ function startMeasureDistance() {
                 showCoordsState.popup=L.popup({closeButton:false, autoClose:false, closeOnClick:false, autoPan:false, className:'show-coords-popup', offset:[0,0]}).setLatLng(ll).setContent('<div style="background:#fff;color:#333;padding:2px 6px;border-radius:0;font-size:11px;font-family:monospace;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.25);border:1px solid #333;">'+txt+'</div>').openOn(map);
                 map.getContainer().style.cursor=snapped?"pointer":"crosshair";
             };
-            map.on("mousemove", showCoordsState.moveHandler);
+            map.on("mousemove", showCoordsState.moveHandler); map.on("touchmove", showCoordsState.moveHandler); map.on("touchmove", showCoordsState.moveHandler);
             showCoordsState.clickHandler=function(e){
                 var ll=e.latlng;
                 var snapped=snapToPoint(ll);
@@ -4713,7 +4711,7 @@ function startMeasureDistance() {
                     updateDynamicInputState('parallel', null, e.latlng);
                 }
             };
-            map.on("mousemove", parallelState.moveHandler);
+            map.on("mousemove", parallelState.moveHandler); map.on("touchmove", parallelState.moveHandler); map.on("touchmove", parallelState.moveHandler);
             parallelState.clickHandler=function(e){
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 addParallelLine(ll.lat);
@@ -4779,7 +4777,7 @@ function startMeasureDistance() {
                     updateDynamicInputState('meridian', null, e.latlng);
                 }
             };
-            map.on("mousemove", meridianState.moveHandler);
+            map.on("mousemove", meridianState.moveHandler); map.on("touchmove", meridianState.moveHandler); map.on("touchmove", meridianState.moveHandler);
             meridianState.clickHandler=function(e){
                 var ll=e.latlng; var s=snapToPoint(ll); if(s) ll=s;
                 addMeridianLine(ll.lng);
@@ -5985,7 +5983,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                 } else if(mode === 'line-segment'){
                     label.textContent = isCs ? '\uD83D\uDCCF D\u00e9lka \u00faseku (km)' : '\uD83D\uDCCF Segment length (km)';
                     field.placeholder = isCs ? 'nap\u0159. 15 nebo 2.5km' : 'e.g. 15 or 2.5km';
-                    hint.textContent = isCs ? 'Vzd\u00e1lenost \u2022 [Enter] vlo\u017eit \u2022 [Esc] smazat' : 'Distance \u2022 [Enter] add \u2022 [Esc] clear';
+                    hint.textContent = isCs ? 'Vzd\u00e1lenost v km \u2022 [Enter] vlo\u017eit \u2022 [Esc] smazat' : 'Distance in km \u2022 [Enter] add \u2022 [Esc] clear';
                 } else if(mode === 'circle-center'){
                     label.textContent = isCs ? '\u2B55 St\u0159ed kru\u017enice' : '\u2B55 Circle center';
                     field.placeholder = '50.1234, 14.5678';
@@ -5993,7 +5991,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                 } else if(mode === 'circle-radius'){
                     label.textContent = isCs ? '\u2B55 Polom\u011br kru\u017enice (km)' : '\u2B55 Circle radius (km)';
                     field.placeholder = isCs ? 'nap\u0159. 25 nebo 100km' : 'e.g. 25 or 100km';
-                    hint.textContent = isCs ? 'Polom\u011br \u2022 [Enter] dokon\u010dit \u2022 nebo klikn\u011bte' : 'Radius \u2022 [Enter] finish \u2022 or click map';
+                    hint.textContent = isCs ? 'Polom\u011br v km \u2022 [Enter] dokon\u010dit \u2022 nebo klikn\u011bte' : 'Radius in km \u2022 [Enter] finish \u2022 or click map';
                 } else if(mode === 'parallel'){
                     label.textContent = isCs ? '\uD83C\uDF10 Rovnob\u011b\u017eka (\u0161\u00ed\u0159ka \u00B0)' : '\uD83C\uDF10 Parallel (lat \u00B0)';
                     field.placeholder = isCs ? 'nap\u0159. 50 nebo 49.85' : 'e.g. 50 or 49.85';
