@@ -287,6 +287,8 @@
         
         .source-item-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; flex-grow: 0; margin-left: auto; }
         .source-count { font-size: 10px; color: #5f6368; background: #e8eaed; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+        .source-count-photo { background: #e8f0fe; color: #1a73e8; font-weight: 700; }
+        .source-count-gis { background: var(--green-bg); color: var(--gis); font-weight: 700; }
         .source-del-btn { border: none; background: transparent; color: #70757a; cursor: pointer; font-size: 16px; line-height: 1; width: 22px; height: 22px; padding: 0; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; touch-action: manipulation; transition: all 0.15s; }
         .source-del-btn:hover { color: #d93025; background: #fce8e6; }
         .source-del-btn:active { background: #fad2cf; }
@@ -776,7 +778,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.42</span>
+                    <span class="info-meta-val">2.43</span>
                 </div>
             </div>
 
@@ -3233,6 +3235,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             line: null,
             lineHit: null,
             polygon: null,
+            polygonHit: null,
             areaLabel: null,
             tempLine: null,
             tempLabel: null,
@@ -3272,6 +3275,116 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             measureUndoStack.push(action);
             measureRedoStack = [];
             updateMeasureUndoRedoBtns();
+        }
+
+        // --- MEASUREMENT SNAPSHOT (memento) for distance points / line / polygon ---
+        // Captures the whole distance-measure state atomically, so undo/redo can
+        // never mix points of one line/polygon into another (no per-point patching).
+        function snapshotMeasure() {
+            var s = measureDistanceState;
+            return {
+                points: s.points.map(function(p){ return { lat: p.lat, lng: p.lng }; }),
+                snapPoints: (s.snapPoints || []).slice(),
+                markers: (s.markers || []).slice(),
+                segmentLabels: (s.segmentLabels || []).slice(),
+                line: s.line,
+                lineHit: s.lineHit,
+                polygon: s.polygon,
+                polygonHit: s.polygonHit || null,
+                areaLabel: s.areaLabel,
+                completed: !!s.completed
+            };
+        }
+
+        function restoreMeasure(snap) {
+            if (!snap) return;
+            var s = measureDistanceState;
+            // 1. Remove current distance layers (other tools' layers stay untouched)
+            (s.markers || []).forEach(function(m){ try { measureLayerGroup.removeLayer(m); } catch(e){} });
+            if (s.line) { try { measureLayerGroup.removeLayer(s.line); } catch(e){} }
+            if (s.lineHit) { try { measureLayerGroup.removeLayer(s.lineHit); } catch(e){} }
+            (s.segmentLabels || []).forEach(function(l){ try { measureLayerGroup.removeLayer(l); } catch(e){} });
+            if (s.polygon) { try { measureLayerGroup.removeLayer(s.polygon); } catch(e){} }
+            if (s.polygonHit) { try { measureLayerGroup.removeLayer(s.polygonHit); } catch(e){} }
+            if (s.areaLabel) { try { measureLayerGroup.removeLayer(s.areaLabel); } catch(e){} }
+            // 2. Restore state (fresh point objects, same layer objects)
+            s.points = snap.points.map(function(p){ return L.latLng(p.lat, p.lng); });
+            s.snapPoints = (snap.snapPoints || []).slice();
+            s.markers = snap.markers.slice();
+            s.segmentLabels = snap.segmentLabels.slice();
+            s.line = snap.line;
+            s.lineHit = snap.lineHit;
+            s.polygon = snap.polygon;
+            s.polygonHit = snap.polygonHit;
+            s.areaLabel = snap.areaLabel;
+            s.completed = snap.completed;
+            // 3. Re-add layers; line geometry is always rebuilt from snapshot points
+            s.markers.forEach(function(m){ try { m.addTo(measureLayerGroup); } catch(e){} });
+            if (s.points.length >= 2) {
+                var g = geodesicPoints(s.points.map(function(p){ return [p.lat, p.lng]; }), false);
+                if (s.line) {
+                    try { s.line.addTo(measureLayerGroup); } catch(e){}
+                    try { s.line.setLatLngs(g); } catch(e){}
+                    s.line._vertexCount = s.points.length;
+                    s.line._measurePoints = s.points.slice();
+                }
+                if (s.lineHit) {
+                    try { s.lineHit.addTo(measureLayerGroup); } catch(e){}
+                    try { s.lineHit.setLatLngs(g); } catch(e){}
+                    s.lineHit._vertexCount = s.points.length;
+                    s.lineHit._measurePoints = s.points.slice();
+                }
+            }
+            s.segmentLabels.forEach(function(l){ try { l.addTo(measureLayerGroup); } catch(e){} });
+            if (s.polygon) { try { s.polygon.addTo(measureLayerGroup); } catch(e){} }
+            if (s.polygonHit) { try { s.polygonHit.addTo(measureLayerGroup); } catch(e){} }
+            if (s.areaLabel) { try { s.areaLabel.addTo(measureLayerGroup); } catch(e){} }
+            // 4. Drop stale drag preview when no points are left
+            if (s.points.length === 0 && s.tempLine) {
+                try { map.removeLayer(s.tempLine); } catch(e){}
+                s.tempLine = null;
+                if (s.tempLabel) { try { map.removeLayer(s.tempLabel); } catch(e){} s.tempLabel = null; }
+            }
+        }
+
+        // Seal the open line as finished (right-click / Esc): the state reset is
+        // recorded as an undoable boundary, so points can never leak across lines.
+        function sealMeasureLine() {
+            var s = measureDistanceState;
+            if (s.points.length === 0 && !s.line) return;
+            // Numbering anchor: which points belong to this line
+            if (s.line && (s.markers || []).length > 0) {
+                var _nums = [];
+                s.markers.forEach(function(m){ if (m && typeof m._measureIdx === "number") _nums.push(m._measureIdx); });
+                if (_nums.length > 0) {
+                    s.line._ptRange = [_nums[0], _nums[_nums.length - 1]];
+                    if (s.lineHit) s.lineHit._ptRange = [_nums[0], _nums[_nums.length - 1]];
+                }
+            }
+            var snapFinished = snapshotMeasure();
+            if (s.tempLine) { try { map.removeLayer(s.tempLine); } catch(e){} }
+            if (s.tempLabel) { try { map.removeLayer(s.tempLabel); } catch(e){} }
+            s.points = [];
+            s.markers = [];
+            s.segmentLabels = [];
+            s.tempLine = null;
+            s.tempLabel = null;
+            s.lineHit = null;
+            s.line = null;
+            s.completed = false;
+            recordMeasureAction({
+                undo: function() { restoreMeasure(snapFinished); },
+                redo: function() {
+                    // Detach again: finished layers STAY on the map
+                    var st = measureDistanceState;
+                    st.points = [];
+                    st.markers = [];
+                    st.segmentLabels = [];
+                    st.line = null;
+                    st.lineHit = null;
+                    st.completed = false;
+                }
+            });
         }
 
         function undoMeasure() {
@@ -3475,25 +3588,9 @@ function startMeasureDistance() {
                     e.stopPropagation();
                 }
                 
-                // Just reset the active measurement state, keep existing visuals
-                if (measureDistanceState.tempLine) {
-                    map.removeLayer(measureDistanceState.tempLine);
-                    measureDistanceState.tempLine = null;
-                }
-                if (measureDistanceState.tempLabel) {
-                    map.removeLayer(measureDistanceState.tempLabel);
-                    measureDistanceState.tempLabel = null;
-                }
-                
-                // Reset only the active measurement state (keep existing visuals & labels on map)
+                // Just seal the finished line, keep existing visuals (boundary recorded)
                 if(measureDistanceState.points.length>=2) measureLineCounter++;
-                measureDistanceState.points = [];
-                measureDistanceState.markers = [];
-                measureDistanceState.segmentLabels = [];
-                measureDistanceState.tempLine = null;
-                measureDistanceState.tempLabel = null;
-                measureDistanceState.lineHit = null;
-                measureDistanceState.line = null;
+                sealMeasureLine();
                 // Keep previous line/polygon and their segmentLabels in measureLayerGroup
                 
                 // Update button tooltip
@@ -3548,6 +3645,8 @@ function startMeasureDistance() {
                 }
             }
 
+            // Snapshot of the whole state BEFORE this point (atomic undo/redo)
+            var snapBeforePoint = snapshotMeasure();
             measureDistanceState.points.push(latLng);
             measureDistanceState.snapPoints.push({lat: latLng.lat, lng: latLng.lng, name: "", type: "measure"});
             
@@ -3564,6 +3663,7 @@ function startMeasureDistance() {
             var marker = L.marker(latLng, {icon: icon}).addTo(measureLayerGroup);
             marker._measureType = 'measure_point';
             marker._measureIdx = ptNum;
+            marker._measureLineIdx = measureLineCounter;
             (function(m, n, ll){
                 m.on('click', function(e){
                     if (n === 1 && measureDistanceState.points.length >= 3) {
@@ -3692,81 +3792,14 @@ function startMeasureDistance() {
             var btn = document.getElementById("btnMeasureDist");
             if (btn) btn.title = i18n[currentLang].btnMeasureDistCancel || (currentLang === "cs" ? "Zrušit měření (Esc/Pravé tlačítko)" : "Cancel measurement (Esc/Right-click)");
         
-            // Record Undo Action for point / polyline
-            (function(ptMarker, ptCoords, hadLineBefore, lineObj, lineHitObj, segLabelObj){
+            // Snapshot-based undo: whole state before/after this point (bindings included)
+            (function(snapB){
+                var snapA = snapshotMeasure();
                 recordMeasureAction({
-                    undo: function() {
-                        // 1. Odeber marker
-                        try { measureLayerGroup.removeLayer(ptMarker); } catch(e){}
-                        var mIdx = measureDistanceState.markers.indexOf(ptMarker);
-                        if (mIdx >= 0) measureDistanceState.markers.splice(mIdx, 1);
-                        var pIdx = measureDistanceState.points.indexOf(ptCoords);
-                        if (pIdx >= 0) measureDistanceState.points.splice(pIdx, 1);
-
-                        // 2. Uprav nebo smaž čáru
-                        if (!hadLineBefore) {
-                            // Byl to 2. bod, který vytvořil čáru -> smazat čáru!
-                            if (lineObj) { try { measureLayerGroup.removeLayer(lineObj); } catch(e){} }
-                            if (lineHitObj) { try { measureLayerGroup.removeLayer(lineHitObj); } catch(e){} }
-                            if (measureDistanceState.line === lineObj) measureDistanceState.line = null;
-                            if (measureDistanceState.lineHit === lineHitObj) measureDistanceState.lineHit = null;
-                        } else {
-                            // Čára už existovala dříve -> zkrátit na zbývající body
-                            if (lineObj && measureDistanceState.points.length >= 2) {
-                                var _pts = measureDistanceState.points.map(function(p){ return [p.lat, p.lng]; });
-                                var _geo = geodesicPoints(_pts, false);
-                                lineObj.setLatLngs(_geo);
-                                if (lineHitObj) lineHitObj.setLatLngs(_geo);
-                            }
-                        }
-
-                        // 3. Odeber popisek úseku
-                        if (segLabelObj) {
-                            try { measureLayerGroup.removeLayer(segLabelObj); } catch(e){}
-                            if (measureDistanceState.segmentLabels) {
-                                var sIdx = measureDistanceState.segmentLabels.indexOf(segLabelObj);
-                                if (sIdx >= 0) measureDistanceState.segmentLabels.splice(sIdx, 1);
-                            }
-                        }
-
-                        // 4. Pokud už je aktivní měření, aktualizuj náhled
-                        if (measureDistanceState.points.length === 0 && measureDistanceState.tempLine) {
-                            try { map.removeLayer(measureDistanceState.tempLine); } catch(e){}
-                            measureDistanceState.tempLine = null;
-                            if (measureDistanceState.tempLabel) { try { map.removeLayer(measureDistanceState.tempLabel); } catch(e){} measureDistanceState.tempLabel = null; }
-                        }
-                    },
-                    redo: function() {
-                        // 1. Obnov marker
-                        try { ptMarker.addTo(measureLayerGroup); } catch(e){}
-                        measureDistanceState.markers.push(ptMarker);
-                        measureDistanceState.points.push(ptCoords);
-
-                        // 2. Obnov nebo rozšiř čáru
-                        if (!hadLineBefore) {
-                            if (lineObj) {
-                                lineObj.addTo(measureLayerGroup);
-                                measureDistanceState.line = lineObj;
-                            }
-                            if (lineHitObj) {
-                                lineHitObj.addTo(measureLayerGroup);
-                                measureDistanceState.lineHit = lineHitObj;
-                            }
-                        } else if (lineObj) {
-                            var _pts = measureDistanceState.points.map(function(p){ return [p.lat, p.lng]; });
-                            var _geo = geodesicPoints(_pts, false);
-                            lineObj.setLatLngs(_geo);
-                            if (lineHitObj) lineHitObj.setLatLngs(_geo);
-                        }
-
-                        // 3. Obnov popisek úseku
-                        if (segLabelObj) {
-                            try { segLabelObj.addTo(measureLayerGroup); } catch(e){}
-                            if (measureDistanceState.segmentLabels) measureDistanceState.segmentLabels.push(segLabelObj);
-                        }
-                    }
+                    undo: function() { restoreMeasure(snapB); },
+                    redo: function() { restoreMeasure(snapA); }
                 });
-            })(marker, latLng, measureDistanceState.points.length > 2, measureDistanceState.line, measureDistanceState.lineHit, (typeof curSegLabel !== 'undefined' ? curSegLabel : null));
+            })(snapBeforePoint);
         }
 
         function stopMeasureDistance() { hideMeasureInput();
@@ -3819,13 +3852,7 @@ function startMeasureDistance() {
             if (measureDistanceState.line && measureDistanceState.points.length >= 2) {
                 measureLineCounter++;
             }
-            measureDistanceState.points = [];
-            measureDistanceState.markers = [];
-            measureDistanceState.segmentLabels = [];
-            measureDistanceState.line = null;
-            measureDistanceState.lineHit = null;
-            measureDistanceState.tempLine = null;
-            measureDistanceState.tempLabel = null;
+            sealMeasureLine();
             measureDistanceState.snapPoints = [];
             measureDistanceState.completed = false;
             
@@ -3872,6 +3899,7 @@ function startMeasureDistance() {
                     measureDistanceState.lineHit = null;
                     measureDistanceState.line = null;
             measureDistanceState.polygon = null;
+            measureDistanceState.polygonHit = null;
             measureDistanceState.areaLabel = null;
             measureDistanceState.label = null;
             measureDistanceState.tempLine = null;
@@ -4526,6 +4554,8 @@ function startMeasureDistance() {
 
         function closeMeasurePolygon() {
             if (typeof hideDynamicInput === 'function') hideDynamicInput();
+            // Snapshot of the whole state BEFORE closing (atomic undo/redo)
+            var snapBeforePoly = snapshotMeasure();
             console.log("closeMeasurePolygon via", new Error().stack.split("\n")[2], "pts", measureDistanceState.points.length, "active", measureDistanceState.active);
             if (!measureDistanceState.active || measureDistanceState.points.length < 3) return;
             // Uzavři polygon
@@ -4600,34 +4630,7 @@ function startMeasureDistance() {
                     L.DomEvent.stopPropagation(e);
                 };
             }
-            // Record Undo Action for closed polygon
-            (function(polyObj, hitObj, areaLblObj, closedPts, closedMarkers, closedLine, closedLineHit, closedSegLabels){
-                recordMeasureAction({
-                    undo: function() {
-                        if (polyObj) try { measureLayerGroup.removeLayer(polyObj); } catch(e){}
-                        if (hitObj) try { measureLayerGroup.removeLayer(hitObj); } catch(e){}
-                        if (areaLblObj) try { measureLayerGroup.removeLayer(areaLblObj); } catch(e){}
-                        measureDistanceState.points = closedPts.slice();
-                        measureDistanceState.markers = closedMarkers.slice();
-                        if (closedLine) { try { closedLine.addTo(measureLayerGroup); } catch(e){} measureDistanceState.line = closedLine; }
-                        if (closedLineHit) { try { closedLineHit.addTo(measureLayerGroup); } catch(e){} measureDistanceState.lineHit = closedLineHit; }
-                        if (closedSegLabels) { closedSegLabels.forEach(function(l){ try { l.addTo(measureLayerGroup); } catch(e){} }); }
-                        measureDistanceState.completed = false;
-                    },
-                    redo: function() {
-                        if (closedLine) try { measureLayerGroup.removeLayer(closedLine); } catch(e){}
-                        if (closedLineHit) try { measureLayerGroup.removeLayer(closedLineHit); } catch(e){}
-                        if (closedSegLabels) { closedSegLabels.forEach(function(l){ try { measureLayerGroup.removeLayer(l); } catch(e){} }); }
-                        measureDistanceState.points = [];
-                        measureDistanceState.line = null;
-                        measureDistanceState.lineHit = null;
-                        if (polyObj) try { polyObj.addTo(measureLayerGroup); } catch(e){}
-                        if (hitObj) try { hitObj.addTo(measureLayerGroup); } catch(e){}
-                        if (areaLblObj) try { areaLblObj.addTo(measureLayerGroup); } catch(e){}
-                        measureDistanceState.completed = true;
-                    }
-                });
-            })(measureDistanceState.polygon, hitPoly, measureDistanceState.areaLabel, pts, savedMarkers, savedLine, savedLineHit, savedSegLabels);
+            // (undo snapshot se zaznamená až po resetu níže)
             // Ulož stav jako dokončený
             measureDistanceState.completed = true;
             measurePolygonCounter++;
@@ -4640,6 +4643,33 @@ function startMeasureDistance() {
             measureDistanceState.segmentLabels = [];
             measureDistanceState.tempLine = null;
             measureDistanceState.tempLabel = null;
+            // Snapshot-based undo for closing; redo keeps vertex markers on the map
+            measureDistanceState.polygonHit = (typeof hitPoly !== "undefined" && hitPoly) ? hitPoly : null;
+            (function(){
+                var _vn = [];
+                (savedMarkers || []).forEach(function(m){ if (m && typeof m._measureIdx === "number") _vn.push(m._measureIdx); });
+                if (_vn.length > 0 && measureDistanceState.polygon) measureDistanceState.polygon._ptRange = [_vn[0], _vn[_vn.length - 1]];
+            })();
+            (function(snapB, polyObj, hitObj, areaLblObj){
+                recordMeasureAction({
+                    undo: function() { restoreMeasure(snapB); },
+                    redo: function() {
+                        // Re-close: swap open line for polygon, vertex markers stay
+                        var st = measureDistanceState;
+                        if (st.line) { try { measureLayerGroup.removeLayer(st.line); } catch(e){} }
+                        if (st.lineHit) { try { measureLayerGroup.removeLayer(st.lineHit); } catch(e){} }
+                        (st.segmentLabels || []).forEach(function(l){ try { measureLayerGroup.removeLayer(l); } catch(e){} });
+                        st.points = [];
+                        st.segmentLabels = [];
+                        st.line = null;
+                        st.lineHit = null;
+                        if (polyObj) { try { polyObj.addTo(measureLayerGroup); } catch(e){} st.polygon = polyObj; }
+                        if (hitObj) { try { hitObj.addTo(measureLayerGroup); } catch(e){} st.polygonHit = hitObj; }
+                        if (areaLblObj) { try { areaLblObj.addTo(measureLayerGroup); } catch(e){} st.areaLabel = areaLblObj; }
+                        st.completed = true;
+                    }
+                });
+            })(snapBeforePoly, measureDistanceState.polygon, hitPoly, measureDistanceState.areaLabel);
         }
 
         // Zobrazit souřadnice – toggle
@@ -6660,6 +6690,50 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
             }
         });
 
+        // Slider interaction: keep popover alive during drag/typing, close on release/blur-out
+        var sliderInteracting = false;
+        function sliderInteractionEnd() {
+            sliderInteracting = false;
+            setTimeout(function() {
+                if (activePopover && !activePopover.contains(document.activeElement)) closeAllPopovers();
+            }, 0);
+        }
+        // All popover sliders/inputs (incl. custom builders) hold the popover;
+        // it closes on Enter (blur), focus loss, outside click or list scroll
+        document.addEventListener("pointerdown", function(e) {
+            if (e.target && e.target.closest && e.target.closest(".style-popover") &&
+                (e.target.matches('input[type="range"]') || e.target.matches('input[type="text"]') || e.target.matches('input[type="number"]'))) {
+                sliderInteracting = true;
+            }
+        }, true);
+        document.addEventListener("focusin", function(e) {
+            if (e.target && e.target.closest && e.target.closest(".style-popover") &&
+                (e.target.matches('input[type="range"]') || e.target.matches('input[type="text"]') || e.target.matches('input[type="number"]'))) {
+                sliderInteracting = true;
+            }
+        });
+        document.addEventListener("focusout", function() { sliderInteractionEnd(); });
+        // Numpad digits win over arrows (NumLock off): NumpadX always types its digit
+        document.addEventListener("keydown", function(e) {
+            if (!e.code || e.code.indexOf("Numpad") !== 0 || e.location !== 3) return;
+            var digit = (e.code === "NumpadDecimal") ? "." : e.code.replace("Numpad", "");
+            if (!/^[0-9.]$/.test(digit)) return;
+            var pop = e.target && e.target.closest ? e.target.closest(".style-popover") : null;
+            if (!pop) return;
+            var group = e.target.closest(".slider-input-group");
+            var field = group ? group.querySelector('input[type="text"], input[type="number"]') : null;
+            if (!field) return;
+            e.preventDefault();
+            e.stopPropagation();
+            if (document.activeElement !== field) field.focus();
+            var start = (typeof field.selectionStart === "number") ? field.selectionStart : field.value.length;
+            var end = (typeof field.selectionEnd === "number") ? field.selectionEnd : field.value.length;
+            field.value = field.value.slice(0, start) + digit + field.value.slice(end);
+            var pos = start + 1;
+            try { field.selectionStart = field.selectionEnd = pos; } catch(err){}
+            if (typeof field.oninput === "function") { try { field.oninput.call(field); } catch(err){} }
+        }, true);
+
         function openPopover(anchorBtn, buildFn) {
             var wasActive = anchorBtn.classList.contains("active");
             closeAllPopovers();
@@ -6697,7 +6771,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
         function renderSrc() {
             var li = document.getElementById("sourcesList");
             li.innerHTML = "";
-            closeAllPopovers();
+            if (!sliderInteracting) closeAllPopovers();
 
             if (li && !li._scrollBound) {
                 li.addEventListener("scroll", closeAllPopovers, { passive: true });
@@ -6837,16 +6911,13 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                 var ri = document.createElement("div");
                 ri.className = "source-item-right";
                 var bd = document.createElement("span");
-                bd.className = "source-count";
+                bd.className = "source-count" + (d.type === "photos" ? " source-count-photo" : (d.type === "track" ? " source-count-gis" : ""));
                 if (d.type === "track") {
                     var parts = [];
                     if (d.totalDistanceKm > 0) parts.push(d.totalDistanceKm.toFixed(1) + " km");
                     else if (d.lines && d.lines.length > 0) parts.push(d.lines.length + " tras");
                     if (d.points && d.points.length > 0) parts.push(d.points.length + " b");
                     bd.textContent = parts.join(" • ") || "Trasa";
-                    bd.style.background = "#e8f0fe";
-                    bd.style.color = "#1a73e8";
-                    bd.style.fontWeight = "700";
                 } else {
                     var cnt = (d.items || []).length;
                     bd.textContent = cnt.toLocaleString(loc);
