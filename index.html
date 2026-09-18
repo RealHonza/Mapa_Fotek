@@ -414,8 +414,10 @@
         .info-meta-label { color: #5f6368; font-weight: 500; }
         .info-meta-val { font-weight: 700; color: #202124; }
         .info-section-title { font-size: 13px; font-weight: 700; color: var(--green); margin: 14px 0 8px 0; }
-        .guide-header { display: flex; align-items: flex-start; min-height: 32px; }
+        .guide-header { display: flex; align-items: center; min-height: 32px; }
         .guide-search { height: 32px; max-width: 220px; margin-left: auto; border: 1px solid #dadce0; border-radius: 16px; padding: 0 12px; font-size: 12px; outline: none; }
+        .guide-clear { display: none; width: 24px; height: 24px; flex: 0 0 24px; border: 1px solid #dadce0; background: #ffffff; color: #5f6368; border-radius: 50%; font-size: 12px; line-height: 1; cursor: pointer; align-items: center; justify-content: center; padding: 0; margin-left: 6px; }
+        .guide-clear:hover { background: #fce8e6; color: #d93025; border-color: #f5c6c2; }
         .guide-search:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(var(--green-rgb),0.15); }
         button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .guide-hi { background: #39ff14; color: #202124; border-radius: 2px; padding: 0 1px; }
@@ -719,6 +721,12 @@
             </button>
             <div id="folderDropdown" class="dropdown-menu" onclick="event.stopPropagation()"></div>
         </div>
+        <!-- 2c. Tlačítko: přiblížit na fotky (bez filtru vše, s filtrem výsledek) -->
+        <div style="position: relative;">
+            <button class="ui-btn icon-only-btn" onclick="zoomToFiltered()" id="btnZoomFiltered" title="Přiblížit na fotky" aria-label="Přiblížit na fotky" style="opacity:0.35;pointer-events:none">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            </button>
+        </div>
         <input type="file" id="fileInput" accept=".txt,.gpx,.kml,.kmz,.geojson,.json,.jpg,.jpeg,.png" multiple style="display:none" onchange="handleFileSelect(this.files)">
     </div>
 
@@ -798,7 +806,7 @@
                 </div>
             </div>
 
-            <div class="guide-header"><div class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití:</div><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" oninput="filterGuideSteps(this.value)"></div>
+            <div class="guide-header"><div class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití:</div><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';"><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';">✕</button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
         </div>
     </div>
@@ -880,6 +888,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 allWord: "Vše",
                 btnSources: "Zdroje",
                 btnFolder: "Složky",
+                folderSearchPH: "Hledat složku…",
+                clearSearch: "Zrušit hledání",
+                folderNoHit: "Nic nenalezeno",
+                tipZoomFiltered: "Přiblížit na fotky",
                 tipFolderFilter: "Filtr složek",
                 noFolder: "Bez složky",
                 monthsShort: ["Led", "Úno", "Bře", "Dub", "Kvě", "Čer", "Čvc", "Srp", "Zář", "Říj", "Lis", "Pro"],
@@ -983,6 +995,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 toastUndo: "↩️ Změna byla vrácena zpět",
                 toastGeoJsonExported: "GeoJSON export dokončen",
                 toastNoData: "Žádná data k exportu",
+                toastNoPhotos: "Žádné fotky k zobrazení",
                 noSources: "Žádné načtené soubory dat",
                 guideSearchPH: "Hledat v návodu…",
                 modalTitle: "Mapa fotek",
@@ -998,6 +1011,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> [+] – přidat soubor či trasu:</strong><br>Podporované formáty:<div class=\"step-sub\"><br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='#202124'><path d='M4 7h3.2l1.7-2h6.2l1.7 2H20a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z'/><circle cx='12' cy='13' r='3.7' fill='#ffffff'/><circle cx='12' cy='13' r='2.4' fill='#202124'/></svg> <strong>Fotky:</strong> <code>.txt</code> (generovaný BAT skriptem)<br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='#202124'><path d='M4 7h3.2l1.7-2h6.2l1.7 2H20a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z'/><circle cx='12' cy='13' r='3.7' fill='#ffffff'/><circle cx='12' cy='13' r='2.4' fill='#202124'/></svg> <strong>Fotky z EXIF GNSS:</strong> <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code> (s GNSS metadaty; poloha se přečte přímo ze souboru)<br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='#202124' stroke-width='2' stroke-linecap='round'><path d='M6.2 16.8c3.6-1.1 4.6-3.8 5.3-6.5.7-2.7 2.6-4.2 6.3-3.1'/><circle cx='5' cy='18.2' r='2.1' fill='#202124' stroke='none'/><circle cx='19' cy='5.8' r='2.1' fill='#202124' stroke='none'/></svg> <strong>GNSS trasy:</strong> <code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>, <code>.json</code></div><br>Soubory můžete také přetáhnout myší přímo do okna mapy (Drag &amp; Drop).",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> [Vše (počet) ▼] – časový filtr (rok / měsíc / den):</strong><br>Otevírá časový filtr fotografií:<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> Po zvolení roku se nabídka rozbalí o mřížku měsíců<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> U vybraného měsíce i o kalendář dnů<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg> Opětovným kliknutím se vrátíte o úroveň výš",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> [Složky (počet) ▼] – filtr složek:</strong><br>Strom složek ze sloupce <code>RELATIVNI_CESTA</code> – rozklikávejte složky až k fotkám (<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/><circle cx='12' cy='13' r='4'/></svg>), šipkou ⬆ zpět; platí společně s časovým filtrem",
+                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3'/></svg> [⌖ Na fotky] – přiblížení na výsledek:</strong><br>Tlačítko vpravo od filtru složek zazoomuje mapu na obálku fotek – bez filtru na všechny fotky (jen fotky, ne trasy), s filtrem na jeho výsledek. Bez načtené fotky je neaktivní.",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z'/><path d='m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65'/><path d='m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65'/></svg> Mapové podklady (vpravo):</strong><br>Výběr ze 8 mapových vrstev:<div class=\"step-sub\"><br>• <img class='guide-ico' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQrSURBVFhHvVdbbJRVEO6LQbw++eaDqOibGqUtD1oj4iraBxJqpbUPKFaMQR+MWhOCBhKqglwS8AEKFmIatpVAK1YoKSL10o0gMUtIG7SAWlqzu91e2Iu7O2c+M7+7m3NZttva+CWTbM6Zf745c2bmzJaVlQhmvo2Z65VSe4noDBGNEVE6KxFZkz1mrhNd+/tZg5nvV0q1ElESJYKIEkqpfcy80LZXMgDcpJTaSkRkE5QKIsoopbYw83zbflEw831EdME2OFsQUZCZ77V5CoKZHyaisG1EQCPDiLd9hom3X0fk+WcQ8i1G6KlKRFb4MP7Wa4gf2AMa/sP+zAMRhQA8ZPMZyJ7cIafRq5jc8B5CSysQerK8uCytwOQH73rf2BAnrhsJZr65UNiTJ7oRfq7KJZpGwtWP4+9TJ2xzuetwc0ISzlaOH9zvGJ6JTG3eYJv0oJTabJBLqdnZLie3DeYk2liHWMtOJL86jGT3EcRadiH6ar1Jvq0ZYNZN5iHVYVyF1LmhMDKM8LOPOcRjDcuROhvQVQ2kzvQjsrIa13Z9Ym85kKblkQO43W4ysR1vOOTja18CT03pagXB8Zi9VBBEFGfmWyX89foGJ4aQ6ZmHyaa78uRScmoiqqvNCZj5BQn/Xn1RXW5GpvcGT+I770B42SIkjx/VVeYMSqndZfKI6Iv0sy/vgEjq8AIgk9FV5gxEFBAHxvTFTN+dhgN0vk7fdrBkU6xkOXXBPIg0JnEgrS9mTs4zHFC/rde3HdgkxaTtB4NKHEj9rw60nk4Z3+YciOiLzhUEV+rbDmySYtIRcCLgXYGZhOeeNhwY7nsAaTXzJLwUUo4DpwecHAgUKMOP8uRHuxfgUf9ydA716iolwd+fdhwYnTBbs1eGMsPpi5y4jETvfDR3PoJF/hWe+DpfRiQ5rqsVxbUko2ZH3CBftTthq0kjqvWGTZnh9I3t/Rvz5Dlp6HkHE6npW3GagKaDSef07e79xwHcknuM9umbI7EQqg696DhR/eUa9F09q6sauDh+Bau7/FiyadIgl2gkUk749+jP8UJ5InWFY1f6HAdyUvP1m9h6rhUdF4/hi1+P49NgG17pXYdyf423X7m/CU98/Gfege8GzblWSp+Z78k7kI3CFkMLwOeDXQ55qVLetgpV235yal+glPrQIBfIGE5E523lnt+/R9WhBodgOqlsr0VLsMs2J6f/BcCNNr8HmVKy06uB0XgY637cjor2f0M8naz55n0MRIdsM0L+F4C7bV4DMjoXckIgyXlg4AjWfrsRy7oasbij1jupr3M1Gk+u93JhMHrJ/syDkDPzgzZfQWQjEbSNzBbZsBc/uQ0ZnWV6tatjJpBsl4S77p2XAolG9h+xNI6SILpS506p/RfIACkznPRveUQkT+Q5zYr8DsietNd8hysB/wBWwn6OFabi+AAAAABJRU5ErkJggg==\' alt=''> <strong>Google <span class='lyr-sub lyr-base'>(Klasická)</span></strong> – přehledná silniční a městská mapa<br>• <img class='guide-ico' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQrSURBVFhHvVdbbJRVEO6LQbw++eaDqOibGqUtD1oj4iraBxJqpbUPKFaMQR+MWhOCBhKqglwS8AEKFmIatpVAK1YoKSL10o0gMUtIG7SAWlqzu91e2Iu7O2c+M7+7m3NZttva+CWTbM6Zf745c2bmzJaVlQhmvo2Z65VSe4noDBGNEVE6KxFZkz1mrhNd+/tZg5nvV0q1ElESJYKIEkqpfcy80LZXMgDcpJTaSkRkE5QKIsoopbYw83zbflEw831EdME2OFsQUZCZ77V5CoKZHyaisG1EQCPDiLd9hom3X0fk+WcQ8i1G6KlKRFb4MP7Wa4gf2AMa/sP+zAMRhQA8ZPMZyJ7cIafRq5jc8B5CSysQerK8uCytwOQH73rf2BAnrhsJZr65UNiTJ7oRfq7KJZpGwtWP4+9TJ2xzuetwc0ISzlaOH9zvGJ6JTG3eYJv0oJTabJBLqdnZLie3DeYk2liHWMtOJL86jGT3EcRadiH6ar1Jvq0ZYNZN5iHVYVyF1LmhMDKM8LOPOcRjDcuROhvQVQ2kzvQjsrIa13Z9Ym85kKblkQO43W4ysR1vOOTja18CT03pagXB8Zi9VBBEFGfmWyX89foGJ4aQ6ZmHyaa78uRScmoiqqvNCZj5BQn/Xn1RXW5GpvcGT+I770B42SIkjx/VVeYMSqndZfKI6Iv0sy/vgEjq8AIgk9FV5gxEFBAHxvTFTN+dhgN0vk7fdrBkU6xkOXXBPIg0JnEgrS9mTs4zHFC/rde3HdgkxaTtB4NKHEj9rw60nk4Z3+YciOiLzhUEV+rbDmySYtIRcCLgXYGZhOeeNhwY7nsAaTXzJLwUUo4DpwecHAgUKMOP8uRHuxfgUf9ydA716iolwd+fdhwYnTBbs1eGMsPpi5y4jETvfDR3PoJF/hWe+DpfRiQ5rqsVxbUko2ZH3CBftTthq0kjqvWGTZnh9I3t/Rvz5Dlp6HkHE6npW3GagKaDSef07e79xwHcknuM9umbI7EQqg696DhR/eUa9F09q6sauDh+Bau7/FiyadIgl2gkUk749+jP8UJ5InWFY1f6HAdyUvP1m9h6rhUdF4/hi1+P49NgG17pXYdyf423X7m/CU98/Gfege8GzblWSp+Z78k7kI3CFkMLwOeDXQ55qVLetgpV235yal+glPrQIBfIGE5E523lnt+/R9WhBodgOqlsr0VLsMs2J6f/BcCNNr8HmVKy06uB0XgY637cjor2f0M8naz55n0MRIdsM0L+F4C7bV4DMjoXckIgyXlg4AjWfrsRy7oasbij1jupr3M1Gk+u93JhMHrJ/syDkDPzgzZfQWQjEbSNzBbZsBc/uQ0ZnWV6tatjJpBsl4S77p2XAolG9h+xNI6SILpS506p/RfIACkznPRveUQkT+Q5zYr8DsietNd8hysB/wBWwn6OFabi+AAAAABJRU5ErkJggg==\' alt=''> <strong>Google <span class='lyr-sub lyr-terr'>(Terénní)</span></strong> – plastický 3D reliéf pohoří a údolí<br>• <img class='guide-ico' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQrSURBVFhHvVdbbJRVEO6LQbw++eaDqOibGqUtD1oj4iraBxJqpbUPKFaMQR+MWhOCBhKqglwS8AEKFmIatpVAK1YoKSL10o0gMUtIG7SAWlqzu91e2Iu7O2c+M7+7m3NZttva+CWTbM6Zf745c2bmzJaVlQhmvo2Z65VSe4noDBGNEVE6KxFZkz1mrhNd+/tZg5nvV0q1ElESJYKIEkqpfcy80LZXMgDcpJTaSkRkE5QKIsoopbYw83zbflEw831EdME2OFsQUZCZ77V5CoKZHyaisG1EQCPDiLd9hom3X0fk+WcQ8i1G6KlKRFb4MP7Wa4gf2AMa/sP+zAMRhQA8ZPMZyJ7cIafRq5jc8B5CSysQerK8uCytwOQH73rf2BAnrhsJZr65UNiTJ7oRfq7KJZpGwtWP4+9TJ2xzuetwc0ISzlaOH9zvGJ6JTG3eYJv0oJTabJBLqdnZLie3DeYk2liHWMtOJL86jGT3EcRadiH6ar1Jvq0ZYNZN5iHVYVyF1LmhMDKM8LOPOcRjDcuROhvQVQ2kzvQjsrIa13Z9Ym85kKblkQO43W4ysR1vOOTja18CT03pagXB8Zi9VBBEFGfmWyX89foGJ4aQ6ZmHyaa78uRScmoiqqvNCZj5BQn/Xn1RXW5GpvcGT+I770B42SIkjx/VVeYMSqndZfKI6Iv0sy/vgEjq8AIgk9FV5gxEFBAHxvTFTN+dhgN0vk7fdrBkU6xkOXXBPIg0JnEgrS9mTs4zHFC/rde3HdgkxaTtB4NKHEj9rw60nk4Z3+YciOiLzhUEV+rbDmySYtIRcCLgXYGZhOeeNhwY7nsAaTXzJLwUUo4DpwecHAgUKMOP8uRHuxfgUf9ydA716iolwd+fdhwYnTBbs1eGMsPpi5y4jETvfDR3PoJF/hWe+DpfRiQ5rqsVxbUko2ZH3CBftTthq0kjqvWGTZnh9I3t/Rvz5Dlp6HkHE6npW3GagKaDSef07e79xwHcknuM9umbI7EQqg696DhR/eUa9F09q6sauDh+Bau7/FiyadIgl2gkUk749+jP8UJ5InWFY1f6HAdyUvP1m9h6rhUdF4/hi1+P49NgG17pXYdyf423X7m/CU98/Gfege8GzblWSp+Z78k7kI3CFkMLwOeDXQ55qVLetgpV235yal+glPrQIBfIGE5E523lnt+/R9WhBodgOqlsr0VLsMs2J6f/BcCNNr8HmVKy06uB0XgY637cjor2f0M8naz55n0MRIdsM0L+F4C7bV4DMjoXckIgyXlg4AjWfrsRy7oasbij1jupr3M1Gk+u93JhMHrJ/syDkDPzgzZfQWQjEbSNzBbZsBc/uQ0ZnWV6tatjJpBsl4S77p2XAolG9h+xNI6SILpS506p/RfIACkznPRveUQkT+Q5zYr8DsietNd8hysB/wBWwn6OFabi+AAAAABJRU5ErkJggg==\' alt=''> <strong>Google <span class='lyr-sub lyr-sat'>(Satelitní)</span></strong> – letecké a družicové snímky s popisky<br>• <img class='guide-ico' src='data:image/png;base64,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\' alt=''> <strong>Mapy.com <span class='lyr-sub lyr-terr'>(Turistická)</span></strong> – značené turistické i cyklistické trasy, vrstevnice<br>• <img class='guide-ico' src='data:image/png;base64,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\' alt=''> <strong>Mapy.com <span class='lyr-sub lyr-base'>(Základní)</span></strong> – detailní česká kartografická mapa<br>• <img class='guide-ico' src='data:image/png;base64,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\' alt=''> <strong>Mapy.com <span class='lyr-sub lyr-sat'>(Letecká)</span></strong> – detailní ortofotomapa<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m8 3 4 8 5-5 5 15H2L8 3z'/></svg> <strong>Esri Topo</strong> – celosvětová topografická mapa s vrstevnicemi<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z'/><path d='M15 5.764v15'/><path d='M9 3.236v15'/></svg> <strong>Offline vektor</strong> – plně offline vektorová mapa světa (bez internetu)</div>",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> Zoom [+ / −] (vpravo, na mobilu dole):</strong><br>Tlačítka pro přiblížení a oddálení. Na počítači lze zoomovat i kolečkem myši, na mobilu gestem roztažení dvou prstů."
                 ]
@@ -1007,6 +1021,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 allWord: "All",
                 btnSources: "Sources",
                 btnFolder: "Folders",
+                folderSearchPH: "Search folders…",
+                clearSearch: "Clear search",
+                folderNoHit: "No matches",
+                tipZoomFiltered: "Zoom to photos",
                 tipFolderFilter: "Folder filter",
                 noFolder: "No folder",
                 monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -1110,6 +1128,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 toastUndo: "↩️ Change undone",
                 toastGeoJsonExported: "GeoJSON export complete",
                 toastNoData: "No data to export",
+                toastNoPhotos: "No photos to show",
                 noSources: "No data sources loaded",
                 guideSearchPH: "Search guide…",
                 modalTitle: "Photo Map",
@@ -1125,6 +1144,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> [+] – add file or track:</strong><br>Supported formats:<div class=\"step-sub\"><br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='#202124'><path d='M4 7h3.2l1.7-2h6.2l1.7 2H20a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z'/><circle cx='12' cy='13' r='3.7' fill='#ffffff'/><circle cx='12' cy='13' r='2.4' fill='#202124'/></svg> <strong>Photos:</strong> <code>.txt</code> (generated by BAT script)<br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='#202124'><path d='M4 7h3.2l1.7-2h6.2l1.7 2H20a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z'/><circle cx='12' cy='13' r='3.7' fill='#ffffff'/><circle cx='12' cy='13' r='2.4' fill='#202124'/></svg> <strong>Photos from EXIF GNSS:</strong> <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code> (with GPS metadata; position is read directly from the file)<br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='#202124' stroke-width='2' stroke-linecap='round'><path d='M6.2 16.8c3.6-1.1 4.6-3.8 5.3-6.5.7-2.7 2.6-4.2 6.3-3.1'/><circle cx='5' cy='18.2' r='2.1' fill='#202124' stroke='none'/><circle cx='19' cy='5.8' r='2.1' fill='#202124' stroke='none'/></svg> <strong>GPS tracks:</strong> <code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>, <code>.json</code></div><br>You can also drag &amp; drop files directly into the map window.",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> [All (count) ▼] – time filter (year / month / day):</strong><br>Opens the photo time filter:<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> Choose <em>All</em> for the complete archive or a specific year<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> After selecting a year, a month grid appears<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> For a selected month, also a day calendar<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg> Clicking the active item steps back one level",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> [Folders (count) ▼] – folder filter:</strong><br>Folder tree from the <code>RELATIVNI_CESTA</code> column – drill through folders down to photos (<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/><circle cx='12' cy='13' r='4'/></svg>), back with ⬆; combines with the time filter",
+                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3'/></svg> [⌖ To photos] – zoom to result:</strong><br>The button right of the folder filter zooms the map to the photo bounds – all photos without a filter (photos only, no tracks), the filter result otherwise. Inactive with no photo loaded.",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z'/><path d='m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65'/><path d='m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65'/></svg> Map layers (right):</strong><br>Choose from 8 map layers:<div class=\"step-sub\"><br>• <img class='guide-ico' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQrSURBVFhHvVdbbJRVEO6LQbw++eaDqOibGqUtD1oj4iraBxJqpbUPKFaMQR+MWhOCBhKqglwS8AEKFmIatpVAK1YoKSL10o0gMUtIG7SAWlqzu91e2Iu7O2c+M7+7m3NZttva+CWTbM6Zf745c2bmzJaVlQhmvo2Z65VSe4noDBGNEVE6KxFZkz1mrhNd+/tZg5nvV0q1ElESJYKIEkqpfcy80LZXMgDcpJTaSkRkE5QKIsoopbYw83zbflEw831EdME2OFsQUZCZ77V5CoKZHyaisG1EQCPDiLd9hom3X0fk+WcQ8i1G6KlKRFb4MP7Wa4gf2AMa/sP+zAMRhQA8ZPMZyJ7cIafRq5jc8B5CSysQerK8uCytwOQH73rf2BAnrhsJZr65UNiTJ7oRfq7KJZpGwtWP4+9TJ2xzuetwc0ISzlaOH9zvGJ6JTG3eYJv0oJTabJBLqdnZLie3DeYk2liHWMtOJL86jGT3EcRadiH6ar1Jvq0ZYNZN5iHVYVyF1LmhMDKM8LOPOcRjDcuROhvQVQ2kzvQjsrIa13Z9Ym85kKblkQO43W4ysR1vOOTja18CT03pagXB8Zi9VBBEFGfmWyX89foGJ4aQ6ZmHyaa78uRScmoiqqvNCZj5BQn/Xn1RXW5GpvcGT+I770B42SIkjx/VVeYMSqndZfKI6Iv0sy/vgEjq8AIgk9FV5gxEFBAHxvTFTN+dhgN0vk7fdrBkU6xkOXXBPIg0JnEgrS9mTs4zHFC/rde3HdgkxaTtB4NKHEj9rw60nk4Z3+YciOiLzhUEV+rbDmySYtIRcCLgXYGZhOeeNhwY7nsAaTXzJLwUUo4DpwecHAgUKMOP8uRHuxfgUf9ydA716iolwd+fdhwYnTBbs1eGMsPpi5y4jETvfDR3PoJF/hWe+DpfRiQ5rqsVxbUko2ZH3CBftTthq0kjqvWGTZnh9I3t/Rvz5Dlp6HkHE6npW3GagKaDSef07e79xwHcknuM9umbI7EQqg696DhR/eUa9F09q6sauDh+Bau7/FiyadIgl2gkUk749+jP8UJ5InWFY1f6HAdyUvP1m9h6rhUdF4/hi1+P49NgG17pXYdyf423X7m/CU98/Gfege8GzblWSp+Z78k7kI3CFkMLwOeDXQ55qVLetgpV235yal+glPrQIBfIGE5E523lnt+/R9WhBodgOqlsr0VLsMs2J6f/BcCNNr8HmVKy06uB0XgY637cjor2f0M8naz55n0MRIdsM0L+F4C7bV4DMjoXckIgyXlg4AjWfrsRy7oasbij1jupr3M1Gk+u93JhMHrJ/syDkDPzgzZfQWQjEbSNzBbZsBc/uQ0ZnWV6tatjJpBsl4S77p2XAolG9h+xNI6SILpS506p/RfIACkznPRveUQkT+Q5zYr8DsietNd8hysB/wBWwn6OFabi+AAAAABJRU5ErkJggg==\' alt=''> <strong>Google <span class='lyr-sub lyr-base'>(Standard)</span></strong> – clean urban and street map<br>• <img class='guide-ico' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQrSURBVFhHvVdbbJRVEO6LQbw++eaDqOibGqUtD1oj4iraBxJqpbUPKFaMQR+MWhOCBhKqglwS8AEKFmIatpVAK1YoKSL10o0gMUtIG7SAWlqzu91e2Iu7O2c+M7+7m3NZttva+CWTbM6Zf745c2bmzJaVlQhmvo2Z65VSe4noDBGNEVE6KxFZkz1mrhNd+/tZg5nvV0q1ElESJYKIEkqpfcy80LZXMgDcpJTaSkRkE5QKIsoopbYw83zbflEw831EdME2OFsQUZCZ77V5CoKZHyaisG1EQCPDiLd9hom3X0fk+WcQ8i1G6KlKRFb4MP7Wa4gf2AMa/sP+zAMRhQA8ZPMZyJ7cIafRq5jc8B5CSysQerK8uCytwOQH73rf2BAnrhsJZr65UNiTJ7oRfq7KJZpGwtWP4+9TJ2xzuetwc0ISzlaOH9zvGJ6JTG3eYJv0oJTabJBLqdnZLie3DeYk2liHWMtOJL86jGT3EcRadiH6ar1Jvq0ZYNZN5iHVYVyF1LmhMDKM8LOPOcRjDcuROhvQVQ2kzvQjsrIa13Z9Ym85kKblkQO43W4ysR1vOOTja18CT03pagXB8Zi9VBBEFGfmWyX89foGJ4aQ6ZmHyaa78uRScmoiqqvNCZj5BQn/Xn1RXW5GpvcGT+I770B42SIkjx/VVeYMSqndZfKI6Iv0sy/vgEjq8AIgk9FV5gxEFBAHxvTFTN+dhgN0vk7fdrBkU6xkOXXBPIg0JnEgrS9mTs4zHFC/rde3HdgkxaTtB4NKHEj9rw60nk4Z3+YciOiLzhUEV+rbDmySYtIRcCLgXYGZhOeeNhwY7nsAaTXzJLwUUo4DpwecHAgUKMOP8uRHuxfgUf9ydA716iolwd+fdhwYnTBbs1eGMsPpi5y4jETvfDR3PoJF/hWe+DpfRiQ5rqsVxbUko2ZH3CBftTthq0kjqvWGTZnh9I3t/Rvz5Dlp6HkHE6npW3GagKaDSef07e79xwHcknuM9umbI7EQqg696DhR/eUa9F09q6sauDh+Bau7/FiyadIgl2gkUk749+jP8UJ5InWFY1f6HAdyUvP1m9h6rhUdF4/hi1+P49NgG17pXYdyf423X7m/CU98/Gfege8GzblWSp+Z78k7kI3CFkMLwOeDXQ55qVLetgpV235yal+glPrQIBfIGE5E523lnt+/R9WhBodgOqlsr0VLsMs2J6f/BcCNNr8HmVKy06uB0XgY637cjor2f0M8naz55n0MRIdsM0L+F4C7bV4DMjoXckIgyXlg4AjWfrsRy7oasbij1jupr3M1Gk+u93JhMHrJ/syDkDPzgzZfQWQjEbSNzBbZsBc/uQ0ZnWV6tatjJpBsl4S77p2XAolG9h+xNI6SILpS506p/RfIACkznPRveUQkT+Q5zYr8DsietNd8hysB/wBWwn6OFabi+AAAAABJRU5ErkJggg==\' alt=''> <strong>Google <span class='lyr-sub lyr-terr'>(Terrain)</span></strong> – 3D elevation relief<br>• <img class='guide-ico' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQrSURBVFhHvVdbbJRVEO6LQbw++eaDqOibGqUtD1oj4iraBxJqpbUPKFaMQR+MWhOCBhKqglwS8AEKFmIatpVAK1YoKSL10o0gMUtIG7SAWlqzu91e2Iu7O2c+M7+7m3NZttva+CWTbM6Zf745c2bmzJaVlQhmvo2Z65VSe4noDBGNEVE6KxFZkz1mrhNd+/tZg5nvV0q1ElESJYKIEkqpfcy80LZXMgDcpJTaSkRkE5QKIsoopbYw83zbflEw831EdME2OFsQUZCZ77V5CoKZHyaisG1EQCPDiLd9hom3X0fk+WcQ8i1G6KlKRFb4MP7Wa4gf2AMa/sP+zAMRhQA8ZPMZyJ7cIafRq5jc8B5CSysQerK8uCytwOQH73rf2BAnrhsJZr65UNiTJ7oRfq7KJZpGwtWP4+9TJ2xzuetwc0ISzlaOH9zvGJ6JTG3eYJv0oJTabJBLqdnZLie3DeYk2liHWMtOJL86jGT3EcRadiH6ar1Jvq0ZYNZN5iHVYVyF1LmhMDKM8LOPOcRjDcuROhvQVQ2kzvQjsrIa13Z9Ym85kKblkQO43W4ysR1vOOTja18CT03pagXB8Zi9VBBEFGfmWyX89foGJ4aQ6ZmHyaa78uRScmoiqqvNCZj5BQn/Xn1RXW5GpvcGT+I770B42SIkjx/VVeYMSqndZfKI6Iv0sy/vgEjq8AIgk9FV5gxEFBAHxvTFTN+dhgN0vk7fdrBkU6xkOXXBPIg0JnEgrS9mTs4zHFC/rde3HdgkxaTtB4NKHEj9rw60nk4Z3+YciOiLzhUEV+rbDmySYtIRcCLgXYGZhOeeNhwY7nsAaTXzJLwUUo4DpwecHAgUKMOP8uRHuxfgUf9ydA716iolwd+fdhwYnTBbs1eGMsPpi5y4jETvfDR3PoJF/hWe+DpfRiQ5rqsVxbUko2ZH3CBftTthq0kjqvWGTZnh9I3t/Rvz5Dlp6HkHE6npW3GagKaDSef07e79xwHcknuM9umbI7EQqg696DhR/eUa9F09q6sauDh+Bau7/FiyadIgl2gkUk749+jP8UJ5InWFY1f6HAdyUvP1m9h6rhUdF4/hi1+P49NgG17pXYdyf423X7m/CU98/Gfege8GzblWSp+Z78k7kI3CFkMLwOeDXQ55qVLetgpV235yal+glPrQIBfIGE5E523lnt+/R9WhBodgOqlsr0VLsMs2J6f/BcCNNr8HmVKy06uB0XgY637cjor2f0M8naz55n0MRIdsM0L+F4C7bV4DMjoXckIgyXlg4AjWfrsRy7oasbij1jupr3M1Gk+u93JhMHrJ/syDkDPzgzZfQWQjEbSNzBbZsBc/uQ0ZnWV6tatjJpBsl4S77p2XAolG9h+xNI6SILpS506p/RfIACkznPRveUQkT+Q5zYr8DsietNd8hysB/wBWwn6OFabi+AAAAABJRU5ErkJggg==\' alt=''> <strong>Google <span class='lyr-sub lyr-sat'>(Satellite)</span></strong> – aerial and satellite imagery<br>• <img class='guide-ico' src='data:image/png;base64,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\' alt=''> <strong>Mapy.com <span class='lyr-sub lyr-terr'>(Outdoor)</span></strong> – hiking and cycling trails, contours<br>• <img class='guide-ico' src='data:image/png;base64,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\' alt=''> <strong>Mapy.com <span class='lyr-sub lyr-base'>(Basic)</span></strong> – European cartography<br>• <img class='guide-ico' src='data:image/png;base64,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\' alt=''> <strong>Mapy.com <span class='lyr-sub lyr-sat'>(Aerial)</span></strong> – high-resolution aerial orthoimagery<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m8 3 4 8 5-5 5 15H2L8 3z'/></svg> <strong>Esri Topo</strong> – worldwide topographic map<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z'/><path d='M15 5.764v15'/><path d='M9 3.236v15'/></svg> <strong>Offline vector</strong> – fully offline world vector map (no internet)</div>",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> Zoom [+ / −] (right, bottom on mobile):</strong><br>Smooth map zooming. On desktop use mouse scroll wheel, on touch devices use pinch gesture."
                 ]
@@ -1291,6 +1311,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var timePrefix = "all", heatLayers = [], ageLayers = [], photoClusterGroups = [], canvasLayerGroup = null;
         var heatZoomTimer = null, heatZoomBound = false;
         var folderPrefix = null;
+        var folderSearch = "";
+        var folderSearchHits = [];
         var fastCanvasRenderer = L.canvas({ padding: 0.5 });
 
         map.createPane('zonePane');
@@ -1797,7 +1819,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var bLbClose = document.getElementById("btnLightboxClose");
             if (bLbClose) bLbClose.title = t.tipLightboxClose;
             // Aria-labels mirror titles (screen readers follow language switch)
-            ["btnMeasureGrid","btnMeasureDist","btnShowCoords","btnParallel","btnMeridian","btnSaveMeasure","btnClearMeasure","btnUndoMeasure","btnRedoMeasure","btnBufferZone","btnBufCircleCenter","btnBufCircle3p","btnBufZone","btnMeasurePanelClose","btnSyncStyles","btnToggleAll","btnResetStyles","btnUndo","btnLayers","btnZoomIn","btnZoomOut","btnAddFile","btnInfoClose","btnLightboxClose","measurePanel","btnYearSelect","btnFolderSelect"].forEach(function(id){
+            ["btnMeasureGrid","btnMeasureDist","btnShowCoords","btnParallel","btnMeridian","btnSaveMeasure","btnClearMeasure","btnUndoMeasure","btnRedoMeasure","btnBufferZone","btnBufCircleCenter","btnBufCircle3p","btnBufZone","btnMeasurePanelClose","btnSyncStyles","btnToggleAll","btnResetStyles","btnUndo","btnLayers","btnZoomIn","btnZoomOut","btnAddFile","btnInfoClose","btnLightboxClose","measurePanel","btnYearSelect","btnFolderSelect","btnZoomFiltered"].forEach(function(id){
                 var el = document.getElementById(id);
                 if (el && el.title) el.setAttribute("aria-label", el.title);
             });
@@ -1832,6 +1854,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (sourcesWord) sourcesWord.textContent = t.btnSources;
             setTi("btnLayers", t.titleLayers);
             setTi("btnFolderSelect", t.tipFolderFilter);
+            setTi("btnZoomFiltered", t.tipZoomFiltered);
             setT("dropText", t.dropText);
             
             setH("lblGRoad", t.lGoogle);
@@ -1850,6 +1873,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             setH("txtGuideTitle", t.guideTitle);
             var guideSearchEl = document.getElementById("guideSearch");
             if (guideSearchEl && t.guideSearchPH) guideSearchEl.placeholder = t.guideSearchPH;
+            var guideClearEl = document.getElementById("guideClear");
+            if (guideClearEl && t.clearSearch) { guideClearEl.title = t.clearSearch; guideClearEl.setAttribute("aria-label", t.clearSearch); }
             
             var stepsList = document.getElementById("infoStepsList");
             if (stepsList && t.steps) {
@@ -2650,6 +2675,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             renderYearDropdown();
             if (folderPrefix !== null && folderPrefix !== undefined && countForFolder(folderPrefix) === 0) folderPrefix = null;
             renderFolderDropdown();
+            updateZoomFilteredBtn();
             updView();
         }
 
@@ -8896,6 +8922,25 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
             }
             return c;
         }
+        function searchFolders(q) {
+            var map = {}, order = [];
+            for (var i = 0; i < rawData.length; i++) {
+                var norm = normFolderPath(rawData[i][5]);
+                if (norm === "" || norm.toLowerCase().indexOf(q) === -1) continue;
+                var segs = norm.split("/");
+                var acc = "";
+                for (var sgi = 0; sgi < segs.length - 1; sgi++) {
+                    acc = acc ? acc + "/" + segs[sgi] : segs[sgi];
+                    if (acc.toLowerCase().indexOf(q) === -1) continue;
+                    if (!map[acc]) { map[acc] = { full: acc, count: 0 }; order.push(acc); }
+                    map[acc].count++;
+                }
+            }
+            order.sort();
+            var out = [];
+            for (var oi = 0; oi < order.length && out.length < MAX_FOLDER_FILES; oi++) out.push(map[order[oi]]);
+            return { list: out, total: order.length };
+        }
         function setFolderFilter(pfx) {
             folderPrefix = pfx;
             renderFolderDropdown();
@@ -8916,12 +8961,72 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
             var dd = document.getElementById("folderDropdown");
             if (!dd) return;
             dd.innerHTML = "";
+            var srow = document.createElement("div");
+            srow.style.cssText = "display:flex;gap:4px;align-items:center;margin-bottom:6px;";
+            var sin = document.createElement("input");
+            sin.id = "folderSearch";
+            sin.className = "guide-search";
+            sin.style.cssText = "flex:1;min-width:0;margin:0;";
+            sin.autocomplete = "off";
+            sin.placeholder = t.folderSearchPH || "";
+            sin.value = folderSearch;
+            sin.onclick = function(e){ if (e) e.stopPropagation(); };
+            sin.oninput = function() {
+                folderSearch = this.value;
+                renderFolderDropdown();
+                var el = document.getElementById("folderSearch");
+                if (el) { el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch(e){} }
+            };
+            sin.onkeydown = function(ev) {
+                if (ev.key === "Escape") { ev.preventDefault(); folderSearch = ""; renderFolderDropdown(); var el = document.getElementById("folderSearch"); if (el) el.focus(); }
+                else if (ev.key === "Enter") { ev.preventDefault(); if (folderSearchHits.length === 1) { var h0 = folderSearchHits[0]; folderSearch = ""; setFolderFilter(h0.full); } }
+                ev.stopPropagation();
+            };
+            srow.appendChild(sin);
+            if (folderSearch) {
+                var sx = document.createElement("button");
+                sx.type = "button";
+                sx.className = "header-action-btn";
+                sx.textContent = "✕";
+                sx.title = t.clearSearch || "Clear";
+                sx.onclick = function(e){ if (e) e.stopPropagation(); folderSearch = ""; renderFolderDropdown(); var el = document.getElementById("folderSearch"); if (el) el.focus(); };
+                srow.appendChild(sx);
+            }
+            dd.appendChild(srow);
+            var q = folderSearch.trim().toLowerCase();
             var isRoot = (folderPrefix === null || folderPrefix === undefined);
             var allItem = document.createElement("div");
             allItem.className = "dropdown-item" + (isRoot ? " active" : "");
             allItem.innerHTML = "<span>" + t.allWord + "</span><span class='item-count'>(" + rawData.length.toLocaleString(loc) + ")</span>";
-            allItem.onclick = function() { setFolderFilter(null); };
+            allItem.onclick = function() { folderSearch = ""; setFolderFilter(null); };
             dd.appendChild(allItem);
+            if (q) {
+                var sr = searchFolders(q);
+                folderSearchHits = sr.list;
+                if (sr.list.length === 0) {
+                    var nempty = document.createElement("div");
+                    nempty.className = "tf-section";
+                    nempty.textContent = t.folderNoHit || "0";
+                    dd.appendChild(nempty);
+                }
+                for (var hi = 0; hi < sr.list.length; hi++) {
+                    (function(hd){
+                        var row = document.createElement("div");
+                        row.className = "dropdown-item";
+                        row.innerHTML = "<span>" + FOLDER_SVG + " " + escapeHtml(hd.full) + "</span><span class='item-count'>(" + hd.count.toLocaleString(loc) + ")</span>";
+                        row.title = hd.full;
+                        row.onclick = function() { folderSearch = ""; setFolderFilter(hd.full); };
+                        dd.appendChild(row);
+                    })(sr.list[hi]);
+                }
+                if (sr.total > sr.list.length) {
+                    var smore = document.createElement("div");
+                    smore.className = "tf-section";
+                    smore.textContent = "… (+" + (sr.total - sr.list.length) + ")";
+                    dd.appendChild(smore);
+                }
+            } else {
+            folderSearchHits = [];
             if (!isRoot) {
                 var parent = (folderPrefix === "") ? null : folderPrefix.split("/").slice(0, -1).join("/");
                 if (parent === "") parent = null;
@@ -9006,6 +9111,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                     dd.appendChild(rowN);
                 }
             }
+            }
             var lbl = document.getElementById("txtFolderLabel");
             if (lbl) lbl.textContent = fmtFolderPrefix(folderPrefix, t) + " (" + countForFolder(folderPrefix).toLocaleString(loc) + ")";
         }
@@ -9017,6 +9123,44 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
             dd.classList.toggle("open");
             if (btn) btn.classList.toggle("active", dd.classList.contains("open"));
             closeOtherDropdowns("folder");
+        }
+
+        // Přiblížit na fotky: bez filtru na všechny, s filtrem na jeho výsledek (jen fotky)
+        function photoBoundsForView() {
+            var b = null;
+            Object.keys(datasets).forEach(function(k){
+                var d = datasets[k];
+                if (!d.active || d.type !== "photos") return;
+                var items = d.items || [];
+                for (var i = 0; i < items.length; i++) {
+                    var p = items[i];
+                    if (timePrefix !== "all" && String(p[2]).indexOf(timePrefix) !== 0) continue;
+                    if (folderPrefix !== null && folderPrefix !== undefined && !folderMatch(normFolderPath(p[5]), folderPrefix, p[3])) continue;
+                    if (b) b.extend([p[0], p[1]]);
+                    else b = L.latLngBounds([[p[0], p[1]], [p[0], p[1]]]);
+                }
+            });
+            return b;
+        }
+        function zoomToFiltered() {
+            var b = photoBoundsForView();
+            var t = i18n[currentLang];
+            if (!b) {
+                showToast(t.toastNoPhotos || (currentLang === "cs" ? "Žádné fotky k zobrazení" : "No photos to show"));
+                return;
+            }
+            map.flyToBounds(b, { padding: [40, 40], maxZoom: 16 });
+        }
+        function updateZoomFilteredBtn() {
+            var btn = document.getElementById("btnZoomFiltered");
+            if (!btn) return;
+            var n = 0;
+            Object.keys(datasets).forEach(function(k){
+                var d = datasets[k];
+                if (d.active && d.type === "photos" && d.items) n += d.items.length;
+            });
+            if (n > 0) { btn.style.opacity = ""; btn.style.pointerEvents = ""; }
+            else { btn.style.opacity = "0.35"; btn.style.pointerEvents = "none"; }
         }
 
         function renderYearDropdown() {
@@ -10443,6 +10587,8 @@ dotColor: initialDot,
 
             var guideSearchEl = document.getElementById("guideSearch");
             if (guideSearchEl && t.guideSearchPH) guideSearchEl.placeholder = t.guideSearchPH;
+            var guideClearEl = document.getElementById("guideClear");
+            if (guideClearEl && t.clearSearch) { guideClearEl.title = t.clearSearch; guideClearEl.setAttribute("aria-label", t.clearSearch); }
 
             var layerDomMap = { gRoad: "lblGRoad", gTerr: "lblGTerr", gSat: "lblGSat", mOutdoor: "lblMOutdoor", mBasic: "lblMBasic", mAerial: "lblMAerial", eTopo: "lblETopo" };
             document.querySelectorAll("#layersDropdown .dropdown-item").forEach(function(i) { i.classList.remove("active"); });
