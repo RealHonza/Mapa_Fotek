@@ -1608,11 +1608,16 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var a = stops[i], b = stops[i + 1];
             return [Math.round(a[0] + (b[0] - a[0]) * f), Math.round(a[1] + (b[1] - a[1]) * f), Math.round(a[2] + (b[2] - a[2]) * f)];
         }
-        function ageYearRange(pts) {
+        function parseTimeValue(ts) {
+            var s = String(ts || "").replace("_", "").replace(/[^0-9]/g, "");
+            var n = parseInt(s, 10);
+            return isNaN(n) ? NaN : n;
+        }
+        function ageTimeRange(pts) {
             var mn = Infinity, mx = -Infinity;
             for (var i = 0; i < pts.length; i++) {
-                var y = parseInt(String(pts[i][2] || "").substring(0, 4), 10);
-                if (!isNaN(y)) { if (y < mn) mn = y; if (y > mx) mx = y; }
+                var v = parseTimeValue(pts[i][2]);
+                if (!isNaN(v)) { if (v < mn) mn = v; if (v > mx) mx = v; }
             }
             if (mn === Infinity) return null;
             return { min: mn, max: mx };
@@ -1622,8 +1627,24 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             Object.keys(datasets).forEach(function(k){
                 var d = datasets[k];
                 if (!d.active || d.type !== "photos") return;
-                var r = ageYearRange(d.items || []);
+                var r = ageTimeRange(d.items || []);
                 if (r) { if (r.min < mn) mn = r.min; if (r.max > mx) mx = r.max; }
+            });
+            if (mn === Infinity) return null;
+            return { min: mn, max: mx };
+        }
+        function ageRangeVisible() {
+            var mn = Infinity, mx = -Infinity;
+            Object.keys(datasets).forEach(function(k){
+                var d = datasets[k];
+                if (!d.active || d.type !== "photos" || !d.items) return;
+                for (var i = 0; i < d.items.length; i++) {
+                    var p = d.items[i];
+                    if (timePrefix !== "all" && String(p[2]).indexOf(timePrefix) !== 0) continue;
+                    if (folderPrefix !== null && folderPrefix !== undefined && !folderMatch(normFolderPath(p[5]), folderPrefix, p[3])) continue;
+                    var v = parseTimeValue(p[2]);
+                    if (!isNaN(v)) { if (v < mn) mn = v; if (v > mx) mx = v; }
+                }
             });
             if (mn === Infinity) return null;
             return { min: mn, max: mx };
@@ -1638,7 +1659,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 this._ageSize = (opts.ageSize !== undefined) ? opts.ageSize : 1;
                 this._builtKey = "";
                 this._buckets = [];
-                this._range = ageYearRange(this._pts);
+                this._range = ageTimeRange(this._pts);
             },
             onAdd: function(map) {
                 this._map = map;
@@ -1709,8 +1730,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 for (var i = 0; i < pts.length; i++) {
                     var lat = pts[i][0], lon = pts[i][1];
                     if (lat < bounds.getSouth() || lat > bounds.getNorth() || lon < bounds.getWest() || lon > bounds.getEast()) continue;
-                    var y = parseInt(String(pts[i][2] || "").substring(0, 4), 10);
-                    var bi = isNaN(y) ? N : Math.round((y - mn) / span * (N - 1));
+                    var v = parseTimeValue(pts[i][2]);
+                    var bi = isNaN(v) ? N : Math.round((v - mn) / span * (N - 1));
                     if (bi < 0) bi = 0;
                     if (bi > N) bi = N;
                     var pt = map.latLngToContainerPoint([lat, lon]);
@@ -7856,12 +7877,33 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                             });
                             pop.appendChild(grid);
                             if (dsMode() === "age") {
-                                var arng = ageRangeAll();
+                                var arng = ageRangeVisible();
                                 if (arng) {
+                                    var fmtAgeRange = function(minV, maxV) {
+                                        var parseTS = function(v) {
+                                            var s = String(v).padStart(14, '0');
+                                            return {
+                                                Y: parseInt(s.substring(0,4), 10),
+                                                M: parseInt(s.substring(4,6), 10),
+                                                D: parseInt(s.substring(6,8), 10),
+                                                h: parseInt(s.substring(8,10), 10),
+                                                m: parseInt(s.substring(10,12), 10),
+                                                s: parseInt(s.substring(12,14), 10)
+                                            };
+                                        };
+                                        var a = parseTS(minV), b = parseTS(maxV);
+                                        var diffMonths = (b.Y - a.Y) * 12 + (b.M - a.M) + (b.D > a.D ? 1 : 0);
+                                        var pad2 = function(n) { return String(n).padStart(2, '0'); };
+                                        if (diffMonths > 3) {
+                                            return pad2(a.D)+'.'+pad2(a.M)+'.'+a.Y + ' \u2013 ' + pad2(b.D)+'.'+pad2(b.M)+'.'+b.Y;
+                                        } else {
+                                            return pad2(a.D)+'.'+pad2(a.M)+' '+pad2(a.h)+':'+pad2(a.m)+':'+pad2(a.s) + ' \u2013 ' + pad2(b.D)+'.'+pad2(b.M)+' '+pad2(b.h)+':'+pad2(b.m)+':'+pad2(b.s);
+                                        }
+                                    };
                                     var scale = document.createElement("div");
                                     scale.style.margin = "6px 0 2px";
                                     scale.innerHTML = '<div style="height:8px;border-radius:4px;background:linear-gradient(90deg,#1a73e8,#34a853,#fbbc04,#ea4335);"></div>' +
-                                        '<div style="display:flex;justify-content:space-between;font-size:10px;color:#5f6368;margin-top:2px;"><span>' + arng.min + '</span><span>' + arng.max + '</span></div>';
+                                        '<div style="display:flex;justify-content:space-between;font-size:10px;color:#5f6368;margin-top:2px;"><span>' + fmtAgeRange(arng.min, arng.max) + '</span></div>';
                                     pop.appendChild(scale);
                                 }
                             }
