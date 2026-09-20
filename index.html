@@ -913,16 +913,12 @@
         .lb-folder-pagination {
           padding: 6px 8px;
           display: flex;
-        .lbh-coords {
-          font-size: 11.5px;
-          color: #b0b8c8;
-          font-variant-numeric: tabular-nums;
-          letter-spacing: 0.01em;
-          cursor: text;
-          user-select: text;
-          -webkit-user-select: text;
-          pointer-events: auto;
-        }8);
+          align-items: center;
+          justify-content: space-between;
+          border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .lb-folder-pg-btn {
+          background: rgba(255,255,255,0.08);
           border: 1px solid rgba(255,255,255,0.15);
           color: #ccc;
           border-radius: 4px;
@@ -1001,11 +997,11 @@
           padding: 8px 10px 12px 10px;
           box-sizing: border-box;
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-          max-width: calc(10 * 130px + 9 * 12px + 20px); /* max 10 sloupců */
+          grid-template-columns: repeat(7, minmax(100px, 180px));
+          max-width: calc(7 * 180px + 6 * 10px + 20px); /* max 7 sloupců */
           margin: 0 auto; /* centrovat grid */
-          grid-auto-rows: 130px;
-          gap: 12px;
+          grid-auto-rows: minmax(100px, 180px);
+          gap: 10px;
           align-content: start;
           justify-content: center;
           scrollbar-width: thin;
@@ -3754,16 +3750,45 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
 function calcLBGridPageSize() {
     var wrapper = document.getElementById('lbGridWrapper');
-    if (!wrapper) return 28;
-    var tileSize = 130 + 12; // šířka dlaždice + mezera
-    // Odečteme šířku panelu složek, pokud je viditelný
+    if (!wrapper) return 49;
     var panel = document.getElementById('lbFolderPanel');
     var panelW = (panel && panel.style.display !== 'none') ? (panel.offsetWidth || 200) + 1 : 0;
-    var gridW = Math.max(tileSize, wrapper.clientWidth - panelW);
-    var cols = Math.min(8, Math.max(1, Math.floor(gridW / tileSize)));
-    // Výška wrapperu minus prostor pro paginaci (~50px)
-    var availH = Math.max(wrapper.clientHeight - 50, tileSize);
-    var rows = Math.min(7, Math.max(1, Math.floor(availH / tileSize)));
+    var wrapW = (wrapper && wrapper.clientWidth) || (typeof window !== 'undefined' ? window.innerWidth : 1200);
+    var wrapH = (wrapper && wrapper.clientHeight) || (typeof window !== 'undefined' ? window.innerHeight : 800);
+    var gridW = Math.max(80, wrapW - panelW - 20); // 20px padding
+    var availH = Math.max(80, wrapH - 55 - 20);    // 55px paginace + 20px padding
+
+    var gap = 10;
+    var MAX_COLS = 7;
+    var MAX_ROWS = 7;
+    var MAX_TILE = 180;
+    var MIN_TILE = 100;
+
+    var tileW7 = Math.floor((gridW - (MAX_COLS - 1) * gap) / MAX_COLS);
+    var tileH7 = Math.floor((availH - (MAX_ROWS - 1) * gap) / MAX_ROWS);
+    var tile7 = Math.min(tileW7, tileH7);
+
+    var cols, rows, tileSize;
+    if (tile7 >= MIN_TILE) {
+        cols = MAX_COLS;
+        rows = MAX_ROWS;
+        tileSize = Math.min(MAX_TILE, tile7);
+    } else {
+        cols = Math.min(MAX_COLS, Math.max(1, Math.floor((gridW + gap) / (MIN_TILE + gap))));
+        rows = Math.min(MAX_ROWS, Math.max(1, Math.floor((availH + gap) / (MIN_TILE + gap))));
+        var fitW = Math.floor((gridW - (cols - 1) * gap) / cols);
+        var fitH = Math.floor((availH - (rows - 1) * gap) / rows);
+        tileSize = Math.max(60, Math.min(MAX_TILE, Math.min(fitW, fitH)));
+    }
+
+    var lbGrid = document.getElementById('lbGrid');
+    if (lbGrid) {
+        lbGrid.style.gridTemplateColumns = 'repeat(' + cols + ', ' + tileSize + 'px)';
+        lbGrid.style.gridAutoRows = tileSize + 'px';
+        lbGrid.style.gap = gap + 'px';
+        lbGrid.style.maxWidth = (cols * tileSize + (cols - 1) * gap + 20) + 'px';
+    }
+
     return cols * rows;
 }
 window.addEventListener('resize', function() {
