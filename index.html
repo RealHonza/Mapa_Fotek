@@ -1872,6 +1872,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 archiveSaved: "✅ Kořen archivu uložen",
                 archiveCleared: "Cesta smazána – platí relativní cesty",
                 archiveEmpty: "⚠️ Nejprve vložte cestu archivu",
+                archiveEmptyTooltip: "Kořen archivu není zadán (kliknutím přejdete k nastavení v nápovědě)",
                 archiveUseOn: "Kořen archivu pro tento zdroj: zapnuto (klik = vypnout)",
                 archiveUseOff: "Kořen archivu pro tento zdroj: vypnuto (klik = zapnout)",
                 archiveActive: "Aktivní – náhledy se načítají z plné cesty",
@@ -2042,6 +2043,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 archiveSaved: "✅ Archive root saved",
                 archiveCleared: "Path cleared – using relative paths",
                 archiveEmpty: "⚠️ Enter the archive path first",
+                archiveEmptyTooltip: "Archive root is not set (click to configure in help)",
                 archiveUseOn: "Archive root for this source: on (click = off)",
                 archiveUseOff: "Archive root for this source: off (click = on)",
                 archiveActive: "Active – previews load from the full path",
@@ -2806,6 +2808,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
         function gotoGuideStep(n) {
             try {
+                openInfoModal();
                 var gs = document.getElementById("guideSearch");
                 if (gs && gs.value) {
                     gs.value = "";
@@ -2818,9 +2821,11 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 var li = list.children[n - 1];
                 var det = li.querySelector("details");
                 if (det) det.open = true;
-                if (li.scrollIntoView) { try { li.scrollIntoView({ behavior: "smooth", block: "start" }); } catch(e2) { li.scrollIntoView(); } }
-                li.classList.add("guide-target");
-                setTimeout(function() { try { li.classList.remove("guide-target"); } catch(e3) {} }, 1800);
+                setTimeout(function() {
+                    if (li.scrollIntoView) { try { li.scrollIntoView({ behavior: "smooth", block: "start" }); } catch(e2) { li.scrollIntoView(); } }
+                    li.classList.add("guide-target");
+                    setTimeout(function() { try { li.classList.remove("guide-target"); } catch(e3) {} }, 1800);
+                }, 50);
             } catch(e) {}
         }
 
@@ -9333,7 +9338,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                         var pfxOn = rootSet && getUseRoot(datasets[pfxKey]);
                         pfxBtn.className = "source-prefix-btn " + (pfxOn ? "on" : "off");
                         pfxBtn.innerHTML = FOLDER_SVG;
-                        var pfxTitle = !rootSet ? (t.archiveEmpty || "Nejprve vyplňte kořen archivu") : (pfxOn ? (t.archiveUseOn || "Kořen archivu: zapnuto") : (t.archiveUseOff || "Kořen archivu: vypnuto"));
+                        var pfxTitle = !rootSet ? (t.archiveEmptyTooltip || t.archiveEmpty || "Nejprve vyplňte kořen archivu") : (pfxOn ? (t.archiveUseOn || "Kořen archivu: zapnuto") : (t.archiveUseOff || "Kořen archivu: vypnuto"));
                         pfxBtn.title = pfxTitle;
                         pfxBtn.setAttribute("aria-label", pfxTitle);
                         pfxBtn.setAttribute("aria-pressed", pfxOn ? "true" : "false");
@@ -9342,7 +9347,16 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                             var dd = datasets[pfxKey];
                             if (!dd) return;
                             var rSet = !!((typeof archiveRoot === "string" ? archiveRoot : "").trim());
-                            if (!rSet) { showToast(t.archiveEmpty || "Nejprve vyplňte kořen archivu", "warn"); return; }
+                            if (!rSet) {
+                                gotoGuideStep(10);
+                                setTimeout(function() {
+                                    try {
+                                        var inp = document.getElementById("archiveRootInput");
+                                        if (inp) { inp.focus(); if (inp.select) inp.select(); }
+                                    } catch(err) {}
+                                }, 150);
+                                return;
+                            }
                             saveUndoState();
                             dd.useArchiveRoot = !getUseRoot(dd);
                             saveDatasetStyles(true);
