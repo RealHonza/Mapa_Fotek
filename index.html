@@ -3825,19 +3825,25 @@ window.addEventListener('resize', function() {
             return Math.max(3, Math.floor(listH / 34));
         }
 
-        function renderLBFolderPanel(subFolders, activeFolder) {
+        var _lastLBFolderPanelTarget = null;
+        function renderLBFolderPanel(subFolders, activeFolder, resetPage) {
             var panel = document.getElementById('lbFolderPanel');
             if (!panel) return;
 
             if (!subFolders || subFolders.length === 0) {
                 panel.style.display = 'none';
+                _lastLBFolderPanelTarget = null;
                 return;
+            }
+            if (resetPage || _lastLBFolderPanelTarget !== activeFolder) {
+                currentLBFolderPage = 0;
+                _lastLBFolderPanelTarget = activeFolder;
             }
             panel.style.display = 'flex';
 
             var pageSize = calcLBFolderPageSize();
             var totalPages = Math.ceil(subFolders.length / pageSize);
-            currentLBFolderPage = Math.min(currentLBFolderPage, Math.max(0, totalPages - 1));
+            currentLBFolderPage = Math.max(0, Math.min(currentLBFolderPage, totalPages - 1));
             var startIdx = currentLBFolderPage * pageSize;
             var pageItems = subFolders.slice(startIdx, startIdx + pageSize);
 
@@ -4004,6 +4010,7 @@ window.addEventListener('resize', function() {
             if (!lbGrid) return;
             var tG = i18n[currentLang];
 
+            LB_GRID_PAGE_SIZE = calcLBGridPageSize();
             var totalItems = currentLBGridItems.length;
             var totalPages = Math.ceil(totalItems / LB_GRID_PAGE_SIZE) || 1;
             if (pageIndex < 0) pageIndex = 0;
@@ -4067,12 +4074,14 @@ window.addEventListener('resize', function() {
         }
 
         function lbGridPrevPage() {
+            LB_GRID_PAGE_SIZE = calcLBGridPageSize();
             if (currentLBGridPage > 0) {
                 renderLBGridPage(currentLBGridPage - 1);
             }
         }
 
         function lbGridNextPage() {
+            LB_GRID_PAGE_SIZE = calcLBGridPageSize();
             var totalPages = Math.ceil(currentLBGridItems.length / LB_GRID_PAGE_SIZE);
             if (currentLBGridPage < totalPages - 1) {
                 renderLBGridPage(currentLBGridPage + 1);
@@ -4085,6 +4094,7 @@ window.addEventListener('resize', function() {
             currentLBGridFolder = null;
             currentLBSubFolders = [];
             currentLBFolderPage = 0;
+            currentLBGridPage = 0;
             var panel = document.getElementById('lbFolderPanel');
             if (panel) panel.style.display = 'none';
             currentLBGridItems = [];
