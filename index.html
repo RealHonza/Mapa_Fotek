@@ -213,6 +213,9 @@
         .dropdown-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; border-radius: 8px; font-size: 12px; font-weight: 500; color: #3c4043; cursor: pointer; transition: background 0.15s; }
         .dropdown-item:hover { background: #f1f3f4; color: var(--green); }
         .dropdown-item.active { background: var(--green-bg); color: var(--green); font-weight: 700; }
+        .dropdown-item.reset-all { font-weight: 700; color: var(--green); background: var(--green-bg); border: 1px solid var(--green-border); position: sticky; top: -6px; z-index: 3; margin-bottom: 4px; }
+        .dropdown-item.reset-all:hover { background: var(--green-bg); color: var(--green); }
+        .dropdown-item.reset-all.active { background: var(--green); color: #ffffff; border-color: var(--green); }
         #layersDropdown .dropdown-item { justify-content: flex-start; gap: 8px; }
         .dropdown-item.menu-has-ico { justify-content: flex-start; gap: 8px; }
         .lyr-brand { display: inline-block; min-width: 64px; font-weight: 700; }
@@ -635,7 +638,7 @@
         .lb-nav:disabled { opacity: 0.15; cursor: default; pointer-events: none; }
         .lb-prev { left: 20px; }
         .lb-next { right: 20px; }
-        .lb-counter { position: absolute; top: 22px; left: 24px; color: rgba(255, 255, 255, 0.8); font-size: 13px; font-weight: 500; letter-spacing: 0.5px; background: rgba(0, 0, 0, 0.4); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.12); user-select: none; z-index: 10001; }
+        .lb-counter { position: absolute; top: 22px; left: 24px; color: rgba(255, 255, 255, 0.95); font-size: 13px; font-weight: 500; letter-spacing: 0.5px; background: rgba(0, 0, 0, 0.65); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.22); display: inline-flex; align-items: center; justify-content: center; line-height: 1.2; user-select: none; -webkit-user-select: none; z-index: 10010; }
         @media (max-width: 600px) {
             .lb-nav { width: 38px; height: 52px; font-size: 22px; }
             .lb-prev { left: 8px; }
@@ -645,9 +648,345 @@
         #lightbox img { max-width: 92vw; max-height: 85vh; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); object-fit: contain; }
         .lb-close { position: absolute; top: 18px; right: 22px; color: white; font-size: 30px; font-weight: 300; cursor: pointer; border: none; background: transparent; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
         .lb-close:hover { background: rgba(255,255,255,0.2); }
-        .lb-caption { color: #e8eaed; font-size: 14px; margin-top: 10px; font-weight: 500; text-align: center; max-width: 90vw; }
-        .lb-caption .lb-title { font-size: 14px; font-weight: 600; color: #fff; word-break: break-all; }
-        .lb-caption .lb-sub { font-size: 12px; font-weight: 400; color: #bbb; margin-top: 3px; }
+        .lb-caption { display: none; }
+        .lb-header {
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          background: linear-gradient(to bottom, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.50) 65%, rgba(0,0,0,0) 100%);
+          padding: 12px 75px 26px 75px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          z-index: 10;
+          pointer-events: none;
+          box-sizing: border-box;
+        }
+        .lb-header .lbh-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: nowrap;
+          max-width: 100%;
+        }
+        .lb-header .lbh-item {
+          color: #d8dadc;
+          font-size: 13px;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 36vw;
+          flex-shrink: 1;
+        }
+        .lb-header .lbh-item.lbh-name {
+          font-weight: 700;
+          color: #fff;
+          font-size: 14px;
+          max-width: 35vw;
+          flex-shrink: 2;
+        }
+        .lb-header .lbh-sep {
+          color: rgba(255,255,255,0.30);
+          margin: 0 10px;
+          font-size: 16px;
+          font-weight: 200;
+          flex-shrink: 0;
+          line-height: 1;
+        }
+        .lb-header .lbh-folder-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          color: #b0b4b8;
+          font-size: 12px;
+          max-width: 80vw;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .lbh-crumb {
+          color: #d1d5db;
+          cursor: pointer;
+          padding: 2px 6px;
+          border-radius: 4px;
+          transition: color 0.15s, background 0.15s;
+          pointer-events: auto;
+        }
+        .lbh-crumb:hover {
+          color: #fff;
+          background: rgba(255, 255, 255, 0.22);
+          text-decoration: underline;
+        }
+        .lbh-crumb.active {
+          color: #34d399;
+          background: rgba(10, 169, 76, 0.25);
+          border: 1px solid rgba(10, 169, 76, 0.50);
+          font-weight: 600;
+        }
+        .lbh-crumb-sep {
+          color: rgba(255, 255, 255, 0.35);
+          margin: 0 3px;
+          user-select: none;
+        }
+        .lbh-grid-exit-btn {
+          display: none;
+          background: rgba(255, 255, 255, 0.16);
+          color: #fff;
+          border: 1px solid rgba(255, 255, 255, 0.32);
+          border-radius: 4px;
+          font-size: 11px;
+          padding: 2px 8px;
+          margin-left: 10px;
+          cursor: pointer;
+          pointer-events: auto;
+          transition: background 0.15s, border-color 0.15s;
+        }
+        .lbh-grid-exit-btn:hover {
+          background: rgba(10, 169, 76, 0.25);
+          border-color: #0AA94C;
+          color: #34d399;
+        }
+        #lightbox.lb-mode-grid .lbh-grid-exit-btn {
+          display: inline-flex;
+          align-items: center;
+        }
+
+        /* Režim mřížky (Grid View) v Lightboxu */
+        #lightbox.lb-mode-grid #lbImg,
+        #lightbox.lb-mode-grid .lb-nav,
+        #lightbox.lb-mode-grid .lb-strip {
+          display: none !important;
+        }
+        .lb-grid-wrapper {
+          display: none;
+          position: absolute;
+          top: 75px;
+          bottom: 12px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: min(94vw, 1200px);
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          z-index: 10002;
+          box-sizing: border-box;
+          pointer-events: auto;
+        }
+        #lightbox.lb-mode-grid .lb-grid-wrapper {
+          display: flex;
+        }
+        #lbGrid {
+          flex: 1;
+          width: 100%;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding: 8px 10px 12px 10px;
+          box-sizing: border-box;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+          grid-auto-rows: 130px;
+          gap: 12px;
+          align-content: start;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+        }
+        #lbGrid::-webkit-scrollbar {
+          width: 8px;
+        }
+        #lbGrid::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 4px;
+        }
+        #lbGrid::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+        .lb-grid-tile {
+          width: 100%;
+          height: 100%;
+          border-radius: 8px;
+          overflow: hidden;
+          cursor: pointer;
+          position: relative;
+          background: #18191a;
+          border: 2px solid transparent;
+          box-sizing: border-box;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+          transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+          user-select: none;
+        }
+        .lb-grid-tile:hover {
+          transform: scale(1.05);
+          border-color: rgba(255, 255, 255, 0.85);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+          z-index: 5;
+        }
+        .lb-grid-tile.active-photo {
+          border-color: #0AA94C;
+          box-shadow: 0 0 16px rgba(10, 169, 76, 0.75);
+        }
+        /* Přepsat globální #lightbox img styly pro miniatury v mřížce */
+        #lbGrid .lb-grid-tile img {
+          width: 100% !important;
+          height: 100% !important;
+          max-width: 100% !important;
+          max-height: 100% !important;
+          object-fit: cover !important;
+          display: block !important;
+          border-radius: 6px !important;
+          box-shadow: none !important;
+          border: none !important;
+        }
+        .lb-grid-tile .lb-grid-overlay {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+          padding: 14px 6px 4px 6px;
+          color: #eee;
+          font-size: 11px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          opacity: 0;
+          transition: opacity 0.15s;
+          pointer-events: none;
+        }
+        .lb-grid-tile:hover .lb-grid-overlay {
+          opacity: 1;
+        }
+        /* Lišta stránkování mřížky */
+        .lb-grid-pagination {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          padding: 8px 20px;
+          background: rgba(20, 22, 25, 0.90);
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 20px;
+          backdrop-filter: blur(8px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+          flex-shrink: 0;
+          margin-top: 6px;
+          box-sizing: border-box;
+          user-select: none;
+        }
+        .lb-pg-btn {
+          background: rgba(255, 255, 255, 0.12);
+          color: #eee;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          border-radius: 6px;
+          padding: 5px 14px;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .lb-pg-btn:hover:not(:disabled) {
+          background: rgba(10, 169, 76, 0.25);
+          border-color: #0AA94C;
+          color: #34d399;
+        }
+        .lb-pg-btn:disabled {
+          opacity: 0.25;
+          cursor: default;
+          pointer-events: none;
+        }
+        .lb-pg-info {
+          color: #d1d5db;
+          font-size: 13px;
+          font-weight: 500;
+        }
+        @media (max-width: 600px) {
+          .lb-grid-wrapper { top: 60px; bottom: 8px; width: 96vw; }
+          #lbGrid {
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            grid-auto-rows: 90px;
+            gap: 8px;
+            padding: 6px 4px 8px 4px;
+          }
+          .lb-grid-pagination { gap: 10px; padding: 6px 12px; }
+          .lb-pg-btn { padding: 4px 10px; font-size: 12px; }
+          .lb-pg-info { font-size: 12px; }
+        }
+        @media (max-width: 600px) {
+          .lb-header { padding: 8px 45px 20px 45px; gap: 2px; }
+          .lb-header .lbh-item { font-size: 11px; }
+          .lb-header .lbh-item.lbh-name { font-size: 12px; }
+          .lb-header .lbh-sep { margin: 0 5px; font-size: 13px; }
+          .lb-header .lbh-folder-row { font-size: 10px; }
+        }
+        .lb-strip {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+          padding: 26px 14px 10px;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          gap: 6px;
+          z-index: 10;
+          overflow: hidden;
+        }
+        .lb-strip-thumb {
+          width: 62px;
+          height: 62px;
+          object-fit: cover;
+          border-radius: 5px;
+          cursor: pointer;
+          opacity: 0.50;
+          border: 2px solid transparent;
+          transition: opacity 0.15s, border-color 0.15s, transform 0.15s;
+          flex-shrink: 0;
+          pointer-events: auto;
+        }
+        .lb-strip-thumb:hover { opacity: 0.80; transform: scale(1.07); }
+        /* Fullscreen obrázek */
+        #lbImg {
+          cursor: zoom-in;
+          transition: transform 0.2s ease;
+        }
+        #lightbox.lb-img-fullscreen #lbImg {
+          position: fixed;
+          top: 0; left: 0;
+          width: 100vw;
+          height: 100vh;
+          max-width: none;
+          max-height: none;
+          object-fit: contain;
+          background: #000;
+          z-index: 10005;
+          cursor: zoom-out;
+          margin: 0;
+          border-radius: 0;
+        }
+        #lightbox.lb-img-fullscreen .lb-header,
+        #lightbox.lb-img-fullscreen .lb-strip,
+        #lightbox.lb-img-fullscreen .lb-nav,
+        #lightbox.lb-img-fullscreen .lb-close,
+        #lightbox.lb-img-fullscreen .lb-counter {
+          display: none !important;
+        }
+
+        .lb-strip-thumb.lb-strip-active {
+          opacity: 1;
+          border-color: #0AA94C;
+          transform: scale(1.14);
+          box-shadow: 0 0 12px rgba(10, 169, 76, 0.75);
+        }
+        @media (max-width: 600px) {
+          .lb-header { padding: 10px 60px 18px 12px; }
+          .lb-header .lbh-item { font-size: 11px; }
+          .lb-header .lbh-item.lbh-name { font-size: 12px; }
+          .lb-header .lbh-sep { margin: 0 6px; }
+          .lb-strip-thumb { width: 46px; height: 46px; }
+        }
         
         #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: rgba(32, 33, 36, 0.95); color: white; padding: 9px 18px; border-radius: 8px; font-size: 12px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 3000; display: none; align-items: center; gap: 6px; backdrop-filter: blur(8px); }
         #toast.show { display: flex; animation: fadeInOut 3s forwards; }
@@ -855,10 +1194,15 @@
     <div id="lightbox" onclick="closeLightbox()">
         <button class="lb-close" onclick="closeLightbox()" id="btnLightboxClose" aria-label="Zavřít náhled fotografie">&times;</button>
         <div class="lb-counter" id="lbCounter" onclick="event.stopPropagation()"></div>
+        <div class="lb-header" id="lbHeader" onclick="event.stopPropagation()"></div>
         <button class="lb-nav lb-prev" id="lbPrev" onclick="event.stopPropagation(); prevLBPhoto();" aria-label="Předchozí fotografie" title="Předchozí fotografie (← / kolečko myši)">&#10094;</button>
-        <img id="lbImg" src="" alt="Fotografie" onclick="event.stopPropagation()">
+        <img id="lbImg" src="" alt="Fotografie" onclick="event.stopPropagation(); toggleLBImgFullscreen();">
+        <div class="lb-grid-wrapper" id="lbGridWrapper" onclick="event.stopPropagation()">
+            <div class="lb-grid" id="lbGrid"></div>
+            <div class="lb-grid-pagination" id="lbGridPagination"></div>
+        </div>
         <button class="lb-nav lb-next" id="lbNext" onclick="event.stopPropagation(); nextLBPhoto();" aria-label="Další fotografie" title="Další fotografie (→ / kolečko myši)">&#10095;</button>
-        <div class="lb-caption" id="lbCap" onclick="event.stopPropagation()"></div>
+        <div class="lb-strip" id="lbStrip" onclick="event.stopPropagation()"></div>
     </div>
 
     <!-- ========================================================================= -->
@@ -3131,9 +3475,171 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 btnNext.disabled = (currentLBIndex >= total - 1);
             }
             if (counter) {
-                counter.style.display = "block";
+                counter.style.display = "inline-flex";
                 counter.textContent = (currentLBIndex + 1) + " / " + total;
             }
+        }
+
+        var currentLBGridFolder = null;
+        var currentLBGridItems = [];
+        var currentLBGridPage = 0;
+        var LB_GRID_PAGE_SIZE = 28; // Počet fotografií na stránku
+
+        function renderFolderBreadcrumbs(folder, activeFolder) {
+            if (!folder) return "";
+            var parts = folder.split("/");
+            var html = [];
+            var currentPath = "";
+            for (var i = 0; i < parts.length; i++) {
+                var part = parts[i];
+                if (!part) continue;
+                currentPath = currentPath ? (currentPath + "/" + part) : part;
+                if (html.length > 0) {
+                    html.push('<span class="lbh-crumb-sep">/</span>');
+                }
+                var isActive = (activeFolder && activeFolder === currentPath) ? ' active' : '';
+                html.push('<span class="lbh-crumb' + isActive + '" data-folder="' + escapeHtml(currentPath) + '" onclick="event.stopPropagation(); openLBFolderGrid(this.getAttribute(\'data-folder\'));" title="Zobrazit mřížku fotek ve složce: ' + escapeHtml(currentPath) + '">' + escapeHtml(part) + '</span>');
+            }
+            return html.join('');
+        }
+
+        function openLBFolderGrid(targetFolder) {
+            var lb = document.getElementById("lightbox");
+            var lbGrid = document.getElementById("lbGrid");
+            if (!lb || !lbGrid || !currentLBPhotos) return;
+
+            currentLBGridFolder = targetFolder;
+            lb.classList.add("lb-mode-grid");
+
+            var crumbs = document.querySelectorAll(".lbh-crumb");
+            for (var c = 0; c < crumbs.length; c++) {
+                if (crumbs[c].getAttribute("data-folder") === targetFolder) {
+                    crumbs[c].classList.add("active");
+                } else {
+                    crumbs[c].classList.remove("active");
+                }
+            }
+
+            // Filtrovat fotky POUZE v dané složce (bez podsložek!)
+            currentLBGridItems = [];
+            var activeIdxInFolder = -1;
+            for (var i = 0; i < currentLBPhotos.length; i++) {
+                var p = currentLBPhotos[i];
+                var rp = p[5] || "";
+                var rawFn = p[3] || "Photo";
+                var pf = getPhotoFolder(rp, rawFn);
+                // Pouze přesná shoda se složkou (žádné vnořené podsložky)
+                if (pf === targetFolder) {
+                    if (i === currentLBIndex) {
+                        activeIdxInFolder = currentLBGridItems.length;
+                    }
+                    currentLBGridItems.push({ index: i, photo: p, folder: pf });
+                }
+            }
+
+            // Určit výchozí stránku podle toho, na které stránce leží aktuální fotka
+            if (activeIdxInFolder !== -1) {
+                currentLBGridPage = Math.floor(activeIdxInFolder / LB_GRID_PAGE_SIZE);
+            } else {
+                currentLBGridPage = 0;
+            }
+
+            // Vykreslit aktuální stránku
+            renderLBGridPage(currentLBGridPage);
+        }
+
+        function renderLBGridPage(pageIndex) {
+            var lbGrid = document.getElementById("lbGrid");
+            var lbPag = document.getElementById("lbGridPagination");
+            if (!lbGrid) return;
+
+            var totalItems = currentLBGridItems.length;
+            var totalPages = Math.ceil(totalItems / LB_GRID_PAGE_SIZE) || 1;
+            if (pageIndex < 0) pageIndex = 0;
+            if (pageIndex >= totalPages) pageIndex = totalPages - 1;
+            currentLBGridPage = pageIndex;
+
+            var start = pageIndex * LB_GRID_PAGE_SIZE;
+            var end = Math.min(start + LB_GRID_PAGE_SIZE, totalItems);
+
+            var tilesHtml = '';
+            for (var j = start; j < end; j++) {
+                var item = currentLBGridItems[j];
+                var tp = item.photo;
+                var tIdx = item.index;
+                var trp = tp[5] || "";
+                var tKey = currentLBKeys ? currentLBKeys[tIdx] : undefined;
+                var trr = resolvePhotoUrl(trp || tp[3], tKey);
+                var tSrc = trr ? (trr.indexOf("data:") === 0 ? trr : encodeURI(trr)) : "";
+                var tFn = escapeHtml(tp[3] || "");
+                var isCurr = (tIdx === currentLBIndex) ? ' active-photo' : '';
+                tilesHtml += '<div class="lb-grid-tile' + isCurr + '" onclick="event.stopPropagation(); selectLBPhotoFromGrid(' + tIdx + ');" title="' + tFn + '">' +
+                             '<img src="' + tSrc + '" alt="' + tFn + '" loading="lazy">' +
+                             '<div class="lb-grid-overlay">' + tFn + '</div>' +
+                             '</div>';
+            }
+
+            if (totalItems === 0) {
+                tilesHtml = '<div style="color:#d1d5db;padding:40px 20px;text-align:center;grid-column:1/-1;font-size:14px;">V této složce nejsou žádné fotografie přímo v kořeni (jsou v podsložkách).</div>';
+            }
+
+            lbGrid.innerHTML = tilesHtml;
+            lbGrid.scrollTop = 0;
+
+            // Vykreslit lištu stránkování
+            if (lbPag) {
+                if (totalItems > LB_GRID_PAGE_SIZE) {
+                    var prevDis = (pageIndex === 0) ? ' disabled' : '';
+                    var nextDis = (pageIndex >= totalPages - 1) ? ' disabled' : '';
+                    lbPag.innerHTML = 
+                        '<button class="lb-pg-btn"' + prevDis + ' onclick="event.stopPropagation(); lbGridPrevPage();" title="Předchozí stránka (←)">❮ Předchozí</button>' +
+                        '<span class="lb-pg-info">Stránka ' + (pageIndex + 1) + ' z ' + totalPages + ' <span style="opacity:0.65;">(' + (start + 1) + '–' + end + ' z ' + totalItems + ')</span></span>' +
+                        '<button class="lb-pg-btn"' + nextDis + ' onclick="event.stopPropagation(); lbGridNextPage();" title="Další stránka (→)">Další ❯</button>';
+                    lbPag.style.display = 'flex';
+                } else {
+                    lbPag.innerHTML = '';
+                    lbPag.style.display = 'none';
+                }
+            }
+
+            // Aktualizovat čítač vlevo nahoře
+            var counter = document.getElementById("lbCounter");
+            if (counter) {
+                var cnt = totalItems;
+                var lbl = cnt + (cnt === 1 ? " fotka" : (cnt >= 2 && cnt <= 4 ? " fotky" : " fotek"));
+                counter.textContent = lbl;
+                counter.style.display = "inline-flex";
+            }
+        }
+
+        function lbGridPrevPage() {
+            if (currentLBGridPage > 0) {
+                renderLBGridPage(currentLBGridPage - 1);
+            }
+        }
+
+        function lbGridNextPage() {
+            var totalPages = Math.ceil(currentLBGridItems.length / LB_GRID_PAGE_SIZE);
+            if (currentLBGridPage < totalPages - 1) {
+                renderLBGridPage(currentLBGridPage + 1);
+            }
+        }
+
+        function exitLBGrid() {
+            var lb = document.getElementById("lightbox");
+            if (lb) lb.classList.remove("lb-mode-grid");
+            currentLBGridFolder = null;
+            currentLBGridItems = [];
+            var crumbs = document.querySelectorAll(".lbh-crumb");
+            for (var c = 0; c < crumbs.length; c++) {
+                crumbs[c].classList.remove("active");
+            }
+            updateLBNavButtons();
+        }
+
+        function selectLBPhotoFromGrid(idx) {
+            exitLBGrid();
+            showLBPhotoByIndex(idx);
         }
 
         function getPhotoFolder(rp, fn) {
@@ -3153,6 +3659,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
         function showLBPhotoByIndex(idx) {
             if (!currentLBPhotos || idx < 0 || idx >= currentLBPhotos.length) return;
+            var lbEl = document.getElementById("lightbox");
+            if (lbEl) lbEl.classList.remove("lb-mode-grid");
             currentLBIndex = idx;
             var p = currentLBPhotos[idx];
             var rp = p[5] || "";
@@ -3160,24 +3668,93 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var fu = _rr ? (_rr.indexOf("data:") === 0 ? _rr : encodeURI(_rr)) : "";
             var rawFn = p[3] || "Photo";
             var df = fmtDate(p[2]);
+            var sz = fmtBytes(p[4] || 0);
             var folder = getPhotoFolder(rp, rawFn);
 
             var lbImg = document.getElementById("lbImg");
-            if (lbImg) lbImg.src = fu;
-                        var lbCap = document.getElementById("lbCap");
-            if (lbCap) {
-                var htmlParts = [];
-                htmlParts.push("<div class=\"lb-title\">" + escapeHtml(rawFn) + "</div>");
-                if (df) {
-                    htmlParts.push("<div class=\"lb-sub\">" + escapeHtml(df) + "</div>");
+            var currentReqIdx = idx;
+            function updateResDisplay() {
+                if (currentLBIndex !== currentReqIdx) return;
+                var elRes = document.getElementById("lbhRes");
+                var elSep = document.getElementById("lbhResSep");
+                if (elRes && lbImg && lbImg.naturalWidth && lbImg.naturalHeight) {
+                    var rText = lbImg.naturalWidth + " × " + lbImg.naturalHeight;
+                    elRes.textContent = rText;
+                    elRes.title = rText;
+                    elRes.style.display = "inline";
+                    if (elSep) elSep.style.display = "inline";
                 }
-                if (folder) {
-                    var folderIconSvg = "<svg viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='margin-right:4px;vertical-align:-2px;display:inline-block;'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg>";
-                    htmlParts.push("<div class=\"lb-sub\"><span style='display:inline-flex;align-items:center;'>" + folderIconSvg + escapeHtml(folder) + "</span></div>");
-                }
-                lbCap.innerHTML = htmlParts.join("");
             }
-            updateLBNavButtons();
+            if (lbImg) {
+                lbImg.onload = updateResDisplay;
+                lbImg.src = fu;
+                if (lbImg.complete && lbImg.naturalWidth) {
+                    updateResDisplay();
+                }
+            }
+
+            // ── HORNÍ LIŠTA (lb-header) ──────────────────────────────────────
+            var lbHeader = document.getElementById("lbHeader");
+            if (lbHeader) {
+                var folderIconSvg = "<svg viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink:0;vertical-align:-1px;'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg>";
+                
+                // 1. řádek: Název | Datum a čas | Velikost | Rozlišení
+                var r1 = [];
+                r1.push('<span class="lbh-item lbh-name" title="' + escapeHtml(rawFn) + '">' + escapeHtml(rawFn) + '</span>');
+                if (df) {
+                    r1.push('<span class="lbh-sep">|</span>');
+                    r1.push('<span class="lbh-item" title="' + escapeHtml(df) + '">' + escapeHtml(df) + '</span>');
+                }
+                if (sz) {
+                    r1.push('<span class="lbh-sep">|</span>');
+                    r1.push('<span class="lbh-item lbh-size" title="' + escapeHtml(sz) + '">' + escapeHtml(sz) + '</span>');
+                }
+                // 4. pozice: Rozlišení (vyplní updateResDisplay z lbImg)
+                r1.push('<span class="lbh-sep" id="lbhResSep" style="display:none;">|</span>');
+                r1.push('<span class="lbh-item lbh-res" id="lbhRes" style="display:none;" title="Rozlišení"></span>');
+
+                var outHtml = '<div class="lbh-row">' + r1.join('') + '</div>';
+
+                // 2. řádek: Složka jako interaktivní drobečková navigace (breadcrumbs)
+                if (folder) {
+                    var crumbsHtml = renderFolderBreadcrumbs(folder, currentLBGridFolder);
+                    outHtml += '<div class="lbh-row lbh-folder-row">' + 
+                               folderIconSvg + 
+                               '<span>' + crumbsHtml + '</span>' + 
+                               '<button class="lbh-grid-exit-btn" onclick="event.stopPropagation(); exitLBGrid();" title="Zpět na zobrazení fotografie">✕ Zpět na fotku</button>' +
+                               '</div>';
+                }
+
+                lbHeader.innerHTML = outHtml;
+            }
+
+            // ── FILMOVÝ PÁS (lb-strip) ───────────────────────────────────────
+            var lbStrip = document.getElementById("lbStrip");
+            if (lbStrip) {
+                if (currentLBPhotos.length > 1) {
+                    var THUMB_RANGE = 5;
+                    var thumbStart = Math.max(0, idx - THUMB_RANGE);
+                    var thumbEnd   = Math.min(currentLBPhotos.length - 1, idx + THUMB_RANGE);
+                    var stripHtml  = '';
+                    for (var ti = thumbStart; ti <= thumbEnd; ti++) {
+                        var tp   = currentLBPhotos[ti];
+                        var trp  = tp[5] || "";
+                        var tKey = currentLBKeys ? currentLBKeys[ti] : undefined;
+                        var trr  = resolvePhotoUrl(trp || tp[3], tKey);
+                        var tSrc = trr ? (trr.indexOf("data:") === 0 ? trr : encodeURI(trr)) : "";
+                        var isAct = (ti === idx) ? ' lb-strip-active' : '';
+                        var tFn  = escapeHtml(tp[3] || '');
+                        stripHtml += '<img class="lb-strip-thumb' + isAct + '" src="' + tSrc + '" alt="' + tFn + '" title="' + tFn + '" onclick="event.stopPropagation(); showLBPhotoByIndex(' + ti + ');" loading="lazy">';
+                    }
+                    lbStrip.innerHTML = stripHtml;
+                    lbStrip.style.display = 'flex';
+                } else {
+                    lbStrip.innerHTML = '';
+                    lbStrip.style.display = 'none';
+                }
+            }
+
+                        updateLBNavButtons();
         }
 
         function prevLBPhoto() {
@@ -3189,6 +3766,16 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         function nextLBPhoto() {
             if (currentLBIndex >= 0 && currentLBIndex < currentLBPhotos.length - 1) {
                 showLBPhotoByIndex(currentLBIndex + 1);
+            }
+        }
+
+        function toggleLBImgFullscreen() {
+            var lb = document.getElementById('lightbox');
+            if (!lb) return;
+            if (lb.classList.contains('lb-img-fullscreen')) {
+                lb.classList.remove('lb-img-fullscreen');
+            } else {
+                lb.classList.add('lb-img-fullscreen');
             }
         }
 
@@ -3233,7 +3820,17 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
         function closeLightbox() {
             var lb = document.getElementById("lightbox");
-            if (lb) lb.classList.remove("active");
+            if (lb) { lb.classList.remove("active"); lb.classList.remove("lb-img-fullscreen"); lb.classList.remove("lb-mode-grid"); }
+            currentLBGridFolder = null;
+            var lbGrid = document.getElementById("lbGrid");
+            if (lbGrid) { lbGrid.innerHTML = ''; }
+            var lbPag = document.getElementById("lbGridPagination");
+            if (lbPag) { lbPag.innerHTML = ''; }
+            currentLBGridItems = [];
+            var lbStrip = document.getElementById("lbStrip");
+            if (lbStrip) { lbStrip.innerHTML = ''; lbStrip.style.display = 'none'; }
+            var lbHeader = document.getElementById("lbHeader");
+            if (lbHeader) lbHeader.innerHTML = '';
             currentLBPhotos = [];
             currentLBKeys = [];
             currentLBIndex = -1;
@@ -3243,13 +3840,26 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var lb = document.getElementById("lightbox");
             var isLbActive = lb && lb.classList.contains("active");
             if (e.key === "Escape") {
-                closeLightbox();
-                closeInfoModal();
+                var lb2 = document.getElementById("lightbox");
+                if (lb2 && lb2.classList.contains("lb-img-fullscreen")) {
+                    lb2.classList.remove("lb-img-fullscreen");
+                } else if (lb2 && lb2.classList.contains("lb-mode-grid")) {
+                    exitLBGrid();
+                } else {
+                    closeLightbox();
+                    closeInfoModal();
+                }
             } else if (isLbActive && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
                 e.preventDefault();
                 e.stopPropagation();
-                if (e.key === "ArrowLeft") prevLBPhoto();
-                else if (e.key === "ArrowRight") nextLBPhoto();
+                var lbGridMode = lb && lb.classList.contains("lb-mode-grid");
+                if (lbGridMode) {
+                    if (e.key === "ArrowLeft") lbGridPrevPage();
+                    else if (e.key === "ArrowRight") lbGridNextPage();
+                } else {
+                    if (e.key === "ArrowLeft") prevLBPhoto();
+                    else if (e.key === "ArrowRight") nextLBPhoto();
+                }
             }
         });
 
@@ -9998,7 +10608,7 @@ function resetFolderPagination() { folderSearchPage = 0; folderFilePage = 0; }
             var q = folderSearch.trim().toLowerCase();
             var isRoot = (folderPrefix === null || folderPrefix === undefined);
             var allItem = document.createElement("div");
-            allItem.className = "dropdown-item" + (isRoot ? " active" : "");
+            allItem.className = "dropdown-item reset-all" + (isRoot ? " active" : "");
             allItem.innerHTML = "<span>" + t.allWord + "</span><span class='item-count'>(" + countAllFiltered().toLocaleString(loc) + ")</span>";
             allItem.onclick = function() { folderSearch = ""; setFolderFilter(null); };
             dd.appendChild(allItem);
@@ -10253,7 +10863,7 @@ if (fileEnd < fList.length || fileStart > 0) {
 
             // Vše
             var allItem = document.createElement("div");
-            allItem.className = "dropdown-item" + (lvl === 0 ? " active" : "");
+            allItem.className = "dropdown-item reset-all" + (lvl === 0 ? " active" : "");
             allItem.innerHTML = "<span>" + t.allWord + "</span><span class='item-count'>(" + countAllFiltered().toLocaleString(loc) + ")</span>";
             allItem.onclick = function() { setTimeFilter("all"); };
             dd.appendChild(allItem);
