@@ -2566,7 +2566,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         function menuExportPng() {
             closeMenuDropdown(); closeAllPopovers();
 
-            function doExport() {
+            function doExportPng() {
                 showToast(i18n[currentLang].toastPngPreparing || "🖼️ Vytvářím PNG…");
                 var mapContainer = document.getElementById("map");
                 if (!mapContainer || !map) { showToast("Chyba"); return; }
@@ -2588,18 +2588,18 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 });
             }
 
-            if (typeof html2canvas !== "undefined") { doExport(); }
-            else { loadScriptOnce(EXPORT_LIB_H2C, function(e) { if (e) { showToast("Chyba: html2canvas se nepodařilo načíst"); return; } doExport(); }); }
+            if (typeof html2canvas !== "undefined") { doExportPng(); }
+            else { loadScriptOnce(EXPORT_LIB_H2C, function(e) { if (e) { showToast("Chyba: html2canvas se nepodařilo načíst"); return; } doExportPng(); }); }
         }
 
         function menuExportPdf() {
             closeMenuDropdown(); closeAllPopovers();
 
-            function doExport() {
+            function doExportPdf() {
                 showToast(i18n[currentLang].toastPdfPreparing || "📄 Vytvářím PDF…");
                 var mapContainer = document.getElementById("map");
                 if (!mapContainer || !map) { showToast("Chyba"); return; }
-                if (!window.jspdf) { loadScriptOnce(EXPORT_LIB_JSPDF, function(e) { if (e) { showToast("Chyba: jsPDF se nepodařilo načíst"); return; } doExport(); }); return; }
+                if (!window.jspdf) { loadScriptOnce(EXPORT_LIB_JSPDF, function(e) { if (e) { showToast("Chyba: jsPDF se nepodařilo načíst"); return; } doExportPdf(); }); return; }
 
                 var ctx = expandMapA4(mapContainer);
                 waitForTileLayers(function() {
@@ -2627,14 +2627,14 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 });
             }
 
-            if (typeof html2canvas !== "undefined") { doExport(); }
-            else { loadScriptOnce(EXPORT_LIB_H2C, function(e) { if (e) { showToast("Chyba: html2canvas se nepodařilo načíst"); return; } doExport(); }); }
+            if (typeof html2canvas !== "undefined") { doExportPdf(); }
+            else { loadScriptOnce(EXPORT_LIB_H2C, function(e) { if (e) { showToast("Chyba: html2canvas se nepodařilo načíst"); return; } doExportPdf(); }); }
         }
 
         function menuExportPdfVektor() {
             closeMenuDropdown(); closeAllPopovers();
 
-            function doExport() {
+            function doExportPdfVektor() {
                 showToast("🧪 PDF-vektor (nativní tisk)…");
                 var mapContainer = document.getElementById("map");
                 if (!mapContainer || !map) { showToast("Chyba"); return; }
