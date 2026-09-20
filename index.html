@@ -821,7 +821,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.48</span>
+                    <span class="info-meta-val">2.50</span>
                 </div>
             </div>
 
@@ -1888,6 +1888,23 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         function scheduleStyleApply(key, fn) {
             clearTimeout(styleApplyTimers[key]);
             styleApplyTimers[key] = setTimeout(fn, 120);
+        }
+        // Throttle pro updView při tahu slideru (max. 1× za 30 ms + debounce na konci)
+        var _tuvTimer = null;
+        var _tuvLast = 0;
+        function throttledUpdView() {
+            var now = Date.now();
+            var elapsed = now - _tuvLast;
+            if (elapsed >= 30) {
+                _tuvLast = now;
+                updView();
+            } else {
+                clearTimeout(_tuvTimer);
+                _tuvTimer = setTimeout(function() {
+                    _tuvLast = Date.now();
+                    updView();
+                }, 30 - elapsed);
+            }
         }
 
         // SVG ikony jednotlivých stylů zobrazení (pro přepínač v panelu Zdroje)
@@ -6443,6 +6460,42 @@ if(measureDistanceState.active) stopMeasureDistance();
                 }
                 if(e.originalEvent && map.mouseEventToContainerPoint) clickPx = map.mouseEventToContainerPoint(e.originalEvent); // Tolerance kliknutí v pixelech na obrazovce
 
+                // 0. Prioritní snap na poledník / rovnoběžku: přesná geometrie, uzamkne volbu
+                // (přímý zásah SVG z přímé detekce výše má přednost – ten respektujeme)
+                if(!found){
+                    var __snapBest = 35, __snapLayer = null;
+                    function __snapCheck(lat1, lng1, lat2, lng2, exactPts, layer){
+                        var dPx = distToSeg(clickPx, map.latLngToContainerPoint([lat1, lng1]), map.latLngToContainerPoint([lat2, lng2]));
+                        if(dPx < __snapBest){ __snapBest = dPx; found = exactPts; isPoly = false; __snapLayer = layer; }
+                    }
+                    if(typeof meridianState !== "undefined" && meridianState.lines){
+                        for(var __mi = 0; __mi < meridianState.lines.length; __mi++){
+                            var __ml = meridianState.lines[__mi];
+                            if(__ml && __ml._lng !== undefined && __ml._lng !== null){
+                                __snapCheck(-85, __ml._lng, 85, __ml._lng, [{lat:-85,lng:__ml._lng},{lat:85,lng:__ml._lng}], __ml);
+                            }
+                        }
+                    }
+                    if(typeof parallelState !== "undefined" && parallelState.lines){
+                        for(var __pi = 0; __pi < parallelState.lines.length; __pi++){
+                            var __pl = parallelState.lines[__pi];
+                            if(__pl && __pl._lat !== undefined && __pl._lat !== null){
+                                __snapCheck(__pl._lat, -180, __pl._lat, 180, [{lat:__pl._lat,lng:-180},{lat:__pl._lat,lng:180}], __pl);
+                            }
+                        }
+                    }
+                    if(found){
+                        bestDistPx = 0;
+                        try{
+                            if(__snapLayer && __snapLayer.setStyle){
+                                var __w0 = (__snapLayer.options && __snapLayer.options.weight) || 2;
+                                __snapLayer.setStyle({weight: __w0 + 3});
+                                (function(__lyr, __wb){ setTimeout(function(){ try{ __lyr.setStyle({weight: __wb}); }catch(e){} }, 1000); })(__snapLayer, __w0);
+                            }
+                        }catch(e){}
+                    }
+                }
+
                 function distToSeg(p, a, b){
                     var dx = b.x - a.x, dy = b.y - a.y;
                     var l2 = dx * dx + dy * dy;
@@ -7788,7 +7841,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                         d.ageOpacity = curOpSingle;
                                         lastEditedDataset = k;
                                         saveDatasetStyles();
-                                        updView();
+                                        throttledUpdView();
                                     });
                                 }
                                 function applyAgeOp(v, syncNum, deferChanged) {
@@ -7849,7 +7902,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     else if (dsMOp === "photoCards") d.heatOpacity = curOpSingle;
                                     lastEditedDataset = k;
                                     saveDatasetStyles();
-                                    updView();
+                                    throttledUpdView();
                                 });
                             }, true);
                             }
@@ -8504,7 +8557,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 if (syncNum !== false) numInput.value = n;
                                 scheduleStyleApply("blur:" + k, function() {
                                     saveDatasetStyles();
-                                    updView();
+                                    throttledUpdView();
                                 });
                             }
 
@@ -8592,7 +8645,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 if (syncNum !== false) numInput.value = n;
                                 scheduleStyleApply("agesize:" + k, function() {
                                     saveDatasetStyles();
-                                    updView();
+                                    throttledUpdView();
                                 });
                             }
 
@@ -8678,7 +8731,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 if (syncNum !== false) numInput.value = n;
                                 scheduleStyleApply("heatsize:" + k, function() {
                                     saveDatasetStyles();
-                                    updView();
+                                    throttledUpdView();
                                 });
                             }
 
@@ -8805,7 +8858,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     if (syncNum !== false) numInput.value = fmtDotSize(n);
                                     scheduleStyleApply("dsz:" + k, function() {
                                         saveDatasetStyles();
-                                        updView();
+                                        throttledUpdView();
                                     });
                                 }
 
@@ -8890,7 +8943,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     if (syncNum !== false) numInput.value = fmtZoneKm(n);
                                     scheduleStyleApply("zk:" + k, function() {
                                         saveDatasetStyles();
-                                        updView();
+                                        throttledUpdView();
                                     });
                                 }
 
