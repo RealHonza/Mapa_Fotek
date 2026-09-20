@@ -712,12 +712,13 @@
                 <div class="sources-header">
                     <span id="txtSourcesHeader">Načtené datové soubory</span>
                     <div class="header-actions-group">
-                        <button class="header-action-btn" onclick="toggleAllSources()" id="btnToggleAll" aria-label="Zapnout nebo vypnout všechny vrstvy" title="Zapnout / vypnout všechny vrstvy"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg> Vše</button>
-                        <button class="header-action-btn" onclick="unifyAllStyles()" id="btnSyncStyles" aria-label="Sjednotit všechny styly podle posledního" title="Sjednotit všechny parametry podle posledního upravovaného souboru"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg> Sjednotit</button>
-                        <button class="header-action-btn" onclick="resetAllDatasetStyles()" id="btnResetStyles" aria-label="Obnovit výchozí styly" title="Obnovit výchozí styly"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8'/><path d='M3 3v5h5'/></svg> Reset</button>
+                        <button class="header-action-btn" onclick="toggleAllSources()" id="btnToggleAll" aria-label="Zapnout nebo vypnout všechny vrstvy" title="Zapnout / vypnout všechny vrstvy"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg></button>
+                        <button class="header-action-btn" onclick="unifyAllStyles()" id="btnSyncStyles" aria-label="Sjednotit všechny styly podle posledního" title="Sjednotit všechny parametry podle posledního upravovaného souboru"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg></button>
+                        <button class="header-action-btn" onclick="resetAllDatasetStyles()" id="btnResetStyles" aria-label="Obnovit výchozí styly" title="Obnovit výchozí styly"><svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' width='12' height='12'><path d='M3 2v6h6'/><path d='M21 12A9 9 0 0 0 6 5.3L3 8'/><path d='M21 22v-6h-6'/><path d='M3 12a9 9 0 0 0 15 6.7l3-2.7'/></svg></button>
                         <button class="add-mini-btn" onclick="document.getElementById('fileInput').click()" id="txtBtnAddMini"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> Přidat</button>
                         <button class="header-action-btn" onclick="exportGeoJSON()" id="txtBtnExportGj" aria-label="Exportovat viditelná data do GeoJSON" title="Exportovat viditelná data do GeoJSON"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg></button>
-                        <button class="header-action-btn" onclick="undoLastAction()" id="btnUndo" aria-label="Vrátit poslední změnu stylů" title="Vrátit poslední změnu stylů" style="opacity:0.35;pointer-events:none"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg></button>
+                        <button class="header-action-btn" onclick="undoLastAction()" id="btnUndo" aria-label="Zpět (Ctrl+Z)" title="Zpět (Ctrl+Z)" style="opacity:0.35;pointer-events:none"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg></button>
+                        <button class="header-action-btn" onclick="redoLastAction()" id="btnRedo" aria-label="Vpřed (Ctrl+Y)" title="Vpřed (Ctrl+Y)" style="opacity:0.35;pointer-events:none"><svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='23 4 23 10 17 10'/><path d='M20.49 15a9 9 0 1 1-2.13-9.36L23 10'/></svg></button>
                         <button class="close-all-btn" onclick="closeAllSources()" id="txtBtnCloseAll" aria-label="Zavřít všechny zdroje" title="Zavřít všechny zdroje">✕ Vše</button>
                     </div>
                 </div>
@@ -821,7 +822,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.50</span>
+                    <span class="info-meta-val">2.56</span>
                 </div>
             </div>
 
@@ -921,6 +922,169 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             if (/^[a-zA-Z]:\//.test(joined)) return "file:///" + joined;
             return joined;
         }
+        // ===== IN-MEMORY THUMBNAIL CACHE & ASYNC QUEUE PRO FOTOKARTY =====
+        var _photoThumbCache = {};
+        try {
+            var _cachedStr = sessionStorage.getItem("mf_thumb_cache_v1");
+            if (_cachedStr) _photoThumbCache = JSON.parse(_cachedStr);
+        } catch(e) { _photoThumbCache = {}; }
+
+        var _thumbQueue = [];
+        var _activeThumbLoads = 0;
+        var _MAX_THUMB_CONCURRENT = 4;
+        var _saveThumbTimer = null;
+
+        function scheduleSaveThumbCache() {
+            if (_saveThumbTimer) return;
+            _saveThumbTimer = setTimeout(function() {
+                _saveThumbTimer = null;
+                try {
+                    var keys = Object.keys(_photoThumbCache);
+                    if (keys.length > 500) {
+                        var pruned = {};
+                        for (var i = keys.length - 500; i < keys.length; i++) pruned[keys[i]] = _photoThumbCache[keys[i]];
+                        sessionStorage.setItem("mf_thumb_cache_v1", JSON.stringify(pruned));
+                    } else {
+                        sessionStorage.setItem("mf_thumb_cache_v1", JSON.stringify(_photoThumbCache));
+                    }
+                } catch(e) {}
+            }, 2000);
+        }
+
+        function createThumbnailFromImg(img) {
+            try {
+                var cv = document.createElement("canvas");
+                cv.width = 88;
+                cv.height = 88;
+                var ctx = cv.getContext("2d");
+                var iw = img.naturalWidth || img.width || 88;
+                var ih = img.naturalHeight || img.height || 88;
+                var r = Math.max(88 / iw, 88 / ih);
+                var nw = iw * r, nh = ih * r;
+                var cx = (88 - nw) / 2, cy = (88 - nh) / 2;
+                ctx.drawImage(img, cx, cy, nw, nh);
+                return cv.toDataURL("image/jpeg", 0.75);
+            } catch(e) {
+                return null;
+            }
+        }
+
+        function updateThumbElements(url, thumbUrl) {
+            try {
+                var enc = encodeURI(url);
+                var els = document.querySelectorAll(".photo-bubble-card[data-thumb-src]");
+                for (var i = 0; i < els.length; i++) {
+                    var card = els[i];
+                    var srcAttr = card.getAttribute("data-thumb-src");
+                    if (srcAttr === url || srcAttr === enc) {
+                        var badge = card.getAttribute("data-badge") || "";
+                        var badgeHtml = badge ? ('<div class="photo-bubble-badge">' + badge + '</div>') : "";
+                        if (thumbUrl && thumbUrl !== "ERROR") {
+                            card.innerHTML = '<img src="' + thumbUrl + '" style="width:100%;height:100%;object-fit:cover;display:block;" alt="">' + badgeHtml;
+                            card.style.background = "#ffffff";
+                        } else {
+                            card.style.background = "#ea4335";
+                            card.innerHTML = '<div style="color:#fff;font-size:16px;line-height:40px;text-align:center;">📷</div>' + badgeHtml;
+                        }
+                    }
+                }
+            } catch(e) {}
+        }
+
+        function processThumbQueue() {
+            while (_activeThumbLoads < _MAX_THUMB_CONCURRENT && _thumbQueue.length > 0) {
+                var item = _thumbQueue.shift();
+                if (!item || !item.url) continue;
+                if (_photoThumbCache[item.url]) {
+                    updateThumbElements(item.url, _photoThumbCache[item.url]);
+                    continue;
+                }
+                _activeThumbLoads++;
+                (function(task) {
+                    var img = new Image();
+                    var timer = setTimeout(function() {
+                        img.src = "";
+                        _activeThumbLoads--;
+                        processThumbQueue();
+                    }, 12000);
+                    img.onload = function() {
+                        clearTimeout(timer);
+                        var thumb = createThumbnailFromImg(img);
+                        if (thumb) {
+                            _photoThumbCache[task.url] = thumb;
+                            scheduleSaveThumbCache();
+                            updateThumbElements(task.url, thumb);
+                        } else {
+                            updateThumbElements(task.url, task.url);
+                        }
+                        _activeThumbLoads--;
+                        processThumbQueue();
+                    };
+                    img.onerror = function() {
+                        clearTimeout(timer);
+                        _photoThumbCache[task.url] = "ERROR";
+                        updateThumbElements(task.url, "ERROR");
+                        _activeThumbLoads--;
+                        processThumbQueue();
+                    };
+                    img.src = task.url;
+                })(item);
+            }
+        }
+
+        function requestThumbnail(url, priority) {
+            if (!url) return null;
+            if (_photoThumbCache[url]) return _photoThumbCache[url];
+            var exists = false;
+            for (var i = 0; i < _thumbQueue.length; i++) {
+                if (_thumbQueue[i].url === url) {
+                    if (priority > _thumbQueue[i].priority) _thumbQueue[i].priority = priority;
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                _thumbQueue.push({ url: url, priority: priority || 1 });
+                _thumbQueue.sort(function(a, b) { return b.priority - a.priority; });
+            }
+            setTimeout(processThumbQueue, 0);
+            return null;
+        }
+
+        function renderPhotoBubbleHtml(imgSrc, count) {
+            var isCluster = count > 1;
+            var badgeHtml = isCluster ? ('<div class="photo-bubble-badge">+' + count + '</div>') : "";
+            var badgeAttr = isCluster ? (' data-badge="+' + count + '"') : "";
+
+            if (imgSrc && imgSrc.indexOf("data:") === 0) {
+                return '<div class="photo-bubble-card">' +
+                    '<img src="' + imgSrc + '" style="width:100%;height:100%;object-fit:cover;display:block;">' +
+                    badgeHtml + '</div>';
+            }
+
+            var cached = imgSrc ? _photoThumbCache[imgSrc] : null;
+            if (cached && cached !== "ERROR") {
+                return '<div class="photo-bubble-card">' +
+                    '<img src="' + cached + '" style="width:100%;height:100%;object-fit:cover;display:block;">' +
+                    badgeHtml + '</div>';
+            } else if (cached === "ERROR") {
+                return '<div class="photo-bubble-card" style="background:#ea4335;">' +
+                    '<div style="color:#fff;font-size:16px;line-height:40px;text-align:center;">📷</div>' +
+                    badgeHtml + '</div>';
+            }
+
+            if (imgSrc) {
+                requestThumbnail(imgSrc, count || 1);
+                return '<div class="photo-bubble-card" data-thumb-src="' + encodeURI(imgSrc) + '"' + badgeAttr + ' style="background:#202124;">' +
+                    '<div style="color:#9aa0a6;font-size:16px;line-height:40px;text-align:center;">📷</div>' +
+                    badgeHtml + '</div>';
+            } else {
+                return '<div class="photo-bubble-card" style="background:#5f6368;">' +
+                    '<div style="color:#fff;font-size:16px;line-height:40px;text-align:center;">📷</div>' +
+                    badgeHtml + '</div>';
+            }
+        }
+
         function syncArchiveInput() {
             try {
                 var el = document.getElementById("archiveRootInput");
@@ -1006,18 +1170,19 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 menuPdfItem: "📄 Uložit mapu jako PDF",
                 btnAddMini: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> Přidat",
                 btnExportGj: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg>",
-                btnSyncStyles: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg> Sjednotit",
+                btnSyncStyles: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg>",
                 titleSyncStyles: "Sjednotit všechny parametry podle posledního upravovaného souboru",
-                btnToggleAll: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg> Vše",
+                btnToggleAll: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg>",
                 titleToggleAll: "Zapnout / vypnout všechny vrstvy",
                 titleZoneSlider: "jemné 0–1 km (po 0,1) | hlavní 1–100 km (po 0,5) | 100–500 km (po 50) | 500–1000 km (po 100) | zbytek. Hodnoty pod 1 km zadejte do číselného pole.",
                 closeAll: "Zavřít vše",
                 confirmCloseAll: "Opravdu chcete zavřít všechny zdroje? Budou odstraněny všechny nahrané soubory i jejich vrstvy na mapě.",
                 moveUp: "Posunout výš",
                 moveDown: "Posunout níž",
-                btnResetStyles: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8'/><path d='M3 3v5h5'/></svg> Reset",
+                btnResetStyles: "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' width='12' height='12'><path d='M3 2v6h6'/><path d='M21 12A9 9 0 0 0 6 5.3L3 8'/><path d='M21 22v-6h-6'/><path d='M3 12a9 9 0 0 0 15 6.7l3-2.7'/></svg>",
                 titleResetStyles: "Obnovit výchozí barvy a průhlednost",
-                titleUndo: "Vrátit poslední změnu stylů (sjednocení / reset)",
+                titleUndo: "Zpět (Ctrl+Z)",
+                titleRedo: "Vpřed (Ctrl+Y)",
                 lblColor: "Barva / Paleta",
                 lblPointColor: "Barva bodů",
                 lblOpacity: "Průhlednost",
@@ -1072,6 +1237,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 toastStorageFull: "⚠️ Nedostatek místa v úložišti prohlížeče – zdroj se nepodařilo uložit.",
                 toastReset: "🔄 Styly byly obnoveny na výchozí",
                 toastUndo: "↩️ Změna byla vrácena zpět",
+                toastRedo: "↪️ Změna byla provedena znovu",
                 toastGeoJsonExported: "GeoJSON export dokončen",
                 toastNoData: "Žádná data k exportu",
                 toastNoPhotos: "Žádné fotky k zobrazení",
@@ -1091,7 +1257,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 steps: [
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z'/><path d='M14 2v4a2 2 0 0 0 2 2h4'/><path d='M9 15h6'/><path d='M12 18v-6'/></svg> Datový soubor – první spuštění (ZÁKLAD):</strong><br>Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> ve složce s fotografiemi. Skript má <strong>3 funkce:</strong><div class=\"step-sub\"><br>① <strong>Generovat data fotek (celý archiv)</strong> – projde všechny složky a podsložky, vyčte GNSS z EXIF, Google JSON, Adobe XMP a DJI SRT titulků, deduplikuje a seřadí dle data<br>② <strong>Generovat data fotek (vybrat konkrétní podsložku)</strong><br>③ <strong>Statistika archivu</strong> – vygeneruje přehled složek do CSV (počty, velikosti, nejstarší/nejnovější soubory). Vygenerovaný soubor není pro tuto aplikaci</div><br><strong>Výstupní soubor:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – formát: JavaScriptový datový soubor (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Struktura řádků:</strong> hlavičkové komentáře (<code>//</code>) + záhlaví sloupců + data oddělená středníkem<div class=\"step-sub\"><br><strong>Povinné sloupce (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Nepovinné doplňkové sloupce: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Příklad řádku:</strong><br><code>20240815_143022; foto_z_vyletu.jpg; 49.123456; 16.654321; 5242880; DoCZ/2024/08/foto_z_vyletu.jpg</code><br><br><strong>Popis sloupců:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (z EXIF, názvu souboru nebo data úpravy)<br>• <strong>NAZEV_SOUBORU</strong> – název souboru včetně přípony<br>• <strong>LATITUDE</strong> – zeměpisná šířka (desetinné stupně, 6 desetinných míst)<br>• <strong>LONGITUDE</strong> – zeměpisná délka (desetinné stupně, 6 desetinných míst)<br>• <strong>VELIKOST_BAJTY</strong> – velikost souboru v bajtech <em>(nepovinné)</em><br>• <strong>RELATIVNI_CESTA</strong> – relativní cesta k souboru vůči kořenové složce <em>(nepovinné)</em> – v mapě se spojuje s kořenem archivu z <a href=\"#\" class=\"guide-jump\" onclick=\"event.stopPropagation();gotoGuideStep(10);return false;\">bodu č. 10</a>; bez vyplněného kořene platí čistá relativní cesta</div>Soubor přetáhněte do mapy nebo nahrajte přes tlačítko +<br><em>⚠️ <code>Mapa_Fotek_aktualizace_dat.bat</code> spouštějte ve složce s fotografiemi. Miniatury a proklik do plné velikosti fungují, pokud <code>Mapa_Fotek.html</code> leží v kořenové složce s fotografiemi, <strong>nebo</strong> je vyplněn kořen archivu v <a href=\"#\" class=\"guide-jump\" onclick=\"event.stopPropagation();gotoGuideStep(10);return false;\">bodu č. 10</a>. Leží-li mapa na webu a kořen ukazuje na lokální disk (<code>C:\\…</code>), prohlížeč náhledy z bezpečnostních důvodů nenačte.</em>",
                     "<strong>☰ Menu (zcela vlevo nahoře):</strong><br>Otevře nabídku se čtyřmi volbami:<ul class='menu-icons'><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m5 8 6 6'/><path d='m4 14 6-6 2-3'/><path d='M2 5h12'/><path d='M7 2h1'/><path d='m22 22-5-10-5 10'/><path d='M14 18h6'/></svg> <strong>Přepínač jazyka</strong> – přepne rozhraní mezi češtinou a angličtinou</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>Uložit mapu</strong> – rozdělené tlačítko se dvěma volbami:<div class=\"step-sub\"><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z'/><path d='M14 2v4a2 2 0 0 0 2 2h4'/><path d='M10 9H8'/><path d='M16 13H8'/><path d='M16 17H8'/></svg> <strong>PDF-rastr HD</strong> – rastrový export do PDF (JPEG, kvalita 92 %), <strong>2× rozlišení</strong> mapy, poměr stran A4 (297:210 ≅ 1,41), 3 mm okraje, <em>bez</em> vektorů<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2' ry='2'/><circle cx='9' cy='9' r='2'/><path d='m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21'/></svg> <strong>PNG-rastr HD</strong> – rastrový export PNG, <strong>2× rozlišení</strong> mapy, poměr stran A4, bez okrajů, <em>bez</em> vektorů</div></li><li><span class='m-ico m-letter' aria-hidden='true'>i</span> <strong>Informace o aplikaci</strong> – otevře tento návod</li><li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21.3 8.7 15.3 2.7a1 1 0 0 0-1.4 0l-11.2 11.2a1 1 0 0 0 0 1.4l6 6a1 1 0 0 0 1.4 0L21.3 10a1 1 0 0 0 0-1.4z'/><path d='m7.5 10.5 2 2'/><path d='m10.5 7.5 2 2'/><path d='m13.5 4.5 2 2'/></svg> <strong>Panel měření</strong></summary><div class=\"step-body\">Otevře panel měření uprostřed horního okraje. V panelu:<ul><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M2 12h20'/><path d='M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z'/></svg> <strong>Mřížka</strong> – 3 stavy: vypnuto / zobrazení mřížky se zvýrazněnými hlavními rovnoběžkami (rovník, obratlníky, polární kruhy) / mřížka s popisky souřadnic</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='16' rx='2.5'/><line x1='6' y1='8' x2='6.01' y2='8'/><line x1='10' y1='8' x2='10.01' y2='8'/><line x1='14' y1='8' x2='14.01' y2='8'/><line x1='18' y1='8' x2='18.01' y2='8'/><line x1='6' y1='12' x2='6.01' y2='12'/><line x1='10' y1='12' x2='10.01' y2='12'/><line x1='14' y1='12' x2='14.01' y2='12'/><line x1='18' y1='12' x2='18.01' y2='12'/><line x1='8' y1='16' x2='16' y2='16'/></svg> <strong>Zadávání z klávesnice</strong> – přepínač (výchozí stav vypnuto). Po zapnutí umožňuje přesné zadávání číselných hodnot přímo z klávesnice do plovoucího okénka:<div class=\"step-sub\"><br>• <strong>Souřadnice bodu:</strong> u prvního bodu čáry či středu kružnice lze psát souřadnice ve formátu <code>lat, lng</code> (např. <code>50.1234, 14.5678</code>).<br>• <strong>Délka úseku a poloměr kružnice (v km):</strong> výchozí jednotkou jsou <strong>kilometry</strong> (např. <code>15</code> = 15 km, <code>12.5</code> = 12,5 km). Pro metry lze zadat explicitní jednotku (např. <code>500m</code>). Směr čáry se říčí kurzorem myši.<br>• <strong>Rovnoběžka a poledník:</strong> zadání zeměpisné šířky (<code>-90</code> až <code>90°</code>) nebo délky (<code>-180</code> až <code>180°</code>) s okamžitým náhledem polohy linie.<br>• <strong>Klávesy a dotykové ovládání:</strong> potvrzení klávesou <strong>Enter</strong> (nebo tlačítkem <strong>[✓]</strong>), mazání textu či zrušení klávesou <strong>Esc</strong> (nebo tlačítkem <strong>[×]</strong>). Na mobilech a dotykových displejich se okénko ukotví nahoře nad mapou, nezakrývá ho vysunutá klávesnice a obsahuje přímá dotyková tlačítka [✓] a [×].</div></li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2v4M12 18v4M2 12h4M18 12h4'/></svg> <strong>Stáří</strong> – barevné zobrazení věku fotek (modrá = starší, červená = novější). Rozsah barev se počítá z <strong>pouze viditelných fotek</strong> (po aplikaci filtrů). Klik na bod zobrazí přesné datum; měřítko barev se dynamicky přizpůsobí rozsahu dat ve viewportu.</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2v4M12 18v4M2 12h4M18 12h4'/></svg> <strong>Zobrazit souřadnice</strong> – u kurzoru zobrazí souřadnice (6 des. míst); okénko zůstává zobrazené i během kreslení, klik mimo kreslení zkopíruje do schránky, snap na body</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='4' cy='19' r='2'/><circle cx='20' cy='5' r='2'/><line x1='5.5' y1='17.5' x2='18.5' y2='6.5'/><line x1='9' y1='11' x2='11' y2='13'/><line x1='13' y1='7' x2='15' y2='9'/></svg> <strong>Měřit</strong> – měří vzdálenost a azimut v místě prvního bodu čáry (čáry aproximuje po 100 km úsecích na ortodromu; lze kombinovat s klávesnicovým zadáváním souřadnic a délek v km), uzavřením čáry na polygon vypočte plochu</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='3' y1='12' x2='21' y2='12'/><line x1='7' y1='8' x2='7' y2='16'/><line x1='17' y1='8' x2='17' y2='16'/></svg> <strong>Rovnoběžka</strong> – vykreslí rovnoběžku dané zeměpisné šířky (kliknutím do mapy nebo zadáním šířky z klávesnice, s přichycením na body)</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='12' y1='3' x2='12' y2='21'/><line x1='8' y1='7' x2='16' y2='7'/><line x1='8' y1='17' x2='16' y2='17'/></svg> <strong>Poledník</strong> – vykreslí poledník dané zeměpisné délky (kliknutím do mapy nebo zadáním délky z klávesnice, s přichycením na body)</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='7'/><circle cx='12' cy='12' r='1' fill='currentColor'/><path d='M12 5v2'/><path d='M12 17v2'/><path d='M5 12h2'/><path d='M17 12h2'/></svg> <strong>Obalová zóna</strong> – rozbalovací tlačítko s volbami (přichycení k existujícím bodům i liniím, kontinuální kreslení více prvků za sebou, krok zpět pravým tlačítkem, ukončení klávesou Esc):<div class=\"step-sub\"><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='6'/><circle cx='12' cy='12' r='1.5' fill='currentColor'/><line x1='12' y1='12' x2='16.5' y2='12'/></svg> <strong>Kružnice (střed + poloměr)</strong> – 1. klik střed (nebo zadání souřadnic), 2. klik poloměr (nebo zadání v km z klávesnice). Vykreslí geodetickou kružnici se zobrazením středu. Po dokončení je obvod klikatelný s oknem informací (přesný poloměr, obvod a plocha; vnitřní plocha zůstává propustná pro kliknutí do mapy).<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='7'/><circle cx='8.5' cy='8' r='1' fill='currentColor'/><circle cx='15.5' cy='8' r='1' fill='currentColor'/><circle cx='12' cy='16.5' r='1' fill='currentColor'/></svg> <strong>Kružnice (3 body)</strong> – 3 body na obvodu. Vypočte a zobrazí střed i geodetickou kružnici. Obvod je klikatelný se zobrazením poloměru, obvodu a plochy.<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2'><path d='M6 12H18'/><rect x='4' y='9' width='16' height='6' rx='3' opacity='0.4' fill='currentColor' stroke='none'/><path d='M4 12h16'/></svg> <strong>Obalová zóna (linie / polygon)</strong> – zadání šířky v km a kliknutí na trasu, linii či polygon. Vytvoří souvislou hladkou obalovou plochu, která respektuje ortodromické zakřivení segmentů delších než 100 km.<br><em>Geodetičká aproximace:</em> Všechny kružnice i kružnicové oblouky automaticky zvyšují počet vrcholů tak, aby žádná aproximační úseka nebyla delší než 100 km.</div></li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>Uložit měření</strong> – uloží vše z měření do GeoJSON a načte jako nový zdroj</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='3 6 5 6 21 6'/><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/><line x1='10' y1='11' x2='10' y2='17'/><line x1='14' y1='11' x2='14' y2='17'/></svg> <strong>Smazat měření</strong> – vymaže vše z měření</li></ul></div></details></li></ul>",
-                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><ellipse cx='12' cy='5' rx='9' ry='3'/><path d='M3 5V19A9 3 0 0 0 21 19V5'/><path d='M3 12A9 3 0 0 0 21 12'/></svg> [Zdroje (počet)] – seznam a správa zdrojů:</strong><br>Číslo v závorce = počet aktivních souborů. Panel zdrojů:<br><br><strong>Hlavička panelu – zleva doprava:</strong><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg> <strong>Vše</strong> – zapnout / vypnout všechny vrstvy<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg> <strong>Sjednotit</strong> – parametry podle posledně upraveného souboru<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8'/><path d='M3 3v5h5'/></svg> <strong>Reset</strong> – obnovit výchozí barvy a průhlednost<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> <strong>Přidat</strong> – přidat soubor či trasu<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>Export</strong> – exportovat viditelná data do GeoJSON<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg> <strong>Zpět</strong> – vrátí poslední sjednocení nebo reset<br>✕ <strong>Vše</strong> – zavřít všechny zdroje<br><br><strong>U každého zdroje (řádek souboru):</strong><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2'/><path d='m9 12 2 2 4-4'/></svg> Zapnout / vypnout vrstvu souboru<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 6 6 18'/><path d='m6 6 12 12'/></svg> Odebrat zdroj (křížek v řádku)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m18 15-6-6-6 6'/></svg> / <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg> Šipky nahoru / dolů – posunou zdroj o jednu pozici výš / níž; pořadí v seznamu určuje překryv vrstev stejného typu (body přes body, čáry přes čáry) – co je v seznamu níž, kreslí se navrch; symboly a špendlíky jsou vždy nad heatmapou a zónou; body jsou vždy nad čárami<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='21' x2='14' y1='4' y2='4'/><line x1='10' x2='3' y1='4' y2='4'/><line x1='21' x2='12' y1='12' y2='12'/><line x1='8' x2='3' y1='12' y2='12'/><line x1='21' x2='16' y1='20' y2='20'/><line x1='12' x2='3' y1='20' y2='20'/><line x1='14' y1='2' x2='14' y2='6'/><line x1='8' y1='10' x2='8' y2='14'/><line x1='16' y1='18' x2='16' y2='22'/></svg> Ovládací pilulky pro styl, barvy a parametry (podrobnosti rozbalíte níže)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>GeoJSON export</strong> – uloží jeden zdroj samostatně jako GeoJSON (tlačítko pod křížkem zdroje)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> Klik na název = přiblížení na souřadnice<br><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.<br><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='21' x2='14' y1='4' y2='4'/><line x1='10' x2='3' y1='4' y2='4'/><line x1='21' x2='12' y1='12' y2='12'/><line x1='8' x2='3' y1='12' y2='12'/><line x1='21' x2='16' y1='20' y2='20'/><line x1='12' x2='3' y1='20' y2='20'/><line x1='14' y1='2' x2='14' y2='6'/><line x1='8' y1='10' x2='8' y2='14'/><line x1='16' y1='18' x2='16' y2='22'/></svg> Styl zobrazení – volí se pro každý datový soubor zvlášť:</summary><div class=\"step-body\"><br>V panelu Zdroje je u každého souboru tlačítko stylu a sada ovládacích pilulek:<div class=\"step-sub\"><br><strong>Fotky – 6 režimů:</strong><br>• 🔥 <strong>Heatmapa</strong> – 🎨 8 palet (Classic, Google, Inferno, Emerald, Ocean, Sunset, Duha, Cyber Neon), 💧 průhlednost (0–100 %), 🌙 rozostření (5–50 px), ⭕ velikost (0,1–4×)<br>• 🕐 <strong>Stáří</strong> – barva bodu vyjadřuje stáří fotky vůči rozsahu viditelných fotek (respektuje filtry), 🎨 8 palet (Duha, Spektrum, Termo, Cyber Neon, Oceán, Smaragd, Západ slunce, Vintage), 💧 průhlednost (0–100 %), 🌙 rozostření (0–50 px), ⭕ velikost (0,05–4×)<br>• 🖼️ <strong>Foto-karty</strong> – 💧 průhlednost (0–100 %)<br>• 📍 <strong>Špendlíky</strong> – 🎨 8 barev, 💧 průhlednost (0–100 %)<br>• ⭐ <strong>Symbol</strong> – 🎨 8 barev, 💧 průhlednost (0–100 %), 📌 styl symbolu (8 stylů), 🔴 velikost (1–25 px)<br>• ⬤ <strong>Zóna výskytu</strong> – 🎨 8 barev, 💧 průhlednost (0–100 %), ⬤ poloměr (0–10 000 km)<br><br><strong>GNSS trasy a polygony:</strong><br>• 🟠 Barva bodů, 📌 styl ikony (8 stylů), 🔘 velikost bodů (3–30 px)<br>• 💧 Průhlednost čar, bodů i výplní<br>• ━━ Barva čáry a polygonu, 📏 tloušťka čáry (0,5–25 px)<br>• Pokud polygony: 🖌️ barva výplně, 💧 průhlednost výplně (0–100 %)<br>• 🌐 <strong>Geodetická interpolace:</strong> Úseky tras i hrany polygonů delší než 100 km se automaticky ortodromicky zakřivují podél povrchu Země.<br><br><strong>🎛️ Vyladěné posuvníky:</strong><br>• Plynulé dotykové ovládání pro mobily a tablety.<br>• Přímé psaní hodnot do číselného pole (s tečkou i čárkou, potvrzení <code>Enter</code>).<br>• Klávesové ovládání: šipky <strong>Doleva / Dolů</strong> snižují o 1 jednotku/krok, <strong>Doprava / Nahoru</strong> zvyšují o 1 jednotku/krok.</div><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.</div></details>",
+                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><ellipse cx='12' cy='5' rx='9' ry='3'/><path d='M3 5V19A9 3 0 0 0 21 19V5'/><path d='M3 12A9 3 0 0 0 21 12'/></svg> [Zdroje (počet)] – seznam a správa zdrojů:</strong><br>Číslo v závorce = počet aktivních souborů. Panel zdrojů:<br><br><strong>Hlavička panelu – zleva doprava:</strong><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg> <strong>Vše</strong> – zapnout / vypnout všechny vrstvy<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg> <strong>Sjednotit</strong> – parametry podle posledně upraveného souboru<br><svg class='m-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' width='14' height='14'><path d='M3 2v6h6'/><path d='M21 12A9 9 0 0 0 6 5.3L3 8'/><path d='M21 22v-6h-6'/><path d='M3 12a9 9 0 0 0 15 6.7l3-2.7'/></svg> <strong>Reset</strong> – obnovit výchozí barvy a průhlednost<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> <strong>Přidat</strong> – přidat soubor či trasu<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>Export</strong> – exportovat viditelná data do GeoJSON<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg> <strong>Zpět</strong> – vrátí poslední akci ze zdrojů (historie 100 kroků; klávesová zkratka Ctrl+Z)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='23 4 23 10 17 10'/><path d='M20.49 15a9 9 0 1 1-2.13-9.36L23 10'/></svg> <strong>Vpřed</strong> – vrátí zrušenou akci zpět (Ctrl+Y / Ctrl+Shift+Z)<br>✕ <strong>Vše</strong> – zavřít všechny zdroje<br><br><strong>U každého zdroje (řádek souboru):</strong><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2'/><path d='m9 12 2 2 4-4'/></svg> Zapnout / vypnout vrstvu souboru<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 6 6 18'/><path d='m6 6 12 12'/></svg> Odebrat zdroj (křížek v řádku)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m18 15-6-6-6 6'/></svg> / <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg> Šipky nahoru / dolů – posunou zdroj o jednu pozici výš / níž; pořadí v seznamu určuje překryv vrstev stejného typu (body přes body, čáry přes čáry) – co je v seznamu níž, kreslí se navrch; symboly a špendlíky jsou vždy nad heatmapou a zónou; body jsou vždy nad čárami<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='21' x2='14' y1='4' y2='4'/><line x1='10' x2='3' y1='4' y2='4'/><line x1='21' x2='12' y1='12' y2='12'/><line x1='8' x2='3' y1='12' y2='12'/><line x1='21' x2='16' y1='20' y2='20'/><line x1='12' x2='3' y1='20' y2='20'/><line x1='14' y1='2' x2='14' y2='6'/><line x1='8' y1='10' x2='8' y2='14'/><line x1='16' y1='18' x2='16' y2='22'/></svg> Ovládací pilulky pro styl, barvy a parametry (podrobnosti rozbalíte níže)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>GeoJSON export</strong> – uloží jeden zdroj samostatně jako GeoJSON (tlačítko pod křížkem zdroje)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> Klik na název = přiblížení na souřadnice<br><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.<br><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='21' x2='14' y1='4' y2='4'/><line x1='10' x2='3' y1='4' y2='4'/><line x1='21' x2='12' y1='12' y2='12'/><line x1='8' x2='3' y1='12' y2='12'/><line x1='21' x2='16' y1='20' y2='20'/><line x1='12' x2='3' y1='20' y2='20'/><line x1='14' y1='2' x2='14' y2='6'/><line x1='8' y1='10' x2='8' y2='14'/><line x1='16' y1='18' x2='16' y2='22'/></svg> Styl zobrazení – volí se pro každý datový soubor zvlášť:</summary><div class=\"step-body\"><br>V panelu Zdroje je u každého souboru tlačítko stylu a sada ovládacích pilulek:<div class=\"step-sub\"><br><strong>Fotky – 6 režimů:</strong><br>• 🔥 <strong>Heatmapa</strong> – 🎨 8 palet (Classic, Google, Inferno, Emerald, Ocean, Sunset, Duha, Cyber Neon), 💧 průhlednost (0–100 %), 🌙 rozostření (5–50 px), ⭕ velikost (0,1–4×)<br>• 🕐 <strong>Stáří</strong> – barva bodu vyjadřuje stáří fotky vůči rozsahu viditelných fotek (respektuje filtry), 🎨 8 palet (Duha, Spektrum, Termo, Cyber Neon, Oceán, Smaragd, Západ slunce, Vintage), 💧 průhlednost (0–100 %), 🌙 rozostření (0–50 px), ⭕ velikost (0,05–4×)<br>• 🖼️ <strong>Foto-karty</strong> – 💧 průhlednost (0–100 %)<br>• 📍 <strong>Špendlíky</strong> – 🎨 8 barev, 💧 průhlednost (0–100 %)<br>• ⭐ <strong>Symbol</strong> – 🎨 8 barev, 💧 průhlednost (0–100 %), 📌 styl symbolu (8 stylů), 🔴 velikost (1–25 px)<br>• ⬤ <strong>Zóna výskytu</strong> – 🎨 8 barev, 💧 průhlednost (0–100 %), ⬤ poloměr (0–10 000 km)<br><br><strong>GNSS trasy a polygony:</strong><br>• 🟠 Barva bodů, 📌 styl ikony (8 stylů), 🔘 velikost bodů (3–30 px)<br>• 💧 Průhlednost čar, bodů i výplní<br>• ━━ Barva čáry a polygonu, 📏 tloušťka čáry (0,5–25 px)<br>• Pokud polygony: 🖌️ barva výplně, 💧 průhlednost výplně (0–100 %)<br>• 🌐 <strong>Geodetická interpolace:</strong> Úseky tras i hrany polygonů delší než 100 km se automaticky ortodromicky zakřivují podél povrchu Země.<br><br><strong>🎛️ Vyladěné posuvníky:</strong><br>• Plynulé dotykové ovládání pro mobily a tablety.<br>• Přímé psaní hodnot do číselného pole (s tečkou i čárkou, potvrzení <code>Enter</code>).<br>• Klávesové ovládání: šipky <strong>Doleva / Dolů</strong> snižují o 1 jednotku/krok, <strong>Doprava / Nahoru</strong> zvyšují o 1 jednotku/krok.</div><br>Veškerá nastavení se automaticky trvale ukládají v prohlížeči.</div></details>",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> [+] – přidat soubor či trasu:</strong><br>Podporované formáty:<div class=\"step-sub\"><br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='#202124'><path d='M4 7h3.2l1.7-2h6.2l1.7 2H20a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z'/><circle cx='12' cy='13' r='3.7' fill='#ffffff'/><circle cx='12' cy='13' r='2.4' fill='#202124'/></svg> <strong>Fotky:</strong> <code>.txt</code> (generovaný BAT skriptem)<br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='#202124'><path d='M4 7h3.2l1.7-2h6.2l1.7 2H20a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z'/><circle cx='12' cy='13' r='3.7' fill='#ffffff'/><circle cx='12' cy='13' r='2.4' fill='#202124'/></svg> <strong>Fotky z EXIF GNSS:</strong> <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code> (s GNSS metadaty; poloha se přečte přímo ze souboru)<br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='#202124' stroke-width='2' stroke-linecap='round'><path d='M6.2 16.8c3.6-1.1 4.6-3.8 5.3-6.5.7-2.7 2.6-4.2 6.3-3.1'/><circle cx='5' cy='18.2' r='2.1' fill='#202124' stroke='none'/><circle cx='19' cy='5.8' r='2.1' fill='#202124' stroke='none'/></svg> <strong>GNSS trasy:</strong> <code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>, <code>.json</code></div><br>Soubory můžete také přetáhnout myší přímo do okna mapy (Drag &amp; Drop).",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> [Vše (počet) ▼] – časový filtr (rok / měsíc / den / hodina):</strong><br>Otevírá časový filtr fotografií:<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> Vyberte <em>Vše</em> pro kompletní archiv nebo konkrétní rok<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> Pokud archiv pokrývá <strong>více než 24 let</strong>, jsou roky seskupeny do <strong>dekád</strong> (např. 1980–1989…); kliknutím na dekádu se zobrazí její roky — <strong>vybraná dekáda zůstane rozbalena</strong> i po výběru roku, měsíce či dne<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> Po zvolení roku se nabídka rozbalí o mřížku měsíců<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> U vybraného měsíce i o kalendář dnů<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><polyline points='12 6 12 12 16 12'/></svg> U vybraného dne mřížka hodin (0h–23h)<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg> Opětovným kliknutím se vrátíte o úroveň výš",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> [Složky (počet) ▼] – filtr složek:</strong><br>Hierarchický filtr fotografií vytvářený ze sloupce <code>RELATIVNI_CESTA</code> v datovém souboru (fotky bez cesty jsou vedeny jako <em>Bez složky</em>). Číslo v závorce udává počet vyfiltrovaných fotek a zohledňuje i časový filtr.<div class=\"step-sub\"><br>• <strong>Vše</strong> – zruší filtr složek a zobrazí všechny fotky archivu<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> <strong>Strom složek</strong> – rozklikávejte složky úroveň po úrovni; u každé složky se zobrazuje její název a počet fotografií. Kliknutím na <code>⬆ Název</code> (nebo <code>⬆ Vše</code>) se vrátíte o úroveň výš<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/><circle cx='12' cy='13' r='4'/></svg> <strong>Jednotlivé fotografie (listy stromu)</strong> – uvnitř složek lze vybrat i konkrétní snímek a zúžit mapu přímo na něj. Při více než 60 souborech ve složce je k dispozici stránkování (tlačítka ‹ a ›)<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> <strong>Okamžité hledání složek</strong> – vyhledávací pole nahoře filtruje složky v reálném čase. Klávesa <code>Enter</code> při jediném nalezeném výsledku složku rovnou otevře, klávesa <code>Esc</code> nebo tlačítko ✕ hledání vymaže. Výsledky hledání jsou rovněž stránkované (po 60 položkách)<br>• <strong>Součinnost</strong> – filtr funguje společně s časovým filtrem (výsledky se prolínají); tlačítkem <code>[⌖ Na fotky]</code> vpravo od filtru zazoomujete mapu přímo na vybranou složku či snímek</div>",
@@ -1146,18 +1312,19 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 menuPdfItem: "📄 Save map as PDF",
                 btnAddMini: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> Add",
                 btnExportGj: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg>",
-                btnSyncStyles: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg> Unify",
+                btnSyncStyles: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg>",
                 titleSyncStyles: "Unify all parameters to match the last edited file",
-                btnToggleAll: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg> All",
+                btnToggleAll: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg>",
                 titleToggleAll: "Show or hide all datasets",
                 titleZoneSlider: "fine 0-1 km (by 0.1) | main 1-100 km (by 0.5) | 100-500 km (by 50) | 500-1000 km (by 100) | rest. Values below 1 km: type into the number field.",
                 closeAll: "Close all",
                 confirmCloseAll: "Do you really want to close all sources? All uploaded files and their map layers will be removed.",
                 moveUp: "Move up",
                 moveDown: "Move down",
-                btnResetStyles: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8'/><path d='M3 3v5h5'/></svg> Reset",
+                btnResetStyles: "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' width='12' height='12'><path d='M3 2v6h6'/><path d='M21 12A9 9 0 0 0 6 5.3L3 8'/><path d='M21 22v-6h-6'/><path d='M3 12a9 9 0 0 0 15 6.7l3-2.7'/></svg>",
                 titleResetStyles: "Reset colors and styles to default",
-                titleUndo: "Undo last style change (unify / reset)",
+                titleUndo: "Undo (Ctrl+Z)",
+                titleRedo: "Redo (Ctrl+Y)",
                 lblColor: "Color / Palette",
                 lblPointColor: "Point color",
                 lblOpacity: "Opacity",
@@ -1212,6 +1379,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 toastStorageFull: "⚠️ Browser storage full – source could not be saved.",
                 toastReset: "🔄 Styles reset to defaults",
                 toastUndo: "↩️ Change undone",
+                toastRedo: "↪️ Change redone",
                 toastGeoJsonExported: "GeoJSON export complete",
                 toastNoData: "No data to export",
                 toastNoPhotos: "No photos to show",
@@ -1231,7 +1399,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 steps: [
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z'/><path d='M14 2v4a2 2 0 0 0 2 2h4'/><path d='M9 15h6'/><path d='M12 18v-6'/></svg> Data File – First Run (ESSENTIAL):</strong><br>Run <code>Mapa_Fotek_aktualizace_dat.bat</code> in your photos folder. The script has <strong>3 functions:</strong><div class=\"step-sub\"><br>① <strong>Generate photo data (full archive)</strong> – scans all folders and subfolders, reads GPS from EXIF, Google JSON, Adobe XMP, and DJI SRT subtitles, deduplicates, and sorts by date<br>② <strong>Generate photo data (select a specific subfolder)</strong><br>③ <strong>Archive statistics</strong> – generates a folder overview to CSV (file counts, sizes, oldest/newest files). The generated file is not for this application</div><br><strong>Output file:</strong> <code>Mapa_Fotek_data_YYYYMMDD.txt</code> – format: JavaScript data file (<code>window.MAPA_FOTEK_DATA</code>)<br><strong>Row structure:</strong> comment header (<code>//</code>) + column header + data rows separated by semicolons<div class=\"step-sub\"><br><strong>Required columns (4):</strong><br><code>DATUM_CAS; NAZEV_SOUBORU; LATITUDE; LONGITUDE</code><br><em>(Optional columns: <code>VELIKOST_BAJTY; RELATIVNI_CESTA</code>)</em><br><br><strong>Example row:</strong><br><code>20240815_143022; hike_photo.jpg; 49.123456; 16.654321; 5242880; trips/CZ/2024/08/hike_photo.jpg</code><br><br><strong>Column descriptions:</strong><br>• <strong>DATUM_CAS</strong> – <code>YYYYMMDD_HHMMSS</code> (from EXIF, filename, or file modification date)<br>• <strong>NAZEV_SOUBORU</strong> – filename with extension<br>• <strong>LATITUDE</strong> – latitude in decimal degrees (6 decimal places)<br>• <strong>LONGITUDE</strong> – longitude in decimal degrees (6 decimal places)<br>• <strong>VELIKOST_BAJTY</strong> – file size in bytes <em>(optional)</em><br>• <strong>RELATIVNI_CESTA</strong> – relative path to file from root folder <em>(optional)</em> – joined in the map with the archive root from <a href=\"#\" class=\"guide-jump\" onclick=\"event.stopPropagation();gotoGuideStep(10);return false;\">step 10</a>; without a root the plain relative path applies</div>Drag it into the map or upload via the + button<br><em>⚠️ Run <code>Mapa_Fotek_aktualizace_dat.bat</code> inside your photos folder. Thumbnails and full-size click-through work if <code>Mapa_Fotek.html</code> sits in the root photos folder, <strong>or</strong> the archive root is set in <a href=\"#\" class=\"guide-jump\" onclick=\"event.stopPropagation();gotoGuideStep(10);return false;\">step 10</a>. If the map is on the web and the root points to a local disk (<code>C:\\…</code>), the browser will not load previews for security reasons.</em>",
                     "<strong>☰ Menu (top left corner):</strong><br>Opens a menu with four options:<ul class='menu-icons'><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m5 8 6 6'/><path d='m4 14 6-6 2-3'/><path d='M2 5h12'/><path d='M7 2h1'/><path d='m22 22-5-10-5 10'/><path d='M14 18h6'/></svg> <strong>Language switch</strong> – toggles between Czech and English</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>Save map</strong> – split button with two options:<div class=\"step-sub\"><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2 2h4'/><path d='M14 2v4a2 2 0 0 0 2 2h4'/><path d='M10 9H8'/><path d='M16 13H8'/><path d='M16 17H8'/></svg> <strong>PDF-raster HD</strong> – raster export to PDF (JPEG, 92% quality), <strong>2× resolution</strong>, A4 aspect ratio (297:210 ≈ 1.41), 3mm margins, <em>without</em> vectors<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2' ry='2'/><circle cx='9' cy='9' r='2'/><path d='m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21'/></svg> <strong>PNG-raster HD</strong> – raster PNG export, <strong>2× resolution</strong>, A4 aspect ratio, no margins, <em>without</em> vectors</div></li><li><span class='m-ico m-letter' aria-hidden='true'>i</span> <strong>About &amp; Help</strong> – opens this guide</li><li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21.3 8.7 15.3 2.7a1 1 0 0 0-1.4 0l-11.2 11.2a1 1 0 0 0 0 1.4l6 6a1 1 0 0 0 1.4 0L21.3 10a1 1 0 0 0 0-1.4z'/><path d='m7.5 10.5 2 2'/><path d='m10.5 7.5 2 2'/><path d='m13.5 4.5 2 2'/></svg> <strong>Measurement panel</strong></summary><div class=\"step-body\">Opens measurement panel at top center. Panel contains:<ul><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M2 12h20'/><path d='M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z'/></svg> <strong>Grid</strong> – 3 states: off / grid with highlighted main parallels (equator, tropics, polar circles) / grid with coordinate labels</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='20' height='16' rx='2.5'/><line x1='6' y1='8' x2='6.01' y2='8'/><line x1='10' y1='8' x2='10.01' y2='8'/><line x1='14' y1='8' x2='14.01' y2='8'/><line x1='18' y1='8' x2='18.01' y2='8'/><line x1='6' y1='12' x2='6.01' y2='12'/><line x1='10' y1='12' x2='10.01' y2='12'/><line x1='14' y1='12' x2='14.01' y2='12'/><line x1='18' y1='12' x2='18.01' y2='12'/><line x1='8' y1='16' x2='16' y2='16'/></svg> <strong>Keyboard input</strong> – toggle button (default off). When turned on, enables precise dynamic numeric input directly into a floating HUD box:<div class=\"step-sub\"><br>• <strong>Point coordinates:</strong> for the first line point or circle center, enter coordinates in <code>lat, lng</code> format (e.g. <code>50.1234, 14.5678</code>).<br>• <strong>Segment length and circle radius (in km):</strong> default unit is <strong>kilometers</strong> (e.g. <code>15</code> = 15 km, <code>12.5</code> = 12.5 km). Explicit meters can be typed with <code>m</code> (e.g. <code>500m</code>). Direction follows the cursor.<br>• <strong>Parallel and Meridian:</strong> enter latitude (<code>-90</code> to <code>90°</code>) or longitude (<code>-180</code> to <code>180°</code>) with live line preview.<br>• <strong>Shortcuts and touch controls:</strong> confirm with <strong>Enter</strong> (or <strong>[✓]</strong> button), clear text or cancel with <strong>Esc</strong> (or <strong>[✕]</strong> button). On mobile phones and touchscreens, the HUD docks at the top above the soft keyboard and features touch-friendly [✓] and [✕] buttons.</div></li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2v4M12 18v4M2 12h4M18 12h4'/></svg> <strong>Age</strong> – color-coded photo age (blue = older, red = newer). Color range is calculated from <strong>only visible photos</strong> (after filters applied). Click a point to show exact date; color scale dynamically adapts to the data range in the viewport.</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2v4M12 18v4M2 12h4M18 12h4'/></svg> <strong>Show coordinates</strong> – displays cursor coordinates (6 decimals); the popup stays visible while drawing, click outside drawing to copy, snap to points</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='4' cy='19' r='2'/><circle cx='20' cy='5' r='2'/><line x1='5.5' y1='17.5' x2='18.5' y2='6.5'/><line x1='9' y1='11' x2='11' y2='13'/><line x1='13' y1='7' x2='15' y2='9'/></svg> <strong>Measure</strong> – measures distance and azimuth from the start point (approximates great circle path every 100 km; can be combined with keyboard input of coordinates and segment lengths in km), closing the line into a polygon calculates the area</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='3' y1='12' x2='21' y2='12'/><line x1='7' y1='8' x2='7' y2='16'/><line x1='17' y1='8' x2='17' y2='16'/></svg> <strong>Parallel</strong> – draw a latitude parallel line through the point (by clicking the map or entering latitude from keyboard, with snapping)</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='12' y1='3' x2='12' y2='21'/><line x1='8' y1='7' x2='16' y2='7'/><line x1='8' y1='17' x2='16' y2='17'/></svg> <strong>Meridian</strong> – draw a longitude meridian line through the point (by clicking the map or entering longitude from keyboard, with snapping)</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='7'/><circle cx='12' cy='12' r='1' fill='currentColor'/><path d='M12 5v2'/><path d='M12 17v2'/><path d='M5 12h2'/><path d='M17 12h2'/></svg> <strong>Buffer Zone</strong> – dropdown button with drawing modes (snapping to points and lines, continuous drawing of multiple features, right-click step back, Esc to cancel):<div class=\"step-sub\"><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='6'/><circle cx='12' cy='12' r='1.5' fill='currentColor'/><line x1='12' y1='12' x2='16.5' y2='12'/></svg>  <strong>Circle (Center + Radius)</strong> – 1st click center (or enter coordinates), 2nd click radius (or enter in km from keyboard). Draws a geodesic circle with its permanent center dot. The boundary stroke is clickable to view exact radius, perimeter, and spherical area (fill area allows click-through to map).<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='7'/><circle cx='8.5' cy='8' r='1' fill='currentColor'/><circle cx='15.5' cy='8' r='1' fill='currentColor'/><circle cx='12' cy='16.5' r='1' fill='currentColor'/></svg>  <strong>Circle (3 Points)</strong> – 3 points on the circumference. Computes and displays the circumcenter and geodesic circle. Stroke is clickable with radius, perimeter, and area info.<br>〰️ <strong>Buffer Zone (Line / Polygon)</strong> – specify width in km and click any track, line, or polygon. Creates a smooth, continuous buffer polygon following orthodromic curvature for segments longer than 100 km.<br><em>Geodesic approximation:</em> All circles and circular arcs automatically scale vertex count so that no approximating chord/segment exceeds 100 km.</div></li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>Save measurements</strong> – saves all measurements to GeoJSON and loads as new source</li><li><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='3 6 5 6 21 6'/><path d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/><line x1='10' y1='11' x2='10' y2='17'/><line x1='14' y1='11' x2='14' y2='17'/></svg> <strong>Clear measurements</strong> – clears all measurements from the map</li></ul></div></details></li></ul>",
-                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><ellipse cx='12' cy='5' rx='9' ry='3'/><path d='M3 5V19A9 3 0 0 0 21 19V5'/><path d='M3 12A9 3 0 0 0 21 12'/></svg> [Sources (count)] – data sources manager:</strong><br>Number = count of active files.<br><br><strong>Panel header – left to right:</strong><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg> <strong>All</strong> – show or hide all datasets<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg> <strong>Unify</strong> – sync parameters to match the last edited file<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8'/><path d='M3 3v5h5'/></svg> <strong>Reset</strong> – reset colors and styles to default<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> <strong>Add</strong> – add file or track<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>Export</strong> – export visible data to GeoJSON<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg> <strong>Undo</strong> – reverts last unify or reset<br>✕ <strong>All</strong> – close all sources<br><br><strong>Per source (file row):</strong><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2'/><path d='m9 12 2 2 4-4'/></svg> Toggle file layer on/off<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 6 6 18'/><path d='m6 6 12 12'/></svg> Remove source (× in the row)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m18 15-6-6-6 6'/></svg> / <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg> Up / down arrows – move the source one position up / down; list order controls overlap of same-type layers (points over points, lines over lines) – lower in the list draws on top; symbols and pins are always above the heatmap and zone; points are always above lines<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='21' x2='14' y1='4' y2='4'/><line x1='10' x2='3' y1='4' y2='4'/><line x1='21' x2='12' y1='12' y2='12'/><line x1='8' x2='3' y1='12' y2='12'/><line x1='21' x2='16' y1='20' y2='20'/><line x1='12' x2='3' y1='20' y2='20'/><line x1='14' y1='2' x2='14' y2='6'/><line x1='8' y1='10' x2='8' y2='14'/><line x1='16' y1='18' x2='16' y2='22'/></svg> Control pills for style, colors and parameters (expand details below)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>GeoJSON export</strong> – saves a single source as GeoJSON (button under the × close button)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> Click a file name to zoom the map to its coordinates<br><br>All settings are automatically saved permanently in browser storage.<br><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='21' x2='14' y1='4' y2='4'/><line x1='10' x2='3' y1='4' y2='4'/><line x1='21' x2='12' y1='12' y2='12'/><line x1='8' x2='3' y1='12' y2='12'/><line x1='21' x2='16' y1='20' y2='20'/><line x1='12' x2='3' y1='20' y2='20'/><line x1='14' y1='2' x2='14' y2='6'/><line x1='8' y1='10' x2='8' y2='14'/><line x1='16' y1='18' x2='16' y2='22'/></svg> View Style – Selected independently for each dataset:</summary><div class=\"step-body\"><br>In the Sources panel, each file has a style trigger and pills:<div class=\"step-sub\"><br><strong>Photos – 6 modes:</strong><br>• 🔥 <strong>Heatmap</strong> – 🎨 8 palettes (Classic, Google, Inferno, Emerald, Ocean, Sunset, Rainbow, Cyber Neon), 💧 opacity (0–100 %), 🌙 blur (5–50 px), ⭕ size (0.1–4×)<br>• 🕐 <strong>Age</strong> – dot color reflects relative age within the visible photos range (respects active filters), 🎨 8 palettes (Rainbow, Spectrum, Thermal, Cyber Neon, Ocean, Emerald, Sunset, Vintage), 💧 opacity (0–100 %), 🌙 blur (0–50 px), ⭕ size (0.05–4×)<br>• 🖼️ <strong>Photo Cards</strong> – 💧 opacity (0–100 %)<br>• 📍 <strong>Pins</strong> – 🎨 8 colors, 💧 opacity (0–100 %)<br>• ⭐ <strong>Symbol</strong> – 🎨 8 colors, 💧 opacity (0–100 %), 📌 symbol icon (8 styles), 🔴 size (1–25 px)<br>• ⬤ <strong>Coverage Zone</strong> – 🎨 8 colors, 💧 opacity (0–100 %), ⬤ radius (0–10,000 km)<br><br><strong>GNSS Tracks & Polygons:</strong><br>• 🟠 Point color, 📌 waypoint icon (8 styles), 🔘 point size (3–30 px)<br>• 💧 Line, point, and fill opacity (0–100 %)<br>• ━━ Line & polygon color, 📏 line width (0.5–25 px)<br>• If polygons: 🖌️ fill color, 💧 fill opacity (0–100 %)<br>• 🌐 <strong>Geodetic Interpolation:</strong> Track segments and polygon edges longer than 100 km automatically bend along Earth's great circle curvature.<br><br><strong>🎛️ Fine-tuned Sliders:</strong><br>• Smooth touch controls for mobile & tablet.<br>• Direct typing into numeric fields (supports comma and period, press <code>Enter</code>).<br>• Keyboard navigation: <strong>Left / Down</strong> arrows decrease by 1 unit/step, <strong>Right / Up</strong> arrows increase by 1 unit/step.</div><br>All settings are automatically saved in the browser.</div></details>",
+                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><ellipse cx='12' cy='5' rx='9' ry='3'/><path d='M3 5V19A9 3 0 0 0 21 19V5'/><path d='M3 12A9 3 0 0 0 21 12'/></svg> [Sources (count)] – data sources manager:</strong><br>Number = count of active files.<br><br><strong>Panel header – left to right:</strong><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg> <strong>All</strong> – show or hide all datasets<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg> <strong>Unify</strong> – sync parameters to match the last edited file<br><svg class='m-ico' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' width='14' height='14'><path d='M3 2v6h6'/><path d='M21 12A9 9 0 0 0 6 5.3L3 8'/><path d='M21 22v-6h-6'/><path d='M3 12a9 9 0 0 0 15 6.7l3-2.7'/></svg> <strong>Reset</strong> – reset colors and styles to default<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> <strong>Add</strong> – add file or track<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>Export</strong> – export visible data to GeoJSON<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg> <strong>Undo</strong> – reverts last sources action (100-step history; Ctrl+Z)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='23 4 23 10 17 10'/><path d='M20.49 15a9 9 0 1 1-2.13-9.36L23 10'/></svg> <strong>Redo</strong> – re-applies the last reverted action (Ctrl+Y / Ctrl+Shift+Z)<br>✕ <strong>All</strong> – close all sources<br><br><strong>Per source (file row):</strong><br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2'/><path d='m9 12 2 2 4-4'/></svg> Toggle file layer on/off<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M18 6 6 18'/><path d='m6 6 12 12'/></svg> Remove source (× in the row)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m18 15-6-6-6 6'/></svg> / <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg> Up / down arrows – move the source one position up / down; list order controls overlap of same-type layers (points over points, lines over lines) – lower in the list draws on top; symbols and pins are always above the heatmap and zone; points are always above lines<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='21' x2='14' y1='4' y2='4'/><line x1='10' x2='3' y1='4' y2='4'/><line x1='21' x2='12' y1='12' y2='12'/><line x1='8' x2='3' y1='12' y2='12'/><line x1='21' x2='16' y1='20' y2='20'/><line x1='12' x2='3' y1='20' y2='20'/><line x1='14' y1='2' x2='14' y2='6'/><line x1='8' y1='10' x2='8' y2='14'/><line x1='16' y1='18' x2='16' y2='22'/></svg> Control pills for style, colors and parameters (expand details below)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg> <strong>GeoJSON export</strong> – saves a single source as GeoJSON (button under the × close button)<br><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> Click a file name to zoom the map to its coordinates<br><br>All settings are automatically saved permanently in browser storage.<br><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><line x1='21' x2='14' y1='4' y2='4'/><line x1='10' x2='3' y1='4' y2='4'/><line x1='21' x2='12' y1='12' y2='12'/><line x1='8' x2='3' y1='12' y2='12'/><line x1='21' x2='16' y1='20' y2='20'/><line x1='12' x2='3' y1='20' y2='20'/><line x1='14' y1='2' x2='14' y2='6'/><line x1='8' y1='10' x2='8' y2='14'/><line x1='16' y1='18' x2='16' y2='22'/></svg> View Style – Selected independently for each dataset:</summary><div class=\"step-body\"><br>In the Sources panel, each file has a style trigger and pills:<div class=\"step-sub\"><br><strong>Photos – 6 modes:</strong><br>• 🔥 <strong>Heatmap</strong> – 🎨 8 palettes (Classic, Google, Inferno, Emerald, Ocean, Sunset, Rainbow, Cyber Neon), 💧 opacity (0–100 %), 🌙 blur (5–50 px), ⭕ size (0.1–4×)<br>• 🕐 <strong>Age</strong> – dot color reflects relative age within the visible photos range (respects active filters), 🎨 8 palettes (Rainbow, Spectrum, Thermal, Cyber Neon, Ocean, Emerald, Sunset, Vintage), 💧 opacity (0–100 %), 🌙 blur (0–50 px), ⭕ size (0.05–4×)<br>• 🖼️ <strong>Photo Cards</strong> – 💧 opacity (0–100 %)<br>• 📍 <strong>Pins</strong> – 🎨 8 colors, 💧 opacity (0–100 %)<br>• ⭐ <strong>Symbol</strong> – 🎨 8 colors, 💧 opacity (0–100 %), 📌 symbol icon (8 styles), 🔴 size (1–25 px)<br>• ⬤ <strong>Coverage Zone</strong> – 🎨 8 colors, 💧 opacity (0–100 %), ⬤ radius (0–10,000 km)<br><br><strong>GNSS Tracks & Polygons:</strong><br>• 🟠 Point color, 📌 waypoint icon (8 styles), 🔘 point size (3–30 px)<br>• 💧 Line, point, and fill opacity (0–100 %)<br>• ━━ Line & polygon color, 📏 line width (0.5–25 px)<br>• If polygons: 🖌️ fill color, 💧 fill opacity (0–100 %)<br>• 🌐 <strong>Geodetic Interpolation:</strong> Track segments and polygon edges longer than 100 km automatically bend along Earth's great circle curvature.<br><br><strong>🎛️ Fine-tuned Sliders:</strong><br>• Smooth touch controls for mobile & tablet.<br>• Direct typing into numeric fields (supports comma and period, press <code>Enter</code>).<br>• Keyboard navigation: <strong>Left / Down</strong> arrows decrease by 1 unit/step, <strong>Right / Up</strong> arrows increase by 1 unit/step.</div><br>All settings are automatically saved in the browser.</div></details>",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14'/><path d='M12 5v14'/></svg> [+] – add file or track:</strong><br>Supported formats:<div class=\"step-sub\"><br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='#202124'><path d='M4 7h3.2l1.7-2h6.2l1.7 2H20a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z'/><circle cx='12' cy='13' r='3.7' fill='#ffffff'/><circle cx='12' cy='13' r='2.4' fill='#202124'/></svg> <strong>Photos:</strong> <code>.txt</code> (generated by BAT script)<br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='#202124'><path d='M4 7h3.2l1.7-2h6.2l1.7 2H20a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z'/><circle cx='12' cy='13' r='3.7' fill='#ffffff'/><circle cx='12' cy='13' r='2.4' fill='#202124'/></svg> <strong>Photos from EXIF GNSS:</strong> <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code> (with GPS metadata; position is read directly from the file)<br><svg class='m-ico' viewBox='0 0 24 24' width='13' height='13' fill='none' stroke='#202124' stroke-width='2' stroke-linecap='round'><path d='M6.2 16.8c3.6-1.1 4.6-3.8 5.3-6.5.7-2.7 2.6-4.2 6.3-3.1'/><circle cx='5' cy='18.2' r='2.1' fill='#202124' stroke='none'/><circle cx='19' cy='5.8' r='2.1' fill='#202124' stroke='none'/></svg> <strong>GPS tracks:</strong> <code>.gpx</code>, <code>.kml</code>, <code>.kmz</code>, <code>.geojson</code>, <code>.json</code></div><br>You can also drag &amp; drop files directly into the map window.",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> [All (count) ▼] – time filter (year / month / day / hour):</strong><br>Opens the photo time filter:<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> Choose <em>All</em> for the complete archive or a specific year<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> If the archive spans <strong>more than 24 years</strong>, years are grouped into <strong>decades</strong> (e.g. 1980–1989…); clicking a decade reveals its years — <strong>the selected decade stays expanded</strong> even after picking a year, month or day<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> After selecting a year, a month grid appears<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg> For a selected month, also a day calendar<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><polyline points='12 6 12 12 16 12'/></svg> For a selected day, an hour grid (0h–23h)<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 4 1 10 7 10'/><path d='M3.51 15a9 9 0 1 0 2.13-9.36L1 10'/></svg> Clicking the active item steps back one level",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> [Folders (count) ▼] – folder filter:</strong><br>Hierarchical photo filter built from the <code>RELATIVNI_CESTA</code> column in the dataset (photos without a path are grouped under <em>No folder</em>). The count in parentheses shows matching photos and respects the time filter.<div class=\"step-sub\"><br>• <strong>All</strong> – clears the folder filter and displays all archive photos<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> <strong>Folder tree</strong> – drill down through folders level by level; each folder shows its name and photo count. Click <code>⬆ Name</code> (or <code>⬆ All</code>) to return one level up<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/><circle cx='12' cy='13' r='4'/></svg> <strong>Individual photos (tree leaves)</strong> – inside folders you can click a specific photo to isolate it on the map. If a folder has more than 60 files, pagination buttons (‹ and ›) are available<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> <strong>Instant folder search</strong> – top search bar filters folder paths in real time. Pressing <code>Enter</code> on a single match opens that folder immediately; <code>Esc</code> or the ✕ button clears search. Results are paginated (60 items per page)<br>• <strong>Interoperability</strong> – combines seamlessly with the time filter; the <code>[⌖ Zoom to photos]</code> button to the right centers and zooms the map directly onto the selected folder or photo</div>",
@@ -2048,7 +2216,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var bLbClose = document.getElementById("btnLightboxClose");
             if (bLbClose) bLbClose.title = t.tipLightboxClose;
             // Aria-labels mirror titles (screen readers follow language switch)
-            ["btnMeasureGrid","btnMeasureDist","btnShowCoords","btnParallel","btnMeridian","btnSaveMeasure","btnClearMeasure","btnUndoMeasure","btnRedoMeasure","btnBufferZone","btnBufCircleCenter","btnBufCircle3p","btnBufZone","btnMeasurePanelClose","btnSyncStyles","btnToggleAll","btnResetStyles","btnUndo","btnLayers","btnZoomIn","btnZoomOut","btnAddFile","btnInfoClose","btnLightboxClose","measurePanel","btnYearSelect","btnFolderSelect","btnZoomFiltered"].forEach(function(id){
+            ["btnMeasureGrid","btnMeasureDist","btnShowCoords","btnParallel","btnMeridian","btnSaveMeasure","btnClearMeasure","btnUndoMeasure","btnRedoMeasure","btnBufferZone","btnBufCircleCenter","btnBufCircle3p","btnBufZone","btnMeasurePanelClose","btnSyncStyles","btnToggleAll","btnResetStyles","btnUndo","btnRedo","btnLayers","btnZoomIn","btnZoomOut","btnAddFile","btnInfoClose","btnLightboxClose","measurePanel","btnYearSelect","btnFolderSelect","btnZoomFiltered"].forEach(function(id){
                 var el = document.getElementById(id);
                 if (el && el.title) el.setAttribute("aria-label", el.title);
             });
@@ -2077,6 +2245,10 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var btnUndo = document.getElementById("btnUndo");
             if (btnUndo) {
                 btnUndo.title = t.titleUndo;
+            }
+            var btnRedo = document.getElementById("btnRedo");
+            if (btnRedo) {
+                btnRedo.title = t.titleRedo;
             }
             setT("txtSourcesHeader", t.sourcesHeader);
             var sourcesWord = document.getElementById("sourcesWord");
@@ -2878,7 +3050,15 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             rawData = [];
             for (var si = 0; si < sourceLayerGroups.length; si++) { map.removeLayer(sourceLayerGroups[si]); }
             sourceLayerGroups = [];
-            if (photoClusterGroups) { photoClusterGroups.forEach(function(pg) { try { map.removeLayer(pg.group); } catch(e){} }); photoClusterGroups = []; }
+            if (photoClusterGroups) {
+                var _pcKsRB = Object.keys(datasets);
+                for (var _pcIRB = 0; _pcIRB < _pcKsRB.length; _pcIRB++) {
+                    var _pcDRB = datasets[_pcKsRB[_pcIRB]];
+                    if (_pcDRB._photoCardsMoveHandler) { try { map.off("moveend zoomend", _pcDRB._photoCardsMoveHandler); } catch(e){} _pcDRB._photoCardsMoveHandler = null; }
+                }
+                photoClusterGroups.forEach(function(pg) { try { map.removeLayer(pg.group); } catch(e){} });
+                photoClusterGroups = [];
+            }
             if (heatLayers) { heatLayers.forEach(function(hl) { try { map.removeLayer(hl.layer); } catch(e){} }); heatLayers = []; }
             if (canvasLayerGroup) { try { map.removeLayer(canvasLayerGroup); } catch(e){} canvasLayerGroup.clearLayers(); canvasLayerGroup = null; }
             if (zoneLayerInstance) { try { map.removeLayer(zoneLayerInstance); } catch(e){} zoneLayerInstance = null; }
@@ -3451,8 +3631,13 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             } catch(e) {}
         }
 
-        function saveDatasetStyles() {
-            if (!_undoSkipSave) saveUndoState();
+        var _saveStylesTimer = null;
+
+        function flushSaveDatasetStyles() {
+            if (_saveStylesTimer) {
+                clearTimeout(_saveStylesTimer);
+                _saveStylesTimer = null;
+            }
             try {
                 var mapStyles = {};
                 Object.keys(datasets).forEach(function(k) {
@@ -3495,19 +3680,92 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             }
         }
 
-        var _undoState = null;
-        var _undoBtnEl = null;
-        var _undoSaved = false;
+        // Debounce pro ukládání stylů (300 ms) – zamezuje desítkám zápisů do localStorage za sekundu při posunu slideru
+        function saveDatasetStyles(immediate) {
+            if (!_undoSkipSave) saveUndoState();
+            if (immediate) {
+                flushSaveDatasetStyles();
+                return;
+            }
+            if (_saveStylesTimer) clearTimeout(_saveStylesTimer);
+            _saveStylesTimer = setTimeout(function() {
+                _saveStylesTimer = null;
+                flushSaveDatasetStyles();
+            }, 300);
+        }
 
-        // Aktuálníž obsah datasetu (pro undo zavření/viditelnosti)
+        // Uložit rozpracovaný stav před zavřením okna / tabu
+        window.addEventListener("beforeunload", function() {
+            if (_saveStylesTimer) flushSaveDatasetStyles();
+        });
+
+        // ===== 100-KROKOVÝ ZÁSOBNÍK UNDO / REDO PRO ZDROJE =====
+        var _undoStack = [];
+        var _redoStack = [];
+        var _MAX_UNDO_STEPS = 100;
+        var _undoBtnEl = null;
+        var _redoBtnEl = null;
+        var _undoSaved = false;
+        var _deletedSourceCache = {};
+        var _undoSkipSave = false;
+        var _lastUndoPushTime = 0;
+
+        function updateUndoRedoBtnState() {
+            if (!_undoBtnEl) _undoBtnEl = document.getElementById("btnUndo");
+            _redoBtnEl = document.getElementById("btnRedo");
+            if (!_redoBtnEl) _redoBtnEl = document.getElementById("btnRedo");
+            var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : null;
+
+            // Undo tlačítko
+            if (_undoBtnEl) {
+                var uCount = _undoStack.length;
+                if (uCount > 0) {
+                    _undoBtnEl.style.opacity = "";
+                    _undoBtnEl.style.pointerEvents = "";
+                    var titleText = (t && t.titleUndo ? t.titleUndo : "Zpět (Ctrl+Z)") + " (" + uCount + ")";
+                    _undoBtnEl.title = titleText;
+                    _undoBtnEl.setAttribute("aria-label", titleText);
+                } else {
+                    _undoBtnEl.style.opacity = "0.35";
+                    _undoBtnEl.style.pointerEvents = "none";
+                    var titleText = t && t.titleUndo ? t.titleUndo : "Zpět (Ctrl+Z)";
+                    _undoBtnEl.title = titleText;
+                    _undoBtnEl.setAttribute("aria-label", titleText);
+                }
+            }
+
+            // Redo tlačítko
+            if (_redoBtnEl) {
+                var rCount = _redoStack.length;
+                if (rCount > 0) {
+                    _redoBtnEl.style.opacity = "";
+                    _redoBtnEl.style.pointerEvents = "";
+                    var titleText = (t && t.titleRedo ? t.titleRedo : "Vpřed (Ctrl+Y)") + " (" + rCount + ")";
+                    _redoBtnEl.title = titleText;
+                    _redoBtnEl.setAttribute("aria-label", titleText);
+                } else {
+                    _redoBtnEl.style.opacity = "0.35";
+                    _redoBtnEl.style.pointerEvents = "none";
+                    var titleText = t && t.titleRedo ? t.titleRedo : "Vpřed (Ctrl+Y)";
+                    _redoBtnEl.title = titleText;
+                    _redoBtnEl.setAttribute("aria-label", titleText);
+                }
+            }
+        }
+        function updateUndoBtnState() { updateUndoRedoBtnState(); }
+
         function snapshotDatasetState() {
             var snap = {};
             snap._sourceOrder = Object.keys(datasets);
             Object.keys(datasets).forEach(function(k) {
                 var d = datasets[k];
-                var raw = null;
                 var isImage = !!(d && d.fromImage);
-                try { raw = localStorage.getItem(isImage ? "mf_photo_" + k : "mf_src_" + k); } catch(e) {}
+                var raw = null;
+                if (_deletedSourceCache[k]) {
+                    raw = _deletedSourceCache[k];
+                } else {
+                    try { raw = localStorage.getItem(isImage ? "mf_photo_" + k : "mf_src_" + k); } catch(e) {}
+                }
                 snap[k] = {
                     exists: true,
                     active: d.active,
@@ -3524,27 +3782,36 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             return snap;
         }
 
-        function saveUndoState() {
-            if (_undoSaved) return;
-            _undoState = snapshotDatasetState();
+        function saveUndoState(force) {
+            if (_undoSkipSave) return;
+            var now = Date.now();
+            // Zamezit duplicitním snapshotům během téhož kontinuálního tahu sliderem
+            if (!force && _undoSaved && (now - _lastUndoPushTime < 280)) return;
+
+            var snap = snapshotDatasetState();
+            _undoStack.push(snap);
+            if (_undoStack.length > _MAX_UNDO_STEPS) {
+                _undoStack.shift(); // Udržovat maximálně 100 kroků
+            }
+            // Nová uživatelská akce maže Redo historii
+            _redoStack = [];
+
             _undoSaved = true;
-            if (_undoBtnEl) { _undoBtnEl.style.opacity = ""; _undoBtnEl.style.pointerEvents = ""; }
+            _lastUndoPushTime = now;
+            updateUndoRedoBtnState();
         }
 
-        var _undoSkipSave = false;
-
-        function undoLastAction() {
-            if (!_undoState) return;
-            _undoSkipSave = true;
+        function applyDatasetSnapshot(targetState) {
             // 1. Obnovit smazané zdroje z uloženého raw obsahu
             var removedKeys = [];
-            Object.keys(_undoState).forEach(function(k) {
-                if (!datasets[k] && _undoState[k] && _undoState[k].exists) removedKeys.push(k);
+            Object.keys(targetState).forEach(function(k) {
+                if (k !== "_sourceOrder" && !datasets[k] && targetState[k] && targetState[k].exists) removedKeys.push(k);
             });
             for (var ri = 0; ri < removedKeys.length; ri++) {
                 (function(k) {
-                    var raw = _undoState[k] ? _undoState[k].raw : null;
-                    var isImage = _undoState[k] ? _undoState[k].isImage : false;
+                    var raw = targetState[k] ? targetState[k].raw : null;
+                    if (!raw && _deletedSourceCache[k]) raw = _deletedSourceCache[k];
+                    var isImage = targetState[k] ? targetState[k].isImage : false;
                     if (!raw) return;
                     if (isImage) {
                         try {
@@ -3559,7 +3826,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                                 type: "photos",
                                 fromImage: true,
                                 name: k,
-                                active: _undoState[k].active,
+                                active: targetState[k].active,
                                 items: items,
                                 mode: (sd && sd.mode && validModes.indexOf(sd.mode) !== -1) ? sd.mode : defaultPhotoMode,
                                 heatPalette: (sd && sd.heatPalette) ? sd.heatPalette : palSequence[numPhotoSets % palSequence.length],
@@ -3582,23 +3849,24 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         return;
                     }
                     var lower = k.toLowerCase();
-                        try {
-                            var trk = null;
-                            if (lower.endsWith(".txt")) { trk = parseRawForUndo(raw, k); }
-                            else if (lower.endsWith(".gpx")) { trk = parseGpx(raw, k); }
-                            else if (lower.endsWith(".kml") || lower.endsWith(".kmz")) { trk = parseKml(raw, k); if (trk && lower.endsWith(".kmz")) trk.format = "KMZ"; }
-                            else if (lower.endsWith(".geojson") || lower.endsWith(".json")) { trk = parseGeoJson(raw, k); }
-                            if (trk) {
-                                datasets[k] = trk;
-                                try { saveStoredSource(k, raw); } catch(se) {}
-                            }
-                        } catch(e) {}
+                    try {
+                        var trk = null;
+                        if (lower.endsWith(".txt")) { trk = parseRawForUndo(raw, k); } 
+                        else if (lower.endsWith(".gpx")) { trk = parseGpx(raw, k); }
+                        else if (lower.endsWith(".kml") || lower.endsWith(".kmz")) { trk = parseKml(raw, k); if (trk && lower.endsWith(".kmz")) trk.format = "KMZ"; }
+                        else if (lower.endsWith(".geojson") || lower.endsWith(".json")) { trk = parseGeoJson(raw, k); }
+                        if (trk) {
+                            datasets[k] = trk;
+                            try { saveStoredSource(k, raw); } catch(se) {}
+                        }
+                    } catch(e) {}
                 })(removedKeys[ri]);
             }
+
             // 2. Vrátit stav (active + styly) pro všechny snapshotované soubory
-            Object.keys(_undoState).forEach(function(k) {
-                if (!datasets[k]) return;
-                var s = _undoState[k], d = datasets[k];
+            Object.keys(targetState).forEach(function(k) {
+                if (k === "_sourceOrder" || !datasets[k]) return;
+                var s = targetState[k], d = datasets[k];
                 d.active = s.active;
                 d.mode = s.mode; d.heatPalette = s.heatPalette; d.heatOpacity = s.heatOpacity;
                 d.heatBlur = s.heatBlur; d.agePalette = s.agePalette; d.dotColor = s.dotColor; d.dotOpacity = s.dotOpacity;
@@ -3608,31 +3876,71 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 d.trackPointOpacity = s.trackPointOpacity; d.lineWidth = s.lineWidth; d.pointSize = s.pointSize;
                 d.pointIcon = s.pointIcon; d.fillColor = s.fillColor; d.fillOpacity = s.fillOpacity;
             });
-            // 3. Smazat soubory, které ve snapshotu nebyly (přidané po snapshotu)
+
+            // 3. Smazat soubory, které ve snapshotu nebyly a uložit je do mezipaměti
             Object.keys(datasets).forEach(function(k) {
-                if (!_undoState[k]) {
-                    var wasImage = !!(datasets[k] && datasets[k].fromImage);
+                if (!targetState[k]) {
+                    var d = datasets[k];
+                    var wasImage = !!(d && d.fromImage);
+                    if (!_deletedSourceCache[k]) {
+                        try {
+                            var raw = localStorage.getItem(wasImage ? "mf_photo_" + k : "mf_src_" + k);
+                            if (raw) _deletedSourceCache[k] = raw;
+                        } catch(e) {}
+                    }
                     delete datasets[k];
                     try { localStorage.removeItem(wasImage ? "mf_photo_" + k : "mf_src_" + k); } catch(e) {}
                 }
             });
-            var _savedOrder = _undoState ? _undoState._sourceOrder : null;
-            _undoState = null;
-            _undoSaved = false;
-            if (_undoBtnEl) { _undoBtnEl.style.opacity = "0.35"; _undoBtnEl.style.pointerEvents = "none"; }
+
+            var _savedOrder = targetState ? targetState._sourceOrder : null;
             if (_savedOrder) {
                 var orderedDatasets = {};
                 _savedOrder.forEach(function(k) { if (datasets[k]) orderedDatasets[k] = datasets[k]; });
                 Object.keys(datasets).forEach(function(k) { if (!orderedDatasets[k]) orderedDatasets[k] = datasets[k]; });
                 datasets = orderedDatasets;
             }
-            saveDatasetStyles();
+            saveDatasetStyles(true);
             saveSourcesOrder();
-            _undoSkipSave = false;
             rebuild();
-            showToast(i18n[currentLang].toastUndo || "↩️ Změna byla vrácena zpět");
         }
-        // Undo obnova zdroje z raw obsahu bez vedlejších efektů (bez toastu/rebuild)
+
+        function undoLastAction() {
+            if (_undoStack.length === 0) return;
+            _undoSkipSave = true;
+            // Uložit stávající stav do Redo zásobníku
+            var currentSnap = snapshotDatasetState();
+            _redoStack.push(currentSnap);
+            if (_redoStack.length > _MAX_UNDO_STEPS) _redoStack.shift();
+
+            var targetState = _undoStack.pop();
+            _undoSaved = false;
+            applyDatasetSnapshot(targetState);
+            updateUndoRedoBtnState();
+            _undoSkipSave = false;
+
+            var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : null;
+            showToast((t && t.toastUndo ? t.toastUndo : "↩️ Změna byla vrácena zpět") + (_undoStack.length > 0 ? " (zbývá " + _undoStack.length + ")" : ""));
+        }
+
+        function redoLastAction() {
+            if (_redoStack.length === 0) return;
+            _undoSkipSave = true;
+            // Uložit stávající stav do Undo zásobníku
+            var currentSnap = snapshotDatasetState();
+            _undoStack.push(currentSnap);
+            if (_undoStack.length > _MAX_UNDO_STEPS) _undoStack.shift();
+
+            var targetState = _redoStack.pop();
+            _undoSaved = false;
+            applyDatasetSnapshot(targetState);
+            updateUndoRedoBtnState();
+            _undoSkipSave = false;
+
+            var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : null;
+            showToast((t && t.toastRedo ? t.toastRedo : "↪️ Změna byla provedena znovu") + (_redoStack.length > 0 ? " (zbývá " + _redoStack.length + ")" : ""));
+        }
+
         function parseRawForUndo(raw, name) {
             var ls = raw.split("\n"), it = [];
             for (var i = 0; i < ls.length; i++) {
@@ -4018,9 +4326,24 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var p = document.getElementById('measurePanel');
             var isMeasureOpen = p && p.classList.contains('open');
             var isDrawing = (typeof isAnyDrawingActive === 'function' && isAnyDrawingActive());
-            if (!isMeasureOpen && !isDrawing) return;
-
             var tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+            if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
+
+            // Globální Ctrl+Z (Undo) a Ctrl+Y / Ctrl+Shift+Z (Redo) pro zdroje pokud není otevřeno měření
+            if (!isMeasureOpen && !isDrawing) {
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && !e.shiftKey) {
+                    if (_undoStack && _undoStack.length > 0) {
+                        e.preventDefault();
+                        undoLastAction();
+                    }
+                } else if ((e.ctrlKey || e.metaKey) && ((e.key === 'y' || e.key === 'Y') || ((e.key === 'z' || e.key === 'Z') && e.shiftKey))) {
+                    if (_redoStack && _redoStack.length > 0) {
+                        e.preventDefault();
+                        redoLastAction();
+                    }
+                }
+                return;
+            }
             if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
 
             if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && !e.shiftKey) {
@@ -7664,7 +7987,12 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                         e.stopPropagation();
                         e.preventDefault();
                     }
-                    saveUndoState();
+                    try {
+                        var _delIsImg = !!(datasets[k] && datasets[k].fromImage);
+                        var _delRaw = localStorage.getItem(_delIsImg ? "mf_photo_" + k : "mf_src_" + k);
+                        if (_delRaw) _deletedSourceCache[k] = _delRaw;
+                    } catch(e) {}
+                    saveUndoState(true);
                     delete datasets[k];
                     removeStoredSource(k);
                     removePhotoSource(k);
@@ -9862,6 +10190,11 @@ if (fileEnd < fList.length || fileStart > 0) {
 
             // Clean up photo layers from their per-dataset groups
             if (photoClusterGroups && photoClusterGroups.length > 0) {
+                var _pcKsUV = Object.keys(datasets);
+                for (var _pcIUV = 0; _pcIUV < _pcKsUV.length; _pcIUV++) {
+                    var _pcDUV = datasets[_pcKsUV[_pcIUV]];
+                    if (_pcDUV._photoCardsMoveHandler) { try { map.off("moveend zoomend", _pcDUV._photoCardsMoveHandler); } catch(e){} _pcDUV._photoCardsMoveHandler = null; }
+                }
                 photoClusterGroups.forEach(function(pg) { try { pg.group.remove(); } catch(e){} });
                 photoClusterGroups = [];
             }
@@ -9918,48 +10251,145 @@ if (fileEnd < fList.length || fileStart > 0) {
                     if (lg) { lg.addLayer(al); } else { map.addLayer(al); }
                     ageLayers.push({ layer: al });
                 }
-                // FOTO-KARTY
+                // FOTO-KARTY (Adaptivní mřížkové shlukování + rychlý Bounding Box + Thumbnail Cache)
                 else if (mode === "photoCards") {
-                    var cg = L.markerClusterGroup({
-                        chunkedLoading: true,
-                        maxClusterRadius: 40,
-                        spiderfyOnMaxZoom: true,
-                        showCoverageOnHover: false,
-                        zoomToBoundsOnClick: true,
-                        iconCreateFunction: function(cluster) {
-                            var childCount = cluster.getChildCount();
-                            var markers = cluster.getAllChildMarkers();
-                            var firstMarker = markers[0];
-                            var p = firstMarker.customPhotoData;
-                            var imgSrc = p ? resolvePhotoUrl(p[5] || p[3]) : "";
-                            var html = '<div class="photo-bubble-card">' +
-                                (imgSrc ? '<img src="' + (imgSrc.indexOf("data:") === 0 ? imgSrc : encodeURI(imgSrc)) + '" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';">' : '') +
-                                '<div class="photo-bubble-badge">+' + childCount + '</div>' +
-                                '</div>';
-                            return L.divIcon({ html: html, className: 'custom-photo-cluster-icon', iconSize: [44, 44], iconAnchor: [22, 22] });
+                    var pcContainer = L.layerGroup();
+                    if (lg) { lg.addLayer(pcContainer); } else { map.addLayer(pcContainer); }
+                    (function(_container, _allPts, _d) {
+                        function _pcRebuild() {
+                            if (!_d.active || (_d.mode && _d.mode !== "photoCards")) return;
+                            _thumbQueue = []; // Vyčistit frontu předchozího výřezu pro okamžitou odezvu
+                            _container.clearLayers();
+                            if (!_allPts || _allPts.length === 0) return;
+
+                            // 1. Zero-allocation Bounding Box test (rychlé číselné porovnání)
+                            var _b = map.getBounds().pad(0.3);
+                            var _s = _b.getSouth(), _n = _b.getNorth(), _w = _b.getWest(), _e = _b.getEast();
+                            var _vis = [];
+                            if (_w <= _e) {
+                                for (var _i = 0; _i < _allPts.length; _i++) {
+                                    var _p = _allPts[_i];
+                                    if (_p[0] >= _s && _p[0] <= _n && _p[1] >= _w && _p[1] <= _e) _vis.push(_p);
+                                }
+                            } else {
+                                for (var _i = 0; _i < _allPts.length; _i++) {
+                                    var _p = _allPts[_i];
+                                    if (_p[0] >= _s && _p[0] <= _n && (_p[1] >= _w || _p[1] <= _e)) _vis.push(_p);
+                                }
+                            }
+                            if (_vis.length === 0) return;
+
+                            // 2. Rozvětvení: při > 1500 fotkách rychlé mřížkové shlukování, při <= 1500 plný detail
+                            if (_vis.length > 1500) {
+                                var sz = map.getSize();
+                                var wPx = (sz && sz.x > 0) ? sz.x : (window.innerWidth || 1200);
+                                var hPx = (sz && sz.y > 0) ? sz.y : (window.innerHeight || 800);
+                                var cols = Math.max(10, Math.floor(wPx / 46));
+                                var rows = Math.max(8, Math.floor(hPx / 46));
+                                var stepLat = (_n - _s) / rows;
+                                var stepLng = (_w <= _e ? (_e - _w) : (360 + _e - _w)) / cols;
+                                if (stepLat <= 0 || stepLng <= 0) return;
+
+                                var cells = {};
+                                for (var _i = 0; _i < _vis.length; _i++) {
+                                    var _p = _vis[_i];
+                                    var gy = Math.floor((_p[0] - _s) / stepLat);
+                                    var gx = Math.floor(((_p[1] >= _w ? (_p[1] - _w) : (_p[1] + 360 - _w))) / stepLng);
+                                    var key = gx + "_" + gy;
+                                    var cell = cells[key];
+                                    if (!cell) {
+                                        cells[key] = {
+                                            first: _p,
+                                            count: 1,
+                                            sumLat: _p[0],
+                                            sumLng: _p[1],
+                                            minLat: _p[0], maxLat: _p[0],
+                                            minLng: _p[1], maxLng: _p[1]
+                                        };
+                                    } else {
+                                        cell.count++;
+                                        cell.sumLat += _p[0];
+                                        cell.sumLng += _p[1];
+                                        if (_p[0] < cell.minLat) cell.minLat = _p[0];
+                                        else if (_p[0] > cell.maxLat) cell.maxLat = _p[0];
+                                        if (_p[1] < cell.minLng) cell.minLng = _p[1];
+                                        else if (_p[1] > cell.maxLng) cell.maxLng = _p[1];
+                                    }
+                                }
+
+                                var gridMarkers = [];
+                                for (var k in cells) {
+                                    var cell = cells[k];
+                                    var p = cell.first;
+                                    var imgSrc = resolvePhotoUrl(p[5] || p[3]);
+                                    var isCluster = cell.count > 1;
+                                    var iconHtml = renderPhotoBubbleHtml(imgSrc, cell.count);
+                                    var iconClass = isCluster ? "custom-photo-cluster-icon" : "custom-photo-marker-icon";
+                                    var icon = L.divIcon({ html: iconHtml, className: iconClass, iconSize: [44, 44], iconAnchor: [22, 22] });
+                                    var pos = isCluster ? [cell.sumLat / cell.count, cell.sumLng / cell.count] : [p[0], p[1]];
+                                    var m = L.marker(pos, { icon: icon });
+                                    m.customPhotoData = p;
+                                    (function(marker, cData) {
+                                        marker.on('click', function(e) {
+                                            if (isAnyDrawingActive()) { L.DomEvent.stopPropagation(e); return; }
+                                            if (cData.count > 1) {
+                                                if (cData.minLat === cData.maxLat && cData.minLng === cData.maxLng) {
+                                                    map.setView([cData.minLat, cData.minLng], Math.min(map.getMaxZoom() || 18, map.getZoom() + 2));
+                                                } else {
+                                                    map.fitBounds([[cData.minLat, cData.minLng], [cData.maxLat, cData.maxLng]], { padding: [50, 50], maxZoom: Math.min(map.getMaxZoom() || 18, map.getZoom() + 3) });
+                                                }
+                                            } else {
+                                                if (!marker.getPopup()) { marker.bindPopup(createPopupContent(cData.first)); marker.openPopup(); }
+                                            }
+                                        });
+                                    })(m, cell);
+                                    gridMarkers.push(m);
+                                }
+                                var gLayer = L.layerGroup(gridMarkers);
+                                _container.addLayer(gLayer);
+                            } else {
+                                var cg = L.markerClusterGroup({
+                                    chunkedLoading: true,
+                                    maxClusterRadius: 40,
+                                    spiderfyOnMaxZoom: true,
+                                    showCoverageOnHover: false,
+                                    zoomToBoundsOnClick: true,
+                                    iconCreateFunction: function(cluster) {
+                                        var childCount = cluster.getChildCount();
+                                        var markers = cluster.getAllChildMarkers();
+                                        var firstMarker = markers[0];
+                                        var p = firstMarker.customPhotoData;
+                                        var imgSrc = p ? resolvePhotoUrl(p[5] || p[3]) : "";
+                                        var html = renderPhotoBubbleHtml(imgSrc, childCount);
+                                        return L.divIcon({ html: html, className: "custom-photo-cluster-icon", iconSize: [44, 44], iconAnchor: [22, 22] });
+                                    }
+                                });
+                                var cMarkers = [];
+                                for (var ci = 0; ci < _vis.length; ci++) {
+                                    var cp = _vis[ci];
+                                    var imgSrc = resolvePhotoUrl(cp[5] || cp[3]);
+                                    var iconHtml = renderPhotoBubbleHtml(imgSrc, 1);
+                                    var customIcon = L.divIcon({ html: iconHtml, className: "custom-photo-marker-icon", iconSize: [44, 44], iconAnchor: [22, 22] });
+                                    var cm = L.marker([cp[0], cp[1]], { icon: customIcon });
+                                    cm.customPhotoData = cp;
+                                    (function(marker, point){
+                                        marker.on('click', function(e){
+                                            if (isAnyDrawingActive()) { L.DomEvent.stopPropagation(e); return; }
+                                            if (!marker.getPopup()) { marker.bindPopup(createPopupContent(point)); marker.openPopup(); }
+                                        });
+                                    })(cm, cp);
+                                    cMarkers.push(cm);
+                                }
+                                cg.addLayers(cMarkers);
+                                _container.addLayer(cg);
+                            }
                         }
-                    });
-                    var cMarkers = [];
-                    for (var ci = 0; ci < pts.length; ci++) {
-                        var cp = pts[ci];
-                        var imgSrc = resolvePhotoUrl(cp[5] || cp[3]);
-                        var iconHtml = '<div class="photo-bubble-card">' +
-                            '<img src="' + (imgSrc ? (imgSrc.indexOf("data:") === 0 ? imgSrc : encodeURI(imgSrc)) : "") + '" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.background=\'#ea4335\';this.parentElement.innerHTML=\'<div style=\\\'color:#fff;font-size:16px;line-height:40px;text-align:center;\\\'>📷</div>\';">' +
-                            '</div>';
-                        var customIcon = L.divIcon({ html: iconHtml, className: 'custom-photo-marker-icon', iconSize: [44, 44], iconAnchor: [22, 22] });
-                        var cm = L.marker([cp[0], cp[1]], { icon: customIcon });
-                        cm.customPhotoData = cp;
-                        (function(marker, point){
-                            marker.on('click', function(e){
-                                if(isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); return; }
-                                if (!marker.getPopup()) { marker.bindPopup(createPopupContent(point)); marker.openPopup(); }
-                            });
-                        })(cm, cp);
-                        cMarkers.push(cm);
-                    }
-                    cg.addLayers(cMarkers);
-                    if (lg) { lg.addLayer(cg); } else { map.addLayer(cg); }
-                    photoClusterGroups.push({ group: cg });
+                        _d._photoCardsMoveHandler = _pcRebuild;
+                        map.on("moveend zoomend", _pcRebuild);
+                        _pcRebuild();
+                    })(pcContainer, pts, d);
+                    d._photoCardGroup = pcContainer;
+                    photoClusterGroups.push({ group: pcContainer });
                 }
                 // SPENDLÍKY / KLASTROVÁNÍ
                 else if (mode === "clusters") {
