@@ -692,8 +692,8 @@
                     <button class="lang-half" id="langBtnEn" onclick="setLanguage('en')">English</button>
                 </div>
                 <div class="lang-split" id="saveSplit">
-                    <button class="lang-half" onclick="menuExportPdf()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> PDF<br><span class="sub">rastr HD</span></button>
-                    <button class="lang-half" onclick="menuExportPng()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg> PNG<br><span class="sub">rastr HD</span></button>
+                    <button class="lang-half" id="btnExportPdf" onclick="menuExportPdf()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> PDF<br><span class="sub">rastr HD</span></button>
+                    <button class="lang-half" id="btnExportPng" onclick="menuExportPng()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg> PNG<br><span class="sub">rastr HD</span></button>
                     
                 </div>
                 <div class="dropdown-item menu-has-ico" onclick="menuOpenInfo()"><span class="layer-ico m-letter" aria-hidden="true">i</span><span id="menuInfoItem">Informace o aplikaci</span></div>
@@ -1058,14 +1058,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
             if (imgSrc && imgSrc.indexOf("data:") === 0) {
                 return '<div class="photo-bubble-card">' +
-                    '<img src="' + imgSrc + '" style="width:100%;height:100%;object-fit:cover;display:block;">' +
+                    '<img src="' + imgSrc + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' +
                     badgeHtml + '</div>';
             }
 
             var cached = imgSrc ? _photoThumbCache[imgSrc] : null;
             if (cached && cached !== "ERROR") {
                 return '<div class="photo-bubble-card">' +
-                    '<img src="' + cached + '" style="width:100%;height:100%;object-fit:cover;display:block;">' +
+                    '<img src="' + cached + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' +
                     badgeHtml + '</div>';
             } else if (cached === "ERROR") {
                 return '<div class="photo-bubble-card" style="background:#ea4335;">' +
@@ -1126,6 +1126,12 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         // ⚠️ UTF-8 POVINNĚ – i18n.cs/en obsahuje diakritiku a emoji (📏🌐🗑️) – zachovejte UTF-8, jinak se rozbije legenda/i18n
         var i18n = {
             cs: {
+                tipLangCs: "Přepnout do češtiny",
+                tipLangEn: "Přepnout do angličtiny",
+                tipExportPdf: "Exportovat mapu do PDF",
+                tipExportPng: "Exportovat mapu do PNG",
+                tipSources: "Spravovat vrstvy a zdroje",
+                tipAddMini: "Přidat nové fotky nebo stopy",
                 photosWord: "fotek",
                 allWord: "Vše",
                 btnSources: "Zdroje",
@@ -1268,6 +1274,12 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 ]
             },
             en: {
+                tipLangCs: "Switch to Czech",
+                tipLangEn: "Switch to English",
+                tipExportPdf: "Export map to PDF",
+                tipExportPng: "Export map to PNG",
+                tipSources: "Manage layers and sources",
+                tipAddMini: "Add new photos or tracks",
                 photosWord: "photos",
                 allWord: "All",
                 btnSources: "Sources",
@@ -2172,6 +2184,13 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             function setH(id, v){ var el = document.getElementById(id); if (el && v !== undefined && v !== null) el.innerHTML = v; }
             function setTi(id, v){ var el = document.getElementById(id); if (el && v !== undefined && v !== null) el.title = v; }
             // Přepínač jazyka: zvýrazni aktivní jazyk (oba názvy zůstávají viditelné)
+            
+            setTi("langBtnCs", t.tipLangCs);
+            setTi("langBtnEn", t.tipLangEn);
+            setTi("btnExportPdf", t.tipExportPdf);
+            setTi("btnExportPng", t.tipExportPng);
+            setTi("btnSources", t.tipSources);
+            setTi("txtBtnAddMini", t.tipAddMini);
             var optCs = document.getElementById("langBtnCs");
             var optEn = document.getElementById("langBtnEn");
             if (optCs) optCs.classList.toggle("active", l === "cs");
@@ -10159,7 +10178,7 @@ if (fileEnd < fList.length || fileStart > 0) {
             var fn = escapeHtml(rawFn);
             var jsFn = rawFn.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
             var df = fmtDate(dt), _rr = resolvePhotoUrl(rp), fu = _rr ? (_rr.indexOf("data:") === 0 ? _rr : encodeURI(_rr)) : "", gm = "https://www.google.com/maps?q="+lat+","+lon, my = "https://mapy.cz/zakladni?q="+lat+"%2C"+lon, sz = fmtBytes(fs);
-            var th = fu ? "<div class=\"thumb-wrapper\" onclick=\"openLB(\x27"+fu+"\x27,\x27"+jsFn+"\x27)\"><img src=\""+fu+"\" class=\"thumb-img\" loading=\"lazy\" decoding=\"async\" onerror=\"this.parentElement.outerHTML=\x27<div class=no-thumb>" + t.noThumb + "</div>\x27\"><div class=\"thumb-badge\">"+t.zoomBadge+"</div></div>" : "<div class=\"no-thumb\">"+t.noThumb+"</div>";
+            var th = fu ? "<div class=\"thumb-wrapper\" onclick=\"openLB(\x27"+fu+"\x27,\x27"+jsFn+"\x27)\"><img src=\""+fu+"\" alt=\"\" class=\"thumb-img\" loading=\"lazy\" decoding=\"async\" onerror=\"this.parentElement.outerHTML=\x27<div class=no-thumb>" + t.noThumb + "</div>\x27\"><div class=\"thumb-badge\">"+t.zoomBadge+"</div></div>" : "<div class=\"no-thumb\">"+t.noThumb+"</div>";
             return th + "<div class=\"card-body\"><div class=\"card-title\" title=\""+fn+"\">"+fn+"</div><div class=\"card-meta\"><span>"+df+"</span><span>"+lat.toFixed(4)+", "+lon.toFixed(4)+"</span></div>"+(sz ? "<div class=\"card-size\">"+sz+"</div>" : "") + "<div class=\"card-actions\"><a href=\""+my+"\" target=\"_blank\" class=\"c-btn c-btn-mapycz\">"+t.btnMapy+"</a><a href=\""+gm+"\" target=\"_blank\" class=\"c-btn c-btn-secondary\">"+t.btnGoogle+"</a>"+(fu ? "<a href=\""+fu+"\" target=\"_blank\" class=\"c-btn c-btn-primary\">"+t.btnFull+"</a>" : "")+"</div></div>";
         }
 
