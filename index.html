@@ -1419,6 +1419,7 @@
                     
                 </div>
                 <div class="dropdown-item menu-has-ico" onclick="menuOpenInfo()"><span class="layer-ico m-letter" aria-hidden="true">i</span><span id="menuInfoItem">Informace o aplikaci</span></div>
+                <div class="dropdown-item menu-has-ico" onclick="menuOpenViewer()"><span class="layer-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span><span id="menuViewerItem">Prohlížečka fotografií</span></div>
                 <div class="dropdown-item menu-has-ico" onclick="toggleMeasurePanel()"><span class="layer-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 8.7 15.3 2.7a1 1 0 0 0-1.4 0l-11.2 11.2a1 1 0 0 0 0 1.4l6 6a1 1 0 0 0 1.4 0L21.3 10a1 1 0 0 0 0-1.4z"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/></svg></span><span id="menuMeasureItem">Panel měření</span></div>
             </div>
         </div>
@@ -1913,6 +1914,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tfMonths: "Měsíce",
                 tfDays: "Dny",
                 menuInfoItem: "Informace o aplikaci",
+                menuViewerItem: "Prohlížečka fotografií",
                 menuMeasureItem: "Panel měření",
                 btnMeasureGrid: "Mřížka souřadnic",
                 btnMeasureDist: "Měřit",
@@ -2087,6 +2089,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tfMonths: "Months",
                 tfDays: "Days",
                 menuInfoItem: "About & Help",
+                menuViewerItem: "Photo viewer",
                 menuMeasureItem: "Measurement panel",
                 btnMeasureGrid: "Coordinate grid",
                 btnMeasureDist: "Measure",
@@ -3004,6 +3007,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (miInfo) miInfo.textContent = t.menuInfoItem;
             var miMeasure = document.getElementById("menuMeasureItem");
             if (miMeasure) miMeasure.textContent = t.menuMeasureItem;
+            var miViewer = document.getElementById("menuViewerItem");
+            if (miViewer) miViewer.textContent = t.menuViewerItem;
             var bmGrid = document.getElementById("btnMeasureGrid");
             if (bmGrid) bmGrid.title = t.btnMeasureGrid;
             var bmDist = document.getElementById("btnMeasureDist");
@@ -3223,6 +3228,38 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
         function menuSelectLanguage() { toggleLanguage(); closeMenuDropdown(); }
         function menuOpenInfo() { openInfoModal(); closeMenuDropdown(); }
+        function menuOpenViewer() {
+            closeMenuDropdown();
+            currentLBPhotos = getFilteredPhotosList();
+            var lb = document.getElementById("lightbox");
+            if (!currentLBPhotos || currentLBPhotos.length === 0) {
+                if (lb) lb.classList.add("active");
+                var lbImg0 = document.getElementById("lbImg");
+                if (lbImg0) { try { lbImg0.removeAttribute("src"); } catch(e) {} }
+                var lbHeader0 = document.getElementById("lbHeader");
+                if (lbHeader0) lbHeader0.innerHTML = "";
+                var lbStrip0 = document.getElementById("lbStrip");
+                if (lbStrip0) { lbStrip0.innerHTML = ""; lbStrip0.style.display = "none"; }
+                currentLBIndex = -1;
+                updateLBNavButtons();
+                showToast(i18n[currentLang].toastNoPhotos || "Žádné fotky k zobrazení");
+                return;
+            }
+            var best = 0;
+            try {
+                if (typeof map !== "undefined" && map && typeof calcDistKm === "function") {
+                    var ctr = map.getCenter();
+                    var bd = Infinity;
+                    for (var i = 0; i < currentLBPhotos.length; i++) {
+                        var p = currentLBPhotos[i];
+                        var dd = calcDistKm(p[0], p[1], ctr.lat, ctr.lng);
+                        if (dd < bd) { bd = dd; best = i; }
+                    }
+                }
+            } catch(e) {}
+            if (lb) lb.classList.add("active");
+            showLBPhotoByIndex(best);
+        }
 
         function spustitEditor() {
             closeMenuDropdown();
