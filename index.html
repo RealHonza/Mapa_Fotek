@@ -862,7 +862,9 @@
           min-width: 200px;
           max-width: 420px;
           background: rgba(255,255,255,0.05);
-          border-right: 1px solid rgba(255,255,255,0.15);
+          border: 1px solid rgba(255,255,255,0.14);
+          border-radius: 8px;
+          padding: 6px;
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -1574,7 +1576,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.70</span>
+                    <span class="info-meta-val">2.71</span>
                 </div>
             </div>
 
@@ -4226,6 +4228,19 @@ function calcLBGridPageSize() {
         lbGrid.style.gridAutoRows = tileSize + 'px';
         lbGrid.style.gap = gap + 'px';
         lbGrid.style.maxWidth = (cols * tileSize + (cols - 1) * gap + 20) + 'px';
+        // Pojistka: mrizka nesmi pretiect pod panel slozek – kdyz se nevejde, uber sloupec (ctverec drzi).
+        try {
+            void lbGrid.offsetWidth;
+            for (var _v = 0; _v < 8 && cols > 1; _v++) {
+                if (lbGrid.scrollWidth <= lbGrid.clientWidth + 1) break;
+                cols--;
+                tileSize = Math.max(60, Math.floor((gridW - (cols - 1) * gap) / Math.max(1, cols)));
+                lbGrid.style.gridTemplateColumns = 'repeat(' + cols + ', ' + tileSize + 'px)';
+                lbGrid.style.gridAutoRows = tileSize + 'px';
+                lbGrid.style.maxWidth = (cols * tileSize + (cols - 1) * gap + 20) + 'px';
+                void lbGrid.offsetWidth;
+            }
+        } catch(e) {}
     }
 
     return cols * rows;
@@ -4485,6 +4500,19 @@ window.addEventListener('resize', function() {
 
             // Vykreslit aktuální stránku
             renderLBGridPage(currentLBGridPage);
+            // Dvojity rAF: po usednuti layoutu (panel, fonty) premerit a pripadne sesadit sloupce.
+            try {
+                if (typeof requestAnimationFrame === "function") requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        try {
+                            var lbG = document.getElementById("lightbox");
+                            if (!lbG || !lbG.classList.contains("lb-mode-grid")) return;
+                            var _pp = calcLBGridPageSize();
+                            if (_pp !== LB_GRID_PAGE_SIZE) { LB_GRID_PAGE_SIZE = _pp; renderLBGridPage(currentLBGridPage); }
+                        } catch(e) {}
+                    });
+                });
+            } catch(e) {}
         }
 
         function renderLBGridPage(pageIndex) {
@@ -5822,31 +5850,202 @@ window.addEventListener('resize', function() {
         }
 
         // --- Source persistence (survive F5 refresh) ---
-        function saveStoredSource(name, rawContent) {
+        // ===== IndexedDB perzistence zdroju (velke TXT/fotky mimo ~5MB localStorage kvotu) =====
+        // Drobnosti (jazyk, styly, poradi, koren, flagy) zustavaji v localStorage.
+        var MF_IDB = { ok: false, db: null, name: "mapa_fotek_db", store: "zdroje" };
+        var _memRaw = {};
+        var _memPhoto = {};
+        var _memOnlyWarned = false;
+        function mfMemOnlyToast() {
+            if (_memOnlyWarned) return; _memOnlyWarned = true;
+            try { showToast("⚠️ " + (currentLang === "cs" ? "Prohlížeč nepodporuje trvalé úložiště – zdroj zůstane jen do obnovení stránky." : "Browser has no persistent storage – source lasts until page reload.")); } catch(e) {}
+        }
+        function mfIdbSupported() { try { return typeof indexedDB !== "undefined" && !!indexedDB; } catch(e) { return false; } }
+        function mfIdbOpen(cb) {
+            var done = function(ok) { MF_IDB.ok = !!ok; try { if (cb) cb(MF_IDB.ok); } catch(e) {} };
+            if (MF_IDB.db) { done(true); return; }
+            if (!mfIdbSupported()) { done(false); return; }
             try {
-                var idxKey = "mapa_fotek_saved_sources_idx";
-                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
-                var srcKey = "mf_src_" + name;
-                localStorage.setItem(srcKey, rawContent);
-                if (idx.indexOf(name) === -1) { idx.push(name); localStorage.setItem(idxKey, JSON.stringify(idx)); }
-            } catch(e) {
-                console.warn("saveStoredSource failed for '" + name + "':", e.message || e);
-                if (e.name === "QuotaExceededError" || e.code === 22 || e.code === 1014) {
-                    var t = i18n[currentLang];
-                    showToast("⚠️ " + (t.toastStorageFull || "Nedostatek místa v úložišti prohlížeče. Zdroj " + name + " se nepodařilo uložit."));
-                }
-            }
+                var rq = indexedDB.open(MF_IDB.name, 1);
+                rq.onupgradeneeded = function() {
+                    try {
+                        var db = rq.result;
+                        if (!db.objectStoreNames.contains(MF_IDB.store)) db.createObjectStore(MF_IDB.store, { keyPath: "name" });
+                    } catch(e) {}
+                };
+                rq.onsuccess = function() { try { MF_IDB.db = rq.result; } catch(e) {} done(true); };
+                rq.onerror = function() { done(false); };
+                rq.onblocked = function() { done(!!MF_IDB.db); };
+            } catch(e) { done(false); }
+        }
+        function mfIdbQuotaToast() {
+            try { var t = i18n[currentLang]; showToast("⚠️ " + (t.toastStorageFull || "Nedostatek místa v úložišti.")); } catch(e) {}
+        }
+        function mfIdbPut(name, kind, raw, cb) {
+            var fin = function(ok, err) { try { if (cb) cb(ok, err); } catch(e) {} };
+            if (!MF_IDB.db) { fin(false, "no-db"); return; }
+            try {
+                var tx = MF_IDB.db.transaction([MF_IDB.store], "readwrite");
+                var rq = tx.objectStore(MF_IDB.store).put({ name: String(name), kind: kind, raw: raw, ts: Date.now() });
+                rq.onsuccess = function() { fin(true); };
+                rq.onerror = function() { var e = rq.error; fin(false, e); if (e && (e.name === "QuotaExceededError" || e.code === 22)) mfIdbQuotaToast(); };
+            } catch(e) { fin(false, e); }
+        }
+        function mfIdbDel(name, cb) {
+            var fin = function() { try { if (cb) cb(); } catch(e) {} };
+            if (!MF_IDB.db) { fin(); return; }
+            try {
+                var tx = MF_IDB.db.transaction([MF_IDB.store], "readwrite");
+                tx.objectStore(MF_IDB.store).delete(String(name));
+                tx.oncomplete = fin; tx.onerror = fin; tx.onabort = fin;
+            } catch(e) { fin(); }
+        }
+        function mfIdbAll(cb) {
+            var fin = function(list) { try { if (cb) cb(list || []); } catch(e) {} };
+            if (!MF_IDB.db) { fin([]); return; }
+            try {
+                var tx = MF_IDB.db.transaction([MF_IDB.store], "readonly");
+                var rq = tx.objectStore(MF_IDB.store).getAll();
+                rq.onsuccess = function() { fin(rq.result || []); };
+                rq.onerror = function() { fin([]); };
+            } catch(e) { fin([]); }
+        }
+        function mfIdbClear(cb) {
+            var fin = function() { try { if (cb) cb(); } catch(e) {} };
+            if (!MF_IDB.db) { fin(); return; }
+            try {
+                var tx = MF_IDB.db.transaction([MF_IDB.store], "readwrite");
+                tx.objectStore(MF_IDB.store).clear();
+                tx.oncomplete = fin; tx.onerror = fin; tx.onabort = fin;
+            } catch(e) { fin(); }
+        }
+        function mfIdbMigrateIfNeeded(cb) {
+            var fin = function() { try { if (cb) cb(); } catch(e) {} };
+            if (!MF_IDB.db) { fin(); return; }
+            try {
+                var jobs = [];
+                try {
+                    var idx = JSON.parse(localStorage.getItem("mapa_fotek_saved_sources_idx") || "[]");
+                    for (var i = 0; i < idx.length; i++) {
+                        var raw = localStorage.getItem("mf_src_" + idx[i]);
+                        if (raw !== null && raw !== undefined) jobs.push({ name: idx[i], kind: "src", raw: raw });
+                    }
+                } catch(e) {}
+                try {
+                    var pidx = JSON.parse(localStorage.getItem("mapa_fotek_photo_idx") || "[]");
+                    for (var j = 0; j < pidx.length; j++) {
+                        var praw = localStorage.getItem("mf_photo_" + pidx[j]);
+                        if (praw !== null && praw !== undefined) jobs.push({ name: pidx[j], kind: "photo", raw: praw });
+                    }
+                } catch(e) {}
+                try {
+                    var legacy = localStorage.getItem("mapa_fotek_saved_sources");
+                    if (legacy) {
+                        var lo = JSON.parse(legacy);
+                        Object.keys(lo).forEach(function(k) { if (lo[k]) jobs.push({ name: k, kind: "src", raw: lo[k] }); });
+                    }
+                } catch(e) {}
+                if (jobs.length === 0) { fin(); return; }
+                var tx = MF_IDB.db.transaction([MF_IDB.store], "readwrite");
+                var st = tx.objectStore(MF_IDB.store);
+                var g = st.getAllKeys();
+                g.onsuccess = function() {
+                    try {
+                        var have = {};
+                        (g.result || []).forEach(function(k) { have[String(k)] = true; });
+                        jobs.forEach(function(jb) { if (!have[String(jb.name)]) { try { st.put({ name: String(jb.name), kind: jb.kind, raw: jb.raw, ts: Date.now() }); } catch(e) {} } });
+                    } catch(e) {}
+                };
+                tx.oncomplete = function() {
+                    try {
+                        jobs.forEach(function(jb) { try { localStorage.removeItem((jb.kind === "photo" ? "mf_photo_" : "mf_src_") + jb.name); } catch(e) {} });
+                        localStorage.removeItem("mapa_fotek_saved_sources_idx");
+                        localStorage.removeItem("mapa_fotek_photo_idx");
+                        localStorage.removeItem("mapa_fotek_saved_sources");
+                    } catch(e) {}
+                    fin();
+                };
+                tx.onerror = fin; tx.onabort = fin;
+            } catch(e) { fin(); }
+        }
+        function saveStoredSource(name, rawContent) {
+            try { _memRaw[String(name)] = rawContent; } catch(e) {}
+            var go = function() {
+                mfIdbPut(String(name), "src", rawContent, function(ok, err) {
+                    if (ok) return;
+                    if (err === "no-db") { mfMemOnlyToast(); return; }
+                    try { console.warn("saveStoredSource failed for '" + name + "':", (err && (err.message || err)) || err); } catch(e) {}
+                    mfIdbQuotaToast();
+                });
+            };
+            try { if (MF_IDB.db) go(); else mfIdbOpen(function() { go(); }); } catch(e) {}
         }
         function removeStoredSource(name) {
-            try {
-                var idxKey = "mapa_fotek_saved_sources_idx";
-                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
-                var srcKey = "mf_src_" + name;
-                localStorage.removeItem(srcKey);
-                var pos = idx.indexOf(name); if (pos !== -1) { idx.splice(pos, 1); localStorage.setItem(idxKey, JSON.stringify(idx)); }
-            } catch(e) {}
+            try { delete _memRaw[String(name)]; } catch(e) {}
+            try { if (MF_IDB.db) mfIdbDel(String(name)); else mfIdbOpen(function() { try { mfIdbDel(String(name)); } catch(e) {} }); } catch(e) {}
         }
-        function loadStoredSources() {
+        function loadStoredSources(cb) {
+            var fin = function() { try { if (cb) cb(); } catch(e) {} };
+            var bootEntries = function(entries) {
+                try {
+                    for (var i = 0; i < entries.length; i++) {
+                        (function(en) {
+                            try {
+                                var name = en.name, content = en.raw;
+                                if (!name || content === null || content === undefined) return;
+                                if (datasets[name]) return;
+                                if (en.kind === "photo") return;
+                                try { _memRaw[String(name)] = content; } catch(e) {}
+                                var lower = String(name).toLowerCase(), trk = null;
+                                if (lower.endsWith(".txt")) { addDS(content, name); }
+                                else if (lower.endsWith(".gpx")) { trk = parseGpx(content, name); }
+                                else if (lower.endsWith(".kml") || lower.endsWith(".kmz")) { trk = parseKml(content, name); if (trk && lower.endsWith(".kmz")) trk.format = "KMZ"; }
+                                else if (lower.endsWith(".geojson") || lower.endsWith(".json")) { trk = parseGeoJson(content, name); }
+                                if (trk) {
+                                    var sv = getSavedDatasetStyle(name);
+                                    if (sv) {
+                                        if (sv.color) trk.color = sv.color;
+                                        if (sv.pointColor) trk.pointColor = sv.pointColor;
+                                        if (sv.trackOpacity !== undefined) trk.trackOpacity = sv.trackOpacity;
+                                        if (sv.trackLineOpacity !== undefined) trk.trackLineOpacity = sv.trackLineOpacity;
+                                        if (sv.trackPointOpacity !== undefined) trk.trackPointOpacity = sv.trackPointOpacity;
+                                        if (sv.lineWidth !== undefined) trk.lineWidth = sv.lineWidth;
+                                        if (sv.pointSize !== undefined) trk.pointSize = sv.pointSize;
+                                        if (sv.pointIcon) trk.pointIcon = sv.pointIcon;
+                                        if (sv.fillColor !== undefined) trk.fillColor = sv.fillColor;
+                                        if (sv.fillOpacity !== undefined) trk.fillOpacity = sv.fillOpacity;
+                                    }
+                                    if (trk.trackOpacity === undefined) trk.trackOpacity = 85;
+                                    if (trk.trackPointOpacity === undefined) trk.trackPointOpacity = 100; else if (trk.trackPointOpacity < 50) trk.trackPointOpacity = 50;
+                                    if (trk.lineWidth === undefined) trk.lineWidth = 4.5;
+                                    if (trk.pointSize === undefined) trk.pointSize = 14;
+                                    if (!trk.pointIcon) trk.pointIcon = "dot";
+                                    if (!trk.pointMode) trk.pointMode = "symbol";
+                                    datasets[trk.name] = trk;
+                                }
+                            } catch(e) {}
+                        })(entries[i]);
+                    }
+                    var savedOrder = getSavedSourcesOrder();
+                    if (savedOrder && savedOrder.length) {
+                        var reordered = {};
+                        savedOrder.forEach(function(k) { if (datasets[k]) reordered[k] = datasets[k]; });
+                        Object.keys(datasets).forEach(function(k) { if (!reordered[k]) reordered[k] = datasets[k]; });
+                        datasets = reordered;
+                    }
+                    rebuild();
+                    saveSourcesOrder();
+                } catch(e) {}
+                fin();
+            };
+            try {
+                mfIdbOpen(function(ok) {
+                    if (!ok) { try { loadStoredSourcesLegacy(); } catch(e) {} fin(); return; }
+                    mfIdbMigrateIfNeeded(function() { mfIdbAll(function(list) { bootEntries(list || []); }); });
+                });
+            } catch(e) { fin(); }
+        }
+        function loadStoredSourcesLegacy() {
             try {
                 var idxKey = "mapa_fotek_saved_sources_idx";
                 var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
@@ -6055,7 +6254,7 @@ window.addEventListener('resize', function() {
                 if (_deletedSourceCache[k]) {
                     raw = _deletedSourceCache[k];
                 } else {
-                    try { raw = localStorage.getItem(isImage ? "mf_photo_" + k : "mf_src_" + k); } catch(e) {}
+                    try { raw = _deletedSourceCache[k] || (isImage ? _memPhoto[k] : _memRaw[k]) || localStorage.getItem(isImage ? "mf_photo_" + k : "mf_src_" + k) || null; } catch(e) { raw = null; }
                 }
                 snap[k] = {
                     exists: true,
@@ -6176,12 +6375,13 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
                     var wasImage = !!(d && d.fromImage);
                     if (!_deletedSourceCache[k]) {
                         try {
-                            var raw = localStorage.getItem(wasImage ? "mf_photo_" + k : "mf_src_" + k);
+                            var raw = _deletedSourceCache[k] || (wasImage ? _memPhoto[k] : _memRaw[k]) || localStorage.getItem(wasImage ? "mf_photo_" + k : "mf_src_" + k) || null;
                             if (raw) _deletedSourceCache[k] = raw;
                         } catch(e) {}
                     }
                     delete datasets[k];
-                    try { localStorage.removeItem(wasImage ? "mf_photo_" + k : "mf_src_" + k); } catch(e) {}
+                    try { delete _memRaw[k]; delete _memPhoto[k]; } catch(e) {}
+                    try { mfIdbDel(k); } catch(e) {}
                 }
             });
 
@@ -6352,17 +6552,12 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
             if (!confirm(t.confirmCloseAll)) return;
             saveUndoState();
             datasets = {};
+            try { _memRaw = {}; _memPhoto = {}; } catch(e) {}
+            try { mfIdbClear(); } catch(e) {}
             try {
-                var idxKey = "mapa_fotek_saved_sources_idx";
-                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
-
-                for (var i = 0; i < idx.length; i++) { localStorage.removeItem("mf_src_" + idx[i]); }
-                localStorage.removeItem(idxKey);
+                localStorage.removeItem("mapa_fotek_saved_sources_idx");
+                localStorage.removeItem("mapa_fotek_photo_idx");
                 localStorage.removeItem("mapa_fotek_saved_sources");
-                var pIdxKey = "mapa_fotek_photo_idx";
-                var pIdx = JSON.parse(localStorage.getItem(pIdxKey) || "[]");
-                for (var pi = 0; pi < pIdx.length; pi++) { localStorage.removeItem("mf_photo_" + pIdx[pi]); }
-                localStorage.removeItem(pIdxKey);
             } catch(e) {}
             rebuild();
         }
@@ -10335,7 +10530,8 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                     }
                     try {
                         var _delIsImg = !!(datasets[k] && datasets[k].fromImage);
-                        var _delRaw = localStorage.getItem(_delIsImg ? "mf_photo_" + k : "mf_src_" + k);
+                        var _delRaw = _deletedSourceCache[k] || (_delIsImg ? _memPhoto[k] : _memRaw[k]) || null;
+                        if (!_delRaw) { try { _delRaw = localStorage.getItem(_delIsImg ? "mf_photo_" + k : "mf_src_" + k) || null; } catch(e) {} }
                         if (_delRaw) _deletedSourceCache[k] = _delRaw;
                     } catch(e) {}
                     saveUndoState(true);
@@ -13904,29 +14100,94 @@ dotColor: initialDot,
 
         // Perzistence fotky (JPG/PNG) - ukládá [lat,lon,dt,fn,sz,thumbUrl]
         function savePhotoSource(name, json) {
-            try {
-                var idxKey = "mapa_fotek_photo_idx";
-                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
-                localStorage.setItem("mf_photo_" + name, json);
-                if (idx.indexOf(name) === -1) { idx.push(name); localStorage.setItem(idxKey, JSON.stringify(idx)); }
-            } catch(e) {
-                console.warn("savePhotoSource failed for '" + name + "':", e.message || e);
-                if (e.name === "QuotaExceededError" || e.code === 22 || e.code === 1014) {
-                    showToast("⚠️ " + (i18n[currentLang].toastStorageFull || "Nedostatek místa v úložišti prohlížeče. Fotka se nepodařila uložit, zůstane jen do obnovení stránky."));
-                }
-            }
+            try { _memPhoto[String(name)] = json; } catch(e) {}
+            var go = function() {
+                mfIdbPut(String(name), "photo", json, function(ok, err) {
+                    if (ok) return;
+                    if (err === "no-db") { mfMemOnlyToast(); return; }
+                    try { console.warn("savePhotoSource failed for '" + name + "':", (err && (err.message || err)) || err); } catch(e) {}
+                    try { showToast("⚠️ " + (i18n[currentLang].toastStorageFull || "Nedostatek místa v úložišti prohlížeče. Fotka se nepodařila uložit, zůstane jen do obnovení stránky.")); } catch(e) {}
+                });
+            };
+            try { if (MF_IDB.db) go(); else mfIdbOpen(function() { go(); }); } catch(e) {}
         }
 
         function removePhotoSource(name) {
-            try {
-                var idxKey = "mapa_fotek_photo_idx";
-                var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
-                localStorage.removeItem("mf_photo_" + name);
-                var pos = idx.indexOf(name); if (pos !== -1) { idx.splice(pos, 1); localStorage.setItem(idxKey, JSON.stringify(idx)); }
-            } catch(e) {}
+            try { delete _memPhoto[String(name)]; } catch(e) {}
+            try { if (MF_IDB.db) mfIdbDel(String(name)); else mfIdbOpen(function() { try { mfIdbDel(String(name)); } catch(e) {} }); } catch(e) {}
         }
 
-        function loadPhotoSources() {
+        function loadPhotoSources(cb) {
+            var fin = function() { try { if (cb) cb(); } catch(e) {} };
+            var bootEntries = function(entries) {
+                try {
+                    var any = false;
+                    for (var i = 0; i < entries.length; i++) {
+                        (function(en) {
+                            try {
+                                var pname = en.name, raw = en.raw;
+                                if (!pname || !raw) return;
+                                if (en.kind && en.kind !== "photo") return;
+                                if (datasets[pname]) return;
+                                try { _memPhoto[String(pname)] = raw; } catch(e) {}
+                                var items = JSON.parse(raw);
+                                if (!items || !items.length) return;
+                                var numPhotoSets = Object.keys(datasets).filter(function(k){ return datasets[k].type === "photos"; }).length;
+                                var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "duha", "neon", "google"];
+                                var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark"];
+                                var zoneSequence = ["blue", "green", "teal", "purple", "red", "orange", "yellow", "dark"];
+                                var sd = getSavedDatasetStyle(pname);
+                                datasets[pname] = {
+                                    type: "photos",
+                                    fromImage: true,
+                                    name: pname,
+                                    active: true,
+                                    items: items,
+                                    mode: (sd && sd.mode && validModes.indexOf(sd.mode) !== -1) ? sd.mode : defaultPhotoMode,
+                                    heatPalette: (sd && sd.heatPalette) ? sd.heatPalette : palSequence[numPhotoSets % palSequence.length],
+                                    heatOpacity: (sd && sd.heatOpacity !== undefined) ? sd.heatOpacity : 100,
+                                    heatBlur: (sd && sd.heatBlur !== undefined) ? sd.heatBlur : 25,
+                                    heatSize: (sd && sd.heatSize !== undefined) ? sd.heatSize : 1,
+                                    agePalette: (sd && sd.agePalette) ? sd.agePalette : "duha",
+                                    ageOpacity: (sd && sd.ageOpacity !== undefined) ? sd.ageOpacity : 100,
+                                    ageBlur: (sd && sd.ageBlur !== undefined) ? sd.ageBlur : 25,
+                                    ageSize: (sd && sd.ageSize !== undefined) ? sd.ageSize : 1,
+                                    dotColor: (sd && sd.dotColor) ? sd.dotColor : dotSequence[numPhotoSets % dotSequence.length],
+                                    dotOpacity: (sd && sd.dotOpacity !== undefined) ? sd.dotOpacity : 50,
+                                    zoneColor: (sd && sd.zoneColor) ? sd.zoneColor : zoneSequence[numPhotoSets % zoneSequence.length],
+                                    zoneOpacity: (sd && sd.zoneOpacity !== undefined) ? sd.zoneOpacity : 50,
+                                    dotSize: parseDotSize(sd ? sd.dotSize : undefined, legacyNum("mapa_fotek_dot_size", 3.5)),
+                                    dotIcon: (sd && sd.dotIcon) ? sd.dotIcon : "dot",
+                                    zoneKm: parseZoneKm(sd ? sd.zoneKm : undefined, legacyNum("mapa_fotek_zone_km", 10))
+                                };
+                                any = true;
+                            } catch(pe) {}
+                        })(entries[i]);
+                    }
+                    if (any) {
+                        var savedOrder2 = getSavedSourcesOrder();
+                        if (savedOrder2 && savedOrder2.length) {
+                            var reordered2 = {};
+                            savedOrder2.forEach(function(k) { if (datasets[k]) reordered2[k] = datasets[k]; });
+                            Object.keys(datasets).forEach(function(k) { if (!reordered2[k]) reordered2[k] = datasets[k]; });
+                            datasets = reordered2;
+                        }
+                        rebuild();
+                        saveSourcesOrder();
+                    }
+                } catch(e) {}
+                fin();
+            };
+            try {
+                if (MF_IDB.db) { mfIdbAll(function(list) { bootEntries(list || []); }); return; }
+                mfIdbOpen(function(ok) {
+                    if (!ok) { try { loadPhotoSourcesLegacy(); } catch(e) {} fin(); return; }
+                    mfIdbAll(function(list) { bootEntries(list || []); });
+                });
+            } catch(e) { fin(); }
+        }
+
+        function loadPhotoSourcesLegacy() {
             try {
                 var idxKey = "mapa_fotek_photo_idx";
                 var idx = JSON.parse(localStorage.getItem(idxKey) || "[]");
@@ -14155,9 +14416,24 @@ dotColor: initialDot,
         }
 
         initAppPreferences();
-        loadStoredSources();
-        loadPhotoSources();
-        setTimeout(function() { if (typeof restoreLBPersistence === "function") restoreLBPersistence(); }, 100);
+        try {
+            var _ov0 = document.getElementById("loading-overlay");
+            if (_ov0) { try { _ov0.style.display = "flex"; } catch(e) {} }
+            var _bootDone = function() {
+                try { if (_ov0) _ov0.style.display = "none"; } catch(e) {}
+                setTimeout(function() { if (typeof restoreLBPersistence === "function") restoreLBPersistence(); }, 100);
+            };
+            var _bootPhotos = function() {
+                try {
+                    if (typeof loadPhotoSources === "function") loadPhotoSources(function() { _bootDone(); });
+                    else _bootDone();
+                } catch(e) { _bootDone(); }
+            };
+            if (typeof loadStoredSources === "function") loadStoredSources(function() { _bootPhotos(); });
+            else _bootPhotos();
+        } catch(e) {
+            setTimeout(function() { if (typeof restoreLBPersistence === "function") restoreLBPersistence(); }, 100);
+        }
         window.addEventListener("resize", function() {
             try {
                 if (!window._lbRestored) return;
