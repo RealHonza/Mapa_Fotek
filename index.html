@@ -3260,6 +3260,20 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     nd.parentNode.replaceChild(frag, nd);
                 });
             });
+            try {
+                document.querySelectorAll("#infoStepsList details").forEach(function(det) { det.open = false; });
+                if (ql.length > 0) {
+                    var marks = document.querySelectorAll("#infoStepsList mark.guide-hi");
+                    for (var mi = 0; mi < marks.length; mi++) {
+                        var p = marks[mi].parentNode;
+                        while (p) {
+                            if (p.tagName === "DETAILS") p.open = true;
+                            if (p.id === "infoStepsList") break;
+                            p = p.parentNode;
+                        }
+                    }
+                }
+            } catch(e) {}
             try { syncArchiveInput(); } catch(e) {}
         }
 
