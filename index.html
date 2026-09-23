@@ -704,6 +704,34 @@
           color: #34d399 !important;
           border-color: #0AA94C !important;
         }
+        .lb-slide-btn {
+          position: absolute;
+          top: 18px;
+          right: 118px;
+          color: rgba(255, 255, 255, 0.85);
+          cursor: pointer;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(0, 0, 0, 0.35);
+          width: 42px;
+          height: 42px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 20;
+          transition: background 0.15s, color 0.15s, border-color 0.15s;
+          box-sizing: border-box;
+        }
+        .lb-slide-btn:hover {
+          background: rgba(255, 255, 255, 0.2);
+          color: #ffffff;
+          border-color: rgba(255, 255, 255, 0.45);
+        }
+        .lb-slide-btn.active {
+          background: rgba(10, 169, 76, 0.35) !important;
+          color: #34d399 !important;
+          border-color: #0AA94C !important;
+        }
         .lb-close:hover { background: rgba(255,255,255,0.2); }
         .lb-caption { display: none; }
         .lb-slide-badge { position: absolute; top: 70px; right: 22px; z-index: 10010; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.22); color: #ffffff; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; padding: 4px 10px; border-radius: 6px; cursor: pointer; user-select: none; -webkit-user-select: none; display: inline-flex; align-items: center; }
@@ -1266,6 +1294,7 @@
         #lightbox.lb-img-fullscreen .lb-nav,
         #lightbox.lb-img-fullscreen .lb-close,
         #lightbox.lb-img-fullscreen .lb-split-btn,
+        #lightbox.lb-img-fullscreen .lb-slide-btn,
         #lightbox.lb-img-fullscreen .lb-slide-badge,
         #lightbox.lb-img-fullscreen .lb-counter {
           display: none !important;
@@ -1354,6 +1383,12 @@
         body.lb-split .lb-split-btn {
             top: 12px !important;
             right: 52px !important;
+            width: 36px !important;
+            height: 36px !important;
+        }
+        body.lb-split .lb-slide-btn {
+            top: 12px !important;
+            right: 92px !important;
             width: 36px !important;
             height: 36px !important;
         }
@@ -1624,6 +1659,7 @@
 
     <!-- LIGHTBOX -->
     <div id="lightbox" onclick="handleLBBgClick(event)">
+        <button class="lb-slide-btn" onclick="event.stopPropagation(); toggleLBSlideshow();" id="lbSlideBtn" aria-label="Slideshow" title="Slideshow (mezerník)"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
         <button class="lb-split-btn" onclick="event.stopPropagation(); toggleLBSplitMode();" id="lbSplitBtn" aria-label="Rozdělené zobrazení" title="Rozdělené zobrazení (prohlížečka vlevo, mapa vpravo)"><svg viewBox="0 0 20 15" width="18" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="18" height="13" rx="1.5"/><line x1="10" y1="1" x2="10" y2="14"/></svg></button>
         <button class="lb-close" onclick="closeLightbox()" id="btnLightboxClose" aria-label="Zavřít náhled fotografie">&times;</button>
         <div class="lb-counter" id="lbCounter" onclick="event.stopPropagation(); lbRefreshPhotos();"></div>
@@ -2115,6 +2151,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 lbEmptyHtml: "<strong>Nejsou načteny žádné fotky k zobrazení</strong><br>1) Spusťte <code>Mapa_Fotek_aktualizace_dat.bat</code> a vygenerovaný TXT soubor přidejte přes <strong>Zdroje [+]</strong> (nebo ho přetáhněte do mapy).<br>2) Zkontrolujte časový filtr (rok / měsíc / den) a zapnuté zdroje.",
                 lbErrorHtml: "<strong>Fotku se nepodařilo načíst</strong><br>Soubor nebyl nalezen. Zkontrolujte:<br>1) Kořen archivu – musí ukazovat na složku s fotkami (relativní cesty z TXT se spojují s kořenem).<br>2) Relativní cesty v TXT souboru – musí odpovídat skutečné struktuře složek.<br>3) Otevření přes <code>file://</code> – přes <code>http://</code> prohlížeč místní soubory blokuje.",
                 tipRefreshPhotos: "Znovu načíst fotky z aktuálních filtrů",
+                slidePlayTip: "Spustit slideshow (mezerník)",
+                slidePauseTip: "Zastavit slideshow (Esc)",
                 slideStart: "▶ Slideshow zapnuta (stop: Mezerník / Esc)",
                 slideStop: "⏸ Slideshow vypnuta",
                 slideEnd: "⏹ Slideshow – poslední fotka",
@@ -2320,6 +2358,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 lbEmptyHtml: "<strong>No photos loaded to show</strong><br>1) Run <code>Mapa_Fotek_aktualizace_dat.bat</code> and add the generated TXT file via <strong>Sources [+]</strong> (or drag &amp; drop it onto the map).<br>2) Check the time filter (year / month / day) and enabled sources.",
                 lbErrorHtml: "<strong>Failed to load the photo</strong><br>File not found. Check:<br>1) Archive root – it must point to the folder with photos (relative paths from TXT are joined with the root).<br>2) Relative paths in the TXT file – they must match the real folder structure.<br>3) Open via <code>file://</code> – via <code>http://</code> the browser blocks local files.",
                 tipRefreshPhotos: "Reload photos from current filters",
+                slidePlayTip: "Start slideshow (space)",
+                slidePauseTip: "Stop slideshow (Esc)",
                 slideStart: "▶ Slideshow on (stop: Space / Esc)",
                 slideStop: "⏸ Slideshow off",
                 slideEnd: "⏹ Slideshow – last photo",
@@ -4299,21 +4339,41 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 var row = header.querySelector(".lbh-row");
                 if (!row) return;
                 if (!lb.classList.contains("active")) return;
-                var counter = document.getElementById("lbCounter");
-                if (!counter) { row.style.paddingLeft = ""; return; }
-                var cs = null;
-                try { cs = window.getComputedStyle(counter); } catch(e) {}
-                if (!cs || cs.display === "none") { row.style.paddingLeft = ""; return; }
-                var c = counter.getBoundingClientRect();
-                var r = row.getBoundingClientRect();
-                if (!c || !r || !r.width) return;
                 var gap = 12;
-                var need = c.right - r.left + gap;
-                if (need < 0) need = 0;
+                var r = row.getBoundingClientRect();
+                if (!r || !r.width) return;
                 var maxP = r.width - 24;
                 if (maxP < 0) maxP = 0;
-                if (need > maxP) need = maxP;
-                row.style.paddingLeft = need > 0 ? Math.ceil(need) + "px" : "";
+                var counter = document.getElementById("lbCounter");
+                if (!counter) { row.style.paddingLeft = ""; }
+                else {
+                    var cs = null;
+                    try { cs = window.getComputedStyle(counter); } catch(e) {}
+                    if (!cs || cs.display === "none") { row.style.paddingLeft = ""; }
+                    else {
+                        var c = counter.getBoundingClientRect();
+                        var need = c.right - r.left + gap;
+                        if (need < 0) need = 0;
+                        if (need > maxP) need = maxP;
+                        row.style.paddingLeft = need > 0 ? Math.ceil(need) + "px" : "";
+                    }
+                }
+                var minL = Infinity;
+                var btnIds = ["btnLightboxClose", "lbSplitBtn", "lbSlideBtn"];
+                for (var bi = 0; bi < btnIds.length; bi++) {
+                    var be = document.getElementById(btnIds[bi]);
+                    if (!be) continue;
+                    var bs = null;
+                    try { bs = window.getComputedStyle(be); } catch(e) {}
+                    if (!bs || bs.display === "none") continue;
+                    var br = be.getBoundingClientRect();
+                    if (br && br.width > 0 && br.left < minL) minL = br.left;
+                }
+                if (minL === Infinity) { row.style.paddingRight = ""; return; }
+                var needR = r.right - minL + gap;
+                if (needR < 0) needR = 0;
+                if (needR > maxP) needR = maxP;
+                row.style.paddingRight = needR > 0 ? Math.ceil(needR) + "px" : "";
             } catch(e) {}
         }
         (function initLBCounterReserve() {
@@ -5158,6 +5218,7 @@ window.addEventListener('resize', function() {
                 btn.title = tip;
                 btn.setAttribute("aria-label", tip);
             }
+            if (typeof lbSlideBtnSync === "function") { try { lbSlideBtnSync(); } catch(e) {} }
             if (typeof map !== 'undefined' && map) {
                 setTimeout(function() {
                     try {
@@ -5202,6 +5263,21 @@ window.addEventListener('resize', function() {
                 b.textContent = (i18n[currentLang] && i18n[currentLang].slideBadge) || "";
             } catch(e) {}
         }
+        function lbSlideBtnSync() {
+            try {
+                var b = document.getElementById("lbSlideBtn");
+                if (!b) return;
+                var on = (typeof lbSlide !== "undefined" && lbSlide && lbSlide.on);
+                b.classList.toggle("active", !!on);
+                var tip = (i18n[currentLang] && (on ? i18n[currentLang].slidePauseTip : i18n[currentLang].slidePlayTip)) ||
+                          (currentLang === "cs" ? (on ? "Zastavit slideshow (Esc)" : "Spustit slideshow (mezerník)") : (on ? "Stop slideshow (Esc)" : "Start slideshow (space)"));
+                b.title = tip;
+                b.setAttribute("aria-label", tip);
+                b.innerHTML = on
+                    ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>'
+                    : '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+            } catch(e) {}
+        }
         function startLBSlideshow() {
             if (typeof stopLBSlideshow === "function") stopLBSlideshow(true);
             if (!currentLBPhotos || currentLBPhotos.length < 2) {
@@ -5209,6 +5285,7 @@ window.addEventListener('resize', function() {
                 return;
             }
             lbSlide.on = true;
+            if (typeof lbSlideBtnSync === "function") { try { lbSlideBtnSync(); } catch(e) {} }
             try {
                 var b = document.getElementById("lbSlideBadge");
                 if (b) {
@@ -5239,6 +5316,7 @@ window.addEventListener('resize', function() {
             try {
                 if (lbSlide.timer) { clearInterval(lbSlide.timer); lbSlide.timer = null; }
                 lbSlide.on = false;
+                if (typeof lbSlideBtnSync === "function") { try { lbSlideBtnSync(); } catch(e) {} }
                 var b = document.getElementById("lbSlideBadge");
                 if (b) b.style.display = "none";
             } catch(e) {}
