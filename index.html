@@ -1431,6 +1431,28 @@
             0% { transform: scale(0.7); opacity: 0.95; }
             100% { transform: scale(2.8); opacity: 0; }
         }
+        @keyframes lbPointerPlus {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(2); opacity: 0.8; }
+        }
+        .lb-photo-pointer.shape-plus {
+            background:
+                linear-gradient(var(--lb-pointer, #0AA94C), var(--lb-pointer, #0AA94C)) center / 28px 2px no-repeat,
+                linear-gradient(var(--lb-pointer, #0AA94C), var(--lb-pointer, #0AA94C)) center / 2px 28px no-repeat;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            filter: drop-shadow(0 0 1px #ffffff) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.55));
+            animation: lbPointerPlus 0.9s ease-out infinite;
+        }
+        .lb-photo-pointer.shape-plus::after { display: none; }
+        .lb-photo-pointer { scale: var(--lb-pointer-scale, 1.25); }
+        .lb-photo-pointer.shape-dot {
+            background: radial-gradient(circle at center, var(--lb-pointer, #0AA94C) 0 3px, #ffffff 3px 4.5px, transparent 5px);
+            border: none;
+            box-shadow: none;
+            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.55));
+        }
         .lb-photo-pointer-wrap {
             background: transparent !important;
             border: none !important;
@@ -1662,7 +1684,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.79</span>
+                    <span class="info-meta-val">2.80</span>
                 </div>
             </div>
 
@@ -2100,12 +2122,19 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tipSettingsClose: "Zavřít nastavení",
                 setViewerTitle: "Nastavení prohlížečky fotografií",
                 lblSlideSec: "Interval slideshow",
-                tipSlideDefault: "Vrátit výchozí 3 s",
+                tipSlideDefault: "Vrátit výchozí slideshow",
                 lblSlideRev: "Pozpátku",
+                lblSlideTrail: "Stopa trasy",
+                lblTrailColor: "Barva stopy",
                 setPointerTitle: "Ukazovátko fotky",
                 lblPointerColor: "Barva",
+                lblPointerSize: "Velikost",
+                lblPointerShape: "Tvar",
+                shapeCircle: "Kruh",
+                shapePlus: "Plus",
+                shapeDot: "Puntík",
                 lblPointerTime: "Doba zobrazení",
-                tipPointerDefault: "Vrátit výchozí (zelená, 2,75 s)",
+                tipPointerDefault: "Vrátit výchozí (zelená, kruh, 2,75 s, 1,25×)",
                 btnMeasureGrid: "Mřížka souřadnic (G)",
                 btnMeasureDist: "Měřit",
                 btnShowCoords: "Zobrazit souřadnice",
@@ -2334,12 +2363,19 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tipSettingsClose: "Close settings",
                 setViewerTitle: "Photo viewer settings",
                 lblSlideSec: "Slideshow interval",
-                tipSlideDefault: "Reset to default 3 s",
+                tipSlideDefault: "Reset slideshow defaults",
                 lblSlideRev: "Reverse",
+                lblSlideTrail: "Route trail",
+                lblTrailColor: "Trail color",
                 setPointerTitle: "Photo pointer",
                 lblPointerColor: "Color",
+                lblPointerSize: "Size",
+                lblPointerShape: "Shape",
+                shapeCircle: "Circle",
+                shapePlus: "Plus",
+                shapeDot: "Dot",
                 lblPointerTime: "Display time",
-                tipPointerDefault: "Reset defaults (green, 2.75 s)",
+                tipPointerDefault: "Reset defaults (green, circle, 2.75 s)",
                 btnMeasureGrid: "Coordinate grid (G)",
                 btnMeasureDist: "Measure",
                 btnShowCoords: "Show coordinates",
@@ -3745,9 +3781,22 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<span class=\"slider-minmax\">" + fmtSlideSec(180) + " s</span>" +
                         "<input id=\"slideSecNum\" type=\"text\" value=\"\" onfocus=\"this.select();\" onchange=\"slideSecFromText(this)\" />" +
                         "<span>s</span>" +
-                        "<button type=\"button\" class=\"header-action-btn\" title=\"" + (t.tipSlideDefault || "Vrátit výchozí 3 s") + "\" onclick=\"event.stopPropagation();setLBSlideMs(3000);setLBSlideRev(false);\">↺</button>" +
+                        "<button type=\"button\" class=\"header-action-btn\" title=\"" + (t.tipSlideDefault || "Vrátit výchozí 3 s") + "\" onclick=\"event.stopPropagation();setLBSlideMs(3000);setLBSlideRev(false);setLBTrailColor('blue');setLBSlideTrail(false);\">↺</button>" +
                         "</div>" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:2px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"slideRevChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setLBSlideRev(this.checked)\" /><span>" + (t.lblSlideRev || "") + "</span></label>" +
+                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:2px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"slideTrailChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setLBSlideTrail(this.checked)\" /><span>" + (t.lblSlideTrail || "") + "</span></label>" +
+                        "<div style=\"display:flex;align-items:center;gap:4px;margin-bottom:6px;\"><span>" + (t.lblTrailColor || "") + "</span><span id=\"trailColors\">" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"green\" style=\"background:#0AA94C\" onclick=\"event.stopPropagation();setLBTrailColor('green')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"red\" style=\"background:#ea4335\" onclick=\"event.stopPropagation();setLBTrailColor('red')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"blue\" style=\"background:#1a73e8\" onclick=\"event.stopPropagation();setLBTrailColor('blue')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"yellow\" style=\"background:#fbbc04\" onclick=\"event.stopPropagation();setLBTrailColor('yellow')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"purple\" style=\"background:#8e24aa\" onclick=\"event.stopPropagation();setLBTrailColor('purple')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"orange\" style=\"background:#fb8c00\" onclick=\"event.stopPropagation();setLBTrailColor('orange')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"teal\" style=\"background:#00897b\" onclick=\"event.stopPropagation();setLBTrailColor('teal')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"dark\" style=\"background:#202124\" onclick=\"event.stopPropagation();setLBTrailColor('dark')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"white\" style=\"background:#ffffff\" onclick=\"event.stopPropagation();setLBTrailColor('white')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"brown\" style=\"background:#795548\" onclick=\"event.stopPropagation();setLBTrailColor('brown')\"></button>" +
+                        "</span></div>" +
                         "</div></details></li>" +
                         "<li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='currentColor'><path d='M8 5v14l11-7z'/></svg> " + (t.setPointerTitle || "") + " <kbd class=\"guide-kbd\">M</kbd>:</summary><div class=\"step-body\">" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-bottom:6px;\"><span>" + (t.lblPointerColor || "") + "</span><span id=\"ptrColors\">" +
@@ -3759,17 +3808,31 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"orange\" style=\"background:#fb8c00\" onclick=\"event.stopPropagation();setLBPointerColor('orange')\"></button>" +
                         "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"teal\" style=\"background:#00897b\" onclick=\"event.stopPropagation();setLBPointerColor('teal')\"></button>" +
                         "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"dark\" style=\"background:#202124\" onclick=\"event.stopPropagation();setLBPointerColor('dark')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"white\" style=\"background:#ffffff\" onclick=\"event.stopPropagation();setLBPointerColor('white')\"></button>" +
+                        "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"brown\" style=\"background:#795548\" onclick=\"event.stopPropagation();setLBPointerColor('brown')\"></button>" +
                         "</span></div>" +
+                        "<div style=\"display:flex;align-items:center;gap:4px;margin-bottom:6px;\"><span>" + (t.lblPointerShape || "") + "</span>" +
+                        "<button type=\"button\" class=\"source-pill-btn ptr-shape\" data-s=\"circle\" onclick=\"event.stopPropagation();setLBPointerShape('circle')\">" + (t.shapeCircle || "") + "</button>" +
+                        "<button type=\"button\" class=\"source-pill-btn ptr-shape\" data-s=\"plus\" onclick=\"event.stopPropagation();setLBPointerShape('plus')\">" + (t.shapePlus || "") + "</button>" +
+                        "<button type=\"button\" class=\"source-pill-btn ptr-shape\" data-s=\"dot\" onclick=\"event.stopPropagation();setLBPointerShape('dot')\">" + (t.shapeDot || "") + "</button>" +
+                        "</div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblPointerSize || "") + "</span>" +
+                        "<span class=\"slider-minmax\">" + fmtSlideSec(0.5) + "×</span>" +
+                        "<input id=\"ptrScaleRange\" type=\"range\" min=\"0.5\" max=\"2\" step=\"0.25\" value=\"1.25\" oninput=\"setLBPointerScale(this.value); syncPointerSettings();\" />" +
+                        "<input id=\"ptrScaleNum\" type=\"text\" value=\"\" onfocus=\"this.select();\" onchange=\"ptrScaleFromText(this)\" />" +
+                        "<span>×</span>" +
+                        "</div>" +
                         "<div class=\"slider-input-group\"><span>" + (t.lblPointerTime || "") + "</span>" +
                         "<span class=\"slider-minmax\">" + fmtSlideSec(0.1) + " s</span>" +
                         "<input id=\"ptrMsRange\" type=\"range\" min=\"0\" max=\"40\" step=\"1\" value=\"16\" oninput=\"setLBPointerMs(PTR_MS[this.value | 0]); syncPointerSettings();\" />" +
                         "<span class=\"slider-minmax\">" + fmtSlideSec(180) + " s</span>" +
                         "<input id=\"ptrMsNum\" type=\"text\" value=\"\" onfocus=\"this.select();\" onchange=\"ptrMsFromText(this)\" />" +
                         "<span>s</span>" +
-                        "<button type=\"button\" class=\"header-action-btn\" title=\"" + (t.tipPointerDefault || "") + "\" onclick=\"event.stopPropagation();setLBPointerColor('green');setLBPointerMs(2750);\">↺</button>" +
+                        "<button type=\"button\" class=\"header-action-btn\" title=\"" + (t.tipPointerDefault || "") + "\" onclick=\"event.stopPropagation();setLBPointerColor('green');setLBPointerMs(2750);setLBPointerShape('circle');setLBPointerScale(1.25);\">↺</button>" +
                         "</div></div></details></li>";
                     try { syncSlideSettings(); } catch(e) {}
                     try { syncPointerSettings(); } catch(e) {}
+                    try { syncTrailSettings(); } catch(e) {}
                 }
                 try { syncArchiveInput(); } catch(e) {}
             } catch(e) {}
@@ -4688,6 +4751,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         })();
 
         function lbRefreshPhotos() {
+            if (typeof lbTrailClear === "function") lbTrailClear();
             var keepDt = null, keepFn = null;
             if (currentLBPhotos && currentLBIndex >= 0 && currentLBIndex < currentLBPhotos.length) {
                 keepDt = String(currentLBPhotos[currentLBIndex][2] || "");
@@ -5406,7 +5470,7 @@ window.addEventListener('resize', function() {
             return "";
         }
 
-        var POINTER_COLORS = { green: "#0AA94C", red: "#ea4335", blue: "#1a73e8", yellow: "#fbbc04", purple: "#8e24aa", orange: "#fb8c00", teal: "#00897b", dark: "#202124" };
+        var POINTER_COLORS = { green: "#0AA94C", red: "#ea4335", blue: "#1a73e8", yellow: "#fbbc04", purple: "#8e24aa", orange: "#fb8c00", teal: "#00897b", dark: "#202124", white: "#ffffff", brown: "#795548" };
         var PTR_MS = [];
         (function() {
             try {
@@ -5433,6 +5497,26 @@ window.addEventListener('resize', function() {
         }
         var lbPointerColor = "green";
         var lbPointerMs = 2750;
+        var lbPointerShape = "circle";
+        var lbPointerScale = 1.25;
+        function setLBPointerScale(v) {
+            try {
+                v = parseFloat(v);
+                if (isNaN(v)) v = 1.25;
+                v = Math.max(0.5, Math.min(2, Math.round(v * 4) / 4));
+            } catch(e) { v = 1.25; }
+            lbPointerScale = v;
+            try { localStorage.setItem("mapa_fotek_pointer_scale", String(v)); } catch(e) {}
+            try { document.documentElement.style.setProperty("--lb-pointer-scale", String(v)); } catch(e) {}
+            try { if (typeof syncPointerSettings === "function") syncPointerSettings(); } catch(e) {}
+        }
+        function ptrScaleFromText(el) {
+            try {
+                var v = parseFloat(String(el && el.value !== undefined ? el.value : "").replace(",", "."));
+                if (isNaN(v)) v = lbPointerScale;
+                setLBPointerScale(v);
+            } catch(e) {}
+        }
         function applyLBPointer() {
             try {
                 document.documentElement.style.setProperty("--lb-pointer", POINTER_COLORS[lbPointerColor] || POINTER_COLORS.green);
@@ -5443,6 +5527,12 @@ window.addEventListener('resize', function() {
             lbPointerColor = key;
             try { localStorage.setItem("mapa_fotek_pointer_color", key); } catch(e) {}
             applyLBPointer();
+            try { if (typeof syncPointerSettings === "function") syncPointerSettings(); } catch(e) {}
+        }
+        function setLBPointerShape(shape) {
+            if (shape !== "circle" && shape !== "plus" && shape !== "dot") shape = "circle";
+            lbPointerShape = shape;
+            try { localStorage.setItem("mapa_fotek_pointer_shape", shape); } catch(e) {}
             try { if (typeof syncPointerSettings === "function") syncPointerSettings(); } catch(e) {}
         }
         function setLBPointerMs(ms) {
@@ -5473,14 +5563,26 @@ window.addEventListener('resize', function() {
                         else bs[i].classList.remove("active");
                     }
                 }
+                var sh = document.querySelectorAll(".ptr-shape");
+                for (var si = 0; si < sh.length; si++) {
+                    if (sh[si].getAttribute("data-s") === lbPointerShape) sh[si].classList.add("active");
+                    else sh[si].classList.remove("active");
+                }
+                var zr = document.getElementById("ptrScaleRange");
+                if (zr) zr.value = lbPointerScale;
+                var zn = document.getElementById("ptrScaleNum");
+                if (zn) zn.value = fmtSlideSec(lbPointerScale);
             } catch(e) {}
         }
         try {
             var _pc0 = localStorage.getItem("mapa_fotek_pointer_color") || "green";
             if (POINTER_COLORS[_pc0]) lbPointerColor = _pc0;
         } catch(e) {}
-        try { var _pm0 = parseInt(localStorage.getItem("mapa_fotek_pointer_ms") || "2750", 10); if (!isNaN(_pm0)) lbPointerMs = Math.max(100, Math.min(180000, _pm0)); } catch(e) {}
+        try { var _pm0 = parseInt(localStorage.getItem("mapa_fotek_pointer_ms") || "2750", 10); if (!isNaN(_pm0)) lbPointerMs = Math.max(100, Math.min(180000, _pm0));
+        try { var _ps0 = localStorage.getItem("mapa_fotek_pointer_shape") || "circle"; if (_ps0 === "circle" || _ps0 === "plus" || _ps0 === "dot") lbPointerShape = _ps0; } catch(e) {} } catch(e) {}
+        try { var _pz0 = parseFloat(localStorage.getItem("mapa_fotek_pointer_scale") || "1.25"); if (!isNaN(_pz0)) lbPointerScale = Math.max(0.5, Math.min(2, Math.round(_pz0 * 4) / 4)); } catch(e) {}
         try { applyLBPointer(); } catch(e) {}
+        try { document.documentElement.style.setProperty("--lb-pointer-scale", String(lbPointerScale)); } catch(e) {}
         function flashPhotoPointer(lat, lon) {
             if (typeof map === 'undefined' || !map || !lat || !lon || typeof L === 'undefined') return;
             if (window._lbPhotoPointerMarker) {
@@ -5494,7 +5596,7 @@ window.addEventListener('resize', function() {
             try {
                 var icon = L.divIcon({
                     className: 'lb-photo-pointer-wrap',
-                    html: '<div class="lb-photo-pointer"></div>',
+                    html: '<div class="lb-photo-pointer' + ((lbPointerShape === "plus" || lbPointerShape === "dot") ? (" shape-" + lbPointerShape) : "") + '"></div>',
                     iconSize: [22, 22],
                     iconAnchor: [11, 11]
                 });
@@ -5642,6 +5744,81 @@ window.addEventListener('resize', function() {
 
         // Slideshow prohlizecky: Space start/pauza, Esc stop, stop na konci. Ve splitu kazdy krok blikne v mape.
         var lbSlide = { on: false, timer: null, ms: 3000, rev: false };
+        var lbSlideTrail = false;
+        var lbTrailLayer = null;
+        var lbTrailLast = null;
+        var lbTrailColor = "blue";
+        function setLBTrailColor(key) {
+            var pal = (typeof POINTER_COLORS !== "undefined") ? POINTER_COLORS : { blue: "#1a73e8" };
+            if (!pal[key]) key = "blue";
+            lbTrailColor = key;
+            try { localStorage.setItem("mapa_fotek_trail_color", key); } catch(e) {}
+            try { if (typeof syncTrailSettings === "function") syncTrailSettings(); } catch(e) {}
+        }
+        function syncTrailSettings() {
+            try {
+                var box = document.getElementById("trailColors");
+                if (box) {
+                    var bs = box.querySelectorAll(".color-bubble-btn");
+                    for (var i = 0; i < bs.length; i++) {
+                        if (bs[i].getAttribute("data-c") === lbTrailColor) bs[i].classList.add("active");
+                        else bs[i].classList.remove("active");
+                    }
+                }
+            } catch(e) {}
+        }
+        try { lbSlideTrail = localStorage.getItem("mapa_fotek_slide_trail") === "1"; } catch(e) { lbSlideTrail = false; }
+        try { var _tc0 = localStorage.getItem("mapa_fotek_trail_color") || "blue"; if (typeof POINTER_COLORS !== "undefined" && POINTER_COLORS[_tc0]) lbTrailColor = _tc0; } catch(e) {}
+        function lbTrailClear() {
+            try {
+                lbTrailLast = null;
+                if (lbTrailLayer && typeof map !== "undefined" && map) { try { map.removeLayer(lbTrailLayer); } catch(e) {} }
+                lbTrailLayer = null;
+            } catch(e) {}
+        }
+        function lbTrailAddSegment(a, b) {
+            try {
+                if (typeof map === "undefined" || !map || !lbTrailLayer) return;
+                var pts = (typeof geodesicPoints === "function") ? geodesicPoints([a, b], false) : [a, b];
+                pts.push(b);
+                var parts = [[]];
+                for (var i = 0; i < pts.length; i++) {
+                    var prev = parts[parts.length - 1];
+                    if (prev.length > 0 && Math.abs(pts[i][1] - prev[prev.length - 1][1]) > 180) parts.push([]);
+                    parts[parts.length - 1].push(pts[i]);
+                }
+                var col = "#1a73e8";
+                try {
+                    if (typeof POINTER_COLORS !== "undefined" && POINTER_COLORS[lbTrailColor]) col = POINTER_COLORS[lbTrailColor];
+                } catch(e) {}
+                for (var k = 0; k < parts.length; k++) {
+                    if (parts[k].length < 2) continue;
+                    L.polyline(parts[k], { color: col, weight: 3, opacity: 0.9, interactive: false }).addTo(lbTrailLayer);
+                }
+            } catch(e) {}
+        }
+        function lbTrailAddCurrent() {
+            try {
+                if (!lbSlideTrail) return;
+                if (!currentLBPhotos || currentLBIndex < 0 || currentLBIndex >= currentLBPhotos.length) return;
+                var p = currentLBPhotos[currentLBIndex];
+                var la = p ? p[0] : NaN, lo = p ? p[1] : NaN;
+                if (!la || !lo || isNaN(la) || isNaN(lo)) return;
+                if (typeof map === "undefined" || !map) return;
+                if (!lbTrailLayer) {
+                    lbTrailLayer = L.layerGroup();
+                    lbTrailLayer.addTo(map);
+                }
+                if (lbTrailLast) lbTrailAddSegment(lbTrailLast, [la, lo]);
+                lbTrailLast = [la, lo];
+            } catch(e) {}
+        }
+        function setLBSlideTrail(on) {
+            lbSlideTrail = !!on;
+            try { localStorage.setItem("mapa_fotek_slide_trail", lbSlideTrail ? "1" : "0"); } catch(e) {}
+            if (!lbSlideTrail && typeof lbTrailClear === "function") lbTrailClear();
+            try { if (typeof syncSlideSettings === "function") syncSlideSettings(); } catch(e) {}
+        }
         var SLIDE_SECS = [];
         (function() {
             try {
@@ -5708,6 +5885,8 @@ window.addEventListener('resize', function() {
                 if (n) n.value = fmtSlideSec(SLIDE_SECS[pos]);
                 var ch = document.getElementById("slideRevChk");
                 if (ch) ch.checked = !!lbSlide.rev;
+                var tr = document.getElementById("slideTrailChk");
+                if (tr) tr.checked = !!lbSlideTrail;
             } catch(e) {}
         }
         try { var _slm = parseInt(localStorage.getItem("mapa_fotek_slide_ms") || "3000", 10); if (!isNaN(_slm)) setLBSlideMs(Math.max(100, Math.min(180000, _slm))); } catch(e) {}
@@ -5741,6 +5920,7 @@ window.addEventListener('resize', function() {
                 return;
             }
             lbSlide.on = true;
+            if (typeof lbTrailClear === "function") lbTrailClear();
             if (typeof lbSlideBtnSync === "function") { try { lbSlideBtnSync(); } catch(e) {} }
             try {
                 var b = document.getElementById("lbSlideBadge");
@@ -5775,6 +5955,7 @@ window.addEventListener('resize', function() {
                     var p = currentLBPhotos[currentLBIndex];
                     if (p && p[0] && p[1] && !isNaN(p[0]) && !isNaN(p[1])) flashPhotoPointer(p[0], p[1]);
                 }
+                if (typeof lbTrailAddCurrent === "function") lbTrailAddCurrent();
             } catch(e) {}
         }
         function stopLBSlideshow(silent) {
@@ -6111,6 +6292,7 @@ window.addEventListener('resize', function() {
         function closeLightbox() {
             lbZoomReset();
             if (typeof stopLBSlideshow === "function") stopLBSlideshow(true);
+            if (typeof lbTrailClear === "function") lbTrailClear();
             window._lbRestored = false;
             try {
                 sessionStorage.removeItem("mf_lb_active");
