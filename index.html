@@ -5857,6 +5857,8 @@ window.addEventListener('resize', function() {
                 if (typeof dynamicInputState !== "undefined" && dynamicInputState && dynamicInputState.active) return;
                 var imbGH = document.getElementById("infoModalBackdrop");
                 if (imbGH && imbGH.classList.contains("open")) return;
+                var lbGH = document.getElementById("lightbox");
+                if (lbGH && lbGH.classList.contains("lb-img-fullscreen")) return;
                 e.stopPropagation();
                 var _gl = e.key.toLowerCase();
                 if (_gl === "g") { if (typeof menuExportPdf === "function") menuExportPdf(); }
@@ -7532,6 +7534,8 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
             var isDrawing = (typeof isAnyDrawingActive === 'function' && isAnyDrawingActive());
             var tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
             if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
+            var imbUZ = document.getElementById("infoModalBackdrop");
+            if (imbUZ && imbUZ.classList.contains("open")) return;
 
             // Globální Ctrl+Z (Undo) a Ctrl+Y / Ctrl+Shift+Z (Redo) pro zdroje pokud není otevřeno měření
             if (!isMeasureOpen && !isDrawing) {
@@ -12969,40 +12973,51 @@ function resetFolderPagination() { folderSearchPage = 0; folderFilePage = 0; }
             var t = i18n[currentLang], loc = currentLang === 'cs' ? "cs-CZ" : "en-US";
             var dd = document.getElementById("folderDropdown");
             if (!dd) return;
-            dd.innerHTML = "";
-            var srow = document.createElement("div");
-            srow.style.cssText = "display:flex;gap:4px;align-items:center;margin-bottom:6px;";
-            var sin = document.createElement("input");
-            sin.id = "folderSearch";
-            sin.className = "guide-search";
-            sin.style.cssText = "flex:1;min-width:0;margin:0;";
-            sin.autocomplete = "off";
+            var srow = document.getElementById("folderSearchRow");
+            var sin = document.getElementById("folderSearch");
+            if (!srow || !sin || srow.parentNode !== dd) {
+                if (srow && srow.parentNode) { try { srow.parentNode.removeChild(srow); } catch(e) {} }
+                srow = document.createElement("div");
+                srow.id = "folderSearchRow";
+                srow.style.cssText = "display:flex;gap:4px;align-items:center;margin-bottom:6px;";
+                sin = document.createElement("input");
+                sin.id = "folderSearch";
+                sin.className = "guide-search";
+                sin.style.cssText = "flex:1;min-width:0;margin:0;";
+                sin.autocomplete = "off";
+                sin.onclick = function(e){ if (e) e.stopPropagation(); };
+                sin.oninput = function() {
+                    folderSearch = this.value;
+                    resetFolderPagination();
+                    renderFolderDropdown();
+                };
+                sin.onkeydown = function(ev) {
+                    if (ev.key === "Escape") { ev.preventDefault(); folderSearch = ""; renderFolderDropdown(); var el = document.getElementById("folderSearch"); if (el) el.focus(); }
+                    else if (ev.key === "Enter") { ev.preventDefault(); if (folderSearchHits.length === 1) { var h0 = folderSearchHits[0]; folderSearch = ""; setFolderFilter(h0.full); } }
+                    ev.stopPropagation();
+                };
+                srow.appendChild(sin);
+            }
+            if (dd.firstChild !== srow) { try { dd.insertBefore(srow, dd.firstChild); } catch(e) {} }
             sin.placeholder = t.folderSearchPH || "";
-            sin.value = folderSearch;
-            sin.onclick = function(e){ if (e) e.stopPropagation(); };
-            sin.oninput = function() {
-                folderSearch = this.value;
-                resetFolderPagination();
-                renderFolderDropdown();
-                var el = document.getElementById("folderSearch");
-                if (el) { el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch(e){} }
-            };
-            sin.onkeydown = function(ev) {
-                if (ev.key === "Escape") { ev.preventDefault(); folderSearch = ""; renderFolderDropdown(); var el = document.getElementById("folderSearch"); if (el) el.focus(); }
-                else if (ev.key === "Enter") { ev.preventDefault(); if (folderSearchHits.length === 1) { var h0 = folderSearchHits[0]; folderSearch = ""; setFolderFilter(h0.full); } }
-                ev.stopPropagation();
-            };
-            srow.appendChild(sin);
+            if (sin.value !== folderSearch) sin.value = folderSearch;
+            var sxOld = document.getElementById("folderSearchClear");
+            if (sxOld && sxOld.parentNode) { try { sxOld.parentNode.removeChild(sxOld); } catch(e) {} }
             if (folderSearch) {
                 var sx = document.createElement("button");
                 sx.type = "button";
+                sx.id = "folderSearchClear";
                 sx.className = "header-action-btn";
                 sx.textContent = "✕";
                 sx.title = t.clearSearch || "Clear";
                 sx.onclick = function(e){ if (e) e.stopPropagation(); folderSearch = ""; renderFolderDropdown(); var el = document.getElementById("folderSearch"); if (el) el.focus(); };
                 srow.appendChild(sx);
             }
-            dd.appendChild(srow);
+            var oldRes = document.getElementById("folderResults");
+            if (oldRes && oldRes.parentNode) { try { oldRes.parentNode.removeChild(oldRes); } catch(e) {} }
+            var res = document.createElement("div");
+            res.id = "folderResults";
+            dd.appendChild(res);
             var q = folderSearch.trim().toLowerCase();
             var isRoot = (folderPrefix === null || folderPrefix === undefined);
             var allItem = document.createElement("div");
@@ -13010,7 +13025,7 @@ function resetFolderPagination() { folderSearchPage = 0; folderFilePage = 0; }
             allItem.innerHTML = "<span>" + t.allWord + "</span><span class='item-count'>(" + countAllFiltered().toLocaleString(loc) + ")</span>";
             allItem.title = fmtSTAV(tallyFiltered(), loc);
             allItem.onclick = function() { folderSearch = ""; setFolderFilter(null); };
-            dd.appendChild(allItem);
+            res.appendChild(allItem);
 if (q) {
             var sr = searchFolders(q, folderSearchPage);
             folderSearchHits = sr.list;
@@ -13018,7 +13033,7 @@ if (q) {
                 var nempty = document.createElement("div");
                 nempty.className = "tf-section";
                 nempty.textContent = t.folderNoHit || "0";
-                dd.appendChild(nempty);
+                res.appendChild(nempty);
             }
             for (var hi = 0; hi < sr.list.length; hi++) {
                 (function(hd){
@@ -13028,7 +13043,7 @@ if (q) {
                     row.innerHTML = "<span>" + FOLDER_SVG + " " + escapeHtml(hd.full) + "</span><span class='item-count'>(" + hd.t.G.toLocaleString(loc) + ")</span>";
                     row.title = hd.full + " (" + fmtSTAV(hd.t, loc) + ")";
                     row.onclick = function() { folderSearch = ""; setFolderFilter(hd.full); };
-                    dd.appendChild(row);
+                    res.appendChild(row);
                 })(sr.list[hi]);
             }
             if (sr.hasMore || sr.page > 0) {
@@ -13056,13 +13071,13 @@ if (q) {
                 if (nextBtn.disabled) { nextBtn.style.cssText += "opacity:0.4;cursor:not-allowed;border-color:#ccc;background:#f5f5f5;color:#999;"; }
                 nextBtn.onclick = function() { if (sr.hasMore) { folderSearchPage++; renderFolderDropdown(); } };
                 pager.appendChild(nextBtn);
-                dd.appendChild(pager);
+                res.appendChild(pager);
             }
                 if (sr.total > sr.list.length) {
                     var smore = document.createElement("div");
                     smore.className = "tf-section";
                     smore.textContent = "… (+" + (sr.total - sr.list.length) + ")";
-                    dd.appendChild(smore);
+                    res.appendChild(smore);
                 }
             } else {
             folderSearchHits = [];
@@ -13073,12 +13088,12 @@ if (q) {
                 up.className = "dropdown-item";
                 up.innerHTML = "<span>⬆ " + (parent === null ? t.allWord : parent.split("/").pop()) + "</span>";
                 up.onclick = (function(p){ return function() { setFolderFilter(p); }; })(parent);
-                dd.appendChild(up);
+                res.appendChild(up);
             }
             var sec = document.createElement("div");
             sec.className = "tf-section";
             sec.textContent = isRoot ? t.tfFolders : fmtFolderPrefix(folderPrefix, t);
-            dd.appendChild(sec);
+            res.appendChild(sec);
             var kids = folderChildren(folderPrefix);
             for (var ki = 0; ki < kids.length; ki++) {
                 (function(kd){
@@ -13088,7 +13103,7 @@ if (q) {
                     row.innerHTML = "<span>" + FOLDER_SVG + " " + escapeHtml(kd.name) + "</span><span class='item-count'>(" + kd.t.G.toLocaleString(loc) + ")</span>";
                     row.title = kd.full + " (" + fmtSTAV(kd.t, loc) + ")";
                     row.onclick = function() { setFolderFilter(kd.full); };
-                    dd.appendChild(row);
+                    res.appendChild(row);
                 })(kids[ki]);
             }
             // Přímé soubory v aktuální složce (listy stromu, max MAX_FOLDER_FILES)
@@ -13144,7 +13159,7 @@ if (q) {
                         frow.innerHTML = "<span>" + PHOTO_SVG + " " + escapeHtml(ff.name) + "</span>";
                         frow.title = ff.key.indexOf("@file:") === 0 ? ff.name : ff.key;
                         frow.onclick = function() { setFolderFilter(ff.key); };
-                        dd.appendChild(frow);
+                        res.appendChild(frow);
                     })(fList[fj]);
                 }
 if (fileEnd < fList.length || fileStart > 0) {
@@ -13171,7 +13186,7 @@ if (fileEnd < fList.length || fileStart > 0) {
                 if (nextBtn.disabled) { nextBtn.style.cssText += "opacity:0.4;cursor:not-allowed;border-color:#ccc;background:#f5f5f5;color:#999;"; }
                 nextBtn.onclick = function() { if (fileEnd < fList.length) { folderFilePage++; renderFolderDropdown(); } };
                 pager.appendChild(nextBtn);
-                dd.appendChild(pager);
+                res.appendChild(pager);
             }
             if (isRoot) {
                 var nft = countNoFolder();
@@ -13181,7 +13196,7 @@ if (fileEnd < fList.length || fileStart > 0) {
                     rowN.innerHTML = "<span>" + PHOTO_SVG + " " + t.noFolder + "</span><span class='item-count'>(" + nft.G.toLocaleString(loc) + ")</span>";
                     rowN.title = t.noFolder + " (" + fmtSTAV(nft, loc) + ")";
                     rowN.onclick = function() { setFolderFilter(""); };
-                    dd.appendChild(rowN);
+                    res.appendChild(rowN);
                 }
             }
             }
@@ -13693,7 +13708,7 @@ if (fileEnd < fList.length || fileStart > 0) {
         function renderYearDropdown() {
             var t = i18n[currentLang], loc = currentLang === 'cs' ? "cs-CZ" : "en-US";
             var dd = document.getElementById("yearDropdown");
-            dd.innerHTML = "";
+            if (!dd) return;
 
             // dostupné roky a jejich počty (respektuj folderPrefix)
             var yc = {};
@@ -13716,50 +13731,57 @@ if (fileEnd < fList.length || fileStart > 0) {
             var dSel = lvl >= 3 ? parseInt(timePrefix.substring(6, 8), 10) : null;
             var hSel = lvl >= 4 ? parseInt(timePrefix.substring(8, 10), 10) : null;
 
-            // Vyhledávání data a hodiny (RRRR MM DD HH, libovolná hloubka)
-            var tsrow = document.createElement("div");
-            tsrow.style.cssText = "display:flex;gap:4px;align-items:center;margin-bottom:6px;";
-            var tsin = document.createElement("input");
-            tsin.id = "timeSearch";
-            tsin.className = "guide-search";
-            tsin.style.cssText = "flex:1;min-width:0;margin:0;";
-            tsin.autocomplete = "off";
-            tsin.placeholder = t.timeSearchPH || "";
-            tsin.value = timeSearch;
-            tsin.onclick = function(e){ if (e) e.stopPropagation(); };
-            tsin.oninput = function() {
-                timeSearch = this.value;
-                var found = parseTimeSearch(timeSearch);
-                var applied = false;
-                if (found) {
-                    var cntT = (found.length >= 10) ? tallyForPrefixHour(found) : tallyForPrefix(found);
-                    var cnt = cntT.G;
-                    if (cnt > 0) {
-                        if (timePrefix !== found) { setTimeFilter(found); applied = true; }
-                    } else {
-                        showToast(t.timeNoMatch || "V tomto období nejsou žádné fotky");
+            // Vyhledávání data a hodiny (RRRR MM DD HH, libovolná hloubka) – vstup je perzistentní
+            var tsrow = document.getElementById("timeSearchRow");
+            var tsin = document.getElementById("timeSearch");
+            if (!tsrow || !tsin || tsrow.parentNode !== dd) {
+                if (tsrow && tsrow.parentNode) { try { tsrow.parentNode.removeChild(tsrow); } catch(e) {} }
+                tsrow = document.createElement("div");
+                tsrow.id = "timeSearchRow";
+                tsrow.style.cssText = "display:flex;gap:4px;align-items:center;margin-bottom:6px;";
+                tsin = document.createElement("input");
+                tsin.id = "timeSearch";
+                tsin.className = "guide-search";
+                tsin.style.cssText = "flex:1;min-width:0;margin:0;";
+                tsin.autocomplete = "off";
+                tsin.onclick = function(e){ if (e) e.stopPropagation(); };
+                tsin.oninput = function() {
+                    timeSearch = this.value;
+                    var found = parseTimeSearch(timeSearch);
+                    var applied = false;
+                    if (found) {
+                        var cntT = (found.length >= 10) ? tallyForPrefixHour(found) : tallyForPrefix(found);
+                        var cnt = cntT.G;
+                        if (cnt > 0) {
+                            if (timePrefix !== found) { setTimeFilter(found); applied = true; }
+                        } else {
+                            showToast(t.timeNoMatch || "V tomto období nejsou žádné fotky");
+                        }
                     }
-                }
-                if (!applied) renderYearDropdown();
-                var el = document.getElementById("timeSearch");
-                if (el) { el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch(e){} }
-            };
-            tsin.onkeydown = function(ev) {
-                if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
-                else if (ev.key === "Escape") { ev.preventDefault(); timeSearch = ""; renderYearDropdown(); var el = document.getElementById("timeSearch"); if (el) el.focus(); }
-                ev.stopPropagation();
-            };
-            tsrow.appendChild(tsin);
+                    if (!applied) renderYearDropdown();
+                };
+                tsin.onkeydown = function(ev) {
+                    if (ev.key === "Enter") { ev.preventDefault(); this.blur(); }
+                    else if (ev.key === "Escape") { ev.preventDefault(); timeSearch = ""; renderYearDropdown(); var el = document.getElementById("timeSearch"); if (el) el.focus(); }
+                    ev.stopPropagation();
+                };
+                tsrow.appendChild(tsin);
+            }
+            if (dd.firstChild !== tsrow) { try { dd.insertBefore(tsrow, dd.firstChild); } catch(e) {} }
+            tsin.placeholder = t.timeSearchPH || "";
+            if (tsin.value !== timeSearch) tsin.value = timeSearch;
+            var tsxOld = document.getElementById("timeSearchClear");
+            if (tsxOld && tsxOld.parentNode) { try { tsxOld.parentNode.removeChild(tsxOld); } catch(e) {} }
             if (timeSearch) {
                 var tsx = document.createElement("button");
                 tsx.type = "button";
+                tsx.id = "timeSearchClear";
                 tsx.className = "header-action-btn";
                 tsx.textContent = "✕";
                 tsx.title = t.clearSearch || "Clear";
                 tsx.onclick = function(e){ if (e) e.stopPropagation(); timeSearch = ""; renderYearDropdown(); var el = document.getElementById("timeSearch"); if (el) el.focus(); };
                 tsrow.appendChild(tsx);
             }
-            dd.appendChild(tsrow);
             // Vše
             var allItem = document.createElement("div");
             allItem.className = "dropdown-item reset-all" + (lvl === 0 ? " active" : "");
@@ -13957,6 +13979,20 @@ if (fileEnd < fList.length || fileStart > 0) {
                 }
                 dd.appendChild(gridH);
             }
+
+            // vysledky seskupit do perzistentniho kontejneru (tsrow zustava prvni, input se neprestavuje)
+            try {
+                var yOld = document.getElementById("yearResults");
+                if (yOld && yOld.parentNode) yOld.parentNode.removeChild(yOld);
+            } catch(e) {}
+            try {
+                var yres = document.createElement("div");
+                yres.id = "yearResults";
+                var ymv = [];
+                for (var ymi = 0; ymi < dd.children.length; ymi++) { if (dd.children[ymi] !== tsrow) ymv.push(dd.children[ymi]); }
+                for (var ymj = 0; ymj < ymv.length; ymj++) yres.appendChild(ymv[ymj]);
+                dd.appendChild(yres);
+            } catch(e) {}
 
             // popisek horního tlačítka
             var label = fmtTimePrefix(timePrefix, t);
