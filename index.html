@@ -305,8 +305,11 @@
         .slider-input-group input[type="range"]::-moz-range-thumb:active { transform: scale(1.2); }
         .slider-input-group input[type="text"], .slider-input-group input[type="number"] { width: 50px; text-align: center; border: 1.5px solid #dadce0; border-radius: 8px; padding: 3px 4px; font-size: 11px; font-weight: 700; color: var(--green); outline: none; background: #ffffff; min-height: 26px; box-sizing: border-box; touch-action: manipulation; }
         .slider-input-group input[type="text"]:focus, .slider-input-group input[type="number"]:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(var(--green-rgb),0.18); }
-        #slideSecRange { background: linear-gradient(to right, #dadce0 0%, #dadce0 calc(42.5% - 1px), #0AA94C calc(42.5% - 1px), #0AA94C calc(42.5% + 1px), #dadce0 calc(42.5% + 1px)); }
-        #ptrMsRange { background: linear-gradient(to right, #dadce0 0%, #dadce0 calc(40% - 1px), #0AA94C calc(40% - 1px), #0AA94C calc(40% + 1px), #dadce0 calc(40% + 1px)); }
+        #slideSecRange { background: linear-gradient(to right, #dadce0 0%, #dadce0 calc(42.5% - 2px), #0AA94C calc(42.5% - 2px), #0AA94C calc(42.5% + 2px), #dadce0 calc(42.5% + 2px)); }
+        #ptrMsRange { background: linear-gradient(to right, #dadce0 0%, #dadce0 calc(40% - 2px), #0AA94C calc(40% - 2px), #0AA94C calc(40% + 2px), #dadce0 calc(40% + 2px)); }
+        #trailOpRange { background: linear-gradient(to right, #dadce0 0%, #dadce0 calc(90% - 2px), #0AA94C calc(90% - 2px), #0AA94C calc(90% + 2px), #dadce0 calc(90% + 2px)); }
+        #trailWdRange { background: linear-gradient(to right, #dadce0 0%, #dadce0 calc(12.82% - 2px), #0AA94C calc(12.82% - 2px), #0AA94C calc(12.82% + 2px), #dadce0 calc(12.82% + 2px)); }
+        #ptrScaleRange { background: linear-gradient(to right, #dadce0 0%, #dadce0 calc(26.67% - 2px), #0AA94C calc(26.67% - 2px), #0AA94C calc(26.67% + 2px), #dadce0 calc(26.67% + 2px)); }
         .slider-minmax { font-size: 10px; color: #80868b; white-space: nowrap; flex-shrink: 0; }
         
         .source-item-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; flex-grow: 0; margin-left: auto; }
@@ -450,6 +453,14 @@
         .guide-search { height: 32px; max-width: 220px; margin-left: auto; border: 1px solid #dadce0; border-radius: 16px; padding: 0 12px; font-size: 12px; outline: none; }
         .guide-clear { display: none; width: 24px; height: 24px; flex: 0 0 24px; border: 1px solid #dadce0; background: #ffffff; color: #5f6368; border-radius: 50%; font-size: 12px; line-height: 1; cursor: pointer; align-items: center; justify-content: center; padding: 0; margin-left: 6px; }
         .guide-clear:hover { background: #fce8e6; color: #d93025; border-color: #f5c6c2; }
+        @media (max-width: 600px) {
+            .info-modal { padding: 16px 14px; }
+            .guide-header { flex-wrap: wrap; row-gap: 8px; }
+            .guide-search { flex: 1 1 0; min-width: 0; max-width: none; margin-left: 0; }
+            .info-modal .slider-input-group { flex-wrap: wrap; }
+            .info-modal .slider-input-group input[type="range"] { flex: 1 1 100%; min-width: 0; }
+            .info-modal .archive-path-input { min-width: 0; }
+        }
         .guide-search:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(var(--green-rgb),0.15); }
         button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .guide-hi { background: #39ff14; color: #202124; border-radius: 2px; padding: 0 1px; }
@@ -582,9 +593,69 @@
             }
             /* Oblast: roleta od praveho okraje tlacitka, aby neutekla za hranu */
             #areaDropdown { left: auto; right: 0; }
-            /* Podklady v zoom-sloupci nad +/– (mobil, kde je zoom vpravo dole) */
-            .zoom-group #layersWrap { display: flex; justify-content: center; }
-            .zoom-group #layersWrap .layers-dropdown { position: absolute; top: auto; bottom: 40px; right: 0; left: auto; width: 230px; max-width: calc(100vw - 16px); max-height: 60vh; max-height: calc(100dvh - 190px); overflow-y: auto; }
+            /* Samostatné tlačítko mapových podkladů vpravo dole nad zoom tlačítky s mezerou 10px */
+            #layersWrap {
+                position: fixed !important;
+                bottom: calc(20px + var(--sab) + 74px + 10px) !important;
+                right: calc(12px + var(--sar)) !important;
+                z-index: 1500 !important;
+                display: block !important;
+                width: 36px !important;
+                height: 36px !important;
+            }
+            #layersWrap #btnLayers {
+                width: 36px !important;
+                height: 36px !important;
+                padding: 0 !important;
+                border-radius: 8px !important;
+                background: rgba(255, 255, 255, 0.96) !important;
+                backdrop-filter: blur(10px) !important;
+                -webkit-backdrop-filter: blur(10px) !important;
+                border: 1px solid rgba(0, 0, 0, 0.08) !important;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                color: #3c4043 !important;
+                cursor: pointer !important;
+                transition: background 0.15s, color 0.15s, transform 0.15s !important;
+            }
+            #layersWrap #btnLayers:hover {
+                background: #ffffff !important;
+                color: var(--green) !important;
+            }
+            #layersWrap #btnLayers.active {
+                background: #202124 !important;
+                color: #ffffff !important;
+                border-color: #202124 !important;
+            }
+            #layersWrap #btnLayers svg {
+                width: 20px !important;
+                height: 20px !important;
+                fill: currentColor !important;
+            }
+
+            /* Roletové menu mapových podkladů - plynulé vysunutí nahoru (dropup) nad samostatné tlačítko */
+            #layersWrap .layers-dropdown {
+                position: absolute !important;
+                top: auto !important;
+                bottom: calc(100% + 8px) !important;
+                right: 0 !important;
+                left: auto !important;
+                width: 230px !important;
+                max-width: calc(100vw - 24px) !important;
+                max-height: calc(100vh - 160px) !important;
+                max-height: calc(100dvh - 160px) !important;
+                overflow-y: auto !important;
+                background: rgba(255, 255, 255, 0.98) !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+                border-radius: 8px !important;
+                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25) !important;
+                border: 1px solid rgba(0, 0, 0, 0.08) !important;
+                padding: 6px !important;
+                z-index: 1510 !important;
+            }
             .info-modal {
                 padding: 16px 14px;
             }
@@ -2121,6 +2192,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 settingsTitle: "Nastavení",
                 tipSettingsClose: "Zavřít nastavení",
                 setViewerTitle: "Nastavení prohlížečky fotografií",
+                setSlideshowTitle: "Slideshow",
+                tipTrailDefault: "Vrátit výchozí stopu",
                 lblSlideSec: "Interval slideshow",
                 tipSlideDefault: "Vrátit výchozí slideshow",
                 lblSlideRev: "Pozpátku",
@@ -2362,6 +2435,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 settingsTitle: "Settings",
                 tipSettingsClose: "Close settings",
                 setViewerTitle: "Photo viewer settings",
+                setSlideshowTitle: "Slideshow",
+                tipTrailDefault: "Reset trail defaults",
                 lblSlideSec: "Slideshow interval",
                 tipSlideDefault: "Reset slideshow defaults",
                 lblSlideRev: "Reverse",
@@ -2375,7 +2450,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 shapePlus: "Plus",
                 shapeDot: "Dot",
                 lblPointerTime: "Display time",
-                tipPointerDefault: "Reset defaults (green, circle, 2.75 s)",
+                tipPointerDefault: "Reset defaults (green, circle, 2.75 s, 1.25×)",
                 btnMeasureGrid: "Coordinate grid (G)",
                 btnMeasureDist: "Measure",
                 btnShowCoords: "Show coordinates",
@@ -3775,15 +3850,18 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 if (list && t.setArchiveTitle) {
                     list.innerHTML = "<li><details class=\"step\"><summary>" + t.setArchiveTitle + "</summary><div class=\"step-body\">" + (t.setArchiveBody || "") + "</div></details></li>" +
                         "<li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='currentColor'><path d='M8 5v14l11-7z'/></svg> " + (t.setViewerTitle || "") + "</summary><div class=\"step-body\">" +
+                        "<details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 2'/></svg> " + (t.setSlideshowTitle || "") + ":</summary><div class=\"step-body\">" +
                         "<div class=\"slider-input-group\"><span>" + (t.lblSlideSec || "") + "</span>" +
                         "<span class=\"slider-minmax\">" + fmtSlideSec(0.1) + " s</span>" +
                         "<input id=\"slideSecRange\" type=\"range\" min=\"0\" max=\"40\" step=\"1\" value=\"17\" oninput=\"setLBSlideMs(SLIDE_SECS[this.value | 0] * 1000); syncSlideSettings();\" />" +
                         "<span class=\"slider-minmax\">" + fmtSlideSec(180) + " s</span>" +
                         "<input id=\"slideSecNum\" type=\"text\" value=\"\" onfocus=\"this.select();\" onchange=\"slideSecFromText(this)\" />" +
                         "<span>s</span>" +
-                        "<button type=\"button\" class=\"header-action-btn\" title=\"" + (t.tipSlideDefault || "Vrátit výchozí 3 s") + "\" onclick=\"event.stopPropagation();setLBSlideMs(3000);setLBSlideRev(false);setLBTrailColor('blue');setLBSlideTrail(false);\">↺</button>" +
+                        "<button type=\"button\" class=\"header-action-btn\" title=\"" + (t.tipSlideDefault || "Vrátit výchozí 3 s") + "\" onclick=\"event.stopPropagation();setLBSlideMs(3000);setLBSlideRev(false);\">↺</button>" +
                         "</div>" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:2px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"slideRevChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setLBSlideRev(this.checked)\" /><span>" + (t.lblSlideRev || "") + "</span></label>" +
+                        "</div></details>" +
+                        "<details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20 C 8 16, 8 12, 12 10 S 18 8, 20 4' stroke-dasharray='2 2'/></svg> " + (t.lblSlideTrail || "") + ":</summary><div class=\"step-body\">" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:2px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"slideTrailChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setLBSlideTrail(this.checked)\" /><span>" + (t.lblSlideTrail || "") + "</span></label>" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-bottom:6px;\"><span>" + (t.lblTrailColor || "") + "</span><span id=\"trailColors\">" +
                         "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"green\" style=\"background:#0AA94C\" onclick=\"event.stopPropagation();setLBTrailColor('green')\"></button>" +
@@ -3797,8 +3875,21 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"white\" style=\"background:#ffffff\" onclick=\"event.stopPropagation();setLBTrailColor('white')\"></button>" +
                         "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"brown\" style=\"background:#795548\" onclick=\"event.stopPropagation();setLBTrailColor('brown')\"></button>" +
                         "</span></div>" +
-                        "</div></details></li>" +
-                        "<li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='currentColor'><path d='M8 5v14l11-7z'/></svg> " + (t.setPointerTitle || "") + " <kbd class=\"guide-kbd\">M</kbd>:</summary><div class=\"step-body\">" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "Průhlednost") + "</span>" +
+                        "<span class=\"slider-minmax\">0 %</span>" +
+                        "<input id=\"trailOpRange\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" value=\"90\" oninput=\"setLBTrailOpacity(this.value); syncTrailSettings();\" />" +
+                        "<input id=\"trailOpNum\" type=\"text\" value=\"\" onfocus=\"this.select();\" onchange=\"setLBTrailOpacity(this.value);\" />" +
+                        "<span>%</span>" +
+                        "</div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblLineWidth || "Tloušťka čáry") + "</span>" +
+                        "<span class=\"slider-minmax\">0,5</span>" +
+                        "<input id=\"trailWdRange\" type=\"range\" min=\"0.5\" max=\"20\" step=\"0.5\" value=\"3\" oninput=\"setLBTrailWidth(this.value); syncTrailSettings();\" />" +
+                        "<input id=\"trailWdNum\" type=\"text\" value=\"\" onfocus=\"this.select();\" onchange=\"trailWidthFromText(this)\" />" +
+                        "<span>px</span>" +
+                        "<button type=\"button\" class=\"header-action-btn\" title=\"" + (t.tipTrailDefault || "") + "\" onclick=\"event.stopPropagation();setLBTrailColor('blue');setLBSlideTrail(false);setLBTrailOpacity(90);setLBTrailWidth(3);\">↺</button>" +
+                        "</div>" +
+                        "</div></details>" +
+                        "<details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='currentColor'><path d='M8 5v14l11-7z'/></svg> " + (t.setPointerTitle || "") + " <kbd class=\"guide-kbd\">M</kbd>:</summary><div class=\"step-body\">" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-bottom:6px;\"><span>" + (t.lblPointerColor || "") + "</span><span id=\"ptrColors\">" +
                         "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"green\" style=\"background:#0AA94C\" onclick=\"event.stopPropagation();setLBPointerColor('green')\"></button>" +
                         "<button type=\"button\" class=\"color-bubble-btn\" data-c=\"red\" style=\"background:#ea4335\" onclick=\"event.stopPropagation();setLBPointerColor('red')\"></button>" +
@@ -3817,8 +3908,9 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<button type=\"button\" class=\"source-pill-btn ptr-shape\" data-s=\"dot\" onclick=\"event.stopPropagation();setLBPointerShape('dot')\">" + (t.shapeDot || "") + "</button>" +
                         "</div>" +
                         "<div class=\"slider-input-group\"><span>" + (t.lblPointerSize || "") + "</span>" +
-                        "<span class=\"slider-minmax\">" + fmtSlideSec(0.5) + "×</span>" +
-                        "<input id=\"ptrScaleRange\" type=\"range\" min=\"0.5\" max=\"2\" step=\"0.25\" value=\"1.25\" oninput=\"setLBPointerScale(this.value); syncPointerSettings();\" />" +
+                        "<span class=\"slider-minmax\">" + fmtSlideSec(0.25) + "×</span>" +
+                        "<input id=\"ptrScaleRange\" type=\"range\" min=\"0.25\" max=\"4\" step=\"0.25\" value=\"1.25\" oninput=\"setLBPointerScale(this.value); syncPointerSettings();\" />" +
+                        "<span class=\"slider-minmax\">" + fmtSlideSec(4) + "×</span>" +
                         "<input id=\"ptrScaleNum\" type=\"text\" value=\"\" onfocus=\"this.select();\" onchange=\"ptrScaleFromText(this)\" />" +
                         "<span>×</span>" +
                         "</div>" +
@@ -3829,7 +3921,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<input id=\"ptrMsNum\" type=\"text\" value=\"\" onfocus=\"this.select();\" onchange=\"ptrMsFromText(this)\" />" +
                         "<span>s</span>" +
                         "<button type=\"button\" class=\"header-action-btn\" title=\"" + (t.tipPointerDefault || "") + "\" onclick=\"event.stopPropagation();setLBPointerColor('green');setLBPointerMs(2750);setLBPointerShape('circle');setLBPointerScale(1.25);\">↺</button>" +
-                        "</div></div></details></li>";
+                        "</div></div></details></div></details></li>";
                     try { syncSlideSettings(); } catch(e) {}
                     try { syncPointerSettings(); } catch(e) {}
                     try { syncTrailSettings(); } catch(e) {}
@@ -5503,7 +5595,7 @@ window.addEventListener('resize', function() {
             try {
                 v = parseFloat(v);
                 if (isNaN(v)) v = 1.25;
-                v = Math.max(0.5, Math.min(2, Math.round(v * 4) / 4));
+                v = Math.max(0.25, Math.min(4, Math.round(v * 4) / 4));
             } catch(e) { v = 1.25; }
             lbPointerScale = v;
             try { localStorage.setItem("mapa_fotek_pointer_scale", String(v)); } catch(e) {}
@@ -5580,7 +5672,7 @@ window.addEventListener('resize', function() {
         } catch(e) {}
         try { var _pm0 = parseInt(localStorage.getItem("mapa_fotek_pointer_ms") || "2750", 10); if (!isNaN(_pm0)) lbPointerMs = Math.max(100, Math.min(180000, _pm0));
         try { var _ps0 = localStorage.getItem("mapa_fotek_pointer_shape") || "circle"; if (_ps0 === "circle" || _ps0 === "plus" || _ps0 === "dot") lbPointerShape = _ps0; } catch(e) {} } catch(e) {}
-        try { var _pz0 = parseFloat(localStorage.getItem("mapa_fotek_pointer_scale") || "1.25"); if (!isNaN(_pz0)) lbPointerScale = Math.max(0.5, Math.min(2, Math.round(_pz0 * 4) / 4)); } catch(e) {}
+        try { var _pz0 = parseFloat(localStorage.getItem("mapa_fotek_pointer_scale") || "1.25"); if (!isNaN(_pz0)) lbPointerScale = Math.max(0.25, Math.min(4, Math.round(_pz0 * 4) / 4)); } catch(e) {}
         try { applyLBPointer(); } catch(e) {}
         try { document.documentElement.style.setProperty("--lb-pointer-scale", String(lbPointerScale)); } catch(e) {}
         function flashPhotoPointer(lat, lon) {
@@ -5748,6 +5840,33 @@ window.addEventListener('resize', function() {
         var lbTrailLayer = null;
         var lbTrailLast = null;
         var lbTrailColor = "blue";
+        var lbTrailOpacity = 90;
+        var lbTrailWidth = 3;
+        function setLBTrailOpacity(v) {
+            try {
+                v = parseFloat(String(v).replace(",", "."));
+                if (isNaN(v)) v = 90;
+                v = Math.max(0, Math.min(100, Math.round(v)));
+            } catch(e) { v = 90; }
+            lbTrailOpacity = v;
+            try { localStorage.setItem("mapa_fotek_trail_opacity", String(v)); } catch(e) {}
+            try { if (typeof syncTrailSettings === "function") syncTrailSettings(); } catch(e) {}
+        }
+        function setLBTrailWidth(v) {
+            try {
+                v = parseFloat(String(v).replace(",", "."));
+                if (isNaN(v)) v = 3;
+                v = Math.max(0.5, Math.min(20, Math.round(v * 2) / 2));
+            } catch(e) { v = 3; }
+            lbTrailWidth = v;
+            try { localStorage.setItem("mapa_fotek_trail_width", String(v)); } catch(e) {}
+            try { if (typeof syncTrailSettings === "function") syncTrailSettings(); } catch(e) {}
+        }
+        function trailWidthFromText(el) {
+            try {
+                setLBTrailWidth(el && el.value !== undefined ? el.value : lbTrailWidth);
+            } catch(e) {}
+        }
         function setLBTrailColor(key) {
             var pal = (typeof POINTER_COLORS !== "undefined") ? POINTER_COLORS : { blue: "#1a73e8" };
             if (!pal[key]) key = "blue";
@@ -5765,9 +5884,19 @@ window.addEventListener('resize', function() {
                         else bs[i].classList.remove("active");
                     }
                 }
+                var to = document.getElementById("trailOpRange");
+                if (to) to.value = lbTrailOpacity;
+                var tn = document.getElementById("trailOpNum");
+                if (tn) tn.value = lbTrailOpacity;
+                var tw = document.getElementById("trailWdRange");
+                if (tw) tw.value = lbTrailWidth;
+                var twn = document.getElementById("trailWdNum");
+                if (twn) twn.value = fmtLineWidth(lbTrailWidth);
             } catch(e) {}
         }
         try { lbSlideTrail = localStorage.getItem("mapa_fotek_slide_trail") === "1"; } catch(e) { lbSlideTrail = false; }
+        try { var _to0 = parseInt(localStorage.getItem("mapa_fotek_trail_opacity") || "90", 10); if (!isNaN(_to0)) lbTrailOpacity = Math.max(0, Math.min(100, _to0)); } catch(e) {}
+        try { var _tw0 = parseFloat(String(localStorage.getItem("mapa_fotek_trail_width") || "3").replace(",", ".")); if (!isNaN(_tw0)) lbTrailWidth = Math.max(0.5, Math.min(20, Math.round(_tw0 * 2) / 2)); } catch(e) {}
         try { var _tc0 = localStorage.getItem("mapa_fotek_trail_color") || "blue"; if (typeof POINTER_COLORS !== "undefined" && POINTER_COLORS[_tc0]) lbTrailColor = _tc0; } catch(e) {}
         function lbTrailClear() {
             try {
@@ -5793,7 +5922,7 @@ window.addEventListener('resize', function() {
                 } catch(e) {}
                 for (var k = 0; k < parts.length; k++) {
                     if (parts[k].length < 2) continue;
-                    L.polyline(parts[k], { color: col, weight: 3, opacity: 0.9, interactive: false }).addTo(lbTrailLayer);
+                    L.polyline(parts[k], { color: col, weight: lbTrailWidth, opacity: lbTrailOpacity / 100, interactive: false }).addTo(lbTrailLayer);
                 }
             } catch(e) {}
         }
@@ -16116,31 +16245,7 @@ dotColor: initialDot,
         function initAppPreferences() {
             var overlay = document.getElementById("loading-overlay");
             if (overlay) overlay.style.display = "none";
-            try {
-                var _lw = document.getElementById("layersWrap");
-                var _tc = document.querySelector(".top-nav-container");
-                var _tr = document.querySelector(".top-bar-right");
-                var _placeLW = function() {
-                    try {
-                        if (!_lw || !_tc || !_tr) return;
-                        var narrow = window.innerWidth <= 768;
-                        var _zg = document.querySelector(".zoom-group");
-                        var _ld = document.getElementById("layersDropdown");
-                        var _lb = document.getElementById("btnLayers");
-                        if (narrow && _zg && _lw.parentNode !== _zg) {
-                            if (_ld) _ld.classList.remove("open"); if (_lb) _lb.classList.remove("active");
-                            _zg.insertBefore(_lw, _zg.firstChild); return;
-                        }
-                        if (!narrow && _lw.parentNode !== _tr) {
-                            if (_ld) _ld.classList.remove("open"); if (_lb) _lb.classList.remove("active");
-                            var _zb = _tr.querySelector(".zoom-group");
-                            if (_zb) _tr.insertBefore(_lw, _zb); else _tr.appendChild(_lw);
-                        }
-                    } catch(e) {}
-                };
-                _placeLW();
-                window.addEventListener("resize", function() { _placeLW(); });
-            } catch(e) {}
+            // Tlačítko mapových podkladů (#layersWrap) je na úzkých displejích pozicováno čistě a reaktivně pomocí CSS nad zoom tlačítky s mezerou
             var t = i18n[currentLang];
 
             _undoBtnEl = document.getElementById("btnUndo");
