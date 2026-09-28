@@ -6538,6 +6538,7 @@ window.addEventListener('resize', function() {
         function lbTrailClear() {
             try {
                 if (lbTrailAnimRaf) { cancelAnimationFrame(lbTrailAnimRaf); lbTrailAnimRaf = null; }
+                if (window._lbTrailAnimTimer) { clearTimeout(window._lbTrailAnimTimer); window._lbTrailAnimTimer = null; }
                 lbTrailAnimData = null;
                 lbTrailLast = null;
                 if (lbTrailLayer && typeof map !== "undefined" && map) { try { map.removeLayer(lbTrailLayer); } catch(e) {} }
@@ -6547,11 +6548,13 @@ window.addEventListener('resize', function() {
         function lbTrailAnimCancel() {
             try {
                 if (lbTrailAnimRaf) { cancelAnimationFrame(lbTrailAnimRaf); lbTrailAnimRaf = null; }
+                if (window._lbTrailAnimTimer) { clearTimeout(window._lbTrailAnimTimer); window._lbTrailAnimTimer = null; }
                 if (lbTrailAnimData) {
                     try {
-                        if (lbTrailAnimData.animPoly) {
+                        if (lbTrailAnimData.animPoly && lbTrailAnimData.pts) {
                             var _fp = lbTrailAnimData.pts.map(function(p) { return L.latLng(p[0], p[1]); });
                             lbTrailAnimData.animPoly.setLatLngs(_fp);
+                            if (typeof lbTrailAnimData.animPoly.redraw === "function") lbTrailAnimData.animPoly.redraw();
                         }
                     } catch(e) {}
                     lbTrailAnimData = null;
@@ -6569,7 +6572,13 @@ window.addEventListener('resize', function() {
                     if (Math.abs(pts[_si][1] - pts[_si - 1][1]) > 180) { hasSplit = true; break; }
                 }
                 if (hasSplit) { lbTrailAddSegment(from, to); return; }
-                // Inteligentní přizpůsobení výřezu mapy:
+
+                // Plynulý posun / zoom mapy: trvá 1/10 intervalu slideshow
+                var _slideMs = (lbSlide && typeof lbSlide.ms === "number" && lbSlide.ms >= 500) ? lbSlide.ms : 3000;
+                var _transDurSec = Math.max(0.15, Math.min(0.8, (_slideMs / 10) / 1000));
+                var _transDurMs = Math.round(_transDurSec * 1000);
+                var _mapMoved = false;
+
                 try {
                     if (typeof map !== "undefined" && map &&
                         !(from[0] === to[0] && from[1] === to[1])) {
@@ -6577,21 +6586,24 @@ window.addEventListener('resize', function() {
                         var _distKm = (typeof calcDistKmLL === "function") ? calcDistKmLL(from, to) : 0;
                         var _fb = L.latLngBounds([L.latLng(from[0], from[1]), L.latLng(to[0], to[1])]);
                         var _reqZoom = map.getBoundsZoom(_fb, false, [60, 60]);
-                        // Pokud je vzdálenost velká (> 5 km) nebo by vyžadovala přílišné oddálení (zoom < 13 nebo skok o > 3 stupně):
-                        // Neoddalovat mapu na celý kontinent! Zachovat detailní měřítko a přejít přímo na novou fotku.
+
                         if (_distKm > 5 || _reqZoom < 13 || _reqZoom < _curZoom - 3) {
+                            // Dlouhý skok na novou lokalitu: plynule přejít na novou fotku v detailním měřítku
                             var _keepZoom = Math.max(_curZoom, 15);
-                            map.setView([to[0], to[1]], _keepZoom, { animate: false });
+                            map.flyTo([to[0], to[1]], _keepZoom, { duration: _transDurSec });
+                            _mapMoved = true;
                         } else {
-                            // Blízké body v jedné lokalitě: zarámovat oba body, pokud už nejsou pohodlně vidět
+                            // Lokální trasa: zarámovat oba body, pokud už nejsou pohodlně vidět
                             var _cb = map.getBounds();
                             if (!_cb || !_cb.pad(-0.08).contains(_fb) || _curZoom < 13) {
                                 var _targetZoom = Math.min(_reqZoom, Math.max(_curZoom, 16));
-                                map.setView(_fb.getCenter(), _targetZoom, { animate: false });
+                                map.flyTo(_fb.getCenter(), _targetZoom, { duration: _transDurSec });
+                                _mapMoved = true;
                             }
                         }
                     }
                 } catch(e) {}
+
                 var col = "#1a73e8";
                 try { if (typeof POINTER_COLORS !== "undefined" && POINTER_COLORS[lbTrailColor]) col = POINTER_COLORS[lbTrailColor]; } catch(e) {}
                 var animPoly = L.polyline([L.latLng(from[0], from[1]), L.latLng(from[0], from[1])], {
@@ -6603,34 +6615,57 @@ window.addEventListener('resize', function() {
                     smoothFactor: 0
                 });
                 animPoly.addTo(lbTrailLayer);
-                var _startTime = performance.now();
-                var _dur = lbSlide.ms;
+
+                // Doba kreslení stopy = zbývající čas intervalu po dokončení pohybu mapy
+                var _delayMs = _mapMoved ? _transDurMs : 0;
+                var _animDur = Math.max(300, _slideMs - _delayMs);
                 lbTrailAnimData = { pts: pts, animPoly: animPoly };
                 var _capturedData = lbTrailAnimData;
-                function _step(now) {
-                    try {
-                        if (!lbTrailAnimData || lbTrailAnimData !== _capturedData) return;
-                        var t = Math.min((now - _startTime) / _dur, 1.0);
-                        var n = pts.length;
-                        var fIdx = t * (n - 1);
-                        var iLo = Math.floor(fIdx);
-                        var iHi = Math.min(iLo + 1, n - 1);
-                        var frac = fIdx - iLo;
-                        var visible = pts.slice(0, iLo + 1);
-                        if (iHi > iLo) {
-                            var pa = pts[iLo], pb = pts[iHi];
-                            visible.push([pa[0] + (pb[0] - pa[0]) * frac, pa[1] + (pb[1] - pa[1]) * frac]);
-                        }
-                        animPoly.setLatLngs(visible.map(function(p) { return L.latLng(p[0], p[1]); }));
-                        if (t < 1.0) {
-                            lbTrailAnimRaf = requestAnimationFrame(_step);
-                        } else {
+
+                function _startDrawing() {
+                    if (!lbTrailAnimData || lbTrailAnimData !== _capturedData) return;
+                    var _startTime = performance.now();
+                    function _step(now) {
+                        try {
+                            if (!lbTrailAnimData || lbTrailAnimData !== _capturedData) return;
+                            var t = Math.min((now - _startTime) / _animDur, 1.0);
+                            var n = pts.length;
+                            var fIdx = t * (n - 1);
+                            var iLo = Math.floor(fIdx);
+                            var iHi = Math.min(iLo + 1, n - 1);
+                            var frac = fIdx - iLo;
+                            var visible = pts.slice(0, iLo + 1);
+                            if (iHi > iLo) {
+                                var pa = pts[iLo], pb = pts[iHi];
+                                visible.push([pa[0] + (pb[0] - pa[0]) * frac, pa[1] + (pb[1] - pa[1]) * frac]);
+                            }
+                            animPoly.setLatLngs(visible.map(function(p) { return L.latLng(p[0], p[1]); }));
+                            if (t < 1.0) {
+                                lbTrailAnimRaf = requestAnimationFrame(_step);
+                            } else {
+                                // Dokončení: nastavit přesně všechny cílové body a překreslit
+                                animPoly.setLatLngs(pts.map(function(p) { return L.latLng(p[0], p[1]); }));
+                                if (typeof animPoly.redraw === "function") animPoly.redraw();
+                                lbTrailAnimRaf = null;
+                                lbTrailAnimData = null;
+                            }
+                        } catch(e) {
+                            try {
+                                animPoly.setLatLngs(pts.map(function(p) { return L.latLng(p[0], p[1]); }));
+                                if (typeof animPoly.redraw === "function") animPoly.redraw();
+                            } catch(e2) {}
                             lbTrailAnimRaf = null;
                             lbTrailAnimData = null;
                         }
-                    } catch(e) { lbTrailAnimRaf = null; lbTrailAnimData = null; }
+                    }
+                    lbTrailAnimRaf = requestAnimationFrame(_step);
                 }
-                lbTrailAnimRaf = requestAnimationFrame(_step);
+
+                if (_delayMs > 0) {
+                    window._lbTrailAnimTimer = setTimeout(_startDrawing, _delayMs);
+                } else {
+                    _startDrawing();
+                }
             } catch(e) {}
         }
         function lbTrailAddSegment(a, b) {
@@ -6808,6 +6843,7 @@ window.addEventListener('resize', function() {
             }
             lbSlide.on = true;
             if (typeof lbTrailClear === "function") lbTrailClear();
+            if (typeof lbTrailAddCurrent === "function") lbTrailAddCurrent();
             if (typeof lbSlideBtnSync === "function") { try { lbSlideBtnSync(); } catch(e) {} }
             try {
                 var b = document.getElementById("lbSlideBadge");
