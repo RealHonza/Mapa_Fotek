@@ -3815,6 +3815,131 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             }
         });
 
+        // Canvasove shluky pro rezim Spendliky pri velkem poctu fotek (1 platno + mrizka bunek s pocty)
+        L.ClustersCanvasLayer = L.Layer.extend({
+            initialize: function(opts) {
+                opts = opts || {};
+                this._pts = opts.pts || [];
+                this._fill = opts.fill || "#ea4335";
+                this._opacity = (opts.opacity !== undefined) ? opts.opacity : 1;
+                this._dsKey = opts.dsKey || null;
+                this._cells = [];
+            },
+            onAdd: function(map) {
+                this._map = map;
+                var pane = map.getPane('markerPane');
+                this._canvas = L.DomUtil.create('canvas', 'leaflet-clusters-canvas', pane);
+                this._canvas.style.pointerEvents = 'none';
+                var self = this;
+                this._mapClickFn = function(e){ self._onMapClick(e); };
+                map.on('click', this._mapClickFn);
+                map.on('moveend zoomend resize viewreset', this._redraw, this);
+                this._redraw();
+            },
+            onRemove: function(map) {
+                if (this._map && this._mapClickFn) { try { this._map.off('click', this._mapClickFn); } catch(e){} }
+                if (this._canvas) L.DomUtil.remove(this._canvas);
+                if (this._map) this._map.off('moveend zoomend resize viewreset', this._redraw, this);
+                this._canvas = null;
+                this._ctx = null;
+                this._mapClickFn = null;
+                this._cells = [];
+            },
+            _bgFor: function(count) {
+                return count < 10 ? "#1a73e8" : (count < 100 ? "#0f9d58" : (count < 1000 ? "#f4b400" : "#d93025"));
+            },
+            _redraw: function() {
+                if (!this._map || !this._canvas) return;
+                var map = this._map;
+                var size = map.getSize();
+                var dpr = window.devicePixelRatio || 1;
+                this._canvas.width = Math.round(size.x * dpr);
+                this._canvas.height = Math.round(size.y * dpr);
+                this._canvas.style.width = size.x + "px";
+                this._canvas.style.height = size.y + "px";
+                if (!this._ctx) this._ctx = this._canvas.getContext('2d');
+                var ctx = this._ctx;
+                var origin = map.layerPointToContainerPoint(map.containerPointToLayerPoint([0, 0]));
+                ctx.setTransform(dpr, 0, 0, dpr, -origin.x * dpr, -origin.y * dpr);
+                ctx.clearRect(origin.x, origin.y, size.x, size.y);
+                var b = map.getBounds().pad(0.3);
+                var s = b.getSouth(), n = b.getNorth(), w = b.getWest(), e = b.getEast();
+                var wPx = (size && size.x > 0) ? size.x : 1200;
+                var hPx = (size && size.y > 0) ? size.y : 800;
+                var cols = Math.max(10, Math.floor(wPx / 46));
+                var rows = Math.max(8, Math.floor(hPx / 46));
+                var stepLat = (n - s) / rows;
+                var spanLng = (w <= e ? (e - w) : (360 + e - w));
+                var stepLng = spanLng / cols;
+                this._cells = [];
+                if (!(stepLat > 0 && stepLng > 0)) { L.DomUtil.setPosition(this._canvas, map.containerPointToLayerPoint([0, 0])); return; }
+                var cells = {};
+                var pts = this._pts;
+                for (var i = 0; i < pts.length; i++) {
+                    var la = pts[i][0], lo = pts[i][1];
+                    if (la < s || la > n) continue;
+                    var inLng = (w <= e) ? (lo >= w && lo <= e) : (lo >= w || lo <= e);
+                    if (!inLng) continue;
+                    var gy = Math.floor((la - s) / stepLat);
+                    var off = (lo >= w) ? (lo - w) : (lo + 360 - w);
+                    var gx = Math.floor(off / stepLng);
+                    var key = gx + "_" + gy;
+                    var cell = cells[key];
+                    if (!cell) cells[key] = { first: pts[i], count: 1, sumLat: la, sumLng: lo, minLat: la, maxLat: la, minLng: lo, maxLng: lo };
+                    else { cell.count++; cell.sumLat += la; cell.sumLng += lo; if (la < cell.minLat) cell.minLat = la; else if (la > cell.maxLat) cell.maxLat = la; if (lo < cell.minLng) cell.minLng = lo; else if (lo > cell.maxLng) cell.maxLng = lo; }
+                }
+                var op = Math.max(0.02, Math.min(1.0, this._opacity));
+                ctx.globalAlpha = op;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.font = "bold 11px sans-serif";
+                for (var k in cells) {
+                    var c = cells[k];
+                    var cLat = c.sumLat / c.count, cLon = c.sumLng / c.count;
+                    var pt = map.latLngToContainerPoint([cLat, cLon]);
+                    var r = c.count > 1 ? (c.count < 10 ? 16 : (c.count < 100 ? 19 : (c.count < 1000 ? 22 : 25))) : 6;
+                    var bg = c.count > 1 ? this._bgFor(c.count) : this._fill;
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
+                    ctx.fillStyle = bg;
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.stroke();
+                    if (c.count > 1) {
+                        ctx.fillStyle = (bg === "#f4b400") ? "#202124" : "#ffffff";
+                        try { ctx.fillText(String(c.count.toLocaleString((typeof currentLang !== "undefined" && currentLang === "en") ? "en-US" : "cs-CZ")), pt.x, pt.y + 0.5); } catch(te) { ctx.fillText(String(c.count), pt.x, pt.y + 0.5); }
+                    }
+                    this._cells.push({ x: pt.x, y: pt.y, r: r, data: c });
+                }
+                ctx.globalAlpha = 1.0;
+                L.DomUtil.setPosition(this._canvas, map.containerPointToLayerPoint([0, 0]));
+            },
+            _onMapClick: function(e) {
+                if ((e.originalEvent && e.originalEvent._stopped) || e._stopped) return;
+                if (typeof isAnyDrawingActive === "function" && isAnyDrawingActive()) { L.DomEvent.stopPropagation(e); return; }
+                var map = this._map;
+                if (!map || !e.containerPoint) return;
+                var cx = e.containerPoint.x, cy = e.containerPoint.y;
+                var best = null, bestD = Infinity;
+                for (var i = 0; i < this._cells.length; i++) {
+                    var c = this._cells[i];
+                    var tol = c.r + 6;
+                    var dx = c.x - cx, dy = c.y - cy;
+                    var dd = dx * dx + dy * dy;
+                    if (dd <= tol * tol && dd < bestD) { bestD = dd; best = c; }
+                }
+                if (!best) return;
+                var cd = best.data;
+                if (cd.count > 1) {
+                    if (cd.minLat === cd.maxLat && cd.minLng === cd.maxLng) map.setView([cd.minLat, cd.minLng], Math.min(map.getMaxZoom() || 18, map.getZoom() + 2));
+                    else map.fitBounds([[cd.minLat, cd.minLng], [cd.maxLat, cd.maxLng]], { padding: [50, 50], maxZoom: Math.min(map.getMaxZoom() || 18, map.getZoom() + 3) });
+                } else {
+                    try { map.openPopup(createPopupContent(cd.first, this._dsKey), [cd.first[0], cd.first[1]]); } catch(eP) {}
+                }
+            }
+        });
+
         // Palety pro styl Stáří (10 samostatných palet, 1. Duha zachována 1:1)
         var agePalettes = {
             duha: {
@@ -17734,6 +17859,11 @@ if (fileEnd < fList.length || fileStart > 0) {
                                     var imgSrc = resolvePhotoUrl(p[5] || p[3], _d.name);
                                     var isCluster = cell.count > 1;
                                     var iconHtml = renderPhotoBubbleHtml(imgSrc, cell.count);
+                                    try {
+                                        var _pcOpG = (_d && _d.cardsOpacity !== undefined) ? _d.cardsOpacity : ((typeof d !== "undefined" && d && d.cardsOpacity !== undefined) ? d.cardsOpacity : 100);
+                                        _pcOpG = Math.max(0, Math.min(100, _pcOpG)) / 100;
+                                        if (_pcOpG < 1) iconHtml = '<div style="opacity:' + _pcOpG + ';">' + iconHtml + '</div>';
+                                    } catch(eOPG) {}
                                     var iconClass = isCluster ? "custom-photo-cluster-icon" : "custom-photo-marker-icon";
                                     var icon = L.divIcon({ html: iconHtml, className: iconClass, iconSize: [44, 44], iconAnchor: [22, 22] });
                                     var pos = isCluster ? [cell.sumLat / cell.count, cell.sumLng / cell.count] : [p[0], p[1]];
@@ -17772,6 +17902,11 @@ if (fileEnd < fList.length || fileStart > 0) {
                                         var p = firstMarker.customPhotoData;
                                         var imgSrc = p ? resolvePhotoUrl(p[5] || p[3], firstMarker._dsKey) : "";
                                         var html = renderPhotoBubbleHtml(imgSrc, childCount);
+                                        try {
+                                            var _pcOpC = (_d && _d.cardsOpacity !== undefined) ? _d.cardsOpacity : ((typeof d !== "undefined" && d && d.cardsOpacity !== undefined) ? d.cardsOpacity : 100);
+                                            _pcOpC = Math.max(0, Math.min(100, _pcOpC)) / 100;
+                                            if (_pcOpC < 1) html = '<div style="opacity:' + _pcOpC + ';">' + html + '</div>';
+                                        } catch(eOPC) {}
                                         return L.divIcon({ html: html, className: "custom-photo-cluster-icon", iconSize: [44, 44], iconAnchor: [22, 22] });
                                     }
                                 });
@@ -17812,6 +17947,15 @@ if (fileEnd < fList.length || fileStart > 0) {
                 else if (mode === "clusters") {
                     var _clColKey = d.clustersColor || d.dotColor || "red";
                     var pinCol = dotColors[_clColKey] || dotColors.red;
+                    var _clOpRaw = (d.clustersOpacity !== undefined ? d.clustersOpacity : (d.dotOpacity !== undefined ? d.dotOpacity : 50));
+                    var _clOp = Math.max(0, Math.min(100, _clOpRaw)) / 100;
+                    if (pts.length >= SYMBOL_CANVAS_THRESHOLD && typeof L.ClustersCanvasLayer !== "undefined") {
+                        var clContainer = L.layerGroup();
+                        if (lg) { lg.addLayer(clContainer); } else { map.addLayer(clContainer); }
+                        var _clCanvas = new L.ClustersCanvasLayer({ pts: pts, fill: pinCol.fill, opacity: _clOp, dsKey: d.name });
+                        clContainer.addLayer(_clCanvas);
+                        photoClusterGroups.push({ group: clContainer });
+                    } else {
                     var pg = L.markerClusterGroup({
                         chunkedLoading: true,
                         maxClusterRadius: 50,
@@ -17855,6 +17999,7 @@ if (fileEnd < fList.length || fileStart > 0) {
                     pg.addLayers(pMarkers);
                     if (lg) { lg.addLayer(pg); } else { map.addLayer(pg); }
                     photoClusterGroups.push({ group: pg });
+                    }
                 }
                 // TEČKY
                 else if (mode === "dots") {
