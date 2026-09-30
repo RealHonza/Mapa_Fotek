@@ -281,6 +281,8 @@
         .source-controls-row .source-move-btn, .source-controls-row .source-del-btn, .source-controls-row .source-export-btn, .source-controls-row .source-prefix-btn { width: 24px; height: 24px; }
         .source-controls-row .icon-style-btn { width: 24px; height: 24px; }
         .source-pill-btn.mf-base { width: 108px; justify-content: center; }
+        .source-pill-btn.mf-none { border-color: #9aa0a6; color: #5f6368; background: #f1f3f4; }
+        .source-pill-btn.mf-none.active { border-style: solid; font-style: normal; }
         .color-bubble-btn { width: 18px; height: 18px; border-radius: 4px; border: 2px solid #ffffff; box-shadow: 0 0 0 1px #dadce0, 0 1px 3px rgba(0,0,0,0.15); cursor: pointer; padding: 0; outline: none; flex-shrink: 0; transition: transform 0.15s, box-shadow 0.15s; touch-action: manipulation; }
         .color-bubble-btn:hover { transform: scale(1.15); box-shadow: 0 0 0 1.5px var(--green), 0 2px 5px rgba(0,0,0,0.25); }
         .color-bubble-btn.active { transform: scale(1.15); box-shadow: 0 0 0 2px var(--green), 0 2px 6px rgba(0,0,0,0.3); }
@@ -1988,7 +1990,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
         var currentLang = (savedLang === "cs" || savedLang === "en") ? savedLang : "cs";
         var lbHideMode = 0;
-        try { var _hsv = parseInt(localStorage.getItem("mapa_fotek_hide_s") || "0", 10); lbHideMode = (_hsv >= 0 && _hsv <= 2) ? _hsv : 0; } catch(e) { lbHideMode = 0; }
+        try {
+            var _hsv = parseInt(localStorage.getItem("mapa_fotek_hide_s") || "x", 10);
+            if (_hsv === 1 || _hsv === 2 || _hsv === 0) lbHideMode = _hsv;
+            else {
+                var _hlv = parseInt(localStorage.getItem("mapa_fotek_last_hide") || "x", 10);
+                if (_hlv === 1 || _hlv === 2 || _hlv === 0) lbHideMode = _hlv;
+            }
+        } catch(e) { lbHideMode = 0; }
         var validModes = ["heat", "photoCards", "clusters", "dots", "zone", "age"];
         // Výchozí styl zobrazení pro datové soubory (migrace ze staršího globálního nastavení)
         var defaultPhotoMode = (validModes.indexOf(savedViewMode) !== -1) ? savedViewMode : "heat";
@@ -2354,7 +2363,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 lblSlideSec: "Interval slideshow",
                 tipSlideDefault: "Vrátit výchozí slideshow",
                 lblSlideRev: "Pozpátku",
-                lblTransition: "Přechod", trCut: "Tvrdý střih", trFade: "Prolnutí", trSlide: "Posun", trZoom: "Přiblížení", lblTransDur: "Délka", lblMapFrame: "Záběr mapy", mfRoute: "Celá trasa", mfFollow: "Sledovat", mfOff: "Vypnuto", lblPhotoVis: "Viditelnost fotek", visAll: "G+D+S", visGD: "G+D", visG: "G", visAllTip: "Zobrazit všechny fotky včetně bez polohy", visGDTip: "Jenom fotky s polohou (G+D)", visGTip: "Jenom unikátní fotky s polohou (G)", lblOpenMode: "Otevření fotky", openViewer: "Prohlížečka", openSplit: "Split", btnViewerDefault: "Obnovit výchozí prohlížečku", tipViewerDefault: "Vrátit výchozí prohlížečku", toastViewerReset: "Výchozí hodnoty prohlížečky obnoveny.", lblTimeline: "Časová osa", tlShow: "Zobrazena", tlHide: "Skryta", tlShowTip: "Zobrazit časovou osu v prohlížečce", tlHideTip: "Skrýt časovou osu",
+                lblTransition: "Přechod", trCut: "Tvrdý střih", trFade: "Prolnutí", trSlide: "Posun", trZoom: "Přiblížení", lblTransDur: "Délka", lblMapFrame: "Záběr mapy", mfRoute: "Celá trasa", mfFollow: "Sledovat", mfOff: "Vypnuto", lblPhotoVis: "Viditelnost fotek", visAll: "G+D+S", visGD: "G+D", visG: "G", visNone: "Bez preference", visNoneTip: "Bez apriorní volby, platí poslední filtrace", visAllTip: "Zobrazit všechny fotky včetně bez polohy", visGDTip: "Jenom fotky s polohou (G+D)", visGTip: "Jenom unikátní fotky s polohou (G)", lblOpenMode: "Otevření fotky", openViewer: "Prohlížečka", openSplit: "Split", btnViewerDefault: "Obnovit výchozí prohlížečku", tipViewerDefault: "Vrátit výchozí prohlížečku", toastViewerReset: "Výchozí hodnoty prohlížečky obnoveny.", lblTimeline: "Časová osa", tlShow: "Zobrazena", tlHide: "Skryta", tlShowTip: "Zobrazit časovou osu v prohlížečce", tlHideTip: "Skrýt časovou osu",
                 lblSlideTrail: "Stopa trasy",
             lblTrailAnim: "Animovat kreslení stopy",
                 lblTrailColor: "Barva stopy",
@@ -2506,7 +2515,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 setWipeBtn: "Smazat všechna data aplikace",
                 setWipeConfirm: "Opravdu smazat VŠECHNA uložená data (zdroje, nastavení, kořen archivu)? Aplikace se znovu načte jako při prvním spuštění.",
                 setProfilesTitle: "Profily a mazání dat",
-                setMapTitle: "Nastavení mapy", lblBaseLayer: "Mapový podklad", btnMapDefault: "Obnovit výchozí podklad", tipMapDefault: "Vrátit výchozí podklad", toastMapReset: "Výchozí podklad obnoven.", lblMapZoom: "Přiblížení", lblMapCenter: "Střed mapy", btnMapCenterUse: "Použít aktuální", setProfilesDesc: "Uložení profilu zapíše všechno nastavení včetně kořene archivu do GeoJSON. Načtení profilu nastavení přepíše a aplikaci restartuje.",
+                setMapTitle: "Nastavení mapy", lblBaseLayer: "Mapový podklad", btnMapDefault: "Obnovit výchozí podklad", tipMapDefault: "Vrátit výchozí podklad", toastMapReset: "Výchozí podklad obnoven.", lblMapZoom: "Přiblížení", lblMapCenter: "Střed mapy", btnMapCenterUse: "Použít aktuální", lblMeasure: "Panel měření", measAuto: "Automatické spuštění", lblGridSt: "Mřížka", gridOff: "Vypnuta", gridOn: "Mřížka", gridLabels: "Mřížka s popisky", lblDynInput: "Zadávání z klávesnice", lblShowCoords: "Zobrazení souřadnic", setProfilesDesc: "Uložení profilu zapíše všechno nastavení včetně kořene archivu do GeoJSON. Načtení profilu nastavení přepíše a aplikaci restartuje.",
                 profileSaveBtn: "Uložit profil",
                 profileLoadBtn: "Načíst profil",
                 profileSaved: "Profil nastavení uložen.",
@@ -2632,7 +2641,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 lblSlideSec: "Slideshow interval",
                 tipSlideDefault: "Reset slideshow defaults",
                 lblSlideRev: "Reverse",
-                lblTransition: "Transition", trCut: "Hard cut", trFade: "Fade", trSlide: "Slide", trZoom: "Zoom", lblTransDur: "Length", lblMapFrame: "Map framing", mfRoute: "Whole route", mfFollow: "Follow", mfOff: "Off", lblPhotoVis: "Photo visibility", visAll: "G+D+S", visGD: "G+D", visG: "G", visAllTip: "Show all photos including ones without location", visGDTip: "Located photos only (G+D)", visGTip: "Unique located photos only (G)", lblOpenMode: "Open photo in", openViewer: "Viewer", openSplit: "Split", btnViewerDefault: "Reset viewer defaults", tipViewerDefault: "Reset viewer defaults", toastViewerReset: "Viewer defaults restored.", lblTimeline: "Timeline", tlShow: "Shown", tlHide: "Hidden", tlShowTip: "Show timeline in viewer", tlHideTip: "Hide timeline",
+                lblTransition: "Transition", trCut: "Hard cut", trFade: "Fade", trSlide: "Slide", trZoom: "Zoom", lblTransDur: "Length", lblMapFrame: "Map framing", mfRoute: "Whole route", mfFollow: "Follow", mfOff: "Off", lblPhotoVis: "Photo visibility", visAll: "G+D+S", visGD: "G+D", visG: "G", visNone: "No preference", visNoneTip: "No default choice, last filtering applies", visAllTip: "Show all photos including ones without location", visGDTip: "Located photos only (G+D)", visGTip: "Unique located photos only (G)", lblOpenMode: "Open photo in", openViewer: "Viewer", openSplit: "Split", btnViewerDefault: "Reset viewer defaults", tipViewerDefault: "Reset viewer defaults", toastViewerReset: "Viewer defaults restored.", lblTimeline: "Timeline", tlShow: "Shown", tlHide: "Hidden", tlShowTip: "Show timeline in viewer", tlHideTip: "Hide timeline",
                 lblSlideTrail: "Route trail",
             lblTrailAnim: "Animate trail drawing",
                 lblTrailColor: "Trail color",
@@ -2784,7 +2793,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 setWipeBtn: "Delete all app data",
                 setWipeConfirm: "Really delete ALL stored data (sources, settings, archive root)? The app will reload as on first launch.",
                 setProfilesTitle: "Profiles & data wipe",
-                setMapTitle: "Map settings", lblBaseLayer: "Base layer", btnMapDefault: "Reset default layer", tipMapDefault: "Reset default layer", toastMapReset: "Default layer restored.", lblMapZoom: "Zoom", lblMapCenter: "Map center", btnMapCenterUse: "Use current",
+                setMapTitle: "Map settings", lblBaseLayer: "Base layer", btnMapDefault: "Reset default layer", tipMapDefault: "Reset default layer", toastMapReset: "Default layer restored.", lblMapZoom: "Zoom", lblMapCenter: "Map center", btnMapCenterUse: "Use current", lblMeasure: "Measure panel", measAuto: "Autostart", lblGridSt: "Grid", gridOff: "Off", gridOn: "Grid", gridLabels: "Grid with labels", lblDynInput: "Keyboard input", lblShowCoords: "Coordinate display",
                 setProfilesDesc: "Saving a profile writes all settings including the archive root to GeoJSON. Loading a profile overwrites settings and restarts the app.",
                 profileSaveBtn: "Save profile",
                 profileLoadBtn: "Load profile",
@@ -2940,6 +2949,12 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var savedLayerKey = null;
         try { savedLayerKey = localStorage.getItem("mapa_fotek_base_layer"); } catch(e) {}
         var initialLayerKey = (savedLayerKey && (layersMap[savedLayerKey] || savedLayerKey === "vOffline")) ? savedLayerKey : "gRoad";
+        try {
+            if (initialLayerKey === "gRoad" && !savedLayerKey) {
+                var _lastL = localStorage.getItem("mapa_fotek_last_layer");
+                if (_lastL && (layersMap[_lastL] || _lastL === "vOffline")) initialLayerKey = _lastL;
+            }
+        } catch(e) {}
         var currentLayerKey = initialLayerKey;
         if (initialLayerKey === "vOffline") {
             var ol = getOfflineLandLayer();
@@ -2967,7 +2982,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 if (typeof setBaseLayerDisplay === "function") setBaseLayerDisplay(next, el);
             } catch(e) {}
         }
-        var MAP_LAYERS_UI = [["gRoad", "Google Klasická", "Google Standard"], ["gTerr", "Google Terénní", "Google Terrain"], ["gSat", "Google Satelitní", "Google Satellite"], ["mOutdoor", "Mapy Outdoor", "Mapy Outdoor"], ["mBasic", "Mapy Základní", "Mapy Basic"], ["mAerial", "Mapy Letecká", "Mapy Aerial"], ["eTopo", "Esri Topo", "Esri Topo"], ["vOffline", "Offline", "Offline"]];
+        var MAP_LAYERS_UI = [["gRoad", "Google Klasická", "Google Standard"], ["gTerr", "Google Terénní", "Google Terrain"], ["gSat", "Google Satelitní", "Google Satellite"], ["mOutdoor", "Mapy Outdoor", "Mapy Outdoor"], ["mBasic", "Mapy Základní", "Mapy Basic"], ["mAerial", "Mapy Letecká", "Mapy Aerial"], ["eTopo", "Esri Topo", "Esri Topo"], ["vOffline", "Offline", "Offline"], ["_none", "Poslední", "Last"]];
         function syncBasePills() {
             try {
                 var cs = !(typeof currentLang !== "undefined" && currentLang === "en");
@@ -2987,7 +3002,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                             (function(key, nm) {
                                 var btn = document.createElement("button");
                                 btn.type = "button";
-                                btn.className = "source-pill-btn mf-base";
+                                btn.className = "source-pill-btn mf-base" + (key === "_none" ? " mf-none" : "");
                                 btn.setAttribute("data-m", key);
                                 btn.textContent = nm;
                                 btn.onclick = function(e) { if (e) e.stopPropagation(); setBaseLayerAndSync(key); };
@@ -2997,11 +3012,13 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         row.appendChild(rdiv);
                     }
                 }
-                var cur = "gRoad";
-                try { var _slk = localStorage.getItem("mapa_fotek_base_layer"); if (_slk) cur = _slk; } catch(eS) {}
+                var cur = null;
+                try { cur = localStorage.getItem("mapa_fotek_base_layer") || null; } catch(eS) {}
+                var curNone = !cur;
                 var frs = document.querySelectorAll(".mf-base");
                 for (var i = 0; i < frs.length; i++) {
-                    frs[i].classList.toggle("active", frs[i].getAttribute("data-m") === cur);
+                    var kk = frs[i].getAttribute("data-m");
+                    frs[i].classList.toggle("active", kk === cur || (kk === "_none" && curNone));
                 }
             } catch(e) {}
         }
@@ -3046,10 +3063,103 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 var lo = document.getElementById("mapLonNum"); if (lo) lo.value = String(lbMapLon).replace(".", dec);
             } catch(e) {}
         }
+        var measAutoStart = false, measGridSt = 0, measDynInput = false, measShowCoords = false;
+        try {
+            measAutoStart = localStorage.getItem("mapa_fotek_measure_auto") === "1";
+            var _mgs = parseInt(localStorage.getItem("mapa_fotek_grid_state") || "0", 10);
+            if (_mgs === 1 || _mgs === 2) measGridSt = _mgs;
+            measDynInput = localStorage.getItem("mapa_fotek_dyn_input") === "1";
+            measShowCoords = localStorage.getItem("mapa_fotek_show_coords") === "1";
+        } catch(e) {}
+        function setMeasAutoStart(on) {
+            measAutoStart = !!on;
+            try { localStorage.setItem("mapa_fotek_measure_auto", measAutoStart ? "1" : "0"); } catch(e) {}
+            try { if (typeof syncMeasureSettings === "function") syncMeasureSettings(); } catch(e2) {}
+        }
+        function setMeasGridSt(v) {
+            v = parseInt(v, 10);
+            if (v !== 1 && v !== 2) v = 0;
+            measGridSt = v;
+            try { localStorage.setItem("mapa_fotek_grid_state", String(v)); } catch(e) {}
+            try {
+                if (typeof gridState !== "undefined") {
+                    var guard = 0;
+                    while (gridState !== v && guard < 3) { if (typeof cycleGrid === "function") cycleGrid(); guard++; }
+                }
+            } catch(e2) {}
+            try { if (typeof syncMeasureSettings === "function") syncMeasureSettings(); } catch(e3) {}
+        }
+        function setMeasDynInput(on) {
+            measDynInput = !!on;
+            try { localStorage.setItem("mapa_fotek_dyn_input", measDynInput ? "1" : "0"); } catch(e) {}
+            try {
+                if (typeof dynamicInputEnabled !== "undefined") {
+                    dynamicInputEnabled = measDynInput;
+                    if (typeof updateDynamicInputBtn === "function") updateDynamicInputBtn();
+                    if (!measDynInput && typeof hideDynamicInput === "function") hideDynamicInput();
+                }
+            } catch(e2) {}
+            try { if (typeof syncMeasureSettings === "function") syncMeasureSettings(); } catch(e3) {}
+        }
+        function setMeasShowCoords(on) {
+            measShowCoords = !!on;
+            try { localStorage.setItem("mapa_fotek_show_coords", measShowCoords ? "1" : "0"); } catch(e) {}
+            try {
+                if (measShowCoords) { if (typeof startShowCoords === "function") startShowCoords(); }
+                else { if (typeof stopShowCoords === "function") stopShowCoords(); }
+            } catch(e2) {}
+            try { if (typeof syncMeasureSettings === "function") syncMeasureSettings(); } catch(e3) {}
+        }
+        function syncMeasureSettings() {
+            try {
+                var a = document.getElementById("measAutoChk");
+                if (a) a.checked = !!measAutoStart;
+                var frs = document.querySelectorAll(".mf-gridst");
+                for (var i = 0; i < frs.length; i++) {
+                    frs[i].classList.toggle("active", parseInt(frs[i].getAttribute("data-m"), 10) === measGridSt);
+                }
+                var d = document.getElementById("measDynChk");
+                if (d) d.checked = !!measDynInput;
+                var c = document.getElementById("measCoordsChk");
+                if (c) c.checked = !!measShowCoords;
+            } catch(e) {}
+        }
+        function applyMeasureDefaults() {
+            try {
+                if (typeof dynamicInputEnabled !== "undefined") {
+                    dynamicInputEnabled = !!measDynInput;
+                    if (typeof updateDynamicInputBtn === "function") updateDynamicInputBtn();
+                }
+                if (measShowCoords && typeof startShowCoords === "function") {
+                    try {
+                        var scActive = false;
+                        try { scActive = !!(typeof showCoordsState !== "undefined" && showCoordsState && showCoordsState.active); } catch(eS) {}
+                        if (!scActive) startShowCoords();
+                    } catch(eS2) {}
+                }
+                if (typeof gridState !== "undefined" && gridState !== measGridSt) {
+                    var guard = 0;
+                    while (gridState !== measGridSt && guard < 3) { if (typeof cycleGrid === "function") cycleGrid(); guard++; }
+                }
+                if (measAutoStart) {
+                    try {
+                        var p = document.getElementById("measurePanel");
+                        if (p && !p.classList.contains("open") && typeof toggleMeasurePanel === "function") toggleMeasurePanel();
+                    } catch(eP) {}
+                }
+                if (typeof syncMeasureSettings === "function") syncMeasureSettings();
+            } catch(e) {}
+        }
+        try { setTimeout(function() { try { if (typeof applyMeasureDefaults === "function") applyMeasureDefaults(); } catch(e) {} }, 0); } catch(e) {}
         function resetLBMapDefaults() {
             try { if (typeof setLBMapZoom === "function") setLBMapZoom(6); } catch(e) {}
             try { if (typeof setLBMapCenter === "function") setLBMapCenter(50.0, 15.0, false); } catch(e2) {}
-            try { if (typeof setBaseLayerAndSync === "function") setBaseLayerAndSync("gRoad"); else if (typeof setBaseLayer === "function") setBaseLayer("gRoad"); } catch(e) {}
+            try { if (typeof setMeasAutoStart === "function") setMeasAutoStart(false); } catch(e3) {}
+            try { if (typeof setMeasGridSt === "function") setMeasGridSt(0); } catch(e4) {}
+            try { if (typeof setMeasDynInput === "function") setMeasDynInput(false); } catch(e5) {}
+            try { if (typeof setMeasShowCoords === "function") setMeasShowCoords(false); } catch(e6) {}
+            try { if (typeof setBaseLayer === "function") setBaseLayer("_none"); } catch(e) {}
+            try { if (typeof setBaseLayerDisplay === "function") setBaseLayerDisplay("gRoad"); } catch(eD) {}
             var t = i18n[currentLang] || {};
             if (typeof showToast === "function") showToast(t.toastMapReset || "Výchozí podklad obnoven.");
         }
@@ -3058,11 +3168,18 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try { if (typeof syncBasePills === "function") syncBasePills(); } catch(e2) {}
         }
         function setBaseLayer(layerKey, el) {
+            if (!layerKey || layerKey === "_none") {
+                try { localStorage.setItem("mapa_fotek_base_layer", ""); } catch(eR) {}
+                try { if (typeof syncBasePills === "function") syncBasePills(); } catch(eS) {}
+                return;
+            }
             try { localStorage.setItem("mapa_fotek_base_layer", layerKey); } catch(e) {}
             try { if (typeof setBaseLayerDisplay === "function") setBaseLayerDisplay(layerKey, el); } catch(e2) {}
             try { if (typeof syncBasePills === "function") syncBasePills(); } catch(e3) {}
         }
         function setBaseLayerDisplay(layerKey, el) {
+            if (!layerKey || (layerKey !== "vOffline" && !layersMap[layerKey])) return;
+            try { localStorage.setItem("mapa_fotek_last_layer", layerKey); } catch(eL) {}
             if (currentBaseLayer) map.removeLayer(currentBaseLayer);
             currentBaseLayer = null;
             currentLayerKey = layerKey;
@@ -4524,8 +4641,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try { setTimeout(function() { try { location.reload(); } catch(e5) {} }, 400); } catch(e6) {}
         }
 
-        var SETTINGS_PROFILE_KEYS = ["mapa_fotek_archive_root", "mapa_fotek_archive_on", "mapa_fotek_base_layer", "mapa_fotek_map_zoom", "mapa_fotek_map_lat", "mapa_fotek_map_lon", "mapa_fotek_settings_open", "mapa_fotek_lang", "mapa_fotek_hide_s", "mapa_fotek_open_mode", "mapa_fotek_pointer_scale", "mapa_fotek_pointer_color", "mapa_fotek_pointer_shape", "mapa_fotek_pointer_ms", "mapa_fotek_transition", "mapa_fotek_trans_ms", "mapa_fotek_map_frame", "mapa_fotek_trail_opacity", "mapa_fotek_trail_width", "mapa_fotek_trail_color", "mapa_fotek_slide_trail", "mapa_fotek_trail_anim", "mapa_fotek_slide_ms", "mapa_fotek_slide_rev", "mapa_fotek_dataset_styles", "mapa_fotek_sources_order", "mapa_fotek_timeline"];
-        var SETTINGS_PROFILE_DEFAULTS = {"mapa_fotek_archive_root": "", "mapa_fotek_archive_on": "1", "mapa_fotek_base_layer": "gRoad", "mapa_fotek_map_zoom": "6", "mapa_fotek_map_lat": "50.0", "mapa_fotek_map_lon": "15.0", "mapa_fotek_settings_open": "{}", "mapa_fotek_lang": "cs", "mapa_fotek_hide_s": "0", "mapa_fotek_open_mode": "viewer", "mapa_fotek_pointer_scale": "1.25", "mapa_fotek_pointer_color": "green", "mapa_fotek_pointer_shape": "circle", "mapa_fotek_pointer_ms": "2750", "mapa_fotek_transition": "cut", "mapa_fotek_trans_ms": "1000", "mapa_fotek_map_frame": "off", "mapa_fotek_trail_opacity": "90", "mapa_fotek_trail_width": "3", "mapa_fotek_trail_color": "blue", "mapa_fotek_slide_trail": "0", "mapa_fotek_trail_anim": "0", "mapa_fotek_slide_ms": "3000", "mapa_fotek_slide_rev": "0", "mapa_fotek_dataset_styles": "{}", "mapa_fotek_sources_order": "[]", "mapa_fotek_timeline": "1"};
+        var SETTINGS_PROFILE_KEYS = ["mapa_fotek_archive_root", "mapa_fotek_archive_on", "mapa_fotek_base_layer", "mapa_fotek_map_zoom", "mapa_fotek_map_lat", "mapa_fotek_map_lon", "mapa_fotek_measure_auto", "mapa_fotek_grid_state", "mapa_fotek_dyn_input", "mapa_fotek_show_coords", "mapa_fotek_settings_open", "mapa_fotek_lang", "mapa_fotek_hide_s", "mapa_fotek_open_mode", "mapa_fotek_pointer_scale", "mapa_fotek_pointer_color", "mapa_fotek_pointer_shape", "mapa_fotek_pointer_ms", "mapa_fotek_transition", "mapa_fotek_trans_ms", "mapa_fotek_map_frame", "mapa_fotek_trail_opacity", "mapa_fotek_trail_width", "mapa_fotek_trail_color", "mapa_fotek_slide_trail", "mapa_fotek_trail_anim", "mapa_fotek_slide_ms", "mapa_fotek_slide_rev", "mapa_fotek_dataset_styles", "mapa_fotek_sources_order", "mapa_fotek_timeline"];
+        var SETTINGS_PROFILE_DEFAULTS = {"mapa_fotek_archive_root": "", "mapa_fotek_archive_on": "1", "mapa_fotek_base_layer": "gRoad", "mapa_fotek_map_zoom": "6", "mapa_fotek_map_lat": "50.0", "mapa_fotek_map_lon": "15.0", "mapa_fotek_measure_auto": "0", "mapa_fotek_grid_state": "0", "mapa_fotek_dyn_input": "0", "mapa_fotek_show_coords": "0", "mapa_fotek_settings_open": "{}", "mapa_fotek_lang": "cs", "mapa_fotek_hide_s": "0", "mapa_fotek_open_mode": "viewer", "mapa_fotek_pointer_scale": "1.25", "mapa_fotek_pointer_color": "green", "mapa_fotek_pointer_shape": "circle", "mapa_fotek_pointer_ms": "2750", "mapa_fotek_transition": "cut", "mapa_fotek_trans_ms": "1000", "mapa_fotek_map_frame": "off", "mapa_fotek_trail_opacity": "90", "mapa_fotek_trail_width": "3", "mapa_fotek_trail_color": "blue", "mapa_fotek_slide_trail": "0", "mapa_fotek_trail_anim": "0", "mapa_fotek_slide_ms": "3000", "mapa_fotek_slide_rev": "0", "mapa_fotek_dataset_styles": "{}", "mapa_fotek_sources_order": "[]", "mapa_fotek_timeline": "1"};
         function collectSettingsProfile() {
             var o = {};
             try {
@@ -4580,6 +4697,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         try {
                             for (var di = 0; di < SETTINGS_PROFILE_KEYS.length; di++) {
                                 var dk = SETTINGS_PROFILE_KEYS[di];
+                                if (dk === "mapa_fotek_base_layer" || dk === "mapa_fotek_hide_s") continue;
                                 if (!st.hasOwnProperty(dk) && SETTINGS_PROFILE_DEFAULTS && SETTINGS_PROFILE_DEFAULTS[dk] !== undefined) {
                                     try { localStorage.setItem(dk, SETTINGS_PROFILE_DEFAULTS[dk]); } catch(eD) {}
                                 }
@@ -4726,6 +4844,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<button type=\"button\" class=\"source-pill-btn mf-vis\" data-m=\"0\" style=\"width:64px;justify-content:center;\" title=\"" + (t.visAllTip || "") + "\" onclick=\"event.stopPropagation();setLBPhotoVis(0)\">" + (t.visAll || "") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-vis\" data-m=\"1\" style=\"width:64px;justify-content:center;\" title=\"" + (t.visGDTip || "") + "\" onclick=\"event.stopPropagation();setLBPhotoVis(1)\">" + (t.visGD || "") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-vis\" data-m=\"2\" style=\"width:64px;justify-content:center;\" title=\"" + (t.visGTip || "") + "\" onclick=\"event.stopPropagation();setLBPhotoVis(2)\">" + (t.visG || "") + "</button>" +
+                        "<button type=\"button\" class=\"source-pill-btn mf-vis mf-none\" data-m=\"none\" title=\"" + (t.visNoneTip || "") + "\" onclick=\"event.stopPropagation();setLBPhotoVis('none')\">" + (t.visNone || "") + "</button>" +
                         "</div>" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblTimeline || "") + "</span>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-tl\" data-m=\"1\" title=\"" + (t.tlShowTip || "") + "\" onclick=\"event.stopPropagation();setLBTimelineVis(1)\">" + (t.tlShow || "") + "</button>" +
@@ -4852,6 +4971,15 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<input id=\"mapLonNum\" type=\"text\" style=\"width:70px;\" value=\"\" onfocus=\"this.select();\" onchange=\"setLBMapCenter(document.getElementById('mapLatNum').value, this.value, true)\" />" +
                         "<button type=\"button\" class=\"source-pill-btn\" onclick=\"event.stopPropagation();useCurrentMapCenter();\">" + (t.btnMapCenterUse || "") + "</button>" +
                         "</div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #f1f3f4;font-size:11px;font-weight:700;color:#3c4043;\">" + (t.lblMeasure || "") + "</div>" +
+                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"measAutoChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setMeasAutoStart(this.checked)\" /><span>" + (t.measAuto || "") + "</span></label>" +
+                        "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblGridSt || "") + "</span>" +
+                        "<button type=\"button\" class=\"source-pill-btn mf-gridst\" data-m=\"0\" onclick=\"event.stopPropagation();setMeasGridSt(0)\">" + (t.gridOff || "") + "</button>" +
+                        "<button type=\"button\" class=\"source-pill-btn mf-gridst\" data-m=\"1\" onclick=\"event.stopPropagation();setMeasGridSt(1)\">" + (t.gridOn || "") + "</button>" +
+                        "<button type=\"button\" class=\"source-pill-btn mf-gridst\" data-m=\"2\" onclick=\"event.stopPropagation();setMeasGridSt(2)\">" + (t.gridLabels || "") + "</button>" +
+                        "</div>" +
+                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"measDynChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setMeasDynInput(this.checked)\" /><span>" + (t.lblDynInput || "") + "</span></label>" +
+                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"measCoordsChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setMeasShowCoords(this.checked)\" /><span>" + (t.lblShowCoords || "") + "</span></label>" +
                         "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #f1f3f4;display:flex;justify-content:flex-end;\">" +
                         "<button type=\"button\" class=\"source-pill-btn\" style=\"font-size:11px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:#f8f9fa;border:1px solid #dadce0;border-radius:14px;color:#3c4043;\" title=\"" + (t.tipMapDefault || "") + "\" onclick=\"event.stopPropagation();resetLBMapDefaults();\">↺ " + (t.btnMapDefault || "Obnovit výchozí podklad") + "</button>" +
                         "</div>" +
@@ -4879,6 +5007,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 try { syncArchiveInput(); } catch(e) {}
                 try { if (typeof syncBasePills === "function") syncBasePills(); } catch(eBP) {}
                 try { if (typeof syncMapSettings === "function") syncMapSettings(); } catch(eMS) {}
+                try { if (typeof syncMeasureSettings === "function") syncMeasureSettings(); } catch(eMM) {}
                 try { if (typeof syncProfileRow === "function") syncProfileRow(); } catch(eSP) {}
                 try { if (typeof updateStorageMeter === "function") updateStorageMeter(); } catch(eSM) {}
             } catch(e) {}
@@ -5657,7 +5786,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
         function cycleLBShow() {
             lbHideMode = ((lbHideMode || 0) + 1) % 3;
-            try { localStorage.setItem("mapa_fotek_hide_s", String(lbHideMode)); } catch(e) {}
+            try { localStorage.setItem("mapa_fotek_last_hide", String(lbHideMode)); } catch(e) {}
             try { if (typeof syncViewerVis === "function") syncViewerVis(); } catch(eV) {}
             try { if (typeof stopLBSlideshow === "function") stopLBSlideshow(true); } catch(e) {}
             var lb = document.getElementById("lightbox");
@@ -6957,23 +7086,38 @@ window.addEventListener('resize', function() {
         }
         function setLBPhotoVis(m) {
             try {
+                if (m === "none" || m === null || m === undefined) {
+                    try { localStorage.removeItem("mapa_fotek_hide_s"); } catch(e) {}
+                    syncViewerVis();
+                    return;
+                }
                 m = parseInt(m, 10);
                 if (m !== 1 && m !== 2) m = 0;
-                lbHideMode = m;
                 try { localStorage.setItem("mapa_fotek_hide_s", String(m)); } catch(e) {}
+                applyLBHideMode(m);
+                syncViewerVis();
+            } catch(e) {}
+        }
+        function applyLBHideMode(m) {
+            try {
+                lbHideMode = m;
+                try { localStorage.setItem("mapa_fotek_last_hide", String(m)); } catch(eL) {}
                 try { if (typeof stopLBSlideshow === "function") stopLBSlideshow(true); } catch(e2) {}
                 try {
                     var lb = document.getElementById("lightbox");
                     if (lb && lb.classList.contains("active") && typeof lbRefreshPhotos === "function") lbRefreshPhotos();
                 } catch(e3) {}
-                syncViewerVis();
             } catch(e) {}
         }
         function syncViewerVis() {
             try {
+                var apri = null;
+                try { var _av = localStorage.getItem("mapa_fotek_hide_s"); if (_av === "0" || _av === "1" || _av === "2") apri = _av; } catch(eA) {}
                 var frs = document.querySelectorAll(".mf-vis");
                 for (var i = 0; i < frs.length; i++) {
-                    frs[i].classList.toggle("active", parseInt(frs[i].getAttribute("data-m"), 10) === ((typeof lbHideMode === "number") ? lbHideMode : 0));
+                    var dm = frs[i].getAttribute("data-m");
+                    if (dm === "none") frs[i].classList.toggle("active", apri === null);
+                    else frs[i].classList.toggle("active", dm === apri);
                 }
                 var fos = document.querySelectorAll(".mf-open");
                 for (var j = 0; j < fos.length; j++) {
