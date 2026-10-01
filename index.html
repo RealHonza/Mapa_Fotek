@@ -280,7 +280,7 @@
         .source-controls-row .source-pill-btn { min-height: 24px; }
         .source-controls-row .source-move-btn, .source-controls-row .source-del-btn, .source-controls-row .source-export-btn, .source-controls-row .source-prefix-btn { width: 24px; height: 24px; }
         .source-controls-row .icon-style-btn { width: 24px; height: 24px; }
-        #srcModeTxt, #srcModeSingle, #srcModeGis, #dDotIcon, #sDotIcon { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+        #srcModeTxt, #srcModeSingle, #srcModeGis, #dDotIcon, #sDotIcon, #gPtIcon { display: inline-flex; gap: 4px; flex-wrap: wrap; }
         .source-pill-btn.mf-base { width: 108px; justify-content: center; }
         .source-pill-btn.mf-none { border-color: #9aa0a6; color: #5f6368; background: #f1f3f4; }
         .source-pill-btn.mf-none.active { border-style: solid; font-style: normal; }
@@ -325,28 +325,37 @@
         #ptrScaleRange { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(26.67% + 3.2px), #0AA94C calc(26.67% + 3.2px), #0AA94C calc(26.67% + 5.2px), transparent calc(26.67% + 5.2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
         #slideTransDurRange { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(15.79% + 5.16px), #0AA94C calc(15.79% + 5.16px), #0AA94C calc(15.79% + 7.16px), transparent calc(15.79% + 7.16px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
         #mapZoomRange { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(25% + 3.5px), #0AA94C calc(25% + 3.5px), #0AA94C calc(25% + 5.5px), transparent calc(25% + 5.5px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dthOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 9px), #0AA94C calc(100% - 9px), #0AA94C calc(100% - 7px), transparent calc(100% - 7px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dthBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(44.44% + 1px), #0AA94C calc(44.44% + 1px), #0AA94C calc(44.44% + 3px), transparent calc(44.44% + 3px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dthSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(23.08% + 4.85px), #0AA94C calc(23.08% + 4.85px), #0AA94C calc(23.08% + 6.85px), transparent calc(23.08% + 6.85px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dAgeOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 9px), #0AA94C calc(100% - 9px), #0AA94C calc(100% - 7px), transparent calc(100% - 7px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dAgeBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(0% + 9px), #0AA94C calc(0% + 9px), #0AA94C calc(0% + 11px), transparent calc(0% + 11px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dAgeSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(11.39% + 6.95px), #0AA94C calc(11.39% + 6.95px), #0AA94C calc(11.39% + 8.95px), transparent calc(11.39% + 8.95px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dCardsOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 9px), #0AA94C calc(100% - 9px), #0AA94C calc(100% - 7px), transparent calc(100% - 7px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dClustersOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% + 0px), #0AA94C calc(50% + 0px), #0AA94C calc(50% + 2px), transparent calc(50% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dDotOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% + 0px), #0AA94C calc(50% + 0px), #0AA94C calc(50% + 2px), transparent calc(50% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dDotSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(10.42% + 7.13px), #0AA94C calc(10.42% + 7.13px), #0AA94C calc(10.42% + 9.13px), transparent calc(10.42% + 9.13px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #dZoneOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% + 0px), #0AA94C calc(50% + 0px), #0AA94C calc(50% + 2px), transparent calc(50% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sthOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 9px), #0AA94C calc(100% - 9px), #0AA94C calc(100% - 7px), transparent calc(100% - 7px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sthBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(44.44% + 1px), #0AA94C calc(44.44% + 1px), #0AA94C calc(44.44% + 3px), transparent calc(44.44% + 3px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sthSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(23.08% + 4.85px), #0AA94C calc(23.08% + 4.85px), #0AA94C calc(23.08% + 6.85px), transparent calc(23.08% + 6.85px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sAgeOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 9px), #0AA94C calc(100% - 9px), #0AA94C calc(100% - 7px), transparent calc(100% - 7px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sAgeBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(0% + 9px), #0AA94C calc(0% + 9px), #0AA94C calc(0% + 11px), transparent calc(0% + 11px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sAgeSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(11.39% + 6.95px), #0AA94C calc(11.39% + 6.95px), #0AA94C calc(11.39% + 8.95px), transparent calc(11.39% + 8.95px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sCardsOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 9px), #0AA94C calc(100% - 9px), #0AA94C calc(100% - 7px), transparent calc(100% - 7px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sClustersOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% + 0px), #0AA94C calc(50% + 0px), #0AA94C calc(50% + 2px), transparent calc(50% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sDotOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% + 0px), #0AA94C calc(50% + 0px), #0AA94C calc(50% + 2px), transparent calc(50% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sDotSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(10.42% + 7.13px), #0AA94C calc(10.42% + 7.13px), #0AA94C calc(10.42% + 9.13px), transparent calc(10.42% + 9.13px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
-        #sZoneOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% + 0px), #0AA94C calc(50% + 0px), #0AA94C calc(50% + 2px), transparent calc(50% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dthOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dthBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(44.44% + 0px), #0AA94C calc(44.44% + 0px), #0AA94C calc(44.44% + 2px), transparent calc(44.44% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dthSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(23.08% + 3.85px), #0AA94C calc(23.08% + 3.85px), #0AA94C calc(23.08% + 5.85px), transparent calc(23.08% + 5.85px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dAgeOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dAgeBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(0% + 8px), #0AA94C calc(0% + 8px), #0AA94C calc(0% + 10px), transparent calc(0% + 10px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dAgeSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(11.39% + 5.95px), #0AA94C calc(11.39% + 5.95px), #0AA94C calc(11.39% + 7.95px), transparent calc(11.39% + 7.95px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dCardsOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dClustersOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% - 1px), #0AA94C calc(50% - 1px), #0AA94C calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dDotOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% - 1px), #0AA94C calc(50% - 1px), #0AA94C calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dDotSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(10.42% + 6.13px), #0AA94C calc(10.42% + 6.13px), #0AA94C calc(10.42% + 8.13px), transparent calc(10.42% + 8.13px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #dZoneOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% - 1px), #0AA94C calc(50% - 1px), #0AA94C calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sthOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sthBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(44.44% + 0px), #0AA94C calc(44.44% + 0px), #0AA94C calc(44.44% + 2px), transparent calc(44.44% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sthSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(23.08% + 3.85px), #0AA94C calc(23.08% + 3.85px), #0AA94C calc(23.08% + 5.85px), transparent calc(23.08% + 5.85px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sAgeOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sAgeBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(0% + 8px), #0AA94C calc(0% + 8px), #0AA94C calc(0% + 10px), transparent calc(0% + 10px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sAgeSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(11.39% + 5.95px), #0AA94C calc(11.39% + 5.95px), #0AA94C calc(11.39% + 7.95px), transparent calc(11.39% + 7.95px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sCardsOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sClustersOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% - 1px), #0AA94C calc(50% - 1px), #0AA94C calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sDotOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% - 1px), #0AA94C calc(50% - 1px), #0AA94C calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sDotSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(10.42% + 6.13px), #0AA94C calc(10.42% + 6.13px), #0AA94C calc(10.42% + 8.13px), transparent calc(10.42% + 8.13px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #sZoneOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% - 1px), #0AA94C calc(50% - 1px), #0AA94C calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gHtOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gHtBlur { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(44.44% + 0px), #0AA94C calc(44.44% + 0px), #0AA94C calc(44.44% + 2px), transparent calc(44.44% + 2px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gPtOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gPtSize { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(40.74% + 0.67px), #0AA94C calc(40.74% + 0.67px), #0AA94C calc(40.74% + 2.67px), transparent calc(40.74% + 2.67px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gPinsOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gZoneOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gLineOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(85% - 7.3px), #0AA94C calc(85% - 7.3px), #0AA94C calc(85% - 5.3px), transparent calc(85% - 5.3px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gLineWd { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(5.05% + 7.09px), #0AA94C calc(5.05% + 7.09px), #0AA94C calc(5.05% + 9.09px), transparent calc(5.05% + 9.09px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #gFillOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% - 1px), #0AA94C calc(50% - 1px), #0AA94C calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
         .slider-minmax { font-size: 10px; color: #80868b; white-space: nowrap; flex-shrink: 0; }
         
         .source-item-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; flex-grow: 0; margin-left: auto; }
@@ -1893,7 +1902,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.90</span>
+                    <span class="info-meta-val">2.91</span>
                 </div>
             </div>
 
@@ -2540,7 +2549,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 setProfilesTitle: "Profily a mazání dat",
                                 setMapTitle: "Nastavení mapy",
                 setSourcesTitle: "Nastavení zdrojů", srcTxt: "Datový soubor fotografií (.TXT)", srcSingle: "Samostatná fotografie (.JPG, .JPEG, .PNG)", srcGis: "GIS soubory (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", lblDefMode: "Výchozí režim",
-                modeHeat: "Heatmapa", modeDots: "Tečky", modeZone: "Zóny", modeAge: "Stáří", modeCards: "Fotokarty", modeClusters: "Shluky", modeSymbol: "Symboly", modePins: "Špendlíky", srcPal: "Paleta", srcSize: "Velikost", srcColor: "Barva", srcIcon: "Ikona", srcRadius: "Poloměr", lblRot: "Rotace", btnSrcDefault: "Obnovit výchozí režimy", tipSrcDefault: "Vrátit výchozí režimy zdrojů", btnTxtDefault: "Obnovit nastavení datového souboru", tipTxtDefault: "Vrátit výchozí nastavení datového souboru fotografií (.TXT)", btnSingleDefault: "Obnovit nastavení samostatné fotografie", tipSingleDefault: "Vrátit výchozí nastavení samostatné fotografie (.JPG, .JPEG, .PNG)", btnSrcAllDefault: "Obnovit nastavení zdrojů", toastSrcReset: "Výchozí režimy zdrojů obnoveny.", lblBaseLayer: "Mapový podklad", btnMapDefault: "Obnovit nastavení mapy", tipMapDefault: "Vrátit výchozí nastavení mapy", toastMapReset: "Nastavení mapy obnoveno.", lblMapZoom: "Přiblížení", lblMapCenter: "Střed mapy", btnMapCenterUse: "Použít aktuální", lblMeasure: "Panel měření", measAuto: "Automatické spuštění", lblGridSt: "Mřížka", gridOff: "Vypnuta", gridOn: "Mřížka", gridLabels: "Mřížka s popisky", lblDynInput: "Zadávání z klávesnice", lblShowCoords: "Zobrazení souřadnic", setProfilesDesc: "Uložení profilu zapíše všechno nastavení včetně kořene archivu do GeoJSON. Načtení profilu nastavení přepíše a aplikaci restartuje.",
+                modeHeat: "Heatmapa", modeDots: "Tečky", modeZone: "Zóny", modeAge: "Stáří", modeCards: "Fotokarty", modeClusters: "Shluky", modeSymbol: "Symboly", modePins: "Špendlíky", srcPal: "Paleta", srcSize: "Velikost", srcColor: "Barva", srcIcon: "Ikona", srcRadius: "Poloměr", lblRot: "Rotace", btnSrcDefault: "Obnovit výchozí režimy", tipSrcDefault: "Vrátit výchozí režimy zdrojů", btnTxtDefault: "Obnovit nastavení datového souboru", tipTxtDefault: "Vrátit výchozí nastavení datového souboru fotografií (.TXT)", btnSingleDefault: "Obnovit nastavení samostatné fotografie", tipSingleDefault: "Vrátit výchozí nastavení samostatné fotografie (.JPG, .JPEG, .PNG)", btnSrcAllDefault: "Obnovit nastavení zdrojů", btnGisDefault: "Obnovit nastavení GIS", tipGisDefault: "Vrátit výchozí nastavení GIS souborů (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", toastSrcReset: "Výchozí režimy zdrojů obnoveny.", lblBaseLayer: "Mapový podklad", btnMapDefault: "Obnovit nastavení mapy", tipMapDefault: "Vrátit výchozí nastavení mapy", toastMapReset: "Nastavení mapy obnoveno.", lblMapZoom: "Přiblížení", lblMapCenter: "Střed mapy", btnMapCenterUse: "Použít aktuální", lblMeasure: "Panel měření", measAuto: "Automatické spuštění", lblGridSt: "Mřížka", gridOff: "Vypnuta", gridOn: "Mřížka", gridLabels: "Mřížka s popisky", lblDynInput: "Zadávání z klávesnice", lblShowCoords: "Zobrazení souřadnic", setProfilesDesc: "Uložení profilu zapíše všechno nastavení včetně kořene archivu do GeoJSON. Načtení profilu nastavení přepíše a aplikaci restartuje.",
                 profileSaveBtn: "Uložit profil",
                 profileLoadBtn: "Načíst profil",
                 profileSaved: "Profil nastavení uložen.",
@@ -2823,7 +2832,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 setProfilesTitle: "Profiles & data wipe",
                 setMapTitle: "Map settings",
                 setSourcesTitle: "Source settings", srcTxt: "Photo data file (.TXT)", srcSingle: "Single photo (.JPG, .JPEG, .PNG)", srcGis: "GIS files (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", lblDefMode: "Default mode",
-                modeHeat: "Heatmap", modeDots: "Dots", modeZone: "Zones", modeAge: "Age", modeCards: "Photo cards", modeClusters: "Clusters", modeSymbol: "Symbols", modePins: "Pins", srcPal: "Palette", srcSize: "Size", srcColor: "Color", srcIcon: "Icon", srcRadius: "Radius", lblRot: "Rotation", btnSrcDefault: "Reset default modes", tipSrcDefault: "Reset source default modes", btnTxtDefault: "Reset data file settings", tipTxtDefault: "Reset photo data file (.TXT) defaults", btnSingleDefault: "Reset single photo settings", tipSingleDefault: "Reset single photo (.JPG, .JPEG, .PNG) defaults", btnSrcAllDefault: "Reset source settings", toastSrcReset: "Source default modes restored.", lblBaseLayer: "Base layer", btnMapDefault: "Reset map settings", tipMapDefault: "Reset map settings", toastMapReset: "Map settings restored.", lblMapZoom: "Zoom", lblMapCenter: "Map center", btnMapCenterUse: "Use current", lblMeasure: "Measure panel", measAuto: "Autostart", lblGridSt: "Grid", gridOff: "Off", gridOn: "Grid", gridLabels: "Grid with labels", lblDynInput: "Keyboard input", lblShowCoords: "Coordinate display",
+                modeHeat: "Heatmap", modeDots: "Dots", modeZone: "Zones", modeAge: "Age", modeCards: "Photo cards", modeClusters: "Clusters", modeSymbol: "Symbols", modePins: "Pins", srcPal: "Palette", srcSize: "Size", srcColor: "Color", srcIcon: "Icon", srcRadius: "Radius", lblRot: "Rotation", btnSrcDefault: "Reset default modes", tipSrcDefault: "Reset source default modes", btnTxtDefault: "Reset data file settings", tipTxtDefault: "Reset photo data file (.TXT) defaults", btnSingleDefault: "Reset single photo settings", tipSingleDefault: "Reset single photo (.JPG, .JPEG, .PNG) defaults", btnSrcAllDefault: "Reset source settings", btnGisDefault: "Reset GIS settings", tipGisDefault: "Reset GIS files (.GPX, .KML, .KMZ, .GEOJSON, .JSON) defaults", toastSrcReset: "Source default modes restored.", lblBaseLayer: "Base layer", btnMapDefault: "Reset map settings", tipMapDefault: "Reset map settings", toastMapReset: "Map settings restored.", lblMapZoom: "Zoom", lblMapCenter: "Map center", btnMapCenterUse: "Use current", lblMeasure: "Measure panel", measAuto: "Autostart", lblGridSt: "Grid", gridOff: "Off", gridOn: "Grid", gridLabels: "Grid with labels", lblDynInput: "Keyboard input", lblShowCoords: "Coordinate display",
                 setProfilesDesc: "Saving a profile writes all settings including the archive root to GeoJSON. Loading a profile overwrites settings and restarts the app.",
                 profileSaveBtn: "Save profile",
                 profileLoadBtn: "Load profile",
@@ -3248,6 +3257,24 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try { localStorage.setItem("mapa_fotek_def_single_" + key, String(v)); } catch(e) {}
             try { if (typeof syncSingleDetail === "function") syncSingleDetail(); } catch(e2) {}
         }
+        var SRC_GIS_KEYS = ["mapa_fotek_def_gis_point_color", "mapa_fotek_def_gis_point_color_rot", "mapa_fotek_def_gis_point_icon", "mapa_fotek_def_gis_point_size", "mapa_fotek_def_gis_point_op", "mapa_fotek_def_gis_pins_op", "mapa_fotek_def_gis_heat_pal", "mapa_fotek_def_gis_heat_pal_rot", "mapa_fotek_def_gis_heat_op", "mapa_fotek_def_gis_heat_blur", "mapa_fotek_def_gis_zone_color", "mapa_fotek_def_gis_zone_color_rot", "mapa_fotek_def_gis_zone_km", "mapa_fotek_def_gis_zone_op", "mapa_fotek_def_gis_line_color", "mapa_fotek_def_gis_line_color_rot", "mapa_fotek_def_gis_line_op", "mapa_fotek_def_gis_line_width", "mapa_fotek_def_gis_fill_color", "mapa_fotek_def_gis_fill_op"];
+        function apriGGet(key, def) {
+            try { var v = localStorage.getItem("mapa_fotek_def_gis_" + key); return (v === null || v === undefined) ? def : v; } catch(e) { return def; }
+        }
+        function setDefGis(key, v) {
+            try { localStorage.setItem("mapa_fotek_def_gis_" + key, String(v)); } catch(e) {}
+            try { if (typeof syncGisDetail === "function") syncGisDetail(); } catch(e2) {}
+        }
+        var GIS_FILL_SEQ = ["#ea4335", "#fb8c00", "#fbbc04", "#34a853", "#00897b", "#1a73e8", "#8e24aa", "#202124", "#ffffff", "#795548"];
+        function gisFillItems() {
+            var namesCs = ["Červená", "Oranžová", "Žlutá", "Zelená", "Tyrkysová", "Modrá", "Fialová", "Tmavá", "Bílá", "Hnědá"];
+            var namesEn = ["Red", "Orange", "Yellow", "Green", "Teal", "Blue", "Purple", "Dark", "White", "Brown"];
+            var out = [];
+            for (var i = 0; i < GIS_FILL_SEQ.length; i++) {
+                out.push({ v: GIS_FILL_SEQ[i], t: (currentLang === "en" ? namesEn[i] : namesCs[i]), css: "background:" + GIS_FILL_SEQ[i] + ";" });
+            }
+            return out;
+        }
         function syncSrcDetail() {
             try {
                 var setPair = function(rid, nid, val, dec) {
@@ -3450,6 +3477,126 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 }
             } catch(e) {}
         }
+        function syncGisDetail() {
+            try {
+                var setPair = function(rid, nid, val) {
+                    var r = document.getElementById(rid), n = document.getElementById(nid);
+                    if (r) r.value = val;
+                    if (n) n.value = val;
+                };
+                var g = function(k, d) { return apriGGet(k, d); };
+                setPair("gHtOp", "gHtOpN", g("heat_op", 100));
+                setPair("gHtBlur", "gHtBlurN", g("heat_blur", 25));
+                setPair("gPtOp", "gPtOpN", g("point_op", 100));
+                setPair("gPtSize", "gPtSizeN", g("point_size", 14));
+                setPair("gPinsOp", "gPinsOpN", g("pins_op", 100));
+                setPair("gZoneOp", "gZoneOpN", g("zone_op", 100));
+                setPair("gLineOp", "gLineOpN", g("line_op", 85));
+                setPair("gLineWd", "gLineWdN", g("line_width", 3));
+                setPair("gFillOp", "gFillOpN", g("fill_op", 50));
+                var zk = document.getElementById("gZoneKm");
+                if (zk) zk.value = g("zone_km", 10);
+                var rotPairs = [["gHtPalRot", "heat_pal_rot"], ["gPtColRot", "point_color_rot"], ["gZoneColRot", "zone_color_rot"], ["gLineColRot", "line_color_rot"]];
+                for (var ri = 0; ri < rotPairs.length; ri++) {
+                    var rcb = document.getElementById(rotPairs[ri][0]);
+                    if (rcb) rcb.checked = (g(rotPairs[ri][1], "1") === "1");
+                }
+                var mkPills = function(elId, items, cur, key) {
+                    var el = document.getElementById(elId);
+                    if (!el) return;
+                    el.innerHTML = "";
+                    try { el.classList.add("color-palette-grid"); } catch(eC) {}
+                    for (var i = 0; i < items.length; i++) {
+                        (function(it) {
+                            var b = document.createElement("button");
+                            b.type = "button";
+                            if (it.v === cur) b.classList.add("active");
+                            b.title = it.t;
+                            if (it.css) b.style.cssText += it.css;
+                            b.onclick = function(e) { if (e) e.stopPropagation(); setDefGis(key, it.v); };
+                            el.appendChild(b);
+                        })(items[i]);
+                    }
+                };
+                var hp = [];
+                try {
+                    var hks = Object.keys(heatPalettes || {});
+                    for (var hi = 0; hi < hks.length; hi++) {
+                        var p = heatPalettes[hks[hi]], stops = [];
+                        try {
+                            var sks = Object.keys(p).filter(function(k) { return !isNaN(parseFloat(k)); }).sort(function(a, b) { return parseFloat(a) - parseFloat(b); });
+                            for (var si = 0; si < sks.length; si++) stops.push(p[sks[si]] + " " + (parseFloat(sks[si]) * 100) + "%");
+                        } catch(e) {}
+                        var hTitleMap = { classic: "Classic", google: "Google Photos", inferno: "Inferno", emerald: "Emerald", ocean: "Ocean", sunset: "Sunset", duha: (currentLang === "en" ? "Rainbow" : "Duha"), neon: "Cyber Neon", lava: (currentLang === "en" ? "Lava" : "Láva"), mono: (currentLang === "en" ? "Grayscale" : "Stupně šedi") };
+                        hp.push({ v: hks[hi], t: (hTitleMap[hks[hi]] || hks[hi]), css: "background:linear-gradient(90deg, " + stops.join(",") + ");" });
+                    }
+                } catch(e2) {}
+                mkPills("gHtPal", hp, g("heat_pal", "classic"), "heat_pal");
+                var dc = [];
+                try {
+                    var dks = Object.keys(dotColors || {});
+                    for (var di2 = 0; di2 < dks.length; di2++) dc.push({ v: dks[di2], t: dks[di2], css: "background:" + dotColors[dks[di2]].fill + ";" });
+                } catch(e4) {}
+                mkPills("gZoneCol", dc, g("zone_color", "blue"), "zone_color");
+                var fills = [];
+                try { fills = gisFillItems(); } catch(e5) {}
+                mkPills("gPtCol", fills, g("point_color", "#ea4335"), "point_color");
+                mkPills("gPinsCol", fills, g("point_color", "#ea4335"), "point_color");
+                mkPills("gLineCol", fills, g("line_color", "#ea4335"), "line_color");
+                var fcol = g("fill_color", "");
+                var fell = document.getElementById("gFillCol");
+                if (fell) {
+                    fell.innerHTML = "";
+                    try { fell.classList.add("color-palette-grid"); } catch(eC2) {}
+                    for (var fj = 0; fj < fills.length; fj++) {
+                        (function(it) {
+                            var b = document.createElement("button");
+                            b.type = "button";
+                            if (it.v === fcol) b.classList.add("active");
+                            b.title = it.t;
+                            if (it.css) b.style.cssText += it.css;
+                            b.onclick = function(e) { if (e) e.stopPropagation(); setDefGis("fill_color", it.v); };
+                            fell.appendChild(b);
+                        })(fills[fj]);
+                    }
+                    (function() {
+                        var fno = document.getElementById("gFillNone");
+                        if (!fno) return;
+                        fno.innerHTML = "";
+                        try { fno.classList.add("color-palette-grid"); } catch(eC3) {}
+                        var b = document.createElement("button");
+                        b.type = "button";
+                        if (!fcol) b.classList.add("active");
+                        b.title = currentLang === "cs" ? "Bez výplně" : "No fill";
+                        b.style.cssText += "background:repeating-conic-gradient(#ccc 0% 25%, transparent 0% 50%) 50%/8px 8px;";
+                        b.onclick = function(e) { if (e) e.stopPropagation(); setDefGis("fill_color", ""); };
+                        fno.appendChild(b);
+                    })();
+                }
+                var tib = document.getElementById("gPtIcon");
+                if (tib) {
+                    tib.innerHTML = "";
+                    var curT = g("point_icon", "pin");
+                    var tiks = [];
+                    try {
+                        var _en = (typeof currentLang !== "undefined" && currentLang === "en");
+                        tiks = [{ v: "dot", t: _en ? "Dot" : "Kolečko" }, { v: "pin", t: _en ? "Pin" : "Špendlík" }, { v: "flag", t: _en ? "Flag" : "Praporek" }, { v: "peak", t: _en ? "Peak" : "Vrchol" }, { v: "camera", t: _en ? "Camera" : "Fotoaparát" }, { v: "cross", t: _en ? "Cross" : "Křížek" }, { v: "camp", t: _en ? "Camp" : "Kemp" }, { v: "star", t: "Symbol" }];
+                    } catch(eT) {}
+                    if (!tiks.length) tiks = [{ v: "dot", t: "dot" }, { v: "pin", t: "pin" }];
+                    for (var ij = 0; ij < tiks.length; ij++) {
+                        (function(it) {
+                            var b = document.createElement("button");
+                            b.type = "button";
+                            b.className = "icon-style-btn" + (it.v === curT ? " active" : "");
+                            b.title = it.t;
+                            try { b.innerHTML = getTrackIconSvg(it.v, "#5f6368", 18, "#ffffff"); } catch(eI) {}
+                            b.onclick = function(e) { if (e) e.stopPropagation(); setDefGis("point_icon", it.v); };
+                            tib.appendChild(b);
+                        })(tiks[ij]);
+                    }
+                }
+            } catch(e) {}
+        }
         function resetSrcDefaults() {
             try { localStorage.removeItem("mapa_fotek_def_txt_mode"); } catch(e) {}
             try { localStorage.removeItem("mapa_fotek_def_single_mode"); } catch(e2) {}
@@ -3464,9 +3611,15 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     try { localStorage.removeItem(SRC_SINGLE_KEYS[sj]); } catch(eY) {}
                 }
             } catch(eS) {}
+            try {
+                for (var gj = 0; gj < SRC_GIS_KEYS.length; gj++) {
+                    try { localStorage.removeItem(SRC_GIS_KEYS[gj]); } catch(eZ) {}
+                }
+            } catch(eG) {}
             try { if (typeof syncSrcModes === "function") syncSrcModes(); } catch(e5) {}
             try { if (typeof syncSrcDetail === "function") syncSrcDetail(); } catch(e6) {}
             try { if (typeof syncSingleDetail === "function") syncSingleDetail(); } catch(e7) {}
+            try { if (typeof syncGisDetail === "function") syncGisDetail(); } catch(e8) {}
             try { if (typeof syncSrcModes === "function") syncSrcModes(); } catch(e4) {}
             var t = i18n[currentLang] || {};
             if (typeof showToast === "function") showToast(t.toastSrcReset || "Výchozí režimy zdrojů obnoveny.");
@@ -3492,6 +3645,18 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             } catch(e2) {}
             try { if (typeof syncSrcModes === "function") syncSrcModes(); } catch(e3) {}
             try { if (typeof syncSingleDetail === "function") syncSingleDetail(); } catch(e4) {}
+            var t = i18n[currentLang] || {};
+            if (typeof showToast === "function") showToast(t.toastSrcReset || "Výchozí režimy zdrojů obnoveny.");
+        }
+        function resetGisDefaults() {
+            try { localStorage.removeItem("mapa_fotek_def_gis_mode"); } catch(e) {}
+            try {
+                for (var di = 0; di < SRC_GIS_KEYS.length; di++) {
+                    try { localStorage.removeItem(SRC_GIS_KEYS[di]); } catch(eX) {}
+                }
+            } catch(e2) {}
+            try { if (typeof syncSrcModes === "function") syncSrcModes(); } catch(e3) {}
+            try { if (typeof syncGisDetail === "function") syncGisDetail(); } catch(e4) {}
             var t = i18n[currentLang] || {};
             if (typeof showToast === "function") showToast(t.toastSrcReset || "Výchozí režimy zdrojů obnoveny.");
         }
@@ -5195,8 +5360,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             setTimeout(function(){ btnCancel.focus(); }, 50);
         }
 
-        var SETTINGS_PROFILE_KEYS = ["mapa_fotek_archive_root", "mapa_fotek_archive_on", "mapa_fotek_base_layer", "mapa_fotek_map_zoom", "mapa_fotek_map_lat", "mapa_fotek_map_lon", "mapa_fotek_measure_auto", "mapa_fotek_grid_state", "mapa_fotek_dyn_input", "mapa_fotek_show_coords", "mapa_fotek_def_txt_mode", "mapa_fotek_def_single_mode", "mapa_fotek_def_gis_mode", "mapa_fotek_def_txt_heat_pal", "mapa_fotek_def_txt_heat_pal_rot", "mapa_fotek_def_txt_heat_op", "mapa_fotek_def_txt_heat_blur", "mapa_fotek_def_txt_heat_size", "mapa_fotek_def_txt_dots_color", "mapa_fotek_def_txt_dots_color_rot", "mapa_fotek_def_txt_dots_op", "mapa_fotek_def_txt_dots_size", "mapa_fotek_def_txt_dots_icon", "mapa_fotek_def_txt_zone_color", "mapa_fotek_def_txt_zone_color_rot", "mapa_fotek_def_txt_zone_op", "mapa_fotek_def_txt_zone_km", "mapa_fotek_def_txt_age_pal", "mapa_fotek_def_txt_age_pal_rot", "mapa_fotek_def_txt_age_op", "mapa_fotek_def_txt_age_blur", "mapa_fotek_def_txt_age_size", "mapa_fotek_def_txt_cards_op", "mapa_fotek_def_txt_clusters_color", "mapa_fotek_def_txt_clusters_color_rot", "mapa_fotek_def_txt_clusters_op", "mapa_fotek_def_single_heat_pal", "mapa_fotek_def_single_heat_pal_rot", "mapa_fotek_def_single_heat_op", "mapa_fotek_def_single_heat_blur", "mapa_fotek_def_single_heat_size", "mapa_fotek_def_single_dots_color", "mapa_fotek_def_single_dots_color_rot", "mapa_fotek_def_single_dots_op", "mapa_fotek_def_single_dots_size", "mapa_fotek_def_single_dots_icon", "mapa_fotek_def_single_zone_color", "mapa_fotek_def_single_zone_color_rot", "mapa_fotek_def_single_zone_op", "mapa_fotek_def_single_zone_km", "mapa_fotek_def_single_age_pal", "mapa_fotek_def_single_age_pal_rot", "mapa_fotek_def_single_age_op", "mapa_fotek_def_single_age_blur", "mapa_fotek_def_single_age_size", "mapa_fotek_def_single_cards_op", "mapa_fotek_def_single_clusters_color", "mapa_fotek_def_single_clusters_color_rot", "mapa_fotek_def_single_clusters_op", "mapa_fotek_settings_open", "mapa_fotek_lang", "mapa_fotek_hide_s", "mapa_fotek_open_mode", "mapa_fotek_pointer_scale", "mapa_fotek_pointer_color", "mapa_fotek_pointer_shape", "mapa_fotek_pointer_ms", "mapa_fotek_transition", "mapa_fotek_trans_ms", "mapa_fotek_map_frame", "mapa_fotek_trail_opacity", "mapa_fotek_trail_width", "mapa_fotek_trail_color", "mapa_fotek_slide_trail", "mapa_fotek_trail_anim", "mapa_fotek_slide_ms", "mapa_fotek_slide_rev", "mapa_fotek_dataset_styles", "mapa_fotek_sources_order", "mapa_fotek_timeline"];
-        var SETTINGS_PROFILE_DEFAULTS = {"mapa_fotek_archive_root": "", "mapa_fotek_archive_on": "1", "mapa_fotek_base_layer": "gRoad", "mapa_fotek_map_zoom": "6", "mapa_fotek_map_lat": "50.0", "mapa_fotek_map_lon": "15.0", "mapa_fotek_measure_auto": "0", "mapa_fotek_grid_state": "0", "mapa_fotek_dyn_input": "0", "mapa_fotek_show_coords": "0", "mapa_fotek_def_txt_mode": "heat", "mapa_fotek_def_single_mode": "dots", "mapa_fotek_def_gis_mode": "symbol", "mapa_fotek_def_txt_heat_pal": "classic", "mapa_fotek_def_txt_heat_pal_rot": "1", "mapa_fotek_def_txt_heat_op": "100", "mapa_fotek_def_txt_heat_blur": "25", "mapa_fotek_def_txt_heat_size": "1", "mapa_fotek_def_txt_dots_color": "red", "mapa_fotek_def_txt_dots_color_rot": "1", "mapa_fotek_def_txt_dots_op": "50", "mapa_fotek_def_txt_dots_size": "3.5", "mapa_fotek_def_txt_dots_icon": "dot", "mapa_fotek_def_txt_zone_color": "blue", "mapa_fotek_def_txt_zone_color_rot": "1", "mapa_fotek_def_txt_zone_op": "50", "mapa_fotek_def_txt_zone_km": "10", "mapa_fotek_def_txt_age_pal": "duha", "mapa_fotek_def_txt_age_pal_rot": "1", "mapa_fotek_def_txt_age_op": "100", "mapa_fotek_def_txt_age_blur": "0", "mapa_fotek_def_txt_age_size": "0.5", "mapa_fotek_def_txt_cards_op": "100", "mapa_fotek_def_txt_clusters_color": "red", "mapa_fotek_def_txt_clusters_color_rot": "1", "mapa_fotek_def_txt_clusters_op": "50", "mapa_fotek_def_single_heat_pal": "classic", "mapa_fotek_def_single_heat_pal_rot": "1", "mapa_fotek_def_single_heat_op": "100", "mapa_fotek_def_single_heat_blur": "25", "mapa_fotek_def_single_heat_size": "1", "mapa_fotek_def_single_dots_color": "red", "mapa_fotek_def_single_dots_color_rot": "1", "mapa_fotek_def_single_dots_op": "50", "mapa_fotek_def_single_dots_size": "3.5", "mapa_fotek_def_single_dots_icon": "dot", "mapa_fotek_def_single_zone_color": "blue", "mapa_fotek_def_single_zone_color_rot": "1", "mapa_fotek_def_single_zone_op": "50", "mapa_fotek_def_single_zone_km": "10", "mapa_fotek_def_single_age_pal": "duha", "mapa_fotek_def_single_age_pal_rot": "1", "mapa_fotek_def_single_age_op": "100", "mapa_fotek_def_single_age_blur": "0", "mapa_fotek_def_single_age_size": "0.5", "mapa_fotek_def_single_cards_op": "100", "mapa_fotek_def_single_clusters_color": "red", "mapa_fotek_def_single_clusters_color_rot": "1", "mapa_fotek_def_single_clusters_op": "50", "mapa_fotek_settings_open": "{}", "mapa_fotek_lang": "cs", "mapa_fotek_hide_s": "0", "mapa_fotek_open_mode": "viewer", "mapa_fotek_pointer_scale": "1.25", "mapa_fotek_pointer_color": "green", "mapa_fotek_pointer_shape": "circle", "mapa_fotek_pointer_ms": "2750", "mapa_fotek_transition": "cut", "mapa_fotek_trans_ms": "1000", "mapa_fotek_map_frame": "off", "mapa_fotek_trail_opacity": "90", "mapa_fotek_trail_width": "3", "mapa_fotek_trail_color": "blue", "mapa_fotek_slide_trail": "0", "mapa_fotek_trail_anim": "0", "mapa_fotek_slide_ms": "3000", "mapa_fotek_slide_rev": "0", "mapa_fotek_dataset_styles": "{}", "mapa_fotek_sources_order": "[]", "mapa_fotek_timeline": "1"};
+        var SETTINGS_PROFILE_KEYS = ["mapa_fotek_archive_root", "mapa_fotek_archive_on", "mapa_fotek_base_layer", "mapa_fotek_map_zoom", "mapa_fotek_map_lat", "mapa_fotek_map_lon", "mapa_fotek_measure_auto", "mapa_fotek_grid_state", "mapa_fotek_dyn_input", "mapa_fotek_show_coords", "mapa_fotek_def_txt_mode", "mapa_fotek_def_single_mode", "mapa_fotek_def_gis_mode", "mapa_fotek_def_txt_heat_pal", "mapa_fotek_def_txt_heat_pal_rot", "mapa_fotek_def_txt_heat_op", "mapa_fotek_def_txt_heat_blur", "mapa_fotek_def_txt_heat_size", "mapa_fotek_def_txt_dots_color", "mapa_fotek_def_txt_dots_color_rot", "mapa_fotek_def_txt_dots_op", "mapa_fotek_def_txt_dots_size", "mapa_fotek_def_txt_dots_icon", "mapa_fotek_def_txt_zone_color", "mapa_fotek_def_txt_zone_color_rot", "mapa_fotek_def_txt_zone_op", "mapa_fotek_def_txt_zone_km", "mapa_fotek_def_txt_age_pal", "mapa_fotek_def_txt_age_pal_rot", "mapa_fotek_def_txt_age_op", "mapa_fotek_def_txt_age_blur", "mapa_fotek_def_txt_age_size", "mapa_fotek_def_txt_cards_op", "mapa_fotek_def_txt_clusters_color", "mapa_fotek_def_txt_clusters_color_rot", "mapa_fotek_def_txt_clusters_op", "mapa_fotek_def_single_heat_pal", "mapa_fotek_def_single_heat_pal_rot", "mapa_fotek_def_single_heat_op", "mapa_fotek_def_single_heat_blur", "mapa_fotek_def_single_heat_size", "mapa_fotek_def_single_dots_color", "mapa_fotek_def_single_dots_color_rot", "mapa_fotek_def_single_dots_op", "mapa_fotek_def_single_dots_size", "mapa_fotek_def_single_dots_icon", "mapa_fotek_def_single_zone_color", "mapa_fotek_def_single_zone_color_rot", "mapa_fotek_def_single_zone_op", "mapa_fotek_def_single_zone_km", "mapa_fotek_def_single_age_pal", "mapa_fotek_def_single_age_pal_rot", "mapa_fotek_def_single_age_op", "mapa_fotek_def_single_age_blur", "mapa_fotek_def_single_age_size", "mapa_fotek_def_single_cards_op", "mapa_fotek_def_single_clusters_color", "mapa_fotek_def_single_clusters_color_rot", "mapa_fotek_def_single_clusters_op", "mapa_fotek_def_gis_point_color", "mapa_fotek_def_gis_point_color_rot", "mapa_fotek_def_gis_point_icon", "mapa_fotek_def_gis_point_size", "mapa_fotek_def_gis_point_op", "mapa_fotek_def_gis_pins_op", "mapa_fotek_def_gis_heat_pal", "mapa_fotek_def_gis_heat_pal_rot", "mapa_fotek_def_gis_heat_op", "mapa_fotek_def_gis_heat_blur", "mapa_fotek_def_gis_zone_color", "mapa_fotek_def_gis_zone_color_rot", "mapa_fotek_def_gis_zone_km", "mapa_fotek_def_gis_line_color", "mapa_fotek_def_gis_line_color_rot", "mapa_fotek_def_gis_line_op", "mapa_fotek_def_gis_line_width", "mapa_fotek_def_gis_fill_color", "mapa_fotek_def_gis_fill_op", "mapa_fotek_settings_open", "mapa_fotek_lang", "mapa_fotek_hide_s", "mapa_fotek_open_mode", "mapa_fotek_pointer_scale", "mapa_fotek_pointer_color", "mapa_fotek_pointer_shape", "mapa_fotek_pointer_ms", "mapa_fotek_transition", "mapa_fotek_trans_ms", "mapa_fotek_map_frame", "mapa_fotek_trail_opacity", "mapa_fotek_trail_width", "mapa_fotek_trail_color", "mapa_fotek_slide_trail", "mapa_fotek_trail_anim", "mapa_fotek_slide_ms", "mapa_fotek_slide_rev", "mapa_fotek_dataset_styles", "mapa_fotek_sources_order", "mapa_fotek_timeline"];
+        var SETTINGS_PROFILE_DEFAULTS = {"mapa_fotek_archive_root": "", "mapa_fotek_archive_on": "1", "mapa_fotek_base_layer": "gRoad", "mapa_fotek_map_zoom": "6", "mapa_fotek_map_lat": "50.0", "mapa_fotek_map_lon": "15.0", "mapa_fotek_measure_auto": "0", "mapa_fotek_grid_state": "0", "mapa_fotek_dyn_input": "0", "mapa_fotek_show_coords": "0", "mapa_fotek_def_txt_mode": "heat", "mapa_fotek_def_single_mode": "dots", "mapa_fotek_def_gis_mode": "symbol", "mapa_fotek_def_txt_heat_pal": "classic", "mapa_fotek_def_txt_heat_pal_rot": "1", "mapa_fotek_def_txt_heat_op": "100", "mapa_fotek_def_txt_heat_blur": "25", "mapa_fotek_def_txt_heat_size": "1", "mapa_fotek_def_txt_dots_color": "red", "mapa_fotek_def_txt_dots_color_rot": "1", "mapa_fotek_def_txt_dots_op": "50", "mapa_fotek_def_txt_dots_size": "3.5", "mapa_fotek_def_txt_dots_icon": "dot", "mapa_fotek_def_txt_zone_color": "blue", "mapa_fotek_def_txt_zone_color_rot": "1", "mapa_fotek_def_txt_zone_op": "50", "mapa_fotek_def_txt_zone_km": "10", "mapa_fotek_def_txt_age_pal": "duha", "mapa_fotek_def_txt_age_pal_rot": "1", "mapa_fotek_def_txt_age_op": "100", "mapa_fotek_def_txt_age_blur": "0", "mapa_fotek_def_txt_age_size": "0.5", "mapa_fotek_def_txt_cards_op": "100", "mapa_fotek_def_txt_clusters_color": "red", "mapa_fotek_def_txt_clusters_color_rot": "1", "mapa_fotek_def_txt_clusters_op": "50", "mapa_fotek_def_single_heat_pal": "classic", "mapa_fotek_def_single_heat_pal_rot": "1", "mapa_fotek_def_single_heat_op": "100", "mapa_fotek_def_single_heat_blur": "25", "mapa_fotek_def_single_heat_size": "1", "mapa_fotek_def_single_dots_color": "red", "mapa_fotek_def_single_dots_color_rot": "1", "mapa_fotek_def_single_dots_op": "50", "mapa_fotek_def_single_dots_size": "3.5", "mapa_fotek_def_single_dots_icon": "dot", "mapa_fotek_def_single_zone_color": "blue", "mapa_fotek_def_single_zone_color_rot": "1", "mapa_fotek_def_single_zone_op": "50", "mapa_fotek_def_single_zone_km": "10", "mapa_fotek_def_single_age_pal": "duha", "mapa_fotek_def_single_age_pal_rot": "1", "mapa_fotek_def_single_age_op": "100", "mapa_fotek_def_single_age_blur": "0", "mapa_fotek_def_single_age_size": "0.5", "mapa_fotek_def_single_cards_op": "100", "mapa_fotek_def_single_clusters_color": "red", "mapa_fotek_def_single_clusters_color_rot": "1", "mapa_fotek_def_single_clusters_op": "50", "mapa_fotek_def_gis_point_color": "#ea4335", "mapa_fotek_def_gis_point_color_rot": "1", "mapa_fotek_def_gis_point_icon": "pin", "mapa_fotek_def_gis_point_size": "14", "mapa_fotek_def_gis_point_op": "100", "mapa_fotek_def_gis_pins_op": "100", "mapa_fotek_def_gis_heat_pal": "classic", "mapa_fotek_def_gis_heat_pal_rot": "0", "mapa_fotek_def_gis_heat_op": "100", "mapa_fotek_def_gis_heat_blur": "25", "mapa_fotek_def_gis_zone_color": "blue", "mapa_fotek_def_gis_zone_color_rot": "0", "mapa_fotek_def_gis_zone_km": "10", "mapa_fotek_def_gis_zone_op": "50", "mapa_fotek_def_gis_line_color": "#ea4335", "mapa_fotek_def_gis_line_color_rot": "1", "mapa_fotek_def_gis_line_op": "85", "mapa_fotek_def_gis_line_width": "3", "mapa_fotek_def_gis_fill_color": "", "mapa_fotek_def_gis_fill_op": "50", "mapa_fotek_settings_open": "{}", "mapa_fotek_lang": "cs", "mapa_fotek_hide_s": "0", "mapa_fotek_open_mode": "viewer", "mapa_fotek_pointer_scale": "1.25", "mapa_fotek_pointer_color": "green", "mapa_fotek_pointer_shape": "circle", "mapa_fotek_pointer_ms": "2750", "mapa_fotek_transition": "cut", "mapa_fotek_trans_ms": "1000", "mapa_fotek_map_frame": "off", "mapa_fotek_trail_opacity": "90", "mapa_fotek_trail_width": "3", "mapa_fotek_trail_color": "blue", "mapa_fotek_slide_trail": "0", "mapa_fotek_trail_anim": "0", "mapa_fotek_slide_ms": "3000", "mapa_fotek_slide_rev": "0", "mapa_fotek_dataset_styles": "{}", "mapa_fotek_sources_order": "[]", "mapa_fotek_timeline": "1"};
         function collectSettingsProfile() {
             var o = {};
             try {
@@ -5604,6 +5769,32 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "</div></details>" +
                         "<details class=\"step\"><summary>5.3 <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' xmlns='http://www.w3.org/2000/svg'><path d='M6.2 16.8c3.6-1.1 4.6-3.8 5.3-6.5.7-2.7 2.6-4.2 6.3-3.1' fill='none' stroke='#202124' stroke-width='2' stroke-linecap='round'/><circle cx='5' cy='18.2' r='2.1' fill='#202124'/><circle cx='19' cy='5.8' r='2.1' fill='#202124'/></svg> <span style='font-weight:400'>" + (t.srcGis || "") + "</span></summary><div class=\"step-body\">" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-top:2px;font-size:11px;color:#3c4043;flex-wrap:wrap;border:1px solid #000000;border-radius:8px;padding:6px 8px;\"><span>" + (t.lblDefMode || "") + "</span><span id=\"srcModeGis\"></span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;font-size:11px;font-weight:700;color:#3c4043;display:flex;align-items:center;justify-content:space-between;gap:6px;\"><span>" + (t.mTPSymbol || "") + "</span><span style=\"display:inline-flex;opacity:0.55;line-height:1;\">" + ((typeof getModeSvg === "function") ? getModeSvg("symbol") : "") + "</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcColor || "") + "</span><span id=\"gPtCol\"></span><label style=\"display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:11px;color:#3c4043;cursor:pointer;white-space:nowrap;\"><input id=\"gPtColRot\" type=\"checkbox\" style=\"width:14px;height:14px;accent-color:var(--green);\" onchange=\"setDefGis('point_color_rot', this.checked ? '1' : '0')\" /><span>" + (t.lblRot || "") + "</span></label></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcIcon || "") + "</span><span id=\"gPtIcon\"></span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcSize || "") + "</span><span class=\"slider-minmax\">3</span><input id=\"gPtSize\" type=\"range\" min=\"3\" max=\"30\" step=\"1\" oninput=\"setDefGis('point_size', this.value)\" /><span class=\"slider-minmax\">30</span><input id=\"gPtSizeN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('point_size', this.value)\" /><span>px</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "") + "</span><span class=\"slider-minmax\">0 %</span><input id=\"gPtOp\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" oninput=\"setDefGis('point_op', this.value)\" /><span class=\"slider-minmax\">100 %</span><input id=\"gPtOpN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('point_op', this.value)\" /><span>%</span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;display:flex;align-items:center;justify-content:space-between;gap:6px;\"><span>" + (t.mTPPins || "") + "</span><span style=\"display:inline-flex;opacity:0.55;line-height:1;\">" + ((typeof getModeSvg === "function") ? getModeSvg("pins") : "") + "</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcColor || "") + "</span><span id=\"gPinsCol\"></span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "") + "</span><span class=\"slider-minmax\">0 %</span><input id=\"gPinsOp\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" oninput=\"setDefGis('pins_op', this.value)\" /><span class=\"slider-minmax\">100 %</span><input id=\"gPinsOpN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('pins_op', this.value)\" /><span>%</span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;display:flex;align-items:center;justify-content:space-between;gap:6px;\"><span>" + (t.mTPHeat || "") + "</span><span style=\"display:inline-flex;opacity:0.55;line-height:1;\">" + ((typeof getModeSvg === "function") ? getModeSvg("heat") : "") + "</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcPal || "") + "</span><span id=\"gHtPal\"></span><label style=\"display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:11px;color:#3c4043;cursor:pointer;white-space:nowrap;\"><input id=\"gHtPalRot\" type=\"checkbox\" style=\"width:14px;height:14px;accent-color:var(--green);\" onchange=\"setDefGis('heat_pal_rot', this.checked ? '1' : '0')\" /><span>" + (t.lblRot || "") + "</span></label></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "") + "</span><span class=\"slider-minmax\">0 %</span><input id=\"gHtOp\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" oninput=\"setDefGis('heat_op', this.value)\" /><span class=\"slider-minmax\">100 %</span><input id=\"gHtOpN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('heat_op', this.value)\" /><span>%</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblBlur || "") + "</span><span class=\"slider-minmax\">5</span><input id=\"gHtBlur\" type=\"range\" min=\"5\" max=\"50\" step=\"1\" oninput=\"setDefGis('heat_blur', this.value)\" /><span class=\"slider-minmax\">50</span><input id=\"gHtBlurN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('heat_blur', this.value)\" /><span>px</span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;display:flex;align-items:center;justify-content:space-between;gap:6px;\"><span>" + (t.mTPZone || "") + "</span><span style=\"display:inline-flex;opacity:0.55;line-height:1;\">" + ((typeof getModeSvg === "function") ? getModeSvg("zone") : "") + "</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcColor || "") + "</span><span id=\"gZoneCol\"></span><label style=\"display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:11px;color:#3c4043;cursor:pointer;white-space:nowrap;\"><input id=\"gZoneColRot\" type=\"checkbox\" style=\"width:14px;height:14px;accent-color:var(--green);\" onchange=\"setDefGis('zone_color_rot', this.checked ? '1' : '0')\" /><span>" + (t.lblRot || "") + "</span></label></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcRadius || "") + "</span><input id=\"gZoneKm\" type=\"text\" style=\"width:70px;\" onfocus=\"this.select();\" onchange=\"setDefGis('zone_km', this.value)\" /><span>km</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "") + "</span><span class=\"slider-minmax\">0 %</span><input id=\"gZoneOp\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" oninput=\"setDefGis('zone_op', this.value)\" /><span class=\"slider-minmax\">100 %</span><input id=\"gZoneOpN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('zone_op', this.value)\" /><span>%</span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;display:flex;align-items:center;justify-content:space-between;gap:6px;\"><span>" + (currentLang === "cs" ? "Čáry" : "Lines") + "</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcColor || "") + "</span><span id=\"gLineCol\"></span><label style=\"display:inline-flex;align-items:center;gap:4px;margin-left:8px;font-size:11px;color:#3c4043;cursor:pointer;white-space:nowrap;\"><input id=\"gLineColRot\" type=\"checkbox\" style=\"width:14px;height:14px;accent-color:var(--green);\" onchange=\"setDefGis('line_color_rot', this.checked ? '1' : '0')\" /><span>" + (t.lblRot || "") + "</span></label></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblLineWidth || "") + "</span><span class=\"slider-minmax\">0,5</span><input id=\"gLineWd\" type=\"range\" min=\"0.5\" max=\"50\" step=\"0.5\" oninput=\"setDefGis('line_width', this.value)\" /><span class=\"slider-minmax\">50</span><input id=\"gLineWdN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('line_width', this.value)\" /><span>px</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "") + "</span><span class=\"slider-minmax\">0 %</span><input id=\"gLineOp\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" oninput=\"setDefGis('line_op', this.value)\" /><span class=\"slider-minmax\">100 %</span><input id=\"gLineOpN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('line_op', this.value)\" /><span>%</span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;display:flex;align-items:center;justify-content:space-between;gap:6px;\"><span>" + (currentLang === "cs" ? "Plocha" : "Fill") + "</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblFillColor || "") + "</span><span id=\"gFillCol\"></span><span id=\"gFillNone\" style=\"display:inline-flex;margin-left:8px;\"></span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "") + "</span><span class=\"slider-minmax\">0 %</span><input id=\"gFillOp\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" oninput=\"setDefGis('fill_op', this.value)\" /><span class=\"slider-minmax\">100 %</span><input id=\"gFillOpN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefGis('fill_op', this.value)\" /><span>%</span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;display:flex;justify-content:flex-end;\">" +
+                        "<button type=\"button\" class=\"source-pill-btn\" style=\"font-size:11px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:#f8f9fa;border:1px solid #dadce0;border-radius:14px;color:#3c4043;\" title=\"" + (t.tipGisDefault || "") + "\" onclick=\"event.stopPropagation();resetGisDefaults();\">↺ " + (t.btnGisDefault || "Obnovit nastavení GIS") + "</button>" +
+                        "</div>" +
                         "</div></details>" +
                         "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #f1f3f4;display:flex;justify-content:flex-end;\">" +
                         "<button type=\"button\" class=\"source-pill-btn\" style=\"font-size:11px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:#f8f9fa;border:1px solid #dadce0;border-radius:14px;color:#3c4043;\" title=\"" + (t.tipSrcDefault || "") + "\" onclick=\"event.stopPropagation();resetSrcDefaults();\">↺ " + (t.btnSrcAllDefault || "Obnovit nastavení zdrojů") + "</button>" +
@@ -5614,6 +5805,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     try { if (typeof syncSrcModes === "function") syncSrcModes(); } catch(eSS) {}
                     try { if (typeof syncSrcDetail === "function") syncSrcDetail(); } catch(eSD) {}
                     try { if (typeof syncSingleDetail === "function") syncSingleDetail(); } catch(eSG) {}
+                    try { if (typeof syncGisDetail === "function") syncGisDetail(); } catch(eGG) {}
                     try { syncPointerSettings(); } catch(e) {}
                     try { syncTrailSettings(); } catch(e) {}
                     try {
@@ -10016,7 +10208,8 @@ window.addEventListener('resize', function() {
                     var zoneArr = d.points.filter(function(pt) { return isFinite(pt.lat) && isFinite(pt.lon); }).map(function(pt) { return [pt.lat, pt.lon]; });
                     var zoneKm = d.zoneKm !== undefined ? d.zoneKm : 10;
                     var zColor = d.zoneColor || "blue";
-                    var _zoneRawOp = (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 50));
+                    var _zoneRawOp = (d.zonePointOpacity !== undefined ? d.zonePointOpacity : (d.zoneOpacity !== undefined ? d.zoneOpacity : 50));
+                    var _zOpF = Math.max(0, Math.min(100, _zoneRawOp)) / 100;
                     var zoneLayer = new L.ZoneCanvasLayer([{
                         pts: zoneArr,
                         colorKey: zColor,
@@ -10030,53 +10223,76 @@ window.addEventListener('resize', function() {
                     for (var p = 0; p < d.points.length; p++) {
                         var pt = d.points[p];
                         if (!isFinite(pt.lat) || !isFinite(pt.lon)) continue;
-                        var m = L.circleMarker([pt.lat, pt.lon], { radius: 3, fillColor: zoneFill, color: "#ffffff", weight: 1, fillOpacity: ptOp, opacity: ptOp });
+                        var m = L.circleMarker([pt.lat, pt.lon], { radius: 3, fillColor: zoneFill, color: "#ffffff", weight: 1, fillOpacity: _zOpF, opacity: _zOpF });
                         m.on('click', function(e){ if(isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); } });
                         m.bindPopup(trackPtPopup(pt));
                         lg.addLayer(m);
                     }
                 } else if (tpMode === "pins") {
-                    // Špendlíky s clustery (stejně jako u fotek)
+                    // Špendlíky s clustery (stejně jako u fotek), při >= 2000 bodech rychlý SymbolCanvasLayer
                     var pinColor = d.pointColor || d.color || "#1a73e8";
                     var pinColObj = dotColors[pinColor] || { fill: pinColor };
-                    var loc = currentLang === 'cs' ? 'cs-CZ' : 'en-US';
-                    var pg = L.markerClusterGroup({
-                        chunkedLoading: true,
-                        maxClusterRadius: 50,
-                        spiderfyOnMaxZoom: true,
-                        showCoverageOnHover: false,
-                        zoomToBoundsOnClick: true,
-                        iconCreateFunction: function(cluster) {
-                            var count = cluster.getChildCount();
-                            var size = count < 10 ? 32 : (count < 100 ? 38 : (count < 1000 ? 44 : 50));
-                            var cClass = count < 10 ? "cluster-s" : (count < 100 ? "cluster-m" : (count < 1000 ? "cluster-l" : "cluster-xl"));
-                            return L.divIcon({
-                                html: '<div class="cluster-circle ' + cClass + '" style="opacity:' + (function() { try { var _cr = (d.pinsOpacity !== undefined ? d.pinsOpacity : (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 85))); return Math.max(0, Math.min(100, _cr)) / 100; } catch(e) { return 1; } })() + '">' + count.toLocaleString(loc) + '</div>',
-                                className: 'custom-cluster-icon',
-                                iconSize: [size, size],
-                                iconAnchor: [size / 2, size / 2]
-                            });
-                        }
-                    });
-                    var pMarkers = [];
                     var pinOpRaw = (d.pinsOpacity !== undefined ? d.pinsOpacity : (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 85)));
                     var pinOp = Math.max(0, Math.min(100, pinOpRaw)) / 100;
-                    var sharedTrackPinIcon = L.divIcon({
-                        html: "<div style='width:12px;height:12px;background:" + pinColObj.fill + ";border:2px solid #ffffff;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.3);opacity:" + pinOp + ";'></div>",
-                        className: 'single-dot-icon',
-                        iconSize: [12, 12],
-                        iconAnchor: [6, 6]
-                    });
-                    for (var p = 0; p < d.points.length; p++) {
-                        var pt = d.points[p];
-                        if (!isFinite(pt.lat) || !isFinite(pt.lon)) continue;
-                        var marker = L.marker([pt.lat, pt.lon], { icon: sharedTrackPinIcon });
-                        marker.on('click', function(e){ if(isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); } });
-                        marker.bindPopup(trackPtPopup(pt));
-                        pMarkers.push(marker);
+                    if (d.points.length >= 2000 && typeof L.SymbolCanvasLayer !== "undefined") {
+                        var cArr = [], cOrig = [];
+                        for (var cp = 0; cp < d.points.length; cp++) {
+                            var cpt = d.points[cp];
+                            if (!isFinite(cpt.lat) || !isFinite(cpt.lon)) continue;
+                            cArr.push([cpt.lat, cpt.lon]);
+                            cOrig.push(cpt);
+                        }
+                        if (cArr.length > 0) {
+                            var cLayer = new L.SymbolCanvasLayer({
+                                pts: cArr,
+                                indexMap: cOrig,
+                                iconKey: "pin",
+                                fill: pinColObj.fill,
+                                opacity: pinOp,
+                                px: (d.pointSize || 14) + 6,
+                                dsKey: null,
+                                popupFn: function(orig) { return trackPtPopup(orig); }
+                            });
+                            lg.addLayer(cLayer);
+                        }
+                    } else {
+                        var loc = currentLang === 'cs' ? 'cs-CZ' : 'en-US';
+                        var pg = L.markerClusterGroup({
+                            chunkedLoading: true,
+                            maxClusterRadius: 50,
+                            spiderfyOnMaxZoom: true,
+                            showCoverageOnHover: false,
+                            zoomToBoundsOnClick: true,
+                            iconCreateFunction: function(cluster) {
+                                var count = cluster.getChildCount();
+                                var size = count < 10 ? 32 : (count < 100 ? 38 : (count < 1000 ? 44 : 50));
+                                var cClass = count < 10 ? "cluster-s" : (count < 100 ? "cluster-m" : (count < 1000 ? "cluster-l" : "cluster-xl"));
+                                return L.divIcon({
+                                    html: '<div class="cluster-circle ' + cClass + '" style="opacity:' + (function() { try { var _cr = (d.pinsOpacity !== undefined ? d.pinsOpacity : (d.trackPointOpacity !== undefined ? d.trackPointOpacity : (d.trackOpacity !== undefined ? d.trackOpacity : 85))); return Math.max(0, Math.min(100, _cr)) / 100; } catch(e) { return 1; } })() + '">' + count.toLocaleString(loc) + '</div>',
+                                    className: 'custom-cluster-icon',
+                                    iconSize: [size, size],
+                                    iconAnchor: [size / 2, size / 2]
+                                });
+                            }
+                        });
+                        var pMarkers = [];
+                        var sharedTrackPinIcon = L.divIcon({
+                            html: "<div style='width:12px;height:12px;background:" + pinColObj.fill + ";border:2px solid #ffffff;border-radius:50%;box-shadow:0 2px 5px rgba(0,0,0,0.3);opacity:" + pinOp + ";'></div>",
+                            className: 'single-dot-icon',
+                            iconSize: [12, 12],
+                            iconAnchor: [6, 6]
+                        });
+                        for (var p = 0; p < d.points.length; p++) {
+                            var pt = d.points[p];
+                            if (!isFinite(pt.lat) || !isFinite(pt.lon)) continue;
+                            var marker = L.marker([pt.lat, pt.lon], { icon: sharedTrackPinIcon });
+                            marker.on('click', function(e){ if(isAnyDrawingActive()){ L.DomEvent.stopPropagation(e); } });
+                            marker.bindPopup(trackPtPopup(pt));
+                            pMarkers.push(marker);
+                        }
+                        pg.addLayers(pMarkers);
+                        lg.addLayer(pg);
                     }
-                    pg.addLayers(pMarkers);
-                    lg.addLayer(pg);
                 } else {
                     // Symbol (výchozí): existující chování
                     var pointIcon = createTrackPointIcon(d);
@@ -10285,24 +10501,48 @@ window.addEventListener('resize', function() {
                                 else if (lower.endsWith(".geojson") || lower.endsWith(".json")) { trk = parseGeoJson(content, name); }
                                 if (trk) {
                                     var sv = getSavedDatasetStyle(name);
+                                    var gisFillsB = [];
+                                    try { gisFillsB = GIS_FILL_SEQ.slice(); } catch(eFB) {}
+                                    if (!gisFillsB.length) gisFillsB = ["#ea4335"];
+                                    var gisIdxB = trackSetIdx();
                                     if (sv) {
                                         if (sv.color) trk.color = sv.color;
+                                        if (sv.pointMode && validTrackPointModes.indexOf(sv.pointMode) !== -1) trk.pointMode = sv.pointMode;
                                         if (sv.pointColor) trk.pointColor = sv.pointColor;
                                         if (sv.trackOpacity !== undefined) trk.trackOpacity = sv.trackOpacity;
                                         if (sv.trackLineOpacity !== undefined) trk.trackLineOpacity = sv.trackLineOpacity;
                                         if (sv.trackPointOpacity !== undefined) trk.trackPointOpacity = sv.trackPointOpacity;
+                                        if (sv.pinsOpacity !== undefined) trk.pinsOpacity = sv.pinsOpacity;
                                         if (sv.lineWidth !== undefined) trk.lineWidth = sv.lineWidth;
                                         if (sv.pointSize !== undefined) trk.pointSize = sv.pointSize;
                                         if (sv.pointIcon) trk.pointIcon = sv.pointIcon;
+                                        if (sv.heatPalette) trk.heatPalette = sv.heatPalette;
+                                        if (sv.heatOpacity !== undefined) trk.heatOpacity = sv.heatOpacity;
+                                        if (sv.heatBlur !== undefined) trk.heatBlur = sv.heatBlur;
+                                        if (sv.zoneColor) trk.zoneColor = sv.zoneColor;
+                                        if (sv.zoneKm !== undefined) trk.zoneKm = sv.zoneKm;
+                                        if (sv.zonePointOpacity !== undefined) trk.zonePointOpacity = sv.zonePointOpacity;
                                         if (sv.fillColor !== undefined) trk.fillColor = sv.fillColor;
                                         if (sv.fillOpacity !== undefined) trk.fillOpacity = sv.fillOpacity;
                                     }
+                                    if (!trk.pointMode || validTrackPointModes.indexOf(trk.pointMode) === -1) trk.pointMode = defGisMode();
+                                    if (!trk.color) trk.color = apriGisRotPick("line_color", gisFillsB, gisIdxB, gisFillsB);
+                                    if (!trk.pointColor) trk.pointColor = apriGisRotPick("point_color", gisFillsB, gisIdxB, gisFillsB);
                                     if (trk.trackOpacity === undefined) trk.trackOpacity = 85;
-                                    if (trk.trackPointOpacity === undefined) trk.trackPointOpacity = 100;
-                                    if (trk.lineWidth === undefined) trk.lineWidth = 3;
-                                    if (trk.pointSize === undefined) trk.pointSize = 14;
-                                    if (!trk.pointIcon) trk.pointIcon = "pin";
-                                    if (!trk.pointMode) trk.pointMode = "symbol";
+                                    if (trk.trackLineOpacity === undefined || trk.trackLineOpacity === null) trk.trackLineOpacity = apriGisNum("line_op", 85, 0, 100);
+                                    if (trk.trackPointOpacity === undefined) trk.trackPointOpacity = apriGisNum("point_op", 100, 0, 100);
+                                    if (trk.pinsOpacity === undefined) trk.pinsOpacity = apriGisNum("pins_op", 100, 0, 100);
+                                    if (trk.lineWidth === undefined || trk.lineWidth === null) trk.lineWidth = apriGisNum("line_width", 3, 0.5, 50);
+                                    if (trk.pointSize === undefined) trk.pointSize = apriGisNum("point_size", 14, 3, 30);
+                                    if (!trk.pointIcon) trk.pointIcon = apriGisIcon();
+                                    if (!trk.heatPalette) trk.heatPalette = apriGisRotPick("heat_pal", Object.keys(heatPalettes || {}), gisIdxB, Object.keys(heatPalettes || {}));
+                                    if (trk.heatOpacity === undefined) trk.heatOpacity = apriGisNum("heat_op", 100, 0, 100);
+                                    if (trk.heatBlur === undefined) trk.heatBlur = apriGisNum("heat_blur", 25, 5, 50);
+                                    if (!trk.zoneColor) trk.zoneColor = apriGisRotPick("zone_color", apriDotKeys(), gisIdxB, apriDotKeys());
+                                    if (trk.zoneKm === undefined) trk.zoneKm = apriGisNum("zone_km", 10, 0, 10000);
+                                    if (trk.zonePointOpacity === undefined) trk.zonePointOpacity = apriGisNum("zone_op", 50, 0, 100);
+                                    if (trk.fillColor === undefined) { var _ffcB = apriGGet("fill_color", ""); trk.fillColor = _ffcB || null; }
+                                    if (trk.fillOpacity === undefined) trk.fillOpacity = trk.fillColor ? (apriGisNum("fill_op", 50, 0, 100) / 100) : 0;
                                     datasets[trk.name] = trk;
                                 }
                             } catch(e) {}
@@ -10374,6 +10614,8 @@ window.addEventListener('resize', function() {
                                 if (sv.trackOpacity !== undefined) trk.trackOpacity = sv.trackOpacity;
                                 if (sv.trackLineOpacity !== undefined) trk.trackLineOpacity = sv.trackLineOpacity;
                                 if (sv.trackPointOpacity !== undefined) trk.trackPointOpacity = sv.trackPointOpacity;
+                                if (sv.pinsOpacity !== undefined) trk.pinsOpacity = sv.pinsOpacity;
+                                if (sv.zonePointOpacity !== undefined) trk.zonePointOpacity = sv.zonePointOpacity;
                                 if (sv.lineWidth !== undefined) trk.lineWidth = sv.lineWidth;
                                 if (sv.pointSize !== undefined) trk.pointSize = sv.pointSize;
                                 if (sv.pointIcon) trk.pointIcon = sv.pointIcon;
@@ -10382,6 +10624,8 @@ window.addEventListener('resize', function() {
                             }
                             if (trk.trackOpacity === undefined) trk.trackOpacity = 85;
                             if (trk.trackPointOpacity === undefined) trk.trackPointOpacity = 100;
+                            if (trk.pinsOpacity === undefined) trk.pinsOpacity = 100;
+                            if (trk.zonePointOpacity === undefined) trk.zonePointOpacity = 50;
                             if (trk.lineWidth === undefined) trk.lineWidth = 3;
                             if (trk.pointSize === undefined) trk.pointSize = 14;
                             if (!trk.pointIcon) trk.pointIcon = "pin";
@@ -10439,6 +10683,8 @@ window.addEventListener('resize', function() {
                         trackOpacity: d.trackOpacity,
                         trackLineOpacity: d.trackLineOpacity,
                         trackPointOpacity: d.trackPointOpacity,
+                        pinsOpacity: d.pinsOpacity,
+                        zonePointOpacity: d.zonePointOpacity,
                         lineWidth: d.lineWidth,
                         pointSize: d.pointSize,
                         pointIcon: d.pointIcon,
@@ -10549,7 +10795,7 @@ window.addEventListener('resize', function() {
                     mode: d.mode, heatPalette: d.heatPalette, heatOpacity: d.heatOpacity,
                     heatBlur: d.heatBlur, heatSize: d.heatSize, agePalette: d.agePalette, ageOpacity: d.ageOpacity, ageBlur: d.ageBlur, ageSize: d.ageSize, dotColor: d.dotColor, dotOpacity: d.dotOpacity,
                     dotSize: d.dotSize, dotIcon: d.dotIcon, cardsOpacity: d.cardsOpacity, clustersColor: d.clustersColor, clustersOpacity: d.clustersOpacity, zoneColor: d.zoneColor, zoneOpacity: d.zoneOpacity,
-                    zoneKm: d.zoneKm, color: d.color, pointColor: d.pointColor,
+                    zoneKm: d.zoneKm, color: d.color, pointColor: d.pointColor, pointMode: d.pointMode, pinsOpacity: d.pinsOpacity, zonePointOpacity: d.zonePointOpacity,
 trackOpacity: d.trackOpacity, lineWidth: d.lineWidth, pointSize: d.pointSize,
 pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useArchiveRoot: d.useArchiveRoot
 };
@@ -10650,7 +10896,7 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
                 d.mode = s.mode; d.heatPalette = s.heatPalette; d.heatOpacity = s.heatOpacity;
                 d.heatBlur = s.heatBlur; d.agePalette = s.agePalette; d.dotColor = s.dotColor; d.dotOpacity = s.dotOpacity;
                 d.dotSize = s.dotSize; d.dotIcon = s.dotIcon; d.cardsOpacity = s.cardsOpacity; d.clustersColor = s.clustersColor; d.clustersOpacity = s.clustersOpacity; d.zoneColor = s.zoneColor; d.zoneOpacity = s.zoneOpacity;
-                d.zoneKm = s.zoneKm; d.color = s.color; d.pointColor = s.pointColor;
+                d.zoneKm = s.zoneKm; d.color = s.color; d.pointColor = s.pointColor; d.pointMode = s.pointMode; d.pinsOpacity = s.pinsOpacity; d.zonePointOpacity = s.zonePointOpacity;
                 d.trackOpacity = s.trackOpacity; d.trackLineOpacity = s.trackLineOpacity;
                 d.trackPointOpacity = s.trackPointOpacity; d.lineWidth = s.lineWidth; d.pointSize = s.pointSize;
                 d.pointIcon = s.pointIcon; d.fillColor = s.fillColor; d.fillOpacity = s.fillOpacity;
@@ -10839,6 +11085,38 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
             } catch(e) {}
             return fb;
         }
+        function apriGisNum(kind, fb, mn, mx) {
+            try {
+                var v = parseFloat(String(apriGGet(kind, "")).replace(",", "."));
+                if (isFinite(v)) return Math.max(mn, Math.min(mx, v));
+            } catch(e) {}
+            return fb;
+        }
+        function apriGisRotPick(base, seq, idx, validArr) {
+            try {
+                var rot = apriGGet(base + "_rot", "1");
+                rot = (rot === null || rot === undefined) ? true : (rot === "1");
+                var chosen = apriGGet(base, null);
+                var valid = validArr || seq;
+                if (chosen && valid.indexOf(chosen) === -1) chosen = null;
+                if (!rot) return chosen || seq[idx % seq.length];
+                if (idx === 0 && chosen) return chosen;
+                return seq[idx % seq.length];
+            } catch(e) { return seq[idx % seq.length]; }
+        }
+        function apriGisIcon() {
+            try {
+                var v = apriGGet("point_icon", null);
+                var arr = [];
+                try {
+                    var _arr = (typeof trackIconOptions !== "undefined" && trackIconOptions) || [];
+                    for (var i = 0; i < _arr.length; i++) arr.push(_arr[i].key);
+                } catch(e) {}
+                if (!arr.length) arr = ["dot", "pin", "flag", "peak", "camera", "cross", "camp", "star"];
+                if (v && arr.indexOf(v) !== -1) return v;
+            } catch(e) {}
+            return "pin";
+        }
         function apriDotKeys() {
             try { return Object.keys(dotColors || {}); } catch(e) { return []; }
         }
@@ -10846,6 +11124,13 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
             try {
                 var c = 0;
                 Object.keys(datasets).forEach(function(k) { if (datasets[k] && datasets[k].type === "photos") c++; });
+                return c;
+            } catch(e) { return 0; }
+        }
+        function trackSetIdx() {
+            try {
+                var c = 0;
+                Object.keys(datasets).forEach(function(k) { if (datasets[k] && datasets[k].type === "track") c++; });
                 return c;
             } catch(e) { return 0; }
         }
@@ -14761,10 +15046,20 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                         // trasa ← trasa: kompletní kopie stylu
                         d.color = src.color || "#1a73e8";
                         d.pointColor = src.pointColor || src.color || "#1a73e8";
+                        d.pointMode = (src.pointMode && validTrackPointModes.indexOf(src.pointMode) !== -1) ? src.pointMode : "symbol";
                         d.trackOpacity = src.trackOpacity !== undefined ? src.trackOpacity : 85;
+                        if (src.trackLineOpacity !== undefined) d.trackLineOpacity = src.trackLineOpacity;
+                        if (src.trackPointOpacity !== undefined) d.trackPointOpacity = src.trackPointOpacity;
+                        if (src.pinsOpacity !== undefined) d.pinsOpacity = src.pinsOpacity;
                         d.lineWidth = src.lineWidth !== undefined ? src.lineWidth : 3;
                         d.pointSize = src.pointSize !== undefined ? src.pointSize : 14;
                         d.pointIcon = src.pointIcon || "pin";
+                        if (src.heatPalette) d.heatPalette = src.heatPalette;
+                        if (src.heatOpacity !== undefined) d.heatOpacity = src.heatOpacity;
+                        if (src.heatBlur !== undefined) d.heatBlur = src.heatBlur;
+                        if (src.zoneColor) d.zoneColor = src.zoneColor;
+                        if (src.zoneKm !== undefined) d.zoneKm = src.zoneKm;
+                        if (src.zonePointOpacity !== undefined) d.zonePointOpacity = src.zonePointOpacity;
                         if (src.fillColor !== undefined) d.fillColor = src.fillColor;
                         if (src.fillOpacity !== undefined) d.fillOpacity = src.fillOpacity;
                     } else {
@@ -15193,7 +15488,11 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                 } else if (d.type === "track") {
                     var baseOp = d.trackOpacity !== undefined ? d.trackOpacity : 85;
                     curOpLine = d.trackLineOpacity !== undefined ? d.trackLineOpacity : baseOp;
-                    curOpPoint = d.trackPointOpacity !== undefined ? d.trackPointOpacity : baseOp;
+                    var _tpMInit = "symbol";
+                    try { _tpMInit = d.pointMode || defaultTrackPointMode; } catch(eM) {}
+                    if (_tpMInit === "pins") curOpPoint = d.pinsOpacity !== undefined ? d.pinsOpacity : (d.trackPointOpacity !== undefined ? d.trackPointOpacity : baseOp);
+                    else if (_tpMInit === "zone") curOpPoint = d.zonePointOpacity !== undefined ? d.zonePointOpacity : (d.zoneOpacity !== undefined ? d.zoneOpacity : 50);
+                    else curOpPoint = d.trackPointOpacity !== undefined ? d.trackPointOpacity : baseOp;
                     // opacity uncapped – full 0–100 % range allowed
                     if (hasPolygons) {
                         curOpFill = d.fillOpacity !== undefined ? Math.round(d.fillOpacity * 100) : 50;
@@ -15400,9 +15699,13 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 var showPoints = d.type === "photos" || hasPoints;
                                 var _isPinsMode = false;
                                 try { _isPinsMode = (d.type === "track" && ((d.pointMode || defaultTrackPointMode) === "pins")); } catch(eP) {}
+                                var _isZoneMode = false;
+                                try { _isZoneMode = (d.type === "track" && ((d.pointMode || defaultTrackPointMode) === "zone")); } catch(eZ) {}
                                 var _bodyInit = curOpPoint;
                                 if (_isPinsMode) {
                                     _bodyInit = (d.pinsOpacity !== undefined ? d.pinsOpacity : curOpPoint);
+                                } else if (_isZoneMode) {
+                                    _bodyInit = (d.zonePointOpacity !== undefined ? d.zonePointOpacity : curOpPoint);
                                 }
                                 makeSliderRow(currentLang === "cs" ? "Body" : "Points", _bodyInit, function(n) {
                                     curOpPoint = n;
@@ -15410,6 +15713,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     scheduleStyleApply("oppoint:" + k, function() {
                                         if (d.type === "track") {
                                             if (_isPinsMode) d.pinsOpacity = curOpPoint;
+                                            else if (_isZoneMode) d.zonePointOpacity = curOpPoint;
                                             else d.trackPointOpacity = curOpPoint;
                                         }
                                         lastEditedDataset = k;
@@ -18437,14 +18741,8 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                     lines: lines,
                     points: points,
                     totalDistanceKm: totalDist,
-                    color: trackColors[(trackColorIdx++) % trackColors.length],
-                    active: true,
-                    // Default heatmap properties for track point mode "heat"
-                    heatPalette: "classic",
-                    heatBlur: 25,
-                    heatOpacity: 100,
-                    // Default point opacity for track symbols (min 50%)
-                    trackPointOpacity: 100
+                    color: null,
+                    active: true
                 };
             } catch (e) {
                 return null;
@@ -18596,14 +18894,8 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                     points: points,
                     polygons: polygons,
                     totalDistanceKm: totalDist,
-                    color: trackColors[(trackColorIdx++) % trackColors.length],
-                    active: true,
-                    // Default heatmap properties for track point mode "heat"
-                    heatPalette: "classic",
-                    heatBlur: 25,
-                    heatOpacity: 100,
-                    // Default point opacity for track symbols (min 50%)
-                    trackPointOpacity: 100
+                    color: null,
+                    active: true
                 };
             } catch (e) {
                 return null;
@@ -18891,16 +19183,10 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                     points: points,
                     polygons: polygons,
                     totalDistanceKm: totalDist,
-                    color: (typeof lineColPick !== "undefined" && lineColPick ? lineColPick : trackColors[(trackColorIdx++) % trackColors.length]),
-                    lineWidth: (typeof lineWPick !== "undefined" && lineWPick !== null ? lineWPick : 4.5),
-                    trackLineOpacity: (typeof lineOPick !== "undefined" && lineOPick !== null ? lineOPick : 85),
+                    color: (typeof lineColPick !== "undefined" && lineColPick ? lineColPick : null),
+                    lineWidth: (typeof lineWPick !== "undefined" && lineWPick !== null ? lineWPick : null),
+                    trackLineOpacity: (typeof lineOPick !== "undefined" && lineOPick !== null ? lineOPick : null),
                     active: true,
-                    // Default heatmap properties for track point mode "heat"
-                    heatPalette: "classic",
-                    heatBlur: 25,
-                    heatOpacity: 100,
-                    // Default point opacity for track symbols (min 50%)
-                    trackPointOpacity: 100,
                     hasPhotoPoints: hasPP
                 };
             } catch (e) {
@@ -18947,25 +19233,48 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                 return;
             }
             var savedStyle = getSavedDatasetStyle(track.name);
+            var gisFills = [];
+            try { gisFills = GIS_FILL_SEQ.slice(); } catch(eF) {}
+            if (!gisFills.length) gisFills = ["#ea4335"];
+            var gisIdx = trackSetIdx();
             if (savedStyle) {
                 if (savedStyle.color) track.color = savedStyle.color;
-                // pointMode se apriorně nemění – vždy symbol pro GeoJSON/KML/KMZ/GPX (uživatel přepne sám)
+                if (savedStyle.pointMode && validTrackPointModes.indexOf(savedStyle.pointMode) !== -1) track.pointMode = savedStyle.pointMode;
                 if (savedStyle.pointColor) track.pointColor = savedStyle.pointColor;
                 if (savedStyle.trackOpacity !== undefined) track.trackOpacity = savedStyle.trackOpacity;
                 if (savedStyle.trackLineOpacity !== undefined) track.trackLineOpacity = savedStyle.trackLineOpacity;
                 if (savedStyle.trackPointOpacity !== undefined) track.trackPointOpacity = savedStyle.trackPointOpacity;
+                if (savedStyle.pinsOpacity !== undefined) track.pinsOpacity = savedStyle.pinsOpacity;
                 if (savedStyle.lineWidth !== undefined) track.lineWidth = savedStyle.lineWidth;
                 if (savedStyle.pointSize !== undefined) track.pointSize = savedStyle.pointSize;
                 if (savedStyle.pointIcon) track.pointIcon = savedStyle.pointIcon;
+                if (savedStyle.heatPalette) track.heatPalette = savedStyle.heatPalette;
+                if (savedStyle.heatOpacity !== undefined) track.heatOpacity = savedStyle.heatOpacity;
+                if (savedStyle.heatBlur !== undefined) track.heatBlur = savedStyle.heatBlur;
+                if (savedStyle.zoneColor) track.zoneColor = savedStyle.zoneColor;
+                if (savedStyle.zoneKm !== undefined) track.zoneKm = savedStyle.zoneKm;
+                if (savedStyle.zonePointOpacity !== undefined) track.zonePointOpacity = savedStyle.zonePointOpacity;
                 if (savedStyle.fillColor !== undefined) track.fillColor = savedStyle.fillColor;
                 if (savedStyle.fillOpacity !== undefined) track.fillOpacity = savedStyle.fillOpacity;
             }
+            if (!track.pointMode || validTrackPointModes.indexOf(track.pointMode) === -1) track.pointMode = defGisMode();
+            if (!track.color) track.color = apriGisRotPick("line_color", gisFills, gisIdx, gisFills);
+            if (!track.pointColor) track.pointColor = apriGisRotPick("point_color", gisFills, gisIdx, gisFills);
             if (track.trackOpacity === undefined) track.trackOpacity = 85;
-            if (track.trackPointOpacity === undefined) track.trackPointOpacity = 100;
-            if (track.lineWidth === undefined) track.lineWidth = 3;
-            if (track.pointSize === undefined) track.pointSize = 14;
-            if (!track.pointIcon) track.pointIcon = "pin";
-            if (!track.pointMode) track.pointMode = "symbol";
+            if (track.trackLineOpacity === undefined || track.trackLineOpacity === null) track.trackLineOpacity = apriGisNum("line_op", 85, 0, 100);
+            if (track.trackPointOpacity === undefined) track.trackPointOpacity = apriGisNum("point_op", 100, 0, 100);
+            if (track.pinsOpacity === undefined) track.pinsOpacity = apriGisNum("pins_op", 100, 0, 100);
+            if (track.lineWidth === undefined || track.lineWidth === null) track.lineWidth = apriGisNum("line_width", 3, 0.5, 50);
+            if (track.pointSize === undefined) track.pointSize = apriGisNum("point_size", 14, 3, 30);
+            if (!track.pointIcon) track.pointIcon = apriGisIcon();
+            if (!track.heatPalette) track.heatPalette = apriGisRotPick("heat_pal", Object.keys(heatPalettes || {}), gisIdx, Object.keys(heatPalettes || {}));
+            if (track.heatOpacity === undefined) track.heatOpacity = apriGisNum("heat_op", 100, 0, 100);
+            if (track.heatBlur === undefined) track.heatBlur = apriGisNum("heat_blur", 25, 5, 50);
+            if (!track.zoneColor) track.zoneColor = apriGisRotPick("zone_color", apriDotKeys(), gisIdx, apriDotKeys());
+            if (track.zoneKm === undefined) track.zoneKm = apriGisNum("zone_km", 10, 0, 10000);
+            if (track.zonePointOpacity === undefined) track.zonePointOpacity = apriGisNum("zone_op", 50, 0, 100);
+            if (track.fillColor === undefined) { var _ffc = apriGGet("fill_color", ""); track.fillColor = _ffc || null; }
+            if (track.fillOpacity === undefined) track.fillOpacity = track.fillColor ? (apriGisNum("fill_op", 50, 0, 100) / 100) : 0;
 
             datasets[track.name] = track;
             rebuild();
