@@ -299,6 +299,7 @@
         .color-palette-grid button { width: 22px; height: 22px; border-radius: 4px; border: 1px solid #dadce0; cursor: pointer; padding: 0; outline: none; box-sizing: border-box; transition: transform 0.15s; }
         .color-palette-grid button:hover { transform: scale(1.18); border-color: #202124; }
         .color-palette-grid button.active { border: 2.5px solid #202124; transform: scale(1.18); }
+        #aLineDash button { width: 33px; }
         .track-icon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
         .track-icon-btn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid #dadce0; background: #fff; cursor: pointer; padding: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
         .track-icon-btn:hover { border-color: var(--green); background: var(--green-bg); }
@@ -356,6 +357,9 @@
         #gLineOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(85% - 7.3px), #0AA94C calc(85% - 7.3px), #0AA94C calc(85% - 5.3px), transparent calc(85% - 5.3px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
         #gLineWd { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(5.05% + 7.09px), #0AA94C calc(5.05% + 7.09px), #0AA94C calc(5.05% + 9.09px), transparent calc(5.05% + 9.09px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
         #gFillOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(50% - 1px), #0AA94C calc(50% - 1px), #0AA94C calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #aLineWd { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(3.03% + 7.45px), #0AA94C calc(3.03% + 7.45px), #0AA94C calc(3.03% + 9.45px), transparent calc(3.03% + 9.45px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #aLineOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(100% - 10px), #0AA94C calc(100% - 10px), #0AA94C calc(100% - 8px), transparent calc(100% - 8px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
+        #aFillOp { height: 20px; background: linear-gradient(to right, transparent 0, transparent calc(15% + 5.3px), #0AA94C calc(15% + 5.3px), #0AA94C calc(15% + 7.3px), transparent calc(15% + 7.3px)), linear-gradient(to bottom, transparent 0, transparent 7px, #dadce0 7px, #dadce0 13px, transparent 13px); }
         .slider-minmax { font-size: 10px; color: #80868b; white-space: nowrap; flex-shrink: 0; }
         
         .source-item-right { display: flex; align-items: center; gap: 4px; flex-shrink: 0; flex-grow: 0; margin-left: auto; }
@@ -1902,7 +1906,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">2.91</span>
+                    <span class="info-meta-val">2.92</span>
                 </div>
             </div>
 
@@ -2534,7 +2538,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 modalTitle: "Mapa fotek",
                 lblAuthor: "Autor:",
                 lblUpdated: "Poslední aktualizace:",
-                valUpdated: "1. 10. 2026",
+                valUpdated: "2. 10. 2026",
                 lblVersion: "Verze:",
                 guideTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg> Návod:",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Cesta k archivu fotografií (kořenová složka) <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>:",
@@ -2547,9 +2551,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 setWipeBtn: "Smazat všechna data aplikace",
                 setWipeConfirm: "Opravdu smazat VŠECHNA uložená data (zdroje, nastavení, kořen archivu)? Aplikace se znovu načte jako při prvním spuštění.",
                 setProfilesTitle: "Profily a mazání dat",
-                                setMapTitle: "Nastavení mapy",
+                                setMapTitle: "Nastavení mapy", setMapGeneralTitle: "Obecná nastavení mapy", setAreaTitle: "Nastavení filtrů", lblFiltersPersist: "Zachovat filtry po obnovení stránky (čas, složky, oblast)", btnAreaDefault: "Obnovit zvýraznění oblasti", tipAreaDefault: "Vrátit výchozí zvýraznění oblastního filtru", btnFiltersDefault: "Obnovit nastavení filtrů", tipFiltersDefault: "Vrátit výchozí stav filtrů (čas, složky, oblast)", toastFiltersReset: "Filtry obnoveny do výchozího stavu.",
                 setSourcesTitle: "Nastavení zdrojů", srcTxt: "Datový soubor fotografií (.TXT)", srcSingle: "Samostatná fotografie (.JPG, .JPEG, .PNG)", srcGis: "GIS soubory (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", lblDefMode: "Výchozí režim",
-                modeHeat: "Heatmapa", modeDots: "Tečky", modeZone: "Zóny", modeAge: "Stáří", modeCards: "Fotokarty", modeClusters: "Shluky", modeSymbol: "Symboly", modePins: "Špendlíky", srcPal: "Paleta", srcSize: "Velikost", srcColor: "Barva", srcIcon: "Ikona", srcRadius: "Poloměr", lblRot: "Rotace", btnSrcDefault: "Obnovit výchozí režimy", tipSrcDefault: "Vrátit výchozí režimy zdrojů", btnTxtDefault: "Obnovit nastavení datového souboru", tipTxtDefault: "Vrátit výchozí nastavení datového souboru fotografií (.TXT)", btnSingleDefault: "Obnovit nastavení samostatné fotografie", tipSingleDefault: "Vrátit výchozí nastavení samostatné fotografie (.JPG, .JPEG, .PNG)", btnSrcAllDefault: "Obnovit nastavení zdrojů", btnGisDefault: "Obnovit nastavení GIS", tipGisDefault: "Vrátit výchozí nastavení GIS souborů (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", toastSrcReset: "Výchozí režimy zdrojů obnoveny.", lblBaseLayer: "Mapový podklad", btnMapDefault: "Obnovit nastavení mapy", tipMapDefault: "Vrátit výchozí nastavení mapy", toastMapReset: "Nastavení mapy obnoveno.", lblMapZoom: "Přiblížení", lblMapCenter: "Střed mapy", btnMapCenterUse: "Použít aktuální", lblMeasure: "Panel měření", measAuto: "Automatické spuštění", lblGridSt: "Mřížka", gridOff: "Vypnuta", gridOn: "Mřížka", gridLabels: "Mřížka s popisky", lblDynInput: "Zadávání z klávesnice", lblShowCoords: "Zobrazení souřadnic", setProfilesDesc: "Uložení profilu zapíše všechno nastavení včetně kořene archivu do GeoJSON. Načtení profilu nastavení přepíše a aplikaci restartuje.",
+                modeHeat: "Heatmapa", modeDots: "Tečky", modeZone: "Zóny", modeAge: "Stáří", modeCards: "Fotokarty", modeClusters: "Shluky", modeSymbol: "Symboly", modePins: "Špendlíky", srcPal: "Paleta", srcSize: "Velikost", srcColor: "Barva", srcIcon: "Ikona", srcRadius: "Poloměr", lblRot: "Rotace", btnSrcDefault: "Obnovit výchozí režimy", tipSrcDefault: "Vrátit výchozí režimy zdrojů", btnTxtDefault: "Obnovit nastavení datového souboru", tipTxtDefault: "Vrátit výchozí nastavení datového souboru fotografií (.TXT)", btnSingleDefault: "Obnovit nastavení samostatné fotografie", tipSingleDefault: "Vrátit výchozí nastavení samostatné fotografie (.JPG, .JPEG, .PNG)", btnSrcAllDefault: "Obnovit nastavení zdrojů", btnGisDefault: "Obnovit nastavení GIS", tipGisDefault: "Vrátit výchozí nastavení GIS souborů (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", toastSrcReset: "Výchozí režimy zdrojů obnoveny.", lblBaseLayer: "Mapový podklad", btnMapDefault: "Obnovit obecná nastavení mapy", tipMapDefault: "Vrátit obecná nastavení mapy", btnMapAllDefault: "Obnovit nastavení mapy a filtrů", tipMapAllDefault: "Vrátit výchozí nastavení mapy a filtrů", toastMapAllReset: "Nastavení mapy a filtrů obnoveno.", toastMapReset: "Nastavení mapy obnoveno.", lblMapZoom: "Přiblížení", lblMapCenter: "Střed mapy", btnMapCenterUse: "Použít aktuální", lblMeasure: "Panel měření", measAuto: "Automatické spuštění", lblGridSt: "Mřížka", gridOff: "Vypnuta", gridOn: "Mřížka", gridLabels: "Mřížka s popisky", lblDynInput: "Zadávání z klávesnice", lblShowCoords: "Zobrazení souřadnic", setProfilesDesc: "Uložení profilu zapíše všechno nastavení včetně kořene archivu do GeoJSON. Načtení profilu nastavení přepíše a aplikaci restartuje.",
                 profileSaveBtn: "Uložit profil",
                 profileLoadBtn: "Načíst profil",
                 profileSaved: "Profil nastavení uložen.",
@@ -2817,7 +2821,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 modalTitle: "Photo Mapper",
                 lblAuthor: "Author:",
                 lblUpdated: "Last update:",
-                valUpdated: "Oct 1, 2026",
+                valUpdated: "Oct 2, 2026",
                 lblVersion: "Version:",
                 guideTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg> User Guide:",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Photo archive path (root folder) <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>:",
@@ -2830,9 +2834,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 setWipeBtn: "Delete all app data",
                 setWipeConfirm: "Really delete ALL stored data (sources, settings, archive root)? The app will reload as on first launch.",
                 setProfilesTitle: "Profiles & data wipe",
-                setMapTitle: "Map settings",
+                setMapTitle: "Map settings", setMapGeneralTitle: "General map settings", setAreaTitle: "Filter settings", lblFiltersPersist: "Keep filters after reload (time, folders, area)", btnAreaDefault: "Reset area highlight", tipAreaDefault: "Reset area filter highlight defaults", btnFiltersDefault: "Reset filter settings", tipFiltersDefault: "Reset filters to defaults (time, folders, area)", toastFiltersReset: "Filters reset to defaults.",
                 setSourcesTitle: "Source settings", srcTxt: "Photo data file (.TXT)", srcSingle: "Single photo (.JPG, .JPEG, .PNG)", srcGis: "GIS files (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", lblDefMode: "Default mode",
-                modeHeat: "Heatmap", modeDots: "Dots", modeZone: "Zones", modeAge: "Age", modeCards: "Photo cards", modeClusters: "Clusters", modeSymbol: "Symbols", modePins: "Pins", srcPal: "Palette", srcSize: "Size", srcColor: "Color", srcIcon: "Icon", srcRadius: "Radius", lblRot: "Rotation", btnSrcDefault: "Reset default modes", tipSrcDefault: "Reset source default modes", btnTxtDefault: "Reset data file settings", tipTxtDefault: "Reset photo data file (.TXT) defaults", btnSingleDefault: "Reset single photo settings", tipSingleDefault: "Reset single photo (.JPG, .JPEG, .PNG) defaults", btnSrcAllDefault: "Reset source settings", btnGisDefault: "Reset GIS settings", tipGisDefault: "Reset GIS files (.GPX, .KML, .KMZ, .GEOJSON, .JSON) defaults", toastSrcReset: "Source default modes restored.", lblBaseLayer: "Base layer", btnMapDefault: "Reset map settings", tipMapDefault: "Reset map settings", toastMapReset: "Map settings restored.", lblMapZoom: "Zoom", lblMapCenter: "Map center", btnMapCenterUse: "Use current", lblMeasure: "Measure panel", measAuto: "Autostart", lblGridSt: "Grid", gridOff: "Off", gridOn: "Grid", gridLabels: "Grid with labels", lblDynInput: "Keyboard input", lblShowCoords: "Coordinate display",
+                modeHeat: "Heatmap", modeDots: "Dots", modeZone: "Zones", modeAge: "Age", modeCards: "Photo cards", modeClusters: "Clusters", modeSymbol: "Symbols", modePins: "Pins", srcPal: "Palette", srcSize: "Size", srcColor: "Color", srcIcon: "Icon", srcRadius: "Radius", lblRot: "Rotation", btnSrcDefault: "Reset default modes", tipSrcDefault: "Reset source default modes", btnTxtDefault: "Reset data file settings", tipTxtDefault: "Reset photo data file (.TXT) defaults", btnSingleDefault: "Reset single photo settings", tipSingleDefault: "Reset single photo (.JPG, .JPEG, .PNG) defaults", btnSrcAllDefault: "Reset source settings", btnGisDefault: "Reset GIS settings", tipGisDefault: "Reset GIS files (.GPX, .KML, .KMZ, .GEOJSON, .JSON) defaults", toastSrcReset: "Source default modes restored.", lblBaseLayer: "Base layer", btnMapDefault: "Reset general map settings", tipMapDefault: "Reset general map settings", btnMapAllDefault: "Reset map and filter settings", tipMapAllDefault: "Reset map and filter settings to defaults", toastMapAllReset: "Map and filter settings restored.", toastMapReset: "Map settings restored.", lblMapZoom: "Zoom", lblMapCenter: "Map center", btnMapCenterUse: "Use current", lblMeasure: "Measure panel", measAuto: "Autostart", lblGridSt: "Grid", gridOff: "Off", gridOn: "Grid", gridLabels: "Grid with labels", lblDynInput: "Keyboard input", lblShowCoords: "Coordinate display",
                 setProfilesDesc: "Saving a profile writes all settings including the archive root to GeoJSON. Loading a profile overwrites settings and restarts the app.",
                 profileSaveBtn: "Save profile",
                 profileLoadBtn: "Load profile",
@@ -3265,6 +3269,15 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try { localStorage.setItem("mapa_fotek_def_gis_" + key, String(v)); } catch(e) {}
             try { if (typeof syncGisDetail === "function") syncGisDetail(); } catch(e2) {}
         }
+        var SRC_AREA_KEYS = ["mapa_fotek_area_line_color", "mapa_fotek_area_line_width", "mapa_fotek_area_line_dash", "mapa_fotek_area_line_op", "mapa_fotek_area_fill_color", "mapa_fotek_area_fill_op"];
+        function apriAGet(key, def) {
+            try { var v = localStorage.getItem("mapa_fotek_area_" + key); return (v === null || v === undefined) ? def : v; } catch(e) { return def; }
+        }
+        function setDefArea(key, v) {
+            try { localStorage.setItem("mapa_fotek_area_" + key, String(v)); } catch(e) {}
+            try { if (typeof syncAreaDetail === "function") syncAreaDetail(); } catch(e2) {}
+            try { if (typeof drawAreaHighlight === "function") drawAreaHighlight(); } catch(e3) {}
+        }
         var GIS_FILL_SEQ = ["#ea4335", "#fb8c00", "#fbbc04", "#34a853", "#00897b", "#1a73e8", "#8e24aa", "#202124", "#ffffff", "#795548"];
         function gisFillItems() {
             var namesCs = ["Červená", "Oranžová", "Žlutá", "Zelená", "Tyrkysová", "Modrá", "Fialová", "Tmavá", "Bílá", "Hnědá"];
@@ -3597,6 +3610,73 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 }
             } catch(e) {}
         }
+        function syncAreaDetail() {
+            try {
+                var fpChk = document.getElementById("filtersPersistChk");
+                if (fpChk) { try { fpChk.checked = filtersPersistOn(); } catch(eF) {} }
+                var setPair = function(rid, nid, val) {
+                    var r = document.getElementById(rid), n = document.getElementById(nid);
+                    if (r) r.value = val;
+                    if (n) n.value = val;
+                };
+                var g = function(k, d) { return apriAGet(k, d); };
+                setPair("aLineWd", "aLineWdN", g("line_width", 2));
+                setPair("aLineOp", "aLineOpN", g("line_op", 100));
+                setPair("aFillOp", "aFillOpN", g("fill_op", 15));
+                var fills = [];
+                try { fills = gisFillItems(); } catch(eF) {}
+                var mkPills = function(elId, items, cur, key) {
+                    var el = document.getElementById(elId);
+                    if (!el) return;
+                    el.innerHTML = "";
+                    try { el.classList.add("color-palette-grid"); } catch(eC) {}
+                    for (var i = 0; i < items.length; i++) {
+                        (function(it) {
+                            var b = document.createElement("button");
+                            b.type = "button";
+                            if (it.v === cur) b.classList.add("active");
+                            b.title = it.t;
+                            if (it.css) b.style.cssText += it.css;
+                            b.onclick = function(e) { if (e) e.stopPropagation(); setDefArea(key, it.v); };
+                            el.appendChild(b);
+                        })(items[i]);
+                    }
+                };
+                mkPills("aLineCol", fills, g("line_color", "#0AA94C"), "line_color");
+                mkPills("aFillCol", fills, g("fill_color", "#0AA94C"), "fill_color");
+                (function() {
+                    var fno = document.getElementById("aFillNone");
+                    if (!fno) return;
+                    fno.innerHTML = "";
+                    try { fno.classList.add("color-palette-grid"); } catch(eC3) {}
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    if (!g("fill_color", "#0AA94C")) b.classList.add("active");
+                    b.title = currentLang === "cs" ? "Bez výplně" : "No fill";
+                    b.style.cssText += "background:repeating-conic-gradient(#ccc 0% 25%, transparent 0% 50%) 50%/8px 8px;";
+                    b.onclick = function(e) { if (e) e.stopPropagation(); setDefArea("fill_color", ""); };
+                    fno.appendChild(b);
+                })();
+                var ddash = document.getElementById("aLineDash");
+                if (ddash) {
+                    ddash.innerHTML = "";
+                    try { ddash.classList.add("color-palette-grid"); } catch(eC4) {}
+                    var curD = g("line_dash", "6 4");
+                    var dpats = [{ v: "", t: currentLang === "cs" ? "Plná" : "Solid" }, { v: "6 4", t: currentLang === "cs" ? "Čárkovaná" : "Dashed" }, { v: "2 4", t: currentLang === "cs" ? "Tečkovaná" : "Dotted" }, { v: "12 4 2 4", t: currentLang === "cs" ? "Čerchovaná" : "Dash-dot" }];
+                    for (var ij = 0; ij < dpats.length; ij++) {
+                        (function(it) {
+                            var b = document.createElement("button");
+                            b.type = "button";
+                            if (it.v === curD) b.classList.add("active");
+                            b.title = it.t;
+                            try { b.innerHTML = '<svg width="26" height="10" viewBox="0 0 26 10"><line x1="1" y1="5" x2="25" y2="5" stroke="#5f6368" stroke-width="3"' + (it.v ? ' stroke-dasharray="' + it.v + '"' : '') + '/></svg>'; } catch(eI) {}
+                            b.onclick = function(e) { if (e) e.stopPropagation(); setDefArea("line_dash", it.v); };
+                            ddash.appendChild(b);
+                        })(dpats[ij]);
+                    }
+                }
+            } catch(e) {}
+        }
         function resetSrcDefaults() {
             try { localStorage.removeItem("mapa_fotek_def_txt_mode"); } catch(e) {}
             try { localStorage.removeItem("mapa_fotek_def_single_mode"); } catch(e2) {}
@@ -3660,7 +3740,35 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var t = i18n[currentLang] || {};
             if (typeof showToast === "function") showToast(t.toastSrcReset || "Výchozí režimy zdrojů obnoveny.");
         }
-        function resetLBMapDefaults() {
+        function resetAreaDefaults(quiet) {
+            try {
+                for (var di = 0; di < SRC_AREA_KEYS.length; di++) {
+                    try { localStorage.removeItem(SRC_AREA_KEYS[di]); } catch(eX) {}
+                }
+            } catch(e2) {}
+            try { if (typeof syncAreaDetail === "function") syncAreaDetail(); } catch(e3) {}
+            try { if (typeof drawAreaHighlight === "function") drawAreaHighlight(); } catch(e4) {}
+            var t = i18n[currentLang] || {};
+            if (!quiet && typeof showToast === "function") showToast(t.toastMapReset || "Nastavení mapy obnoveno.");
+        }
+        function resetFiltersDefaults(quiet) {
+            try { localStorage.setItem("mapa_fotek_filters_persist", "1"); } catch(e) {}
+            try { localStorage.removeItem("mapa_fotek_filters_state"); } catch(e2) {}
+            try { timePrefix = "all"; } catch(e3) {}
+            try { activedecade = null; } catch(e4) {}
+            try { folderPrefix = null; } catch(e5) {}
+            try { areaFilter = null; } catch(e6) {}
+            try { if (typeof renderYearDropdown === "function") renderYearDropdown(); } catch(e7) {}
+            try { if (typeof renderFolderDropdown === "function") renderFolderDropdown(); } catch(e8) {}
+            try { if (typeof updateAreaLabel === "function") updateAreaLabel(); } catch(e9) {}
+            try { if (typeof updView === "function") updView(); } catch(eA) {}
+            try { if (typeof drawAreaHighlight === "function") drawAreaHighlight(); } catch(eB) {}
+            try { if (typeof saveFiltersState === "function") saveFiltersState(); } catch(eC) {}
+            try { if (typeof syncAreaDetail === "function") syncAreaDetail(); } catch(eD) {}
+            var t = i18n[currentLang] || {};
+            if (!quiet && typeof showToast === "function") showToast(t.toastFiltersReset || "Filtry obnoveny do výchozího stavu.");
+        }
+        function resetLBMapDefaults(quiet) {
             try { if (typeof setLBMapZoom === "function") setLBMapZoom(6); } catch(e) {}
             try { if (typeof setLBMapCenter === "function") setLBMapCenter(50.0, 15.0, false); } catch(e2) {}
             try { if (typeof setMeasAutoStart === "function") setMeasAutoStart(false); } catch(e3) {}
@@ -3670,7 +3778,19 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try { if (typeof setBaseLayer === "function") setBaseLayer("_none"); } catch(e) {}
             try { if (typeof setBaseLayerDisplay === "function") setBaseLayerDisplay("gRoad"); } catch(eD) {}
             var t = i18n[currentLang] || {};
-            if (typeof showToast === "function") showToast(t.toastMapReset || "Výchozí podklad obnoven.");
+            if (!quiet && typeof showToast === "function") showToast(t.toastMapReset || "Výchozí podklad obnoven.");
+        }
+        function resetAreaSectionDefaults(quiet) {
+            try { if (typeof resetFiltersDefaults === "function") resetFiltersDefaults(true); } catch(e1) {}
+            try { if (typeof resetAreaDefaults === "function") resetAreaDefaults(true); } catch(e2) {}
+            var t = i18n[currentLang] || {};
+            if (!quiet && typeof showToast === "function") showToast(t.toastFiltersReset || "Filtry obnoveny do výchozího stavu.");
+        }
+        function resetMapSectionDefaults() {
+            try { if (typeof resetLBMapDefaults === "function") resetLBMapDefaults(true); } catch(e1) {}
+            try { if (typeof resetAreaSectionDefaults === "function") resetAreaSectionDefaults(true); } catch(e2) {}
+            var t = i18n[currentLang] || {};
+            if (typeof showToast === "function") showToast(t.toastMapAllReset || "Nastavení mapy a filtrů obnoveno.");
         }
         function setBaseLayerAndSync(key) {
             try { if (typeof setBaseLayer === "function") setBaseLayer(key); } catch(e) {}
@@ -5360,8 +5480,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             setTimeout(function(){ btnCancel.focus(); }, 50);
         }
 
-        var SETTINGS_PROFILE_KEYS = ["mapa_fotek_archive_root", "mapa_fotek_archive_on", "mapa_fotek_base_layer", "mapa_fotek_map_zoom", "mapa_fotek_map_lat", "mapa_fotek_map_lon", "mapa_fotek_measure_auto", "mapa_fotek_grid_state", "mapa_fotek_dyn_input", "mapa_fotek_show_coords", "mapa_fotek_def_txt_mode", "mapa_fotek_def_single_mode", "mapa_fotek_def_gis_mode", "mapa_fotek_def_txt_heat_pal", "mapa_fotek_def_txt_heat_pal_rot", "mapa_fotek_def_txt_heat_op", "mapa_fotek_def_txt_heat_blur", "mapa_fotek_def_txt_heat_size", "mapa_fotek_def_txt_dots_color", "mapa_fotek_def_txt_dots_color_rot", "mapa_fotek_def_txt_dots_op", "mapa_fotek_def_txt_dots_size", "mapa_fotek_def_txt_dots_icon", "mapa_fotek_def_txt_zone_color", "mapa_fotek_def_txt_zone_color_rot", "mapa_fotek_def_txt_zone_op", "mapa_fotek_def_txt_zone_km", "mapa_fotek_def_txt_age_pal", "mapa_fotek_def_txt_age_pal_rot", "mapa_fotek_def_txt_age_op", "mapa_fotek_def_txt_age_blur", "mapa_fotek_def_txt_age_size", "mapa_fotek_def_txt_cards_op", "mapa_fotek_def_txt_clusters_color", "mapa_fotek_def_txt_clusters_color_rot", "mapa_fotek_def_txt_clusters_op", "mapa_fotek_def_single_heat_pal", "mapa_fotek_def_single_heat_pal_rot", "mapa_fotek_def_single_heat_op", "mapa_fotek_def_single_heat_blur", "mapa_fotek_def_single_heat_size", "mapa_fotek_def_single_dots_color", "mapa_fotek_def_single_dots_color_rot", "mapa_fotek_def_single_dots_op", "mapa_fotek_def_single_dots_size", "mapa_fotek_def_single_dots_icon", "mapa_fotek_def_single_zone_color", "mapa_fotek_def_single_zone_color_rot", "mapa_fotek_def_single_zone_op", "mapa_fotek_def_single_zone_km", "mapa_fotek_def_single_age_pal", "mapa_fotek_def_single_age_pal_rot", "mapa_fotek_def_single_age_op", "mapa_fotek_def_single_age_blur", "mapa_fotek_def_single_age_size", "mapa_fotek_def_single_cards_op", "mapa_fotek_def_single_clusters_color", "mapa_fotek_def_single_clusters_color_rot", "mapa_fotek_def_single_clusters_op", "mapa_fotek_def_gis_point_color", "mapa_fotek_def_gis_point_color_rot", "mapa_fotek_def_gis_point_icon", "mapa_fotek_def_gis_point_size", "mapa_fotek_def_gis_point_op", "mapa_fotek_def_gis_pins_op", "mapa_fotek_def_gis_heat_pal", "mapa_fotek_def_gis_heat_pal_rot", "mapa_fotek_def_gis_heat_op", "mapa_fotek_def_gis_heat_blur", "mapa_fotek_def_gis_zone_color", "mapa_fotek_def_gis_zone_color_rot", "mapa_fotek_def_gis_zone_km", "mapa_fotek_def_gis_line_color", "mapa_fotek_def_gis_line_color_rot", "mapa_fotek_def_gis_line_op", "mapa_fotek_def_gis_line_width", "mapa_fotek_def_gis_fill_color", "mapa_fotek_def_gis_fill_op", "mapa_fotek_settings_open", "mapa_fotek_lang", "mapa_fotek_hide_s", "mapa_fotek_open_mode", "mapa_fotek_pointer_scale", "mapa_fotek_pointer_color", "mapa_fotek_pointer_shape", "mapa_fotek_pointer_ms", "mapa_fotek_transition", "mapa_fotek_trans_ms", "mapa_fotek_map_frame", "mapa_fotek_trail_opacity", "mapa_fotek_trail_width", "mapa_fotek_trail_color", "mapa_fotek_slide_trail", "mapa_fotek_trail_anim", "mapa_fotek_slide_ms", "mapa_fotek_slide_rev", "mapa_fotek_dataset_styles", "mapa_fotek_sources_order", "mapa_fotek_timeline"];
-        var SETTINGS_PROFILE_DEFAULTS = {"mapa_fotek_archive_root": "", "mapa_fotek_archive_on": "1", "mapa_fotek_base_layer": "gRoad", "mapa_fotek_map_zoom": "6", "mapa_fotek_map_lat": "50.0", "mapa_fotek_map_lon": "15.0", "mapa_fotek_measure_auto": "0", "mapa_fotek_grid_state": "0", "mapa_fotek_dyn_input": "0", "mapa_fotek_show_coords": "0", "mapa_fotek_def_txt_mode": "heat", "mapa_fotek_def_single_mode": "dots", "mapa_fotek_def_gis_mode": "symbol", "mapa_fotek_def_txt_heat_pal": "classic", "mapa_fotek_def_txt_heat_pal_rot": "1", "mapa_fotek_def_txt_heat_op": "100", "mapa_fotek_def_txt_heat_blur": "25", "mapa_fotek_def_txt_heat_size": "1", "mapa_fotek_def_txt_dots_color": "red", "mapa_fotek_def_txt_dots_color_rot": "1", "mapa_fotek_def_txt_dots_op": "50", "mapa_fotek_def_txt_dots_size": "3.5", "mapa_fotek_def_txt_dots_icon": "dot", "mapa_fotek_def_txt_zone_color": "blue", "mapa_fotek_def_txt_zone_color_rot": "1", "mapa_fotek_def_txt_zone_op": "50", "mapa_fotek_def_txt_zone_km": "10", "mapa_fotek_def_txt_age_pal": "duha", "mapa_fotek_def_txt_age_pal_rot": "1", "mapa_fotek_def_txt_age_op": "100", "mapa_fotek_def_txt_age_blur": "0", "mapa_fotek_def_txt_age_size": "0.5", "mapa_fotek_def_txt_cards_op": "100", "mapa_fotek_def_txt_clusters_color": "red", "mapa_fotek_def_txt_clusters_color_rot": "1", "mapa_fotek_def_txt_clusters_op": "50", "mapa_fotek_def_single_heat_pal": "classic", "mapa_fotek_def_single_heat_pal_rot": "1", "mapa_fotek_def_single_heat_op": "100", "mapa_fotek_def_single_heat_blur": "25", "mapa_fotek_def_single_heat_size": "1", "mapa_fotek_def_single_dots_color": "red", "mapa_fotek_def_single_dots_color_rot": "1", "mapa_fotek_def_single_dots_op": "50", "mapa_fotek_def_single_dots_size": "3.5", "mapa_fotek_def_single_dots_icon": "dot", "mapa_fotek_def_single_zone_color": "blue", "mapa_fotek_def_single_zone_color_rot": "1", "mapa_fotek_def_single_zone_op": "50", "mapa_fotek_def_single_zone_km": "10", "mapa_fotek_def_single_age_pal": "duha", "mapa_fotek_def_single_age_pal_rot": "1", "mapa_fotek_def_single_age_op": "100", "mapa_fotek_def_single_age_blur": "0", "mapa_fotek_def_single_age_size": "0.5", "mapa_fotek_def_single_cards_op": "100", "mapa_fotek_def_single_clusters_color": "red", "mapa_fotek_def_single_clusters_color_rot": "1", "mapa_fotek_def_single_clusters_op": "50", "mapa_fotek_def_gis_point_color": "#ea4335", "mapa_fotek_def_gis_point_color_rot": "1", "mapa_fotek_def_gis_point_icon": "pin", "mapa_fotek_def_gis_point_size": "14", "mapa_fotek_def_gis_point_op": "100", "mapa_fotek_def_gis_pins_op": "100", "mapa_fotek_def_gis_heat_pal": "classic", "mapa_fotek_def_gis_heat_pal_rot": "0", "mapa_fotek_def_gis_heat_op": "100", "mapa_fotek_def_gis_heat_blur": "25", "mapa_fotek_def_gis_zone_color": "blue", "mapa_fotek_def_gis_zone_color_rot": "0", "mapa_fotek_def_gis_zone_km": "10", "mapa_fotek_def_gis_zone_op": "50", "mapa_fotek_def_gis_line_color": "#ea4335", "mapa_fotek_def_gis_line_color_rot": "1", "mapa_fotek_def_gis_line_op": "85", "mapa_fotek_def_gis_line_width": "3", "mapa_fotek_def_gis_fill_color": "", "mapa_fotek_def_gis_fill_op": "50", "mapa_fotek_settings_open": "{}", "mapa_fotek_lang": "cs", "mapa_fotek_hide_s": "0", "mapa_fotek_open_mode": "viewer", "mapa_fotek_pointer_scale": "1.25", "mapa_fotek_pointer_color": "green", "mapa_fotek_pointer_shape": "circle", "mapa_fotek_pointer_ms": "2750", "mapa_fotek_transition": "cut", "mapa_fotek_trans_ms": "1000", "mapa_fotek_map_frame": "off", "mapa_fotek_trail_opacity": "90", "mapa_fotek_trail_width": "3", "mapa_fotek_trail_color": "blue", "mapa_fotek_slide_trail": "0", "mapa_fotek_trail_anim": "0", "mapa_fotek_slide_ms": "3000", "mapa_fotek_slide_rev": "0", "mapa_fotek_dataset_styles": "{}", "mapa_fotek_sources_order": "[]", "mapa_fotek_timeline": "1"};
+        var SETTINGS_PROFILE_KEYS = ["mapa_fotek_archive_root", "mapa_fotek_archive_on", "mapa_fotek_base_layer", "mapa_fotek_map_zoom", "mapa_fotek_map_lat", "mapa_fotek_map_lon", "mapa_fotek_measure_auto", "mapa_fotek_grid_state", "mapa_fotek_dyn_input", "mapa_fotek_show_coords", "mapa_fotek_def_txt_mode", "mapa_fotek_def_single_mode", "mapa_fotek_def_gis_mode", "mapa_fotek_def_txt_heat_pal", "mapa_fotek_def_txt_heat_pal_rot", "mapa_fotek_def_txt_heat_op", "mapa_fotek_def_txt_heat_blur", "mapa_fotek_def_txt_heat_size", "mapa_fotek_def_txt_dots_color", "mapa_fotek_def_txt_dots_color_rot", "mapa_fotek_def_txt_dots_op", "mapa_fotek_def_txt_dots_size", "mapa_fotek_def_txt_dots_icon", "mapa_fotek_def_txt_zone_color", "mapa_fotek_def_txt_zone_color_rot", "mapa_fotek_def_txt_zone_op", "mapa_fotek_def_txt_zone_km", "mapa_fotek_def_txt_age_pal", "mapa_fotek_def_txt_age_pal_rot", "mapa_fotek_def_txt_age_op", "mapa_fotek_def_txt_age_blur", "mapa_fotek_def_txt_age_size", "mapa_fotek_def_txt_cards_op", "mapa_fotek_def_txt_clusters_color", "mapa_fotek_def_txt_clusters_color_rot", "mapa_fotek_def_txt_clusters_op", "mapa_fotek_def_single_heat_pal", "mapa_fotek_def_single_heat_pal_rot", "mapa_fotek_def_single_heat_op", "mapa_fotek_def_single_heat_blur", "mapa_fotek_def_single_heat_size", "mapa_fotek_def_single_dots_color", "mapa_fotek_def_single_dots_color_rot", "mapa_fotek_def_single_dots_op", "mapa_fotek_def_single_dots_size", "mapa_fotek_def_single_dots_icon", "mapa_fotek_def_single_zone_color", "mapa_fotek_def_single_zone_color_rot", "mapa_fotek_def_single_zone_op", "mapa_fotek_def_single_zone_km", "mapa_fotek_def_single_age_pal", "mapa_fotek_def_single_age_pal_rot", "mapa_fotek_def_single_age_op", "mapa_fotek_def_single_age_blur", "mapa_fotek_def_single_age_size", "mapa_fotek_def_single_cards_op", "mapa_fotek_def_single_clusters_color", "mapa_fotek_def_single_clusters_color_rot", "mapa_fotek_def_single_clusters_op", "mapa_fotek_def_gis_point_color", "mapa_fotek_def_gis_point_color_rot", "mapa_fotek_def_gis_point_icon", "mapa_fotek_def_gis_point_size", "mapa_fotek_def_gis_point_op", "mapa_fotek_def_gis_pins_op", "mapa_fotek_def_gis_heat_pal", "mapa_fotek_def_gis_heat_pal_rot", "mapa_fotek_def_gis_heat_op", "mapa_fotek_def_gis_heat_blur", "mapa_fotek_def_gis_zone_color", "mapa_fotek_def_gis_zone_color_rot", "mapa_fotek_def_gis_zone_km", "mapa_fotek_def_gis_zone_op", "mapa_fotek_def_gis_line_color", "mapa_fotek_def_gis_line_color_rot", "mapa_fotek_def_gis_line_op", "mapa_fotek_def_gis_line_width", "mapa_fotek_def_gis_fill_color", "mapa_fotek_def_gis_fill_op", "mapa_fotek_area_line_color", "mapa_fotek_area_line_width", "mapa_fotek_area_line_dash", "mapa_fotek_area_line_op", "mapa_fotek_area_fill_color", "mapa_fotek_area_fill_op", "mapa_fotek_filters_persist", "mapa_fotek_settings_open", "mapa_fotek_lang", "mapa_fotek_hide_s", "mapa_fotek_open_mode", "mapa_fotek_pointer_scale", "mapa_fotek_pointer_color", "mapa_fotek_pointer_shape", "mapa_fotek_pointer_ms", "mapa_fotek_transition", "mapa_fotek_trans_ms", "mapa_fotek_map_frame", "mapa_fotek_trail_opacity", "mapa_fotek_trail_width", "mapa_fotek_trail_color", "mapa_fotek_slide_trail", "mapa_fotek_trail_anim", "mapa_fotek_slide_ms", "mapa_fotek_slide_rev", "mapa_fotek_dataset_styles", "mapa_fotek_sources_order", "mapa_fotek_timeline"];
+        var SETTINGS_PROFILE_DEFAULTS = {"mapa_fotek_archive_root": "", "mapa_fotek_archive_on": "1", "mapa_fotek_base_layer": "gRoad", "mapa_fotek_map_zoom": "6", "mapa_fotek_map_lat": "50.0", "mapa_fotek_map_lon": "15.0", "mapa_fotek_measure_auto": "0", "mapa_fotek_grid_state": "0", "mapa_fotek_dyn_input": "0", "mapa_fotek_show_coords": "0", "mapa_fotek_def_txt_mode": "heat", "mapa_fotek_def_single_mode": "dots", "mapa_fotek_def_gis_mode": "symbol", "mapa_fotek_def_txt_heat_pal": "classic", "mapa_fotek_def_txt_heat_pal_rot": "1", "mapa_fotek_def_txt_heat_op": "100", "mapa_fotek_def_txt_heat_blur": "25", "mapa_fotek_def_txt_heat_size": "1", "mapa_fotek_def_txt_dots_color": "red", "mapa_fotek_def_txt_dots_color_rot": "1", "mapa_fotek_def_txt_dots_op": "50", "mapa_fotek_def_txt_dots_size": "3.5", "mapa_fotek_def_txt_dots_icon": "dot", "mapa_fotek_def_txt_zone_color": "blue", "mapa_fotek_def_txt_zone_color_rot": "1", "mapa_fotek_def_txt_zone_op": "50", "mapa_fotek_def_txt_zone_km": "10", "mapa_fotek_def_txt_age_pal": "duha", "mapa_fotek_def_txt_age_pal_rot": "1", "mapa_fotek_def_txt_age_op": "100", "mapa_fotek_def_txt_age_blur": "0", "mapa_fotek_def_txt_age_size": "0.5", "mapa_fotek_def_txt_cards_op": "100", "mapa_fotek_def_txt_clusters_color": "red", "mapa_fotek_def_txt_clusters_color_rot": "1", "mapa_fotek_def_txt_clusters_op": "50", "mapa_fotek_def_single_heat_pal": "classic", "mapa_fotek_def_single_heat_pal_rot": "1", "mapa_fotek_def_single_heat_op": "100", "mapa_fotek_def_single_heat_blur": "25", "mapa_fotek_def_single_heat_size": "1", "mapa_fotek_def_single_dots_color": "red", "mapa_fotek_def_single_dots_color_rot": "1", "mapa_fotek_def_single_dots_op": "50", "mapa_fotek_def_single_dots_size": "3.5", "mapa_fotek_def_single_dots_icon": "dot", "mapa_fotek_def_single_zone_color": "blue", "mapa_fotek_def_single_zone_color_rot": "1", "mapa_fotek_def_single_zone_op": "50", "mapa_fotek_def_single_zone_km": "10", "mapa_fotek_def_single_age_pal": "duha", "mapa_fotek_def_single_age_pal_rot": "1", "mapa_fotek_def_single_age_op": "100", "mapa_fotek_def_single_age_blur": "0", "mapa_fotek_def_single_age_size": "0.5", "mapa_fotek_def_single_cards_op": "100", "mapa_fotek_def_single_clusters_color": "red", "mapa_fotek_def_single_clusters_color_rot": "1", "mapa_fotek_def_single_clusters_op": "50", "mapa_fotek_def_gis_point_color": "#ea4335", "mapa_fotek_def_gis_point_color_rot": "1", "mapa_fotek_def_gis_point_icon": "pin", "mapa_fotek_def_gis_point_size": "14", "mapa_fotek_def_gis_point_op": "100", "mapa_fotek_def_gis_pins_op": "100", "mapa_fotek_def_gis_heat_pal": "classic", "mapa_fotek_def_gis_heat_pal_rot": "0", "mapa_fotek_def_gis_heat_op": "100", "mapa_fotek_def_gis_heat_blur": "25", "mapa_fotek_def_gis_zone_color": "blue", "mapa_fotek_def_gis_zone_color_rot": "0", "mapa_fotek_def_gis_zone_km": "10", "mapa_fotek_def_gis_zone_op": "100", "mapa_fotek_def_gis_line_color": "#ea4335", "mapa_fotek_def_gis_line_color_rot": "1", "mapa_fotek_def_gis_line_op": "85", "mapa_fotek_def_gis_line_width": "3", "mapa_fotek_def_gis_fill_color": "", "mapa_fotek_def_gis_fill_op": "50", "mapa_fotek_area_line_color": "#0AA94C", "mapa_fotek_area_line_width": "2", "mapa_fotek_area_line_dash": "6 4", "mapa_fotek_area_line_op": "100", "mapa_fotek_area_fill_color": "#0AA94C", "mapa_fotek_area_fill_op": "15", "mapa_fotek_filters_persist": "1", "mapa_fotek_settings_open": "{}", "mapa_fotek_lang": "cs", "mapa_fotek_hide_s": "0", "mapa_fotek_open_mode": "viewer", "mapa_fotek_pointer_scale": "1.25", "mapa_fotek_pointer_color": "green", "mapa_fotek_pointer_shape": "circle", "mapa_fotek_pointer_ms": "2750", "mapa_fotek_transition": "cut", "mapa_fotek_trans_ms": "1000", "mapa_fotek_map_frame": "off", "mapa_fotek_trail_opacity": "90", "mapa_fotek_trail_width": "3", "mapa_fotek_trail_color": "blue", "mapa_fotek_slide_trail": "0", "mapa_fotek_trail_anim": "0", "mapa_fotek_slide_ms": "3000", "mapa_fotek_slide_rev": "0", "mapa_fotek_dataset_styles": "{}", "mapa_fotek_sources_order": "[]", "mapa_fotek_timeline": "1"};
         function collectSettingsProfile() {
             var o = {};
             try {
@@ -5681,6 +5801,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "</div>" +
                         "</div></details></li>" +
                         "<li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z'/><path d='M9 4v14M15 6v14'/></svg> " + (t.setMapTitle || "") + ":</summary><div class=\"step-body\">" +
+                        "<details class=\"step\"><summary>4.1 <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 8h10M18 8h2M4 16h4M12 16h8'/><circle cx='16' cy='8' r='2'/><circle cx='10' cy='16' r='2'/></svg> <span style='font-weight:400'>" + (t.setMapGeneralTitle || "") + "</span></summary><div class=\"step-body\">" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-top:2px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblBaseLayer || "") + "</span><span id=\"basePillsRow\"></span></div>" +
                         "<div class=\"slider-input-group\" style=\"margin-top:6px;\"><span>" + (t.lblMapZoom || "") + "</span>" +
                         "<span class=\"slider-minmax\">2</span>" +
@@ -5693,7 +5814,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<input id=\"mapLonNum\" type=\"text\" style=\"width:70px;\" value=\"\" onfocus=\"this.select();\" onchange=\"setLBMapCenter(document.getElementById('mapLatNum').value, this.value, true)\" />" +
                         "<button type=\"button\" class=\"source-pill-btn\" onclick=\"event.stopPropagation();useCurrentMapCenter();\">" + (t.btnMapCenterUse || "") + "</button>" +
                         "</div>" +
-                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #f1f3f4;font-size:11px;font-weight:700;color:#3c4043;\">" + (t.lblMeasure || "") + "</div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;\">" + (t.lblMeasure || "") + "</div>" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"measAutoChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setMeasAutoStart(this.checked)\" /><span>" + (t.measAuto || "") + "</span></label>" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblGridSt || "") + "</span>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-gridst\" data-m=\"0\" onclick=\"event.stopPropagation();setMeasGridSt(0)\">" + (t.gridOff || "") + "</button>" +
@@ -5703,7 +5824,25 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"measDynChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setMeasDynInput(this.checked)\" /><span>" + (t.lblDynInput || "") + "</span></label>" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"measCoordsChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setMeasShowCoords(this.checked)\" /><span>" + (t.lblShowCoords || "") + "</span></label>" +
                         "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #f1f3f4;display:flex;justify-content:flex-end;\">" +
-                        "<button type=\"button\" class=\"source-pill-btn\" style=\"font-size:11px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:#f8f9fa;border:1px solid #dadce0;border-radius:14px;color:#3c4043;\" title=\"" + (t.tipMapDefault || "") + "\" onclick=\"event.stopPropagation();resetLBMapDefaults();\">↺ " + (t.btnMapDefault || "Obnovit výchozí podklad") + "</button>" +
+                        "<button type=\"button\" class=\"source-pill-btn\" style=\"font-size:11px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:#f8f9fa;border:1px solid #dadce0;border-radius:14px;color:#3c4043;\" title=\"" + (t.tipMapDefault || "") + "\" onclick=\"event.stopPropagation();resetLBMapDefaults();\">↺ " + (t.btnMapDefault || "Obnovit obecná nastavení mapy") + "</button>" +
+                        "</div>" +
+                        "</div></details>" +
+                        "<details class=\"step\"><summary>4.2 <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l7 4v10l-7 4-7-4V7z' stroke-dasharray='3 2'/></svg> <span style='font-weight:400'>" + (t.setAreaTitle || "") + "</span></summary><div class=\"step-body\">" +
+                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:2px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"filtersPersistChk\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setFiltersPersist(this.checked)\" /><span>" + (t.lblFiltersPersist || "") + "</span></label>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;display:flex;align-items:center;justify-content:space-between;gap:6px;\"><span>" + (currentLang === "cs" ? "Čára" : "Line") + "</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.srcColor || "") + "</span><span id=\"aLineCol\"></span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblLineWidth || "") + "</span><span class=\"slider-minmax\">0,5</span><input id=\"aLineWd\" type=\"range\" min=\"0.5\" max=\"50\" step=\"0.5\" oninput=\"setDefArea('line_width', this.value)\" /><span class=\"slider-minmax\">50</span><input id=\"aLineWdN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefArea('line_width', this.value)\" /><span>px</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (currentLang === "cs" ? "Typ čáry" : "Line style") + "</span><span id=\"aLineDash\"></span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "") + "</span><span class=\"slider-minmax\">0 %</span><input id=\"aLineOp\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" oninput=\"setDefArea('line_op', this.value)\" /><span class=\"slider-minmax\">100 %</span><input id=\"aLineOpN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefArea('line_op', this.value)\" /><span>%</span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;display:flex;align-items:center;justify-content:space-between;gap:6px;\"><span>" + (currentLang === "cs" ? "Výplň" : "Fill") + "</span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblFillColor || "") + "</span><span id=\"aFillCol\"></span><span id=\"aFillNone\" style=\"display:inline-flex;margin-left:8px;\"></span></div>" +
+                        "<div class=\"slider-input-group\"><span>" + (t.lblOpacity || "") + "</span><span class=\"slider-minmax\">0 %</span><input id=\"aFillOp\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" oninput=\"setDefArea('fill_op', this.value)\" /><span class=\"slider-minmax\">100 %</span><input id=\"aFillOpN\" type=\"text\" onfocus=\"this.select();\" onchange=\"setDefArea('fill_op', this.value)\" /><span>%</span></div>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;display:flex;justify-content:flex-end;\">" +
+                        "<button type=\"button\" class=\"source-pill-btn\" style=\"font-size:11px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:#f8f9fa;border:1px solid #dadce0;border-radius:14px;color:#3c4043;\" title=\"" + (t.tipFiltersDefault || "") + "\" onclick=\"event.stopPropagation();resetAreaSectionDefaults();\">↺ " + (t.btnFiltersDefault || "Obnovit nastavení filtrů") + "</button>" +
+                        "</div>" +
+                        "</div></details>" +
+                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #f1f3f4;display:flex;justify-content:flex-end;\">" +
+                        "<button type=\"button\" class=\"source-pill-btn\" style=\"font-size:11px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:#f8f9fa;border:1px solid #dadce0;border-radius:14px;color:#3c4043;\" title=\"" + (t.tipMapAllDefault || "") + "\" onclick=\"event.stopPropagation();resetMapSectionDefaults();\">↺ " + (t.btnMapAllDefault || "Obnovit nastavení mapy a filtrů") + "</button>" +
                         "</div>" +
                         "</div></details></li>" +
                         "<li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><ellipse cx='12' cy='5' rx='9' ry='3'/><path d='M3 5V19A9 3 0 0 0 21 19V5'/><path d='M3 12A9 3 0 0 0 21 12'/></svg> " + (t.setSourcesTitle || "") + ":</summary><div class=\"step-body\">" +
@@ -5827,6 +5966,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 try { syncArchiveInput(); } catch(e) {}
                 try { if (typeof syncBasePills === "function") syncBasePills(); } catch(eBP) {}
                 try { if (typeof syncMapSettings === "function") syncMapSettings(); } catch(eMS) {}
+                try { if (typeof syncAreaDetail === "function") syncAreaDetail(); } catch(eAD) {}
                 try { if (typeof syncMeasureSettings === "function") syncMeasureSettings(); } catch(eMM) {}
                 try { if (typeof syncProfileRow === "function") syncProfileRow(); } catch(eSP) {}
                 try { if (typeof updateStorageMeter === "function") updateStorageMeter(); } catch(eSM) {}
@@ -17006,6 +17146,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
             renderFolderDropdown();
             if (typeof updateAreaLabel === "function") updateAreaLabel();
             updView();
+            try { if (typeof saveFiltersState === "function") saveFiltersState(); } catch(eSF) {}
         }
         // Parsování hledaného data/hodiny (RRRR[MM[DD[HH]]], oddělovače libovolné; bere nejdelší platnou délku 10/8/6/4)
         function parseTimeSearch(s) {
@@ -17146,6 +17287,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
             renderYearDropdown();
             if (typeof updateAreaLabel === "function") updateAreaLabel();
             updView();
+            try { if (typeof saveFiltersState === "function") saveFiltersState(); } catch(eSF) {}
         }
         function fmtFolderPrefix(pfx, t) {
             if (pfx === null || pfx === undefined) return t.btnFolder;
@@ -17430,19 +17572,41 @@ if (fileEnd < fList.length || fileStart > 0) {
             try {
                 if (areaHighlightLayer) { try { map.removeLayer(areaHighlightLayer); } catch(e) {} areaHighlightLayer = null; }
                 if (!areaFilter || typeof map === "undefined" || !map || typeof L === "undefined") return;
+                var ahCol = "#0AA94C", ahW = 2, ahDash = "6 4", ahLOp = 1, ahFill = "#0AA94C", ahFOp = 0.15;
+                try {
+                    var _lc = null, _lw = null, _ld = null, _lo = null, _fc = null, _fo = null;
+                    try { _lc = localStorage.getItem("mapa_fotek_area_line_color"); } catch(e1) {}
+                    try { _lw = parseFloat(String(localStorage.getItem("mapa_fotek_area_line_width")).replace(",", ".")); } catch(e2) {}
+                    try { _ld = localStorage.getItem("mapa_fotek_area_line_dash"); } catch(e3) {}
+                    try { _lo = parseFloat(String(localStorage.getItem("mapa_fotek_area_line_op")).replace(",", ".")); } catch(e4) {}
+                    try { _fc = localStorage.getItem("mapa_fotek_area_fill_color"); } catch(e5) {}
+                    try { _fo = parseFloat(String(localStorage.getItem("mapa_fotek_area_fill_op")).replace(",", ".")); } catch(e6) {}
+                    if (_lc) ahCol = _lc;
+                    if (isFinite(_lw)) ahW = Math.max(0.5, Math.min(50, _lw));
+                    if (_ld !== null && _ld !== undefined) ahDash = _ld;
+                    if (isFinite(_lo)) ahLOp = Math.max(0, Math.min(100, _lo)) / 100;
+                    if (_fc !== null && _fc !== undefined && _fc !== "") { ahFill = _fc; } else if (_fc === "") { ahFill = null; }
+                    if (isFinite(_fo)) ahFOp = Math.max(0, Math.min(100, _fo)) / 100;
+                    if (!ahFill) ahFOp = 0;
+                } catch(eA) {}
                 var g = L.layerGroup(), i;
                 var rings = areaFilter.rings || [], circles = areaFilter.circles || [];
+                var ahOpts = function() {
+                    var o = { color: ahCol, weight: ahW, opacity: ahLOp, fillColor: ahFill || ahCol, fillOpacity: ahFOp, interactive: false };
+                    if (ahDash) o.dashArray = ahDash;
+                    return o;
+                };
                 for (i = 0; i < rings.length; i++) {
                     var r = rings[i];
                     if (!r || !r.outer || r.outer.length < 3) continue;
                     var lls = [r.outer];
                     (r.holes || []).forEach(function(h) { if (h && h.length >= 3) lls.push(h); });
-                    g.addLayer(L.polygon(lls, { color: "#0AA94C", weight: 2, dashArray: "6 4", fillColor: "#0AA94C", fillOpacity: 0.15, interactive: false }));
+                    g.addLayer(L.polygon(lls, ahOpts()));
                 }
                 for (i = 0; i < circles.length; i++) {
                     var cc = circles[i];
                     if (!cc || !(cc.rKm > 0)) continue;
-                    g.addLayer(L.circle([cc.lat, cc.lon], { radius: cc.rKm * 1000, color: "#0AA94C", weight: 2, dashArray: "6 4", fillColor: "#0AA94C", fillOpacity: 0.15, interactive: false }));
+                    g.addLayer(L.circle([cc.lat, cc.lon], { radius: cc.rKm * 1000, color: ahCol, weight: ahW, opacity: ahLOp, dashArray: (ahDash || undefined), fillColor: ahFill || ahCol, fillOpacity: ahFOp, interactive: false }));
                 }
                 g.addTo(map);
                 areaHighlightLayer = g;
@@ -17458,6 +17622,7 @@ if (fileEnd < fList.length || fileStart > 0) {
                 if (typeof renderFolderDropdown === "function") renderFolderDropdown();
                 if (typeof updView === "function") updView();
                 drawAreaHighlight();
+                try { if (typeof saveFiltersState === "function") saveFiltersState(); } catch(eSF) {}
                 if (areaFilter) {
                     var selfF = areaFilter;
                     areaBuildMatchAsync(areaFilter, true, function(ms) {
@@ -17473,6 +17638,43 @@ if (fileEnd < fList.length || fileStart > 0) {
                         } catch(e) {}
                     });
                 }
+            } catch(e) {}
+        }
+        function filtersPersistOn() {
+            try { return localStorage.getItem("mapa_fotek_filters_persist") !== "0"; } catch(e) { return true; }
+        }
+        function setFiltersPersist(on) {
+            try { localStorage.setItem("mapa_fotek_filters_persist", on ? "1" : "0"); } catch(e) {}
+            try { if (on) saveFiltersState(); } catch(e2) {}
+            try { if (typeof syncAreaDetail === "function") syncAreaDetail(); } catch(e3) {}
+        }
+        function saveFiltersState() {
+            try {
+                var f = (typeof folderPrefix === "undefined") ? null : folderPrefix;
+                var a = (typeof areaFilter === "undefined") ? null : areaFilter;
+                localStorage.setItem("mapa_fotek_filters_state", JSON.stringify({ t: timePrefix, f: f, a: a }));
+            } catch(e) {}
+        }
+        function restoreFiltersState() {
+            try {
+                if (!filtersPersistOn()) return;
+                var raw = null;
+                try { raw = localStorage.getItem("mapa_fotek_filters_state"); } catch(e) {}
+                if (!raw) return;
+                var st = JSON.parse(raw);
+                if (!st || typeof st !== "object") return;
+                if (typeof st.t === "string" && (st.t === "all" || /^(?:\d{4}|\d{6}|\d{8}|\d{10})$/.test(st.t))) timePrefix = st.t;
+                if (st.f === null || typeof st.f === "string") folderPrefix = st.f;
+                if (st.a && typeof st.a === "object" && (Array.isArray(st.a.rings) || Array.isArray(st.a.circles))) {
+                    if (typeof areaNormalizeFilter === "function") { try { areaFilter = areaNormalizeFilter(st.a) || null; } catch(eN) {} }
+                    else areaFilter = st.a;
+                }
+                if (folderPrefix !== null && folderPrefix !== undefined) { try { if (countForFolder(folderPrefix) === 0) folderPrefix = null; } catch(eC) {} }
+                try { if (typeof renderYearDropdown === "function") renderYearDropdown(); } catch(e1) {}
+                try { if (typeof renderFolderDropdown === "function") renderFolderDropdown(); } catch(e2) {}
+                try { if (typeof updateAreaLabel === "function") updateAreaLabel(); } catch(e3) {}
+                try { if (typeof updView === "function") updView(); } catch(e4) {}
+                try { if (typeof drawAreaHighlight === "function") drawAreaHighlight(); } catch(e5) {}
             } catch(e) {}
         }
         function collectAreaShapes() {
@@ -19977,6 +20179,7 @@ var zoneSequence = ["blue", "green", "teal", "purple", "red", "orange", "yellow"
             if (_ov0) { try { _ov0.style.display = "flex"; } catch(e) {} }
             var _bootDone = function() {
                 try { if (_ov0) _ov0.style.display = "none"; } catch(e) {}
+                try { if (typeof restoreFiltersState === "function") restoreFiltersState(); } catch(eRF) {}
                 setTimeout(function() { if (typeof restoreLBPersistence === "function") restoreLBPersistence(); }, 100);
             };
             var _bootPhotos = function() {
