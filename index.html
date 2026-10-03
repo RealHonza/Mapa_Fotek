@@ -2503,7 +2503,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsTimeSpan: "Časový rozptyl",
             statsDensest: "Nejhustší okruh",
             statsBusiestDay: "Nejvíce fotek za den",
-            statsPhotos: "fotek",
+            statsPhotos: "fotek", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní",
             statsOldest: "Nejstarší soubor",
             statsNewest: "Nejnovější soubor",
             statsLargest: "Největší soubor",
@@ -2844,7 +2844,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsTimeSpan: "Time span",
             statsDensest: "Densest area",
             statsBusiestDay: "Most photos in one day",
-            statsPhotos: "photos",
+            statsPhotos: "photos", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
             statsOldest: "Oldest file",
             statsNewest: "Newest file",
             statsLargest: "Largest file",
@@ -5700,6 +5700,53 @@ function statsSetFilters(on) {
                 return fmt + " " + unit;
             } catch(e) { return ""; }
         }
+        // Ciselne oznaceni dne z "YYYYMMDD" - pres UTC, aby nehralo DST ani presun mesici
+        function statsDayNo(d8) {
+            try {
+                var s = String(d8 || "");
+                var y = parseInt(s.substring(0, 4), 10);
+                var m = parseInt(s.substring(4, 6), 10);
+                var d = parseInt(s.substring(6, 8), 10);
+                if (!isFinite(y) || !isFinite(m) || !isFinite(d)) return null;
+                if (m < 1 || m > 12 || d < 1 || d > 31) return null;
+                return Math.floor(Date.UTC(y, m - 1, d) / 86400000);
+            } catch(e) { return null; }
+        }
+        // Nejdelší souvislá řada dnů, kdy je alespoň jedna fotka.
+        // Vrací počet dní, první a poslední den a fotky z obou konců.
+        function statsLongestSeries(times) {
+            try {
+                if (!times || !times.length) return null;
+                var g = Object.create(null);
+                for (var i = 0; i < times.length; i++) {
+                    var k = statsTimeKey(times[i]);
+                    if (k.length < 8) continue;
+                    var d8 = k.substring(0, 8);
+                    var no = statsDayNo(d8);
+                    if (no === null) continue;
+                    if (!g[d8]) g[d8] = { no: no, n: 0, fk: k, fr: times[i], lk: k, lr: times[i] };
+                    g[d8].n++;
+                    if (k < g[d8].fk) { g[d8].fk = k; g[d8].fr = times[i]; }
+                    if (k > g[d8].lk) { g[d8].lk = k; g[d8].lr = times[i]; }
+                }
+                var keys = Object.keys(g).sort(); // YYYYMMDD -> lexikograficky = chronologicky
+                if (!keys.length) return null;
+                var bestS = 0, bestE = 0, runS = 0, runE = 0, prev = null;
+                for (var j = 0; j < keys.length; j++) {
+                    var cur = g[keys[j]].no;
+                    if (prev !== null && cur === prev + 1) runE = j;
+                    else { runS = j; runE = j; }
+                    if ((runE - runS + 1) > (bestE - bestS + 1)) { bestS = runS; bestE = runE; }
+                    prev = cur;
+                }
+                // pocet fotek v cele serii (soucet po dnech od prvniho do poslednihho)
+                var photos = 0;
+                for (var q = bestS; q <= bestE; q++) photos += g[keys[q]].n;
+                return { n: bestE - bestS + 1, photos: photos,
+                    first: keys[bestS], last: keys[bestE],
+                    fr: g[keys[bestS]].fr, lr: g[keys[bestE]].lr };
+            } catch(e) { return null; }
+        }
         function statsTimeKey(p) { return String((p && p[2]) || "").replace(/[^0-9]/g, ""); }
         // Nejhustsi okruh: kolik fotek lezi do kruhu o polomeru km od kazde fotky.
         // POCO: mrizka (bunka ~km) + presny dotaz calcDistKm - jinak by to bylo O(n^2).
@@ -6366,6 +6413,25 @@ statsFocusList = [];
                     + (statsFocusList.push(busy.p) - 1) + ")\" title=\"" + bTxt + "\">" + bTxt + "</span></span>" : "";
                 H += stRow([{ label: L_("statsBusiestDay", "Nejvíce fotek za den"), val: nmb(busy.n),
                     sub: bTxt, subHtml: bSub, valTitle: nmb(busy.n) + " " + L_("statsPhotos", "fotek") }]);
+            }
+            /* --- Nejdelší fotosérie: nejdelší souvislá řada dnů, kdy je alespoň jedna fotka --- */
+            var ser = statsLongestSeries(times);
+            if (ser) {
+                var serDays = L_("statsDayMany", "dní");
+                if (ser.n === 1) serDays = L_("statsDayOne", "den");
+                else if (ser.n >= 2 && ser.n <= 4) serDays = L_("statsDayFew", "dny");
+                var sFirst = fmtStatsDay(ser.first), sLast = fmtStatsDay(ser.last);
+                var sSub = "";
+                if (sFirst !== "" && sLast !== "") {
+                    sSub = "<span class=\"st-row-sub\">"
+                        + "<span class=\"st-pick\" onclick=\"statsFocusIdx(" + (statsFocusList.push(ser.fr) - 1) + ")\" title=\"" + sFirst + "\">" + sFirst + "</span>"
+                        + "<span class=\"st-picksep\"> \u21c4 </span>"
+                        + "<span class=\"st-pick\" onclick=\"statsFocusIdx(" + (statsFocusList.push(ser.lr) - 1) + ")\" title=\"" + sLast + "\">" + sLast + "</span>"
+                        + "</span>";
+                }
+                H += stRow([{ label: L_("statsLongestSeries", "Nejdelší fotosérie"), val: nmb(ser.n) + " " + serDays,
+                    sub: (sFirst === sLast) ? sFirst : (sFirst + " \u21c4 " + sLast), subHtml: sSub,
+                    valTitle: nmb(ser.photos) + " " + L_("statsPhotos", "fotek") }]);
             }
             H += "</div>";
 
