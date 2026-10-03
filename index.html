@@ -5824,16 +5824,24 @@ function statsSetFilters(on) {
                     for (a = s0; a <= s1; a += 7) B.push({ from: a, to: a + 6 });
                 } else {
                     var d1 = new Date(lo * 86400000), d2 = new Date(hi * 86400000);
-                    var stepM = (res === "y") ? 12 : 1;
+                    var stepM = 1;
+                    if (res === "y") {
+                        // Nad 200 let uz by jednotlive roky byly tak uzké, ze by se bary
+                        // slisly dohromady (min. sirka 0.7 jednotky). Prepni na dekady.
+                        var nYrs = d2.getUTCFullYear() - d1.getUTCFullYear() + 1;
+                        if (nYrs > 200) { res = "dec"; stepM = 120; }
+                        else stepM = 12;
+                    }
                     var mi = d1.getUTCFullYear() * 12 + d1.getUTCMonth();
                     var mend = d2.getUTCFullYear() * 12 + d2.getUTCMonth();
-                    mi -= (mi % stepM); // u roku zarovnat na leden
+                    mi -= (mi % stepM); // u roku na leden, u dekady na rok delitelny deseti
                     for (var mm2 = mi; mm2 <= mend; mm2 += stepM) {
                         yy = Math.floor(mm2 / 12); mo = mm2 % 12;
                         a1 = Math.floor(Date.UTC(yy, mo, 1) / 86400000);
-                        // u roku je delka intervalu cely rok (365/366), u mesice pocet dni mesice
-                        nd = (res === "y") ? (Math.floor(Date.UTC(yy + 1, 0, 1) / 86400000) - a1)
-                                           : new Date(Date.UTC(yy, mo + 1, 0)).getUTCDate();
+                        // delka intervalu: az do zacatku DALSIHO kosu (mesic / rok / dekada)
+                        var stepY = (res === "m") ? 0 : (res === "y" ? 1 : 10);
+                        var stepMo = (res === "m") ? 1 : 0;
+                        nd = Math.floor(Date.UTC(yy + stepY, mo + stepMo, 1) / 86400000) - a1;
                         B.push({ from: Math.max(a1, lo), to: Math.min(a1 + nd - 1, hi), y: yy, m: mo });
                     }
                 }
@@ -5864,8 +5872,9 @@ function statsSetFilters(on) {
                 if (!b) return "";
                 if (res === "h") return ("0" + (b.hh === undefined ? 0 : b.hh)).slice(-2) + ":00";
                 if (res === "d" || res === "w") return fmtStatsDayNo(b.from);
-                var mn = (currentLang === "cs" ? STATS_MONTHS_CS : STATS_MONTHS_EN)[b.m] || "";
                 if (res === "y") return String(b.y);
+                if (res === "dec") return String(b.y);   // desetileti - zacatek, napr. "1990"
+                var mn = (currentLang === "cs" ? STATS_MONTHS_CS : STATS_MONTHS_EN)[b.m] || "";
                 return mn + " " + b.y;
             } catch(e) { return ""; }
         }
@@ -5881,6 +5890,12 @@ function statsSetFilters(on) {
                 if (res === "d") return fmtStatsDayNo(b.from);
                 if (res === "w") return fmtStatsDayNo(b.from) + " \u2013 " + fmtStatsDayNo(b.to);
                 var full = false;
+                if (res === "dec") {
+                    full = (b.from === Math.floor(Date.UTC(b.y, 0, 1) / 86400000)
+                        && b.to === Math.floor(Date.UTC(b.y + 10, 0, 1) / 86400000) - 1);
+                    if (full) return b.y + " \u2013 " + (b.y + 9);
+                    return fmtStatsDayNo(b.from) + " \u2013 " + fmtStatsDayNo(b.to);
+                }
                 if (res === "y") {
                     full = (b.from === Math.floor(Date.UTC(b.y, 0, 1) / 86400000)
                         && b.to === Math.floor(Date.UTC(b.y + 1, 0, 1) / 86400000) - 1);
@@ -5895,58 +5910,103 @@ function statsSetFilters(on) {
         }
         // Nejhustsi okruh: kolik fotek lezi do kruhu o polomeru km od kazde fotky.
         // POCO: mrizka (bunka ~km) + presny dotaz calcDistKm - jinak by to bylo O(n^2).
+        // Nejhustsi okruh: hleda bod, od ktereho je do rKm nejvic dalsich bodu (presne, calcDistKm).
+        // Puvodne se prochazel KAZDY bod jako stred, coz je na seskupenych datech kvadraticke
+        // (250 tis. fotek z dovolenych = ~2 minuty). Tedy:
+        //   1) bunky ~rKm a pocet bodu v kazde (O(n)),
+        //   2) pro kazdou bunku HORNI ODHAD = pocet bodu v jejim 3x3 okoli. Kruznice o polomeru
+        //      rKm se ze stredu bunky nikdy ne dostane daleko nez do 3x3 sousednich bunek, takze
+        //      je to platny odhad shora pro vsechny strety v te bunce,
+        //   3) bunky prochazime od nejvetsiho odhadu dolu a koncime, jakmile odhad <= nalezene.
+        //      Stejny vysledek, ale seskupena mista se vyridi v jednom pruchodu.
+        // Nejhustsi okruh: hleda bod, od ktereho je do rKm nejvic dalsich bodu (presne, calcDistKm).
+        // Puvodne se prochazel KAZDY bod jako stred, coz je na seskupenych datech kvadraticke
+        // (250 tis. fotek z dovolenych = ~2 minuty). Tedy:
+        //   1) mrizka ~rKm; sirku sloupce pocitame JEDNOU pro cely radek ze stredu radku,
+        //      takze dva body v okraji bunky nemohou spadnout do ruznych sloupcu. Sloupec je
+        //      sirky rKm/cos(rovnobezka) >= rKm, takze kruznice o polomeru rKm se ze stredu bunky
+        //      nikdy nedostane daleko nez do 3x3 sousednich bunek,
+        //   2) pro kazdou neprazdnou bunku HORNÍ ODHAD = pocet bodu v jejim 3x3 okoli,
+        //   3) bunky prochazime od nejvetsiho odhadu dolu a koncime, jakmile odhad <= nalezene.
+        //      Stejny vysledek, ale seskupena mista se vyridi v jednom pruchodu misto vsech.
+        // Souradnice jsou v plochych Float64Array, takze v cyklu neni ani Number(), ani
+        // property lookup, ani trigonometrie (jen jedno cos na stred, ne na kazdý bod).
         function statsDensest(locs, km) {
             try {
                 if (!locs || !locs.length) return null;
                 if (typeof calcDistKm !== "function") return null;
                 var rKm = Number(km);
                 if (!isFinite(rKm) || rKm <= 0) return null;
-                var n = locs.length, cell = rKm / 111.32, grid = Object.create(null), i, j;
+                var n = locs.length, cellDeg = rKm / 111.32, i, j, cnt = 0;
+                var la = new Float64Array(n), lo = new Float64Array(n), orig = new Int32Array(n);
+                var rows = Object.create(null), maxAbs = 0;
                 for (i = 0; i < n; i++) {
-                    var l0 = locs[i].ll;
-                    if (!l0) continue;
-                    var a0 = Number(l0[0]), b0 = Number(l0[1]);
+                    var l0 = locs[i].ll, a0 = NaN, b0 = NaN;
+                    if (l0) { a0 = Number(l0[0]); b0 = Number(l0[1]); }
                     if (!isFinite(a0) || !isFinite(b0)) continue;
-                    // 1 km ve stupnich delky = rKm/(111.32*cos). CIm bliz k polu, tym vetsi
-                    // uhel DELKY odpovida 1 km - bunka se musi SIRIT, ne zuosit. Spodni limit
-                    // 1e-6 jen chrani pred deleni nulou; vetsi bunka je jen nadbytek, ktery
-                    // odfiltruje presny dotaz calcDistKm.
-                    var c0 = Math.cos(a0 * Math.PI / 180);
-                    if (!(c0 > 0.000001)) c0 = 0.000001;
-                    var k = Math.floor(a0 / cell) + ":" + Math.floor(b0 / (cell / c0));
-                    (grid[k] || (grid[k] = [])).push(i);
+                    la[cnt] = a0; lo[cnt] = b0; orig[cnt] = i;
+                    var ab = Math.abs(a0); if (ab > maxAbs) maxAbs = ab;
+                    cnt++;
                 }
-                var seen = new Int32Array(n), stamp = 0, bestI = -1, bestN = 0;
-                for (i = 0; i < n; i++) {
-                    var l1 = locs[i].ll;
-                    if (!l1) continue;
-                    var a1 = Number(l1[0]), b1 = Number(l1[1]);
-                    if (!isFinite(a1) || !isFinite(b1)) continue;
-                    var c1 = Math.cos(a1 * Math.PI / 180);
-                    if (!(c1 > 0.000001)) c1 = 0.000001;
-                    var ci = Math.floor(a1 / cell), cj = Math.floor(b1 / (cell / c1));
-                    stamp++;
-                    var cnt = 1;
-                    seen[i] = stamp;
-                    for (var da = -1; da <= 1; da++) {
-                        for (var db = -1; db <= 1; db++) {
-                            var arr = grid[(ci + da) + ":" + (cj + db)];
-                            if (!arr) continue;
-                            for (j = 0; j < arr.length; j++) {
-                                var ix = arr[j];
-                                if (seen[ix] === stamp) continue;
-                                seen[ix] = stamp;
-                                var o = locs[ix].ll;
-                                if (!o) continue;
-                                var dd = calcDistKm(a1, b1, Number(o[0]), Number(o[1]));
-                                if (isFinite(dd) && dd <= rKm) cnt++;
+                if (!cnt) return null;
+                // SIRKA SLOUPCE JE JEDNA PRO CELOU MRIZKU a odvozena z NEJSEVERNEJSIHO bodu.
+                // Delka vsech sloupcu tak vychazi >= rKm, takze dva body do rKm od sebe
+                // lezi VZDY v sousednim sloupci (i radku). Kdyby se sirka pocitala z cos
+                // kazdeho radku zvlastna, sousedni radky by meli ruzne sirky, sloupce by
+                // nebyly zarovnane a bod vedle by spadl o dva sloupce - 3x3 by ho minul.
+                var cosMin = Math.cos(maxAbs * Math.PI / 180);
+                if (!(cosMin > 0.000001)) cosMin = 0.000001;
+                var colDeg = cellDeg / cosMin;
+                for (i = 0; i < cnt; i++) {
+                    var ra2 = Math.floor(la[i] / cellDeg), ca2 = Math.floor(lo[i] / colDeg);
+                    var rw = rows[ra2];
+                    if (!rw) rw = rows[ra2] = { cols: Object.create(null) };
+                    (rw.cols[ca2] || (rw.cols[ca2] = [])).push(i);
+                }
+                // horni odhad pro kazdou neprazdnou bunku = pocet bodu v jejim 3x3 okoli
+                var list = [], rk, ck, ra2, ca2, da, db, R2, A2;
+                for (rk in rows) {
+                    ra2 = +rk;
+                    for (ck in rows[ra2].cols) {
+                        ca2 = +ck;
+                        var s = 0;
+                        for (da = -1; da <= 1; da++) {
+                            R2 = rows[ra2 + da];
+                            if (!R2) continue;
+                            for (db = -1; db <= 1; db++) { A2 = R2.cols[ca2 + db]; if (A2) s += A2.length; }
+                        }
+                        list.push({ r: ra2, c: ca2, blk: s });
+                    }
+                }
+                list.sort(function(x, y) { return y.blk - x.blk; });
+                var bestN = 0, bestI = -1;
+                for (var ci = 0; ci < list.length; ci++) {
+                    var C = list[ci];
+                    if (C.blk <= bestN) break;          // dalsi bunky maji mensi odhad, uz nepomohou
+                    var own = rows[C.r].cols[C.c];
+                    for (var oi = 0; oi < own.length; oi++) {
+                        if (bestN >= C.blk) break;        // dosahl jsem odhadu pro tuto bunku
+                        var i0 = own[oi];
+                        var got = 1;
+                        for (var dr = -1; dr <= 1; dr++) {
+                            var RR = rows[C.r + dr];
+                            if (!RR) continue;
+                            for (var dc = -1; dc <= 1; dc++) {
+                                var arr = RR.cols[C.c + dc];
+                                if (!arr) continue;
+                                for (j = 0; j < arr.length; j++) {
+                                    var ix = arr[j];
+                                    if (ix === i0) continue;
+                                    if (calcDistKm(la[i0], lo[i0], la[ix], lo[ix]) <= rKm) got++;
+                                }
                             }
                         }
+                        if (got > bestN) { bestN = got; bestI = i0; }
                     }
-                    if (cnt > bestN) { bestN = cnt; bestI = i; }
                 }
                 if (bestI < 0) return null;
-                return { ll: locs[bestI].ll, p: locs[bestI].p, n: bestN };
+                var src = locs[orig[bestI]];
+                return { ll: src.ll, p: src.p, n: bestN };
             } catch(e) { return null; }
         }
         // Den s nejvetsim poctem fotek. Při shode vyhriva nejstarsi den.
