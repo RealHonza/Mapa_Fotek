@@ -501,6 +501,20 @@
         .info-section-title { font-size: 13px; font-weight: 700; color: var(--green); margin: 14px 0 8px 0; }
         .info-section-title .st-ico { width: 14px; height: 14px; margin-right: 6px; vertical-align: -2px; }
         .st-sec-note { font-size: 12px; color: #5f6368; margin: 0 0 8px 0; }
+        .st-chart-cap { font-size: 13px; color: #5f6368; margin: 0 0 4px 0; font-weight: 500; }
+        .st-chart { display: block; width: 100%; height: auto; overflow: visible; }
+        .st-chart-grid { stroke: #e8eaed; stroke-width: 1; shape-rendering: crispEdges; }
+        .st-chart-axis { stroke: #dadce0; stroke-width: 1; shape-rendering: crispEdges; }
+        .st-chart-txt { fill: #5f6368; }
+        .st-chart-bar { fill: #0AA94C; }
+        .st-chart-bar.pick { cursor: pointer; }
+        .st-chart-hit { fill: transparent; }
+        .st-chart-hit.pick { cursor: pointer; }
+        .st-chart-bar.pick:hover { fill: #087c35; }
+        .st-chart-tip { position: fixed; display: none; z-index: 100000; pointer-events: none;
+            background: #202124; color: #ffffff; font-size: 11.5px; line-height: 1.4;
+            padding: 5px 9px; border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,.28); white-space: nowrap; }
+        .st-chart-tip b { margin-left: 9px; font-weight: 700; color: #8fe3b0; }
         /* --- Statistiky --- */
         #statsModalBackdrop .info-modal { width: 620px; }
         .st-ref-box { background: #f8f9fa; border: 1px solid #e8eaed; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px; color: #3c4043; }
@@ -2493,7 +2507,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsSecTime: "Čas",
             statsSecExtremes: "Krajní body",
             statsSecDistances: "Vzdálenosti",
-            statsSecTable: "Tabulka", statsSecGraphs: "Grafy", statsGraphsNote: "Zatím bez obsahu.",
+            statsSecTable: "Tabulka", statsSecGraphs: "Grafy", statsGraphsNote: "Bez datumu není co zobrazit.", statsChartCap: "Počet souborů v čase",
             statsSecSources: "Zdroje", statsSecLocatedOnly: "Počítá se pouze z fotek s polohou.",
             statsSized: "se známou velikostí",
             statsAvgSize: "Průměrná velikost souboru",
@@ -2503,7 +2517,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsTimeSpan: "Časový rozptyl",
             statsDensest: "Nejhustší okruh",
             statsBusiestDay: "Nejvíce fotek za den",
-            statsPhotos: "fotek", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní",
+            statsPhotoOne: "fotka", statsPhotoFew: "fotky", statsPhotoMany: "fotek", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní",
             statsOldest: "Nejstarší soubor",
             statsNewest: "Nejnovější soubor",
             statsLargest: "Největší soubor",
@@ -2834,7 +2848,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsSecTime: "Time",
             statsSecExtremes: "Extreme points",
             statsSecDistances: "Distances",
-            statsSecTable: "Table", statsSecGraphs: "Charts", statsGraphsNote: "Nothing here yet.",
+            statsSecTable: "Table", statsSecGraphs: "Charts", statsGraphsNote: "No dated photos to chart.", statsChartCap: "Number of files over time",
             statsSecSources: "Sources", statsSecLocatedOnly: "Counted from photos with a location only.",
             statsSized: "with known size",
             statsAvgSize: "Average file size",
@@ -2844,7 +2858,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsTimeSpan: "Time span",
             statsDensest: "Densest area",
             statsBusiestDay: "Most photos in one day",
-            statsPhotos: "photos", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
+            statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
             statsOldest: "Oldest file",
             statsNewest: "Newest file",
             statsLargest: "Largest file",
@@ -5748,6 +5762,137 @@ function statsSetFilters(on) {
             } catch(e) { return null; }
         }
         function statsTimeKey(p) { return String((p && p[2]) || "").replace(/[^0-9]/g, ""); }
+        // ciselne oznaceni dne -> datum jako text (dlouhy tvar, pro tooltipy)
+        function fmtStatsDayNo(no) {
+            try {
+                if (no === null || no === undefined || !isFinite(no)) return "";
+                var d = new Date(no * 86400000);
+                var y = d.getUTCFullYear(), m = d.getUTCMonth() + 1, dd = d.getUTCDate();
+                if (currentLang !== "cs") return y + "-" + ("0" + m).slice(-2) + "-" + ("0" + dd).slice(-2);
+                return dd + ". " + m + ". " + y;
+            } catch(e) { return ""; }
+        }
+        // Rozdeli fotky do casovych kosu. Rozliseni (den / tyden / mesic / rok) se voli
+        // podle rozpeti, aby pocet sloupcu zustal v rozumnych mezich.
+        function statsChartBuckets(times) {
+            try {
+                if (!times || !times.length) return null;
+                var days = Object.create(null), lo = null, hi = null;
+                for (var i = 0; i < times.length; i++) {
+                    var k = statsTimeKey(times[i]);
+                    if (k.length < 8) continue;
+                    var d8 = k.substring(0, 8);
+                    var no = statsDayNo(d8);
+                    if (no === null) continue;
+                    if (!days[d8]) days[d8] = { no: no, n: 0, p: times[i] };
+                    days[d8].n++;
+                    if (lo === null || no < lo) lo = no;
+                    if (hi === null || no > hi) hi = no;
+                }
+                if (lo === null) return null;
+                var span = hi - lo + 1;
+                // vsechny fotky ze stejneho dne -> rozcesteni po hodinach
+                var res = (span <= 1) ? "h" : (span <= 62) ? "d" : (span <= 400) ? "w" : (span <= 4000) ? "m" : "y";
+                var unit = (res === "h") ? (1 / 24) : 1;   // delka jednoho sloupce ve dnech
+                var axisSpan = (res === "h") ? 1 : span;   // delka cele osy ve dnech
+                var B = [], a, b, s0, s1, yy, mo, a1, nd;
+                if (res === "h") {
+                    // hodiny 0-23; from/to jsou desetinne dny, to == from (kratkejsi interval)
+                    var hb = Object.create(null);
+                    for (var hi2 = 0; hi2 < times.length; hi2++) {
+                        var kh = statsTimeKey(times[hi2]);
+                        if (kh.length < 8) continue;
+                        var nb = statsDayNo(kh.substring(0, 8));
+                        if (nb !== lo) continue;
+                        var hv = (kh.length >= 10) ? parseInt(kh.substring(8, 10), 10) : 0;
+                        if (!isFinite(hv) || hv < 0 || hv > 23) hv = 0;
+                        var hkk = "h" + hv;
+                        if (!hb[hkk]) hb[hkk] = { from: lo + hv / 24, to: lo + hv / 24, hh: hv, n: 0, p: times[hi2] };
+                        hb[hkk].n++;
+                    }
+                    var hks = Object.keys(hb).sort(function(a2, b2) { return hb[a2].hh - hb[b2].hh; });
+                    var hmx = 0;
+                    for (b = 0; b < hks.length; b++) { B.push(hb[hks[b]]); if (hb[hks[b]].n > hmx) hmx = hb[hks[b]].n; }
+                    return { res: res, span: span, unit: unit, axisSpan: axisSpan, lo: lo, hi: hi, max: hmx, buckets: B };
+                }
+                if (res === "d") {
+                    for (a = lo; a <= hi; a++) B.push({ from: a, to: a });
+                } else if (res === "w") {
+                    // tyden od pondeli do nedele
+                    s0 = lo - ((new Date(lo * 86400000).getUTCDay() + 6) % 7);
+                    s1 = hi - ((new Date(hi * 86400000).getUTCDay() + 6) % 7);
+                    for (a = s0; a <= s1; a += 7) B.push({ from: a, to: a + 6 });
+                } else {
+                    var d1 = new Date(lo * 86400000), d2 = new Date(hi * 86400000);
+                    var stepM = (res === "y") ? 12 : 1;
+                    var mi = d1.getUTCFullYear() * 12 + d1.getUTCMonth();
+                    var mend = d2.getUTCFullYear() * 12 + d2.getUTCMonth();
+                    mi -= (mi % stepM); // u roku zarovnat na leden
+                    for (var mm2 = mi; mm2 <= mend; mm2 += stepM) {
+                        yy = Math.floor(mm2 / 12); mo = mm2 % 12;
+                        a1 = Math.floor(Date.UTC(yy, mo, 1) / 86400000);
+                        // u roku je delka intervalu cely rok (365/366), u mesice pocet dni mesice
+                        nd = (res === "y") ? (Math.floor(Date.UTC(yy + 1, 0, 1) / 86400000) - a1)
+                                           : new Date(Date.UTC(yy, mo + 1, 0)).getUTCDate();
+                        B.push({ from: Math.max(a1, lo), to: Math.min(a1 + nd - 1, hi), y: yy, m: mo });
+                    }
+                }
+                // priradeni dnu ke kosum (dny jsou serazene, jednim ukazatelem)
+                var dl = Object.keys(days);
+                dl.sort(function(x, y) { return days[x].no - days[y].no; });
+                var ptr = 0, max = 0;
+                for (b = 0; b < B.length; b++) {
+                    while (ptr < dl.length && days[dl[ptr]].no < B[b].from) ptr++;
+                    var q = ptr, cnt = 0, firstP = null;
+                    while (q < dl.length && days[dl[q]].no <= B[b].to) {
+                        cnt += days[dl[q]].n;
+                        if (firstP === null) firstP = days[dl[q]].p;
+                        q++;
+                    }
+                    B[b].n = cnt; B[b].p = firstP;
+                    if (cnt > max) max = cnt;
+                }
+                return { res: res, span: span, unit: unit, axisSpan: axisSpan, lo: lo, hi: hi, max: max, buckets: B };
+            } catch(e) { return null; }
+        }
+        var STATS_MONTHS_CS = ["leden", "únor", "březen", "duben", "květen", "červen", "červenec", "srpen", "září", "říjen", "listopad", "prosinec"];
+        var STATS_MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        // Popisek kosu - podle rozliseni se liší
+        // Popisek = CELA jednotka: den "10. 9. 2014", tyden od pondeli, mesic "zari 2014", rok.
+        function fmtStatsBucketLabel(b, res) {
+            try {
+                if (!b) return "";
+                if (res === "h") return ("0" + (b.hh === undefined ? 0 : b.hh)).slice(-2) + ":00";
+                if (res === "d" || res === "w") return fmtStatsDayNo(b.from);
+                var mn = (currentLang === "cs" ? STATS_MONTHS_CS : STATS_MONTHS_EN)[b.m] || "";
+                if (res === "y") return String(b.y);
+                return mn + " " + b.y;
+            } catch(e) { return ""; }
+        }
+        // Rozsah kosu do textu pro tooltip. Prvni a posledni kos muze byt oriznuty,
+        // takze ukazujeme skutecne pokryty interval, ne nazev cele jednotky.
+        function fmtStatsBucketRange(b, res) {
+            try {
+                if (!b) return "";
+                if (res === "h") {
+                    var hh2 = ("0" + (b.hh === undefined ? 0 : b.hh)).slice(-2);
+                    return hh2 + ":00 \u2013 " + ("0" + ((b.hh + 1) % 24)).slice(-2) + ":00";
+                }
+                if (res === "d") return fmtStatsDayNo(b.from);
+                if (res === "w") return fmtStatsDayNo(b.from) + " \u2013 " + fmtStatsDayNo(b.to);
+                var full = false;
+                if (res === "y") {
+                    full = (b.from === Math.floor(Date.UTC(b.y, 0, 1) / 86400000)
+                        && b.to === Math.floor(Date.UTC(b.y + 1, 0, 1) / 86400000) - 1);
+                } else {
+                    var ld = new Date(Date.UTC(b.y, b.m + 1, 0)).getUTCDate();
+                    full = (b.from === Math.floor(Date.UTC(b.y, b.m, 1) / 86400000)
+                        && b.to === Math.floor(Date.UTC(b.y, b.m + 1, 1) / 86400000) - 1);
+                }
+                if (full) return fmtStatsBucketLabel(b, res);
+                return fmtStatsDayNo(b.from) + " \u2013 " + fmtStatsDayNo(b.to);
+            } catch(e) { return ""; }
+        }
         // Nejhustsi okruh: kolik fotek lezi do kruhu o polomeru km od kazde fotky.
         // POCO: mrizka (bunka ~km) + presny dotaz calcDistKm - jinak by to bylo O(n^2).
         function statsDensest(locs, km) {
@@ -6412,7 +6557,7 @@ statsFocusList = [];
                 var bSub = (bTxt !== "") ? "<span class=\"st-row-sub\"><span class=\"st-pick\" onclick=\"statsFocusIdx("
                     + (statsFocusList.push(busy.p) - 1) + ")\" title=\"" + bTxt + "\">" + bTxt + "</span></span>" : "";
                 H += stRow([{ label: L_("statsBusiestDay", "Nejvíce fotek za den"), val: nmb(busy.n),
-                    sub: bTxt, subHtml: bSub, valTitle: nmb(busy.n) + " " + L_("statsPhotos", "fotek") }]);
+                    sub: bTxt, subHtml: bSub, valTitle: fmtStatsPhotos(busy.n) }]);
             }
             /* --- Nejdelší fotosérie: nejdelší souvislá řada dnů, kdy je alespoň jedna fotka --- */
             var ser = statsLongestSeries(times);
@@ -6431,7 +6576,7 @@ statsFocusList = [];
                 }
                 H += stRow([{ label: L_("statsLongestSeries", "Nejdelší fotosérie"), val: nmb(ser.n) + " " + serDays,
                     sub: (sFirst === sLast) ? sFirst : (sFirst + " \u21c4 " + sLast), subHtml: sSub,
-                    valTitle: nmb(ser.photos) + " " + L_("statsPhotos", "fotek") }]);
+                    valTitle: fmtStatsPhotos(ser.photos) }]);
             }
             H += "</div>";
 
@@ -6572,7 +6717,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 H += stRow([{ label: L_("statsDensest", "Nejhustší okruh"), val: nmb(dens.n),
                     sub: dnTxt, subHtml: dnSub,
                     valClick: "statsFocusCircle(" + (statsCircleList.push([dens.ll, 1]) - 1) + ")",
-                    valTitle: nmb(dens.n) + " " + L_("statsPhotos", "fotek") + " \u00b7 1 km" }]);
+                    valTitle: fmtStatsPhotos(dens.n) + " \u00b7 1 km" }]);
             }
             H += "</div>";
             }
@@ -6637,9 +6782,190 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                      "<td class=\"num\" title=\"" + nmb(totB) + " " + bUnit + "\">" + fmtStatsBytes(totB) + "</td>";
                 H += "</tr></tfoot></table></div>";
             }
-            /* --- Grafy: zatim bez obsahu, jen nadpis --- */
+            // --- Spocet souboru se spodnim cislem: "1 fotka" / "2 fotky" / "5 fotek" ---
+        function fmtStatsPhotos(n) {
+            try {
+                var v = Number(n);
+                if (!isFinite(v)) return String(n);
+                var w = L_("statsPhotoMany", "fotek");
+                if (v === 1) w = L_("statsPhotoOne", "fotka");
+                else if (v >= 2 && v <= 4) w = L_("statsPhotoFew", "fotky");
+                var loc = (currentLang === "cs") ? "cs-CZ" : "en-US";
+                return v.toLocaleString(loc) + " " + w;
+            } catch(e) { return String(n); }
+        }
+        // --- Tooltip grafu: obdobi sloupce + presny pocet fotek ---
+        function stChartTipEl() {
+            try {
+                var d = document.getElementById("stChartTip");
+                if (d) return d;
+                if (!document.body) return null;
+                d = document.createElement("div");
+                d.id = "stChartTip";
+                d.className = "st-chart-tip";
+                d.style.display = "none";
+                document.body.appendChild(d);
+                return d;
+            } catch(e) { return null; }
+        }
+        function stChartTipShow(ev) {
+            try {
+                var el = (ev && ev.currentTarget) ? ev.currentTarget : null;
+                var d = stChartTipEl();
+                if (!el || !d) return;
+                var a = el.getAttribute("data-tip-a") || "", b = el.getAttribute("data-tip-b") || "";
+                d.innerHTML = "<span>" + escapeHtml(a) + "</span><b>" + escapeHtml(b) + "</b>";
+                d.style.display = "block";
+                stChartTipMove(ev);
+            } catch(e) {}
+        }
+        function stChartTipMove(ev) {
+            try {
+                var d = stChartTipEl();
+                if (!d || d.style.display === "none") return;
+                var cx = (ev && ev.clientX) ? ev.clientX : 0, cy = (ev && ev.clientY) ? ev.clientY : 0;
+                var w = d.offsetWidth || 120, h = d.offsetHeight || 24;
+                var x = cx + 16, y = cy - h - 12;
+                if (x + w > (window.innerWidth || 1000) - 6) x = cx - w - 16;
+                if (x < 6) x = 6;
+                if (y < 6) y = cy + 18;
+                if (y + h > (window.innerHeight || 800) - 6) y = (window.innerHeight || 800) - h - 6;
+                d.style.left = x + "px";
+                d.style.top = y + "px";
+            } catch(e) {}
+        }
+        function stChartTipHide() {
+            try {
+                var d = document.getElementById("stChartTip");
+                if (d) d.style.display = "none";
+            } catch(e) {}
+        }
+        // Tyto funkce jsou deklarovane UVNITR renderStats(), tedy nejsou v globalnim
+        // rozsaHU. Inline handlery v HTML (onmouseenter="stChartTipShow(event)") se
+        // ale hledaji VZDY globalne - bez toho by vyhazovaly ReferenceError.
+        try {
+            if (typeof window.stChartTipShow !== "function") {
+                window.stChartTipEl = stChartTipEl;
+                window.stChartTipShow = stChartTipShow;
+                window.stChartTipMove = stChartTipMove;
+                window.stChartTipHide = stChartTipHide;
+            }
+        } catch(e) {}
+        // --- Graf: pocet souboru v case. SVG v textu, sloupce proportionalni k delce obdobi ---
+        function statsChartSvg(times) {
+            try {
+                var C = statsChartBuckets(times);
+                if (!C) return "<div class=\"st-sec-note\">" + L_("statsGraphsNote", "Bez datumu není co zobrazit.") + "</div>";
+                var B = C.buckets, res = C.res, n = B.length;
+                var W = 600, mR = 4, mT = 8;
+                // Okno ma max-width: 94vw, takze na uzkem displeji je chart uzsi nez viewBox
+                // a SVG se zmenší. Pismo proto prevedeme na user units: fsTxt = 11 / scale,
+                // aby se vzdy zobrazilo ve SKUTECNE velikosti 11px (min. pozadovanych 9px).
+                var realW = 0;
+                try {
+                    var mm = document.querySelector("#statsModalBackdrop .info-modal");
+                    if (mm && mm.clientWidth > 0) {
+                        var cs = window.getComputedStyle ? window.getComputedStyle(mm) : null;
+                        var pl = cs ? (parseFloat(cs.paddingLeft) || 0) : 24;
+                        var pr = cs ? (parseFloat(cs.paddingRight) || 0) : 24;
+                        realW = mm.clientWidth - pl - pr;
+                    }
+                } catch(e) {}
+                if (!(realW > 100)) realW = 572; // 620 - 2x24 = plna sirka okna na desktopu
+                var scale = realW / W;
+                if (!(scale > 0)) scale = 1;
+                var fsTxt = Math.round(11 / scale * 10) / 10;
+                // Okraje prizpusobene velikosti pisma:
+                //  mL  - misto vpravo na cisla osy Y
+                // mT  - misto nahoru na nejvyssi cislo osy Y
+                // mB  - misto dolu na popisky osy X (sikmo 45 deg)
+                // gapLbl - VZDAJENOST popisku od osy. drivej je 4, coz text lepilo na graf.
+                var gapLbl = Math.round(fsTxt * 1.2);
+                mT = Math.max(8, Math.round(fsTxt * 0.9 + 4));
+                var mL = Math.max(42, Math.round(6 * fsTxt * 0.62 + 8));
+                var mB = Math.max(72, Math.round(13 * fsTxt * 0.62 * 0.7071 + gapLbl + fsTxt * 0.7071 + 6));
+                var pW = W - mL - mR;
+                // Plocha, do ktere se kresli bary, ma pomer stran 4:3 (delska:vyska)
+                var pH = Math.round(pW * 3 / 4);
+                var Hh = Math.round(mT + pH + mB);
+                // POZOR: tato funkce je globalni, takze NESMI sahat na nmb/L_ z renderStats().
+                // Formatovani cisel si resi sama, stejne jako statsBytesTitle().
+                var loc = (currentLang === "cs") ? "cs-CZ" : "en-US";
+                var fmtN = function(v) { try { return Number(v).toLocaleString(loc); } catch(e) { return String(v); } };
+                // hezké maximum osy Y (1/2/5 x 10^n)
+                var top = C.max, mag = Math.pow(10, Math.floor(Math.log(Math.max(1, top)) / Math.LN10));
+                var norm = top / mag, nice = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10);
+                var yMax = Math.max(1, nice * mag);
+                var xOf = function(dayNo) { return mL + (dayNo - C.lo) / C.axisSpan * pW; };
+                var yOf = function(v) { return mT + pH - (v / yMax) * pH; };
+                var s = "<div class=\"st-chart-cap\">" + L_("statsChartCap", "Počet souborů v čase") + "</div>";
+                s += "<svg class=\"st-chart\" style=\"font-size:" + fsTxt + "px\" viewBox=\"0 0 " + W + " " + Hh + "\" role=\"img\" aria-label=\"" + L_("statsChartCap", "Počet souborů v čase") + "\">";
+                // mrizky a cisla osy Y. Pri malem maxu by 1/3 a 2/3 spadly na stejne
+                // cislo a mrizka by se opakovala - proto stejne hodnoty preskakujeme.
+                var prevGv = null;
+                for (var gI = 0; gI <= 3; gI++) {
+                    var gv = Math.round(yMax * gI / 3);
+                    if (gv === prevGv) continue;
+                    prevGv = gv;
+                    var gy = Math.round(yOf(gv)) + 0.5;
+                    s += "<line class=\"st-chart-grid\" x1=\"" + mL + "\" y1=\"" + gy + "\" x2=\"" + (mL + pW) + "\" y2=\"" + gy + "\"/>";
+                    s += "<text class=\"st-chart-txt\" x=\"" + (mL - 5) + "\" y=\"" + (gy + 3) + "\" text-anchor=\"end\">" + fmtN(gv) + "</text>";
+                }
+                // sloupce (sirka podle delky obdobi, prazdne obdobi = nulova vyska)
+                var gap = pW / C.axisSpan > 3 ? 1 : 0;
+                for (var i = 0; i < n; i++) {
+                    var b = B[i];
+                    if (!b.n) continue;
+                    var bx = xOf(b.from), bw = xOf(b.to + C.unit) - bx - gap;
+                    if (bw < 0.7) bw = 0.7;
+                    var by = yOf(b.n), bh = mT + pH - by;
+                    var tip = " data-tip-a=\"" + escapeHtml(fmtStatsBucketRange(b, res)) + "\" data-tip-b=\"" + escapeHtml(fmtStatsPhotos(b.n)) + "\"";
+                    var cls = "st-chart-bar" + (b.p ? " pick" : "");
+                    var oc = " onmouseenter=\"stChartTipShow(event)\" onmousemove=\"stChartTipMove(event)\" onmouseleave=\"stChartTipHide()\"";
+                    if (b.p) oc += " onclick=\"statsFocusIdx(" + (statsFocusList.push(b.p) - 1) + ")\"";
+                    var rx = Math.round(bx * 10) / 10, rw = Math.round(bw * 10) / 10;
+                    // Sloupec s jednou fotkou ma vysku par pixelu a blbne se na nej.
+                    // Proto mu pridavame neviditelnou klikaci zonu Sahajici NEJMIN 5% vysky plochy.
+                    // Kliknout tak lze lehce nad bar. Zona ma vlastni x/width, takze se neprekryva
+                    // se sousednim sloupcem. SVG hora: viditelny bar je nad zónou, takže se
+                    // onclick nespusti dvakrat.
+                    var hitH = Math.max(bh, pH * 0.05);
+                    if (hitH > bh + 0.5) {
+                        s += "<rect class=\"st-chart-hit" + (b.p ? " pick" : "") + "\"" + tip + " x=\"" + rx + "\" y=\"" + (Math.round((mT + pH - hitH) * 10) / 10) + "\" width=\"" + rw + "\" height=\"" + (Math.round(hitH * 10) / 10) + "\"" + oc + "/>";
+                    }
+                    s += "<rect class=\"" + cls + "\"" + tip + " x=\"" + rx + "\" y=\"" + (Math.round(by * 10) / 10) + "\" width=\"" + rw + "\" height=\"" + (Math.round(bh * 10) / 10) + "\"" + oc + "/>";
+                }
+                // osa X
+                s += "<line class=\"st-chart-axis\" x1=\"" + mL + "\" y1=\"" + (mT + pH + 0.5) + "\" x2=\"" + (mL + pW) + "\" y2=\"" + (mT + pH + 0.5) + "\"/>";
+                // Popisky osy X sklonene o 45 deg doleva, takze se vejdou vedle sebe.
+                // Sikmy popisek zabere vodorovne jen svou vysku, takze jich muze byt vic.
+                var fitPx = Math.max(16, Math.round(fsTxt * 1.05 + 6)), budget = Math.max(2, Math.floor(pW / fitPx));
+                var step = Math.max(1, Math.ceil(n / budget));
+                var baseY = mT + pH + gapLbl;
+                // Dva popisky jsou rovnobezne sikme cary: kolma vzdalenost = Δ*0.7071.
+                // Aby se nedotkly, musi Δ > vyska pisma / 0.7071 ≈ 1.02 * fsTxt.
+                var minGapX = fsTxt * 1.02;
+                var placedX = null;
+                for (var tI = n - 1; tI >= 0; tI -= step) {
+                    var tb = B[tI], lab = fmtStatsBucketLabel(tb, res);
+                    if (!lab) continue;
+                    var tx = xOf(tb.from);
+                    // kam popisek po rotaci sahne doleva (delka textu i jeho vyska)
+                    var reach = lab.length * fsTxt * 0.62 * 0.7071 + fsTxt * 0.7071 + 2;
+                    if (tx - reach < 1) tx = reach + 2; // POSUN O MINIMUM, ne o celou delku
+                    if (placedX !== null && (placedX - tx) < minGapX) continue; // dotkl by se souseda
+                    placedX = tx;
+                    var tr = Math.round(tx * 10) / 10;
+                    s += "<text class=\"st-chart-txt\" x=\"" + tr + "\" y=\"" + baseY + "\" text-anchor=\"end\""
+                        + " transform=\"rotate(-45 " + tr + " " + baseY + ")\">" + lab + "</text>";
+                }
+                s += "</svg>";
+                return s;
+            } catch(e) { return ""; }
+        }
+            /* --- Grafy: graf pocetu souboru v case --- */
             H += "<div class=\"info-section-title\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 3v18h18\"/><path d=\"M7 16v-5\"/><path d=\"M12 16V8\"/><path d=\"M17 16v-8\"/></svg>" + L_("statsSecGraphs", "Grafy") + "</div>";
-            H += "<div class=\"st-sec-note\">" + L_("statsGraphsNote", "Zatím bez obsahu.") + "</div>";
+            H += statsChartSvg(times);
             /* --- Zdroje --- */
             var srcs = [];
             try {
@@ -19919,7 +20245,6 @@ if (fileEnd < fList.length || fileStart > 0) {
                     var mpfx = ySel + pad2(m);
                     var mt = tallyForPrefix(mpfx);
                     (function(mpfx2, mt2, m2) {
-                        if (mt2.G === 0) return;
                         var chip = document.createElement("button");
                         chip.type = "button";
                         chip.className = "tf-chip" + (mSel === m2 ? " active" : "") + (mt2.G === 0 ? " none" : "");
@@ -19966,7 +20291,6 @@ if (fileEnd < fList.length || fileStart > 0) {
                     var dpfx = ySel + pad2(mSel) + pad2(day);
                     var dt2 = tallyForPrefix(dpfx);
                     (function(dpfx2, dt3, day2) {
-                        if (dt3.G === 0) return;
                         var cell = document.createElement("button");
                         cell.type = "button";
                         cell.className = "tf-day" + (dSel === day2 ? " sel" : "") + (dt3.G === 0 ? " none" : "");
@@ -19994,7 +20318,6 @@ if (fileEnd < fList.length || fileStart > 0) {
                     var hpfx = ySel + pad2(mSel) + pad2(dSel) + pad2(h);
                     var ht = tallyForPrefixHour(hpfx);
                     (function(hpfx2, ht2, h2) {
-                        if (ht2.G === 0) return;
                         var chip = document.createElement("button");
                         chip.type = "button";
                         chip.className = "tf-chip" + (hSel === h2 ? " active" : "") + (ht2.G === 0 ? " none" : "");
