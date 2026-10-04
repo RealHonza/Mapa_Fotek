@@ -6277,30 +6277,6 @@ function statsSetFilters(on) {
             } catch(e) { return null; }
         }
         // Prumer + median dnu z košu casoveho grafu (from/to ve dnech, n = pocty). Interpolace medianu v kosi.
-        function statsTimeMeanMed(B) {
-            try {
-                var tot = 0, i, sum = 0;
-                for (i = 0; i < B.length; i++) tot += (B[i].n || 0);
-                if (!tot) return null;
-                for (i = 0; i < B.length; i++) {
-                    var w0 = (B[i].to >= B[i].from) ? (B[i].to - B[i].from + 1) : 1;
-                    sum += (B[i].from + (w0 - 1) / 2) * (B[i].n || 0);
-                }
-                var need = (tot + 1) / 2, cum = 0, med = B[0].from;
-                for (i = 0; i < B.length; i++) {
-                    var nn = B[i].n || 0;
-                    if (nn > 0 && cum + nn >= need) {
-                        var w2 = (B[i].to >= B[i].from) ? (B[i].to - B[i].from + 1) : 1;
-                        var fr = (need - cum) / nn;
-                        if (!(fr >= 0)) fr = 0; if (!(fr <= 1)) fr = 1;
-                        med = (w2 > 1) ? (B[i].from + fr * (w2 - 1)) : B[i].from;
-                        break;
-                    }
-                    cum += nn;
-                }
-                return { mean: sum / tot, med: med, n: tot };
-            } catch(e) { return null; }
-        }
         // Prevod km na souradnici slotu (kos i + zlomek) pro distance graf se stejnymi sirkami.
         function statsDistKmToSlot(cats, km) {
             try {
@@ -7342,6 +7318,100 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 return s;
             } catch(e) { return ""; }
         }
+        // Median na kruznici: hodnoty rozradime tak, aby nejvetsi mezera padla za zacatek,
+        // tim se kruh "rozvinne" na interval a median je normalni. Bez toho by 23:30 a 00:30
+        // daly pulnoctni median 12:00, coz je nesmysl.
+        function statsCircularMedian(sorted, period) {
+            try {
+                var n = sorted.length;
+                if (!n) return null;
+                if (n === 1) return sorted[0];
+                var bestGap = -1, bestIdx = 0, i, cur, next, gap;
+                for (i = 0; i < n; i++) {
+                    cur = sorted[i];
+                    next = (i + 1 < n) ? sorted[i + 1] : sorted[0] + period;
+                    gap = next - cur;
+                    if (gap > bestGap) { bestGap = gap; bestIdx = i; }
+                }
+                // hodnoty, ktere pri rozpraseci "presly" za konec, posuneme o periodu,
+                // jinak by posloupnost nebyla monotonni a median by vysel spatne
+                var b = [], k, src;
+                for (k = 0; k < n; k++) {
+                    src = (bestIdx + 1 + k) % n;
+                    b.push(sorted[src] + (((bestIdx + 1 + k) >= n) ? period : 0));
+                }
+                var m = Math.floor(n / 2);
+                var med = (n % 2) ? b[m] : (b[m - 1] + b[m]) / 2;
+                return ((med % period) + period) % period;
+            } catch(e) { return null; }
+        }
+        // Prumer a median denni doby z PRESNYCH sekund, ne z hodinovych kosu.
+        // Koše maji presnost +/- 30 minut, tady jde o sekundy primo z razeni casu.
+        // KRUHOVE: prumer i median resi prechod pres pulnoc (23:30 + 00:30 -> ~00:00, ne 12:00).
+        function statsTodSecMeanMed(times) {
+            try {
+                if (!times || !times.length) return null;
+                var a = [], s = 0, i;
+                for (i = 0; i < times.length; i++) {
+                    var k = statsTimeKey(times[i]);
+                    if (k.length < 10) continue;
+                    var hh = parseInt(k.substring(8, 10), 10);
+                    if (!isFinite(hh) || hh < 0 || hh > 23) continue;
+                    var mi = (k.length >= 12) ? parseInt(k.substring(10, 12), 10) : 0;
+                    if (!isFinite(mi) || mi < 0 || mi > 59) mi = 0;
+                    var se = (k.length >= 14) ? parseInt(k.substring(12, 14), 10) : 0;
+                    if (!isFinite(se) || se < 0 || se > 59) se = 0;
+                    var sec = hh * 3600 + mi * 60 + se;
+                    a.push(sec); s += sec;
+                }
+                if (!a.length) return null;
+                // kruhovy prumer: prumer vektoru jednotkovych vektoru misto primouctu
+                var rk = 2 * Math.PI / 86400, sx = 0, sy = 0, i2;
+                for (i2 = 0; i2 < a.length; i2++) { sx += Math.cos(a[i2] * rk); sy += Math.sin(a[i2] * rk); }
+                var meanSec = ((Math.atan2(sy, sx) / rk) % 86400 + 86400) % 86400;
+                a.sort(function(x, y) { return x - y; });
+                var med = statsCircularMedian(a, 86400);
+                return { meanSec: meanSec, medSec: med, n: a.length };
+            } catch(e) { return null; }
+        }
+        // Sekundy od pulnoci -> "HH:MM:SS" (nebo "HH:MM", kdyz withSec === false)
+        function statsSecToHMS(sec, withSec) {
+            try {
+                var v = Math.round(Number(sec));
+                if (!isFinite(v)) return "";
+                v = ((v % 86400) + 86400) % 86400;   // 00:00:00 az 23:59:59 i presto kdyz vyjde z intervalu
+                var p2 = function(n) { return ("0" + n).slice(-2); };
+                return p2(Math.floor(v / 3600)) + ":" + p2(Math.floor((v % 3600) / 60))
+                    + (withSec === false ? "" : ":" + p2(v % 60));
+            } catch(e) { return ""; }
+        }
+        // Presny prumer a median CASU FOTENI (absolutni okamziky, ms od epocha) z raw dat.
+        // Vzdy z presnych razeni, nikdy z kosu - kos dava +/- 30 minut az vetsi.
+        function statsTimeExactMeanMed(times) {
+            try {
+                if (!times || !times.length) return null;
+                var a = [], s = 0, i;
+                for (i = 0; i < times.length; i++) {
+                    var k = statsTimeKey(times[i]);
+                    if (k.length < 8) continue;
+                    var no = statsDayNo(k.substring(0, 8));
+                    if (no === null) continue;
+                    var hh = (k.length >= 10) ? parseInt(k.substring(8, 10), 10) : 0;
+                    if (!isFinite(hh) || hh < 0 || hh > 23) hh = 0;
+                    var mi = (k.length >= 12) ? parseInt(k.substring(10, 12), 10) : 0;
+                    if (!isFinite(mi) || mi < 0 || mi > 59) mi = 0;
+                    var se = (k.length >= 14) ? parseInt(k.substring(12, 14), 10) : 0;
+                    if (!isFinite(se) || se < 0 || se > 59) se = 0;
+                    var ms = (no * 86400 + hh * 3600 + mi * 60 + se) * 1000;
+                    a.push(ms); s += ms;
+                }
+                if (!a.length) return null;
+                a.sort(function(x, y) { return x - y; });
+                var m = Math.floor(a.length / 2);
+                var med = (a.length % 2) ? a[m] : (a[m - 1] + a[m]) / 2;
+                return { meanMs: s / a.length, medMs: med, n: a.length };
+            } catch(e) { return null; }
+        }
         // --- Graf: pocet souboru v denni dobe. 24 stejne siroke sloupce, barva podle pasma. ---
         function statsChartTodSvg(times) {
             try {
@@ -7371,17 +7441,14 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 var todMarks = null;
                 if (statsChartAvgMed) {
                     try {
-                        var _tt = 0, _ts = 0, _ti2;
-                        for (_ti2 = 0; _ti2 < 24; _ti2++) { _tt += cats[_ti2].n; _ts += _ti2 * cats[_ti2].n; }
-                        if (_tt > 0) {
-                            var _tMean = _ts / _tt, _tNeed = (_tt + 1) / 2, _tCum = 0, _tMed = 0;
-                            for (_ti2 = 0; _ti2 < 24; _ti2++) { _tCum += cats[_ti2].n; if (_tCum >= _tNeed) { _tMed = _ti2; break; } }
+                        var _tmm2 = statsTodSecMeanMed(times);
+                        if (_tmm2) {
                             var _tW = (currentLang === "cs") ? { avg: "Průměr", med: "Medián" } : { avg: "Average", med: "Median" };
-                            var _tMeanLab = _tW.avg + ": " + (currentLang === "cs" ? String(Math.round(_tMean * 10) / 10).replace(".", ",") : String(Math.round(_tMean * 10) / 10)) + " h";
-                            var _tMedLab = _tW.med + ": " + _tMed + " h";
+                            var _tMeanLab = _tW.avg + ": " + statsSecToHMS(_tmm2.meanSec, true);
+                            var _tMedLab = _tW.med + ": " + statsSecToHMS(_tmm2.medSec, true);
                             todMarks = [
-                                { x: _tMean, lab: _tMeanLab, tip: _tMeanLab, col: "#d93025" },
-                                { x: _tMed, lab: _tMedLab, tip: _tMedLab, col: "#1a73e8" }
+                                { x: _tmm2.meanSec / 3600, lab: _tMeanLab, tip: _tMeanLab, col: "#d93025" },
+                                { x: _tmm2.medSec / 3600, lab: _tMedLab, tip: _tMedLab, col: "#1a73e8" }
                             ];
                         }
                     } catch(eM) { todMarks = null; }
@@ -7548,13 +7615,28 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 // cary prumeru/medianu na ose X (svisle, prerusovane); hodnota jen v tooltipu
                 if (statsChartAvgMed) {
                     try {
-                        var _tmm = statsTimeMeanMed(B);
-                        if (_tmm) {
-                            var _tW2 = (currentLang === "cs") ? { avg: "Průměr", med: "Medián" } : { avg: "Average", med: "Median" };
-                            var _tMarks = [
-                                { v: _tmm.mean, lab: _tW2.avg + ": " + fmtStatsDay(fmtStatsDayNoYmd(Math.round(_tmm.mean))), col: "#d93025" },
-                                { v: _tmm.med, lab: _tW2.med + ": " + fmtStatsDay(fmtStatsDayNoYmd(Math.round(_tmm.med))), col: "#1a73e8" }
+                        var _tW2 = (currentLang === "cs") ? { avg: "Průměr", med: "Medián" } : { avg: "Average", med: "Median" };
+                        var _tMarks = null;
+                        /* Vzdy presne z raw dat (absolutni okamziky), pro kazde rozlišeni.
+                           Zobrazuje se vzdy jen datum, hodiny se ukazuji jen kdyz nesmysli:
+                           res="h" vse v jednom dni a res="d" jeden den na sloupec. */
+                        var _tex = statsTimeExactMeanMed(times);
+                        if (_tex) {
+                            var _msToHMS = function(ms) { return statsSecToHMS(Math.round(ms / 1000), true); };
+                            var _lab = function(ms) {
+                                var dayN = Math.floor(ms / 86400000);
+                                var dt = fmtStatsDay(fmtStatsDayNoYmd(dayN));
+                                if (res === "h") return dt + " " + _msToHMS(ms - dayN * 86400000);
+                                if (res === "d") return dt + " " + statsSecToHMS(Math.round((ms - dayN * 86400000) / 1000 / 60) * 60, false);
+                                return dt;
+                            };
+                            var _vx = function(ms) { return ms / 86400000; };
+                            _tMarks = [
+                                { v: _vx(_tex.meanMs), lab: _tW2.avg + ": " + _lab(_tex.meanMs), col: "#d93025" },
+                                { v: _vx(_tex.medMs), lab: _tW2.med + ": " + _lab(_tex.medMs), col: "#1a73e8" }
                             ];
+                        }
+                        if (_tMarks) {
                             for (var _mi2 = 0; _mi2 < _tMarks.length; _mi2++) {
                                 var _mx2 = xOf(_tMarks[_mi2].v);
                                 if (!(_mx2 >= mL)) _mx2 = mL; if (!(_mx2 <= mL + pW)) _mx2 = mL + pW;
