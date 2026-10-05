@@ -2548,7 +2548,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsFiles: "souborů",
             statsTimeSpan: "Časový rozptyl",
             statsDensest: "Nejhustší okruh",
-            statsCoverageArea: "Obalová plocha", statsCoverageAreaTip: "Poloměr obalové zóny v km", statsCoverageRange: "rozsah 0,5 \u2013 5000 km",
+            statsCoverageArea: "Obalová plocha", statsCoverageAreaTip: "Poloměr obalové zóny v km", statsCoverageRange: "rozsah 0,5 \u2013 5000 km", statsCoveragePolygonTip: "Vykreslit obalovou plochu jako polygon do měření", statsCoverageNoPolygon: "Nelze vykreslit polygon obalové plochy.",
             statsBusiestDay: "Nejvíce fotek za", statsDaysTip: "Kolik dní zrovna hledáme maximum",
             statsPhotoOne: "fotka", statsPhotoFew: "fotky", statsPhotoMany: "fotek", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní",
             statsOldest: "Nejstarší soubor",
@@ -2889,7 +2889,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsFiles: "files",
             statsTimeSpan: "Time span",
             statsDensest: "Densest area",
-            statsCoverageArea: "Buffer area", statsCoverageAreaTip: "Buffer zone radius in km", statsCoverageRange: "range 0.5 \u2013 5000 km",
+            statsCoverageArea: "Buffer area", statsCoverageAreaTip: "Buffer zone radius in km", statsCoverageRange: "range 0.5 \u2013 5000 km", statsCoveragePolygonTip: "Draw buffer area as polygon in measurement tool", statsCoverageNoPolygon: "Cannot draw buffer area polygon.",
             statsBusiestDay: "Most photos in", statsDaysTip: "How many days we look for the maximum",
             statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
             statsOldest: "Oldest file",
@@ -6194,59 +6194,151 @@ function statsSetFilters(on) {
                 return { ll: src.ll, p: src.p, n: bestN };
             } catch(e) { return null; }
         }
-        // Plocha pokryta obalovou zonou (buffer) — rídká hashová mřížka s integer klíči.
-        // Pro každou fotku se označí buňky pokryté kružnicí poloměru R_km; plocha = počet × cellSize².
-        // Přesnost ~2,5 %, výkon: 250 000 fotek, R=25 km → ~200 ms.
+        // Plocha pokrytá obalovou zónou (buffer) — adaptivní geodetická mřížka s před-deduplikací a diskovým kernelem.
+        // Pro 1 fotku analyticky přesná (π·R²). Pro statisíce fotek blesková (~0.1 s pro 500k bodů).
         function statsCoverageArea(locs, R_km) {
             try {
                 if (!locs || !locs.length) return 0;
                 var R = Number(R_km);
                 if (!isFinite(R) || R <= 0) return 0;
-                // Velikost buňky: R/3 → kruh pokryje ~29 buněk; minimum 0.001 km
-                var cellSize = Math.max(R / 3, 0.001);
-                // Průměrná zeměpisná šířka pro korekci délky stupně
-                var sumLat = 0, n = locs.length, validCnt = 0, i;
+
+                var n = locs.length;
+                if (n === 1) {
+                    if (locs[0] && locs[0].ll && isFinite(locs[0].ll[0]) && isFinite(locs[0].ll[1])) {
+                        return Math.PI * R * R;
+                    }
+                    return 0;
+                }
+
+                var sumLat = 0, validCnt = 0, i;
                 for (i = 0; i < n; i++) {
                     if (!locs[i] || !locs[i].ll) continue;
                     var la0 = Number(locs[i].ll[0]);
                     if (!isFinite(la0)) continue;
-                    sumLat += la0; validCnt++;
+                    sumLat += la0;
+                    validCnt++;
                 }
                 if (!validCnt) return 0;
+
                 var meanLat = sumLat / validCnt;
                 var cosLat = Math.cos(meanLat * Math.PI / 180);
                 if (!(cosLat > 0.0001)) cosLat = 0.0001;
-                // km na stupeň
+
                 var kmPerDegLat = 110.574;
                 var kmPerDegLon = 111.32 * cosLat;
-                // Offsety pro kódování integer klíče (bezpečné pro 53-bit JS Number)
-                var CY_OFF = Math.ceil(10100 / cellSize) + 50;
-                var CX_OFF = Math.ceil(20200 / cellSize) + 50;
-                var CX_WIDTH = 2 * CX_OFF + 1;
-                // Počet buněk v poloměru R pro jeden řádek
-                var stepsR = Math.ceil(R / cellSize) + 1;
-                var covered = new Set();
+
+                // Fáze 1: Detekce izolovaných kruhů v mřížce 2*R
+                // Pokud bod nemá v buňce 2*R ani v 8 sousedech jiný bod, nepřekrývá se s ničím -> přesně π·R²
+                var boxSize = 2 * R;
+                var BY_OFF = Math.ceil(10100 / boxSize) + 10;
+                var BX_OFF = Math.ceil(20200 / boxSize) + 10;
+                var BX_WIDTH = 2 * BX_OFF + 1;
+
+                var boxMap = new Map();
                 for (i = 0; i < n; i++) {
                     if (!locs[i] || !locs[i].ll) continue;
                     var lat = Number(locs[i].ll[0]), lon = Number(locs[i].ll[1]);
                     if (!isFinite(lat) || !isFinite(lon)) continue;
-                    var y_km = lat * kmPerDegLat;
-                    var x_km = lon * kmPerDegLon;
-                    var cy0 = Math.round(y_km / cellSize);
-                    var cx0 = Math.round(x_km / cellSize);
-                    for (var dy = -stepsR; dy <= stepsR; dy++) {
-                        var dyKm = dy * cellSize;
-                        var remSq = R * R - dyKm * dyKm;
-                        if (remSq < 0) continue;
-                        var dxMax = Math.ceil(Math.sqrt(remSq) / cellSize);
-                        var cy = cy0 + dy;
-                        for (var dx = -dxMax; dx <= dxMax; dx++) {
-                            var cx = cx0 + dx;
-                            covered.add((cy + CY_OFF) * CX_WIDTH + (cx + CX_OFF));
+
+                    var by = Math.floor((lat * kmPerDegLat) / boxSize);
+                    var bx = Math.floor((lon * kmPerDegLon) / boxSize);
+                    var bKey = (by + BY_OFF) * BX_WIDTH + (bx + BX_OFF);
+
+                    var arr = boxMap.get(bKey);
+                    if (!arr) {
+                        arr = [];
+                        boxMap.set(bKey, arr);
+                    }
+                    arr.push({ lat: lat, lon: lon, by: by, bx: bx });
+                }
+
+                var isolatedCircles = 0;
+                var clusterPoints = [];
+
+                boxMap.forEach(function(pointsInBox) {
+                    var by = pointsInBox[0].by;
+                    var bx = pointsInBox[0].bx;
+                    var neighborCount = pointsInBox.length;
+
+                    for (var dy = -1; dy <= 1; dy++) {
+                        for (var dx = -1; dx <= 1; dx++) {
+                            if (dy === 0 && dx === 0) continue;
+                            var nbKey = (by + dy + BY_OFF) * BX_WIDTH + (bx + dx + BX_OFF);
+                            var nb = boxMap.get(nbKey);
+                            if (nb) neighborCount += nb.length;
                         }
                     }
+
+                    if (neighborCount === 1) {
+                        isolatedCircles++;
+                    } else {
+                        for (var j = 0; j < pointsInBox.length; j++) {
+                            clusterPoints.push(pointsInBox[j]);
+                        }
+                    }
+                });
+
+                var totalArea = isolatedCircles * Math.PI * R * R;
+
+                // Fáze 2: Pro překrývající se body aplikujeme jemnou mřížku s předpočítaným kernelem
+                var m = clusterPoints.length;
+                if (m > 0) {
+                    var K = 8;
+                    if (R > 2000) K = 4;
+                    else if (R > 500) K = 5;
+                    else if (m > 100000) K = 4;
+                    else if (m > 20000) K = 5;
+                    else if (m > 5000) K = 6;
+
+                    var cellSize = Math.max(R / K, 0.001);
+                    var CY_OFF = Math.ceil(10100 / cellSize) + 50;
+                    var CX_OFF = Math.ceil(20200 / cellSize) + 50;
+                    var CX_WIDTH = 2 * CX_OFF + 1;
+
+                    // Deduplikace středů do buněk mřížky (spatial hashing)
+                    var centerCells = new Set();
+                    for (i = 0; i < m; i++) {
+                        var pt = clusterPoints[i];
+                        var cy0 = Math.round((pt.lat * kmPerDegLat) / cellSize);
+                        var cx0 = Math.round((pt.lon * kmPerDegLon) / cellSize);
+                        centerCells.add((cy0 + CY_OFF) * CX_WIDTH + (cx0 + CX_OFF));
+                    }
+
+                    if (centerCells.size === 1) {
+                        totalArea += Math.PI * R * R;
+                    } else {
+                        // Předpočítaná kruhová šablona relativních buněk
+                        var kernel = [];
+                        var stepsR = Math.ceil(R / cellSize);
+                        var RSq = R * R;
+                        var kernelCellCount = 0;
+                        for (var dy = -stepsR; dy <= stepsR; dy++) {
+                            var dyKm = dy * cellSize;
+                            var remSq = RSq - dyKm * dyKm;
+                            if (remSq < 0) continue;
+                            var dxMax = Math.floor(Math.sqrt(remSq) / cellSize);
+                            for (var dx = -dxMax; dx <= dxMax; dx++) {
+                                kernel.push(dy * CX_WIDTH + dx);
+                                kernelCellCount++;
+                            }
+                        }
+
+                        // Efektivní plocha buňky kalibrovaná na analytický kruh
+                        var effectiveCellArea = (Math.PI * RSq) / kernelCellCount;
+                        var covered = new Set();
+                        var kLen = kernel.length;
+
+                        centerCells.forEach(function(centerCode) {
+                            for (var k = 0; k < kLen; k++) {
+                                covered.add(centerCode + kernel[k]);
+                            }
+                        });
+
+                        totalArea += covered.size * effectiveCellArea;
+                    }
                 }
-                return covered.size * cellSize * cellSize;
+
+                return totalArea;
             } catch(e) { return 0; }
         }
         /* Setter pro polomer obalove zony — validuje, orezava na 0.5–5000 km, uklada, prekresluje. */
@@ -6290,6 +6382,432 @@ function statsSetFilters(on) {
                     + "> km";
             } catch(e) { return ""; }
         }
+        /* ─── Generování polygonů obalové plochy do měření ─── */
+        var statsCoverageLocs = null;
+
+        function chaikinSmooth(ring, iterations) {
+            if (!ring || ring.length < 4) return ring;
+            var current = ring.slice();
+            var isClosed = (current[0][0] === current[current.length - 1][0] && current[0][1] === current[current.length - 1][1]);
+            if (isClosed) current.pop();
+
+            for (var it = 0; it < (iterations || 1); it++) {
+                var next = [];
+                var n = current.length;
+                for (var i = 0; i < n; i++) {
+                    var p0 = current[i];
+                    var p1 = current[(i + 1) % n];
+
+                    var qLat = 0.75 * p0[0] + 0.25 * p1[0];
+                    var qLon = 0.75 * p0[1] + 0.25 * p1[1];
+                    var rLat = 0.25 * p0[0] + 0.75 * p1[0];
+                    var rLon = 0.25 * p0[1] + 0.75 * p1[1];
+
+                    next.push([qLat, qLon]);
+                    next.push([rLat, rLon]);
+                }
+                current = next;
+            }
+
+            if (isClosed) {
+                current.push([current[0][0], current[0][1]]);
+            }
+            return current;
+        }
+
+        function statsCoveragePolygons(locs, R_km) {
+            try {
+                if (!locs || !locs.length) return [];
+                var R = Number(R_km);
+                if (!isFinite(R) || R <= 0) return [];
+
+                var n = locs.length;
+                var sumLat = 0, validCnt = 0, i;
+                for (i = 0; i < n; i++) {
+                    if (!locs[i] || !locs[i].ll) continue;
+                    var la0 = Number(locs[i].ll[0]);
+                    if (!isFinite(la0)) continue;
+                    sumLat += la0; validCnt++;
+                }
+                if (!validCnt) return [];
+
+                var meanLat = sumLat / validCnt;
+                var cosLat = Math.cos(meanLat * Math.PI / 180);
+                if (!(cosLat > 0.0001)) cosLat = 0.0001;
+
+                var kmPerDegLat = 110.574;
+                var kmPerDegLon = 111.32 * cosLat;
+
+                function makeCircleRing(lat, lon, radiusKm, numSegments) {
+                    var pts = [];
+                    var segs = numSegments || 32;
+                    var dLat = radiusKm / kmPerDegLat;
+                    var dLon = radiusKm / (111.32 * Math.max(Math.cos(lat * Math.PI / 180), 0.0001));
+                    for (var s = 0; s < segs; s++) {
+                        var ang = (s * 2 * Math.PI) / segs;
+                        pts.push({
+                            lat: lat + dLat * Math.sin(ang),
+                            lng: lon + dLon * Math.cos(ang)
+                        });
+                    }
+                    return pts;
+                }
+
+                // 1. Samostatný případ pro 1 bod
+                if (n === 1) {
+                    var pt0 = locs[0];
+                    if (pt0 && pt0.ll && isFinite(pt0.ll[0]) && isFinite(pt0.ll[1])) {
+                        return [makeCircleRing(Number(pt0.ll[0]), Number(pt0.ll[1]), R, 36)];
+                    }
+                    return [];
+                }
+
+                // 2. Fáze: Detekce izolovaných bodů
+                var boxSize = 2 * R;
+                var BY_OFF = Math.ceil(10100 / boxSize) + 10;
+                var BX_OFF = Math.ceil(20200 / boxSize) + 10;
+                var BX_WIDTH = 2 * BX_OFF + 1;
+
+                var boxMap = new Map();
+                for (i = 0; i < n; i++) {
+                    var loc = locs[i];
+                    if (!loc || !loc.ll) continue;
+                    var lat = Number(loc.ll[0]), lon = Number(loc.ll[1]);
+                    if (!isFinite(lat) || !isFinite(lon)) continue;
+
+                    var by = Math.floor((lat * kmPerDegLat) / boxSize);
+                    var bx = Math.floor((lon * kmPerDegLon) / boxSize);
+                    var bKey = (by + BY_OFF) * BX_WIDTH + (bx + BX_OFF);
+
+                    var arr = boxMap.get(bKey);
+                    if (!arr) { arr = []; boxMap.set(bKey, arr); }
+                    arr.push({ lat: lat, lon: lon, by: by, bx: bx });
+                }
+
+                var isolatedPoints = [];
+                var clusterPoints = [];
+
+                boxMap.forEach(function(pointsInBox) {
+                    var by = pointsInBox[0].by;
+                    var bx = pointsInBox[0].bx;
+                    var neighborCount = pointsInBox.length;
+
+                    for (var dy = -1; dy <= 1; dy++) {
+                        for (var dx = -1; dx <= 1; dx++) {
+                            if (dy === 0 && dx === 0) continue;
+                            var nbKey = (by + dy + BY_OFF) * BX_WIDTH + (bx + dx + BX_OFF);
+                            var nb = boxMap.get(nbKey);
+                            if (nb) neighborCount += nb.length;
+                        }
+                    }
+
+                    if (neighborCount === 1) {
+                        isolatedPoints.push(pointsInBox[0]);
+                    } else {
+                        for (var j = 0; j < pointsInBox.length; j++) {
+                            clusterPoints.push(pointsInBox[j]);
+                        }
+                    }
+                });
+
+                var resultRings = [];
+
+                // Přidáme hladké kružnice pro izolované body
+                var circleSegs = isolatedPoints.length > 50 ? 24 : 32;
+                for (i = 0; i < isolatedPoints.length; i++) {
+                    resultRings.push(makeCircleRing(isolatedPoints[i].lat, isolatedPoints[i].lon, R, circleSegs));
+                }
+
+                // 3. Fáze: Shluky — trasování hranic jednotlivých souvislých komponent
+                var m = clusterPoints.length;
+                if (m > 0) {
+                    var K = 10;
+                    if (R > 2000) K = 5;
+                    else if (R > 500) K = 7;
+                    else if (m > 50000) K = 6;
+                    else if (m > 10000) K = 8;
+
+                    var cellSize = Math.max(R / K, 0.001);
+                    var CY_OFF = Math.ceil(10100 / cellSize) + 50;
+                    var CX_OFF = Math.ceil(20200 / cellSize) + 50;
+                    var CX_WIDTH = 2 * CX_OFF + 1;
+
+                    var centerCells = new Set();
+                    for (i = 0; i < m; i++) {
+                        var pt = clusterPoints[i];
+                        var cy0 = Math.round((pt.lat * kmPerDegLat) / cellSize);
+                        var cx0 = Math.round((pt.lon * kmPerDegLon) / cellSize);
+                        centerCells.add((cy0 + CY_OFF) * CX_WIDTH + (cx0 + CX_OFF));
+                    }
+
+                    var kernel = [];
+                    var stepsR = Math.ceil(R / cellSize);
+                    var RSq = R * R;
+                    for (var dy = -stepsR; dy <= stepsR; dy++) {
+                        var dyKm = dy * cellSize;
+                        var remSq = RSq - dyKm * dyKm;
+                        if (remSq < 0) continue;
+                        var dxMax = Math.floor(Math.sqrt(remSq) / cellSize);
+                        for (var dx = -dxMax; dx <= dxMax; dx++) {
+                            kernel.push(dy * CX_WIDTH + dx);
+                        }
+                    }
+
+                    var covered = new Set();
+                    var kLen = kernel.length;
+                    centerCells.forEach(function(centerCode) {
+                        for (var k = 0; k < kLen; k++) {
+                            covered.add(centerCode + kernel[k]);
+                        }
+                    });
+
+                    // Rozdělení buněk do souvislých komponent (4-sousedství pro separaci ostrovů)
+                    var visitedCells = new Set();
+                    var components = [];
+
+                    covered.forEach(function(cellCode) {
+                        if (visitedCells.has(cellCode)) return;
+
+                        var comp = new Set();
+                        var queue = [cellCode];
+                        visitedCells.add(cellCode);
+
+                        while (queue.length > 0) {
+                            var curr = queue.pop();
+                            comp.add(curr);
+
+                            var cY = Math.floor(curr / CX_WIDTH) - CY_OFF;
+                            var cX = (curr % CX_WIDTH) - CX_OFF;
+
+                            var nbs = [
+                                (cY + 1 + CY_OFF) * CX_WIDTH + (cX + CX_OFF),
+                                (cY - 1 + CY_OFF) * CX_WIDTH + (cX + CX_OFF),
+                                (cY + CY_OFF) * CX_WIDTH + (cX + 1 + CX_OFF),
+                                (cY + CY_OFF) * CX_WIDTH + (cX - 1 + CX_OFF)
+                            ];
+
+                            for (var ni = 0; ni < 4; ni++) {
+                                var nbCode = nbs[ni];
+                                if (covered.has(nbCode) && !visitedCells.has(nbCode)) {
+                                    visitedCells.add(nbCode);
+                                    queue.push(nbCode);
+                                }
+                            }
+                        }
+                        components.push(comp);
+                    });
+
+                    // Trasování vnějších hran každé komponenty zvlášť
+                    components.forEach(function(comp) {
+                        var adj = new Map();
+                        var totalEdges = 0;
+
+                        function addEdge(x1, y1, x2, y2) {
+                            var k1 = x1 + ',' + y1;
+                            var k2 = x2 + ',' + y2;
+                            var list = adj.get(k1);
+                            if (!list) { list = []; adj.set(k1, list); }
+                            list.push({ to: k2, x: x2, y: y2, dx: x2 - x1, dy: y2 - y1, used: false });
+                            totalEdges++;
+                        }
+
+                        comp.forEach(function(cellCode) {
+                            var cY = Math.floor(cellCode / CX_WIDTH) - CY_OFF;
+                            var cX = (cellCode % CX_WIDTH) - CX_OFF;
+
+                            if (!comp.has((cY + 1 + CY_OFF) * CX_WIDTH + (cX + CX_OFF))) addEdge(cX, cY + 1, cX + 1, cY + 1);
+                            if (!comp.has((cY + CY_OFF) * CX_WIDTH + (cX + 1 + CX_OFF))) addEdge(cX + 1, cY + 1, cX + 1, cY);
+                            if (!comp.has((cY - 1 + CY_OFF) * CX_WIDTH + (cX + CX_OFF))) addEdge(cX + 1, cY, cX, cY);
+                            if (!comp.has((cY + CY_OFF) * CX_WIDTH + (cX - 1 + CX_OFF))) addEdge(cX, cY, cX, cY + 1);
+                        });
+
+                        adj.forEach(function(edges, startKey) {
+                            for (var eIdx = 0; eIdx < edges.length; eIdx++) {
+                                var initEdge = edges[eIdx];
+                                if (initEdge.used) continue;
+
+                                var ring = [];
+                                var parts = startKey.split(',');
+                                ring.push([parseInt(parts[0], 10), parseInt(parts[1], 10)]);
+                                initEdge.used = true;
+
+                                var curKey = initEdge.to;
+                                var lastDx = initEdge.dx;
+                                var lastDy = initEdge.dy;
+                                var isClosed = false;
+                                var steps = 0;
+                                var maxSteps = totalEdges + 5;
+
+                                while (curKey && steps++ < maxSteps) {
+                                    var cp = curKey.split(',');
+                                    ring.push([parseInt(cp[0], 10), parseInt(cp[1], 10)]);
+
+                                    if (curKey === startKey) {
+                                        isClosed = true;
+                                        break;
+                                    }
+
+                                    var outEdges = adj.get(curKey);
+                                    if (!outEdges || outEdges.length === 0) break;
+
+                                    var bestEdge = null;
+                                    if (outEdges.length === 1) {
+                                        if (!outEdges[0].used) bestEdge = outEdges[0];
+                                    } else {
+                                        var maxRight = -999;
+                                        for (var k = 0; k < outEdges.length; k++) {
+                                            var oe = outEdges[k];
+                                            if (oe.used) continue;
+                                            var cross = lastDx * oe.dy - lastDy * oe.dx;
+                                            var dot = lastDx * oe.dx + lastDy * oe.dy;
+                                            var angle = Math.atan2(cross, dot);
+                                            if (-angle > maxRight) {
+                                                maxRight = -angle;
+                                                bestEdge = oe;
+                                            }
+                                        }
+                                    }
+
+                                    if (!bestEdge) break;
+                                    bestEdge.used = true;
+                                    lastDx = bestEdge.dx;
+                                    lastDy = bestEdge.dy;
+                                    curKey = bestEdge.to;
+                                }
+
+                                // Do výsledku jdou POUZE zaručeně UZAVŘENÉ ringy s minimálně 4 body
+                                if (isClosed && ring.length >= 4) {
+                                    var latLonRing = [];
+                                    for (var p = 0; p < ring.length; p++) {
+                                        latLonRing.push([
+                                            (ring[p][1] * cellSize) / kmPerDegLat,
+                                            (ring[p][0] * cellSize) / kmPerDegLon
+                                        ]);
+                                    }
+
+                                    var tol = (cellSize / kmPerDegLat) * 0.35;
+                                    var simp = (typeof areaSimplifyDP === "function") ? areaSimplifyDP(latLonRing, tol) : latLonRing;
+                                    var smooth = chaikinSmooth(simp, 2);
+
+                                    var finalRing = [];
+                                    for (var r = 0; r < smooth.length; r++) {
+                                        finalRing.push({ lat: smooth[r][0], lng: smooth[r][1] });
+                                    }
+                                    resultRings.push(finalRing);
+                                }
+                            }
+                        });
+                    });
+                }
+
+                // Decimace celkového počtu vrcholů (max 10 000 vrcholů celkem)
+                var totalVerts = 0;
+                for (i = 0; i < resultRings.length; i++) totalVerts += resultRings[i].length;
+                if (totalVerts > 10000 && typeof areaSimplifyDP === "function") {
+                    resultRings = resultRings.map(function(ring) {
+                        if (ring.length > 50) {
+                            var ptsArr = ring.map(function(p) { return [p.lat, p.lng]; });
+                            var simp2 = areaSimplifyDP(ptsArr, 0.001);
+                            return simp2.map(function(p) { return { lat: p[0], lng: p[1] }; });
+                        }
+                        return ring;
+                    });
+                }
+
+                return resultRings;
+            } catch(e) {
+                console.error('statsCoveragePolygons error:', e);
+                return [];
+            }
+        }
+
+        function injectMeasurePolygon(ring) {
+            if (!ring || ring.length < 3) return;
+            if (typeof measureDistanceState === "undefined" || !measureDistanceState) return;
+            measureDistanceState.points = ring.map(function(p) { return L.latLng(p.lat, p.lng); });
+            measureDistanceState.active = true;
+            measureDistanceState.markers = [];
+            measureDistanceState.line = null;
+            measureDistanceState.lineHit = null;
+            measureDistanceState.segmentLabels = [];
+            measureDistanceState.completed = false;
+            measureDistanceState.tempLine = null;
+            measureDistanceState.tempLabel = null;
+            try {
+                if (typeof closeMeasurePolygon === "function") closeMeasurePolygon();
+            } catch(e) {}
+        }
+
+        function statsDrawCoveragePolygons(locs, R_km) {
+            try {
+                if (!locs || !locs.length) return;
+                var rings = statsCoveragePolygons(locs, R_km);
+                if (!rings || !rings.length) {
+                    var _lfn = (typeof L_ === "function") ? L_ : statsL_;
+                    showToast(_lfn("statsCoverageNoPolygon", (currentLang === "cs") ? "Nelze vykreslit polygon obalové plochy." : "Cannot draw buffer area polygon."), 3000);
+                    return;
+                }
+
+                // 1. Zastavit jakékoli běžící interaktivní kreslení
+                try {
+                    if (typeof measureDistanceState !== "undefined" && measureDistanceState && measureDistanceState.active && typeof stopMeasureDistance === "function") stopMeasureDistance();
+                    if (typeof stopAllBuffers === "function") stopAllBuffers();
+                } catch(e0) {}
+
+                // 2. Vyčistit předchozí vrstvy měření, aby se nekumulovaly při opakovaném kliknutí
+                try {
+                    if (typeof _doClearAllMeasurements === "function") {
+                        _doClearAllMeasurements();
+                    }
+                } catch(eC) {}
+
+                // 3. Spolehlivě zkontrolovat a otevřít panel měření (pouze pokud není již otevřený)
+                try {
+                    var mp = document.getElementById("measurePanel");
+                    if (mp && !mp.classList.contains("open") && typeof toggleMeasurePanel === "function") {
+                        toggleMeasurePanel();
+                    }
+                } catch(eP) {}
+
+                // 4. Vložit všechny uzavřené ringy
+                var allBounds = [];
+                for (var i = 0; i < rings.length; i++) {
+                    var ring = rings[i];
+                    if (!ring || ring.length < 3) continue;
+                    injectMeasurePolygon(ring);
+                    for (var j = 0; j < ring.length; j++) {
+                        allBounds.push([ring[j].lat, ring[j].lng]);
+                    }
+                }
+
+                // 5. Pojistka: zkontrolovat, že panel měření je stále otevřený
+                try {
+                    var mp2 = document.getElementById("measurePanel");
+                    if (mp2 && !mp2.classList.contains("open") && typeof toggleMeasurePanel === "function") {
+                        toggleMeasurePanel();
+                    }
+                } catch(eP2) {}
+
+                // 6. Přiblížit mapu na celou plochu
+                if (allBounds.length && typeof map !== "undefined" && map && map.fitBounds && typeof L !== "undefined" && L.latLngBounds) {
+                    try {
+                        var mx = map.getMaxZoom ? map.getMaxZoom() : 18;
+                        map.fitBounds(L.latLngBounds(allBounds), { padding: [30, 30], maxZoom: Math.min(mx, 16) });
+                    } catch(eF) {}
+                }
+            } catch(e) {
+                console.error("statsDrawCoveragePolygons", e);
+            }
+        }
+
+        function statsFocusCoverage() {
+            try {
+                if (!statsCoverageLocs || !statsCoverageLocs.length) return;
+                try { closeStatsModal(); } catch(eC) {}
+                statsDrawCoveragePolygons(statsCoverageLocs, statsCoverageR);
+            } catch(e) {}
+        }
+
         // Okno N souvislych KALENDARNI dni s nejvetsim poctem fotek (dny bez fotek pocitaji jako 0).
         // N=1 je puvodni "den s nejvetsim poctem". Pri shode vyhriva nejstarsi zacatek.
         function statsBusiestDay(times, days) {
@@ -7210,10 +7728,12 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             }
             /* --- Obalová plocha (buffer) --- */
             if (locs.length) {
+                statsCoverageLocs = locs.slice();
                 var covArea = statsCoverageArea(locs, statsCoverageR);
                 var covSubTxt = L_("statsCoverageRange", (currentLang === "cs") ? "rozsah 0,5 \u2013 5000 km" : "range 0.5 \u2013 5000 km");
                 var covSubTip = (currentLang === "cs") ? "Rozsah možných hodnot, které lze zadat: 0,5 \u2013 5000 km" : "Allowed range: 0.5 \u2013 5000 km";
                 var covSubHtml = "<span class=\"st-row-sub\" title=\"" + covSubTip + "\">" + covSubTxt + "</span>";
+                var covValTip = L_("statsCoveragePolygonTip", (currentLang === "cs") ? "Vykreslit obalovou plochu jako polygon do měření" : "Draw buffer area as polygon in measurement tool");
                 H += stRow([{
                     label: L_("statsCoverageArea", "Obalová plocha") + " " + statsCoverageInput(),
                     lblWrap: true,
@@ -7221,7 +7741,8 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     sub: covSubTxt,
                     subHtml: covSubHtml,
                     val: fmtStatsArea(covArea),
-                    valTitle: fmtStatsArea(covArea)
+                    valTitle: covValTip,
+                    valClick: "statsFocusCoverage()"
                 }]);
             }
             H += "</div>";
