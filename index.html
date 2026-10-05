@@ -7188,9 +7188,9 @@ function statsSetFilters(on) {
             while (seeds.length < 16 && gs++ < 10000) { sp = P[Math.floor(rnd() * P.length)]; if (seeds.indexOf(sp) < 0) seeds.push(sp); }
             for (si = 0; si < seeds.length; si++) {
                 if (!seeds[si]) continue;
-                var fa = farthestFrom(seeds[si]), guard = 0;
-                while (guard++ < 20) { var fb = farthestFrom(fa.p, P); if (fb.km > fa.km + 1e-9) fa = fb; else break; }
-                if (fa.km > best) { best = fa.km; ba = seeds[si]; bb = fa.p; }
+                var curA = seeds[si], fa = farthestFrom(seeds[si]), guard = 0;
+                while (guard++ < 20) { var fb = farthestFrom(fa.p); if (fb.km > fa.km + 1e-9) { curA = fa.p; fa = fb; } else break; }
+                if (fa.km >= best) { best = fa.km; ba = curA; bb = fa.p; }
             }
             if (!ba) return null;
             return { a: ba.row, b: bb.row, km: best };
@@ -17364,7 +17364,7 @@ if(measureDistanceState.active) stopMeasureDistance();
                         var miterPt = destinationPoint(pts[i].lat, pts[i].lng, bisectorAz, miterDistKm);
                         leftSide.push([miterPt.lat, miterPt.lng]);
                     } else {
-                        var pMid = destPt(pts[i].lat, pts[i].lng, (azIn + azOut) / 2 - 90);
+                        var pMid = destPt(pts[i].lat, pts[i].lng, azIn + diff / 2 - 90);
                         leftSide.push([pMid.lat, pMid.lng]);
                     }
                 }
@@ -17396,7 +17396,7 @@ if(measureDistanceState.active) stopMeasureDistance();
                         var miterPt = destinationPoint(pts[i].lat, pts[i].lng, bisectorAz, miterDistKm);
                         rightSide.push([miterPt.lat, miterPt.lng]);
                     } else {
-                        var pMid = destPt(pts[i].lat, pts[i].lng, (azIn + azOut) / 2 + 90);
+                        var pMid = destPt(pts[i].lat, pts[i].lng, azIn + diff / 2 + 90);
                         rightSide.push([pMid.lat, pMid.lng]);
                     }
                 }
