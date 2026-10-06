@@ -17355,14 +17355,26 @@ if(measureDistanceState.active) stopMeasureDistance();
                             leftSide.push([dp.lat, dp.lng]);
                         }
                     } else if(diff < -2){
-                        // Zatáčí doleva: vnitřní roh -> přesný miter bez překřížení (mašlí)
+                        // Zatáčí doleva: vnitřní roh -> bevel (přesná šířka distKm) nebo miter
                         var halfDiffRad = Math.abs(diff) * Math.PI / 360.0;
                         var cosHalf = Math.cos(halfDiffRad);
-                        var bisectorAz = ((azIn + diff / 2.0 - 90) % 360 + 360) % 360;
-                        var maxMiter = Math.min(distKm * 2.5, Math.min(lenIn, lenOut) * 0.45);
-                        var miterDistKm = Math.min(distKm / Math.max(0.01, cosHalf), maxMiter);
-                        var miterPt = destinationPoint(pts[i].lat, pts[i].lng, bisectorAz, miterDistKm);
-                        leftSide.push([miterPt.lat, miterPt.lng]);
+                        var tanHalf = Math.tan(halfDiffRad);
+                        var setback = distKm * tanHalf;
+                        var minLen = Math.min(lenIn, lenOut);
+                        if(setback <= minLen * 0.85){
+                            // Bevel: P1 na příchozím segmentu, P2 na odchozím – oba přesně distKm od trasy
+                            var bp1 = destinationPoint(pts[i].lat, pts[i].lng, azIn + 180, setback);
+                            var p1  = destinationPoint(bp1.lat, bp1.lng, azIn - 90, distKm);
+                            var bp2 = destinationPoint(pts[i].lat, pts[i].lng, azOut, setback);
+                            var p2  = destinationPoint(bp2.lat, bp2.lng, azOut - 90, distKm);
+                            leftSide.push([p1.lat, p1.lng]);
+                            leftSide.push([p2.lat, p2.lng]);
+                        } else {
+                            // Degenerate: buffer širší než poloměr – capped miter
+                            var bisectorAz = ((azIn + diff / 2.0 - 90) % 360 + 360) % 360;
+                            var miterPt = destinationPoint(pts[i].lat, pts[i].lng, bisectorAz, Math.min(distKm / Math.max(0.01, cosHalf), minLen * 0.45));
+                            leftSide.push([miterPt.lat, miterPt.lng]);
+                        }
                     } else {
                         var pMid = destPt(pts[i].lat, pts[i].lng, azIn + diff / 2 - 90);
                         leftSide.push([pMid.lat, pMid.lng]);
@@ -17387,14 +17399,27 @@ if(measureDistanceState.active) stopMeasureDistance();
                             rightSide.push([dp.lat, dp.lng]);
                         }
                     } else if(diff > 2){
-                        // Zatáčelo doprava: vnitřní roh -> miter bez mašlí
+                        // Zatáčelo doprava: vnitřní roh -> bevel (přesná šířka distKm) nebo miter
                         var halfDiffRad = Math.abs(diff) * Math.PI / 360.0;
                         var cosHalf = Math.cos(halfDiffRad);
-                        var bisectorAz = ((azIn + diff / 2.0 + 90) % 360 + 360) % 360;
-                        var maxMiter = Math.min(distKm * 2.5, Math.min(lenIn, lenOut) * 0.45);
-                        var miterDistKm = Math.min(distKm / Math.max(0.01, cosHalf), maxMiter);
-                        var miterPt = destinationPoint(pts[i].lat, pts[i].lng, bisectorAz, miterDistKm);
-                        rightSide.push([miterPt.lat, miterPt.lng]);
+                        var tanHalf = Math.tan(halfDiffRad);
+                        var setback = distKm * tanHalf;
+                        var minLen = Math.min(lenIn, lenOut);
+                        if(setback <= minLen * 0.85){
+                            // Bevel: pOut na odchozím, pIn na příchozím – oba přesně distKm od trasy
+                            // (pravá strana se stavuje pozpátku, proto pOut první)
+                            var bpOut = destinationPoint(pts[i].lat, pts[i].lng, azOut, setback);
+                            var pOut  = destinationPoint(bpOut.lat, bpOut.lng, azOut + 90, distKm);
+                            var bpIn  = destinationPoint(pts[i].lat, pts[i].lng, azIn + 180, setback);
+                            var pIn   = destinationPoint(bpIn.lat, bpIn.lng, azIn + 90, distKm);
+                            rightSide.push([pOut.lat, pOut.lng]);
+                            rightSide.push([pIn.lat, pIn.lng]);
+                        } else {
+                            // Degenerate: buffer širší než poloměr – capped miter
+                            var bisectorAz = ((azIn + diff / 2.0 + 90) % 360 + 360) % 360;
+                            var miterPt = destinationPoint(pts[i].lat, pts[i].lng, bisectorAz, Math.min(distKm / Math.max(0.01, cosHalf), minLen * 0.45));
+                            rightSide.push([miterPt.lat, miterPt.lng]);
+                        }
                     } else {
                         var pMid = destPt(pts[i].lat, pts[i].lng, azIn + diff / 2 + 90);
                         rightSide.push([pMid.lat, pMid.lng]);
