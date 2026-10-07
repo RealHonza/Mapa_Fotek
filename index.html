@@ -479,6 +479,7 @@
         
 
         /* Vzhled foto-karet přímo na mapě */
+        .pc-cards-suspended .custom-photo-marker-icon, .pc-cards-suspended .custom-photo-cluster-icon { display: none !important; }
         .photo-bubble-card { position: relative; width: 44px; height: 44px; border-radius: 8px; background: #ffffff; box-shadow: 0 3px 12px rgba(0,0,0,0.28); border: 2px solid #ffffff; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
         .photo-bubble-card:hover { transform: scale(1.18); box-shadow: 0 6px 20px rgba(0,0,0,0.35); z-index: 9999 !important; }
         .photo-bubble-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -550,7 +551,7 @@
         .st-ref-btn { height: 26px; border: 1px solid #dadce0; background: #fff; border-radius: 13px; padding: 0 12px; font-size: 11.5px; color: #3c4043; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: background .15s, border-color .15s, color .15s; }
         .st-ref-btn:hover { background: var(--green-bg); border-color: var(--green); color: var(--green); }
         .st-ref-btn:focus-visible { outline: none; border-color: var(--green); box-shadow: 0 0 0 2px rgba(var(--green-rgb),0.18); }
-        .st-ref-btn:active { background: var(--green-border); }
+        .st-ref-btn:active { background: var(--green-border); } .st-async-cancel { height: 16px; line-height: 1; border: 1px solid #dadce0; background: #fff; border-radius: 8px; padding: 0 7px; font-size: 10px; color: #3c4043; cursor: pointer; display: inline-flex; align-items: center; } .st-async-cancel:hover { background: var(--green-bg); border-color: var(--green); color: var(--green); } #stRowDensest .st-row, #stRowFarthest .st-row { align-items: center; }
         .st-ref-lbl { color: #5f6368; font-weight: 500; }
         .st-ref-box #stRefExtra { margin-top: 16px; padding-top: 16px; border-top: 1px solid #e8eaed; }
         .st-ref-box #stRefExtra:empty { display: none; }
@@ -2029,7 +2030,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.05</span>
+                    <span class="info-meta-val">3.06</span>
                 </div>
             </div>
 
@@ -2226,6 +2227,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         try { sessionStorage.removeItem("mf_thumb_cache_v1"); } catch(e) {}
 
         var _thumbQueue = [];
+        var _thumbGen = 0; // generace nacitani minatur - pri pohybu mapy se zneplatni
         var _activeThumbLoads = 0;
         var _MAX_THUMB_CONCURRENT = 4;
 
@@ -2307,9 +2309,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 _activeThumbLoads++;
                 (function(task) {
                     var img = new Image();
+                    var gen = _thumbGen;
                     var timer = setTimeout(function() {
                         img.src = "";
                         _activeThumbLoads--;
+                        if (gen !== _thumbGen) { _activeThumbLoads--; processThumbQueue(); return; }
                         processThumbQueue();
                     }, 12000);
                     img.onload = function() {
@@ -2324,6 +2328,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                         _activeThumbLoads--;
                         processThumbQueue();
                     };
+                        if (gen !== _thumbGen) { _activeThumbLoads--; processThumbQueue(); return; }
                     img.onerror = function() {
                         clearTimeout(timer);
                         _photoThumbCache[task.url] = "ERROR";
@@ -2551,7 +2556,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsBandNight: "noc", statsBandMorning: "ráno", statsBandForenoon: "dopoledne",
             statsBandAfternoon: "odpoledne", statsBandEarlyEvening: "podvečer", statsBandEvening: "večer",
             statsChartNoTime: "Žádná fotka nemá čas.", statsChartNoLoc: "Žádná fotka nemá polohu.",
-            statsSecSources: "Zdroje", statsSecLocatedOnly: "Počítá se pouze z fotek s polohou.", statsSrcPhotosH: "Fotky a videa", statsSrcGeomH: "Body, čáry a polygony", statsPtOne: "bod", statsPtFew: "body", statsPtMany: "bodů", statsLineOne: "čára", statsLineFew: "čáry", statsLineMany: "čar", statsPolyOne: "polygon", statsPolyFew: "polygony", statsPolyMany: "polygonů", statsHoleOne: "díra", statsHoleFew: "díry", statsHoleMany: "děr", statsVideoOne: "video", statsVideoFew: "videa", statsVideoMany: "videí",
+            statsSecSources: "Zdroje", statsSecLocatedOnly: "Počítá se pouze z fotek s polohou.", statsSrcPhotosH: "Fotky a videa", statsSrcGeomH: "Body, čáry a polygony", statsPtOne: "bod", statsPtFew: "body", statsPtMany: "bodů", statsLineOne: "čára", statsLineFew: "čáry", statsLineMany: "čar", statsPolyOne: "polygon", statsPolyFew: "polygony", statsPolyMany: "polygonů", statsHoleOne: "díra", statsHoleFew: "díry", statsHoleMany: "d\u011br", statsComputing: "Po\u010d\u00edt\u00e1m\u2026", statsCancel: "Zru\u0161it", statsCancelled: "Zru\u0161eno", statsVideoOne: "video", statsVideoFew: "videa", statsVideoMany: "videí",
             statsSized: "se známou velikostí",
             statsAvgSize: "Průměrná velikost souboru",
             statsMedianTitle: "Medián velikosti souboru",
@@ -2895,7 +2900,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsBandNight: "night", statsBandMorning: "morning", statsBandForenoon: "forenoon",
             statsBandAfternoon: "afternoon", statsBandEarlyEvening: "early evening", statsBandEvening: "evening",
             statsChartNoTime: "No photo has a time.", statsChartNoLoc: "No photo has a position.",
-            statsSecSources: "Sources", statsSecLocatedOnly: "Counted from photos with a location only.", statsSrcPhotosH: "Photos and videos", statsSrcGeomH: "Points, lines and polygons", statsPtOne: "point", statsPtFew: "points", statsPtMany: "points", statsLineOne: "line", statsLineFew: "lines", statsLineMany: "lines", statsPolyOne: "polygon", statsPolyFew: "polygons", statsPolyMany: "polygons", statsHoleOne: "hole", statsHoleFew: "holes", statsHoleMany: "holes", statsVideoOne: "video", statsVideoFew: "videos", statsVideoMany: "videos",
+            statsSecSources: "Sources", statsSecLocatedOnly: "Counted from photos with a location only.", statsSrcPhotosH: "Photos and videos", statsSrcGeomH: "Points, lines and polygons", statsPtOne: "point", statsPtFew: "points", statsPtMany: "points", statsLineOne: "line", statsLineFew: "lines", statsLineMany: "lines", statsPolyOne: "polygon", statsPolyFew: "polygons", statsPolyMany: "polygons", statsHoleOne: "hole", statsHoleFew: "holes", statsHoleMany: "holes", statsComputing: "Computing\u2026", statsCancel: "Cancel", statsCancelled: "Cancelled", statsVideoOne: "video", statsVideoFew: "videos", statsVideoMany: "videos",
             statsSized: "with known size",
             statsAvgSize: "Average file size",
             statsMedianTitle: "Median file size",
@@ -6133,7 +6138,7 @@ function statsSetFilters(on) {
         //      Stejny vysledek, ale seskupena mista se vyridi v jednom pruchodu misto vsech.
         // Souradnice jsou v plochych Float64Array, takze v cyklu neni ani Number(), ani
         // property lookup, ani trigonometrie (jen jedno cos na stred, ne na kazdý bod).
-        function statsDensest(locs, km) {
+        function statsDensest(locs, km, prog) {
             try {
                 if (!locs || !locs.length) return null;
                 if (typeof calcDistKm !== "function") return null;
@@ -6184,6 +6189,7 @@ function statsSetFilters(on) {
                 var bestN = 0, bestI = -1;
                 for (var ci = 0; ci < list.length; ci++) {
                     var C = list[ci];
+                    if (prog && list.length > 50 && (ci & 63) === 0) { try { prog(ci / list.length); } catch(eP) {} }
                     if (C.blk <= bestN) break;          // dalsi bunky maji mensi odhad, uz nepomohou
                     var own = rows[C.r].cols[C.c];
                     for (var oi = 0; oi < own.length; oi++) {
@@ -6811,7 +6817,7 @@ function statsSetFilters(on) {
             }
         }
 
-        function injectMeasurePolygon(polyDef) {
+        function injectMeasurePolygon(polyDef, opts) {
             if (!polyDef) return;
             var outerPts = Array.isArray(polyDef) ? polyDef : polyDef.outer;
             var holesPts = (polyDef && polyDef.holes) ? polyDef.holes : [];
@@ -6831,7 +6837,7 @@ function statsSetFilters(on) {
                 measureDistanceState.tempLine = null;
                 measureDistanceState.tempLabel = null;
                 try {
-                    if (typeof closeMeasurePolygon === "function") closeMeasurePolygon();
+                    if (typeof closeMeasurePolygon === "function") { if (opts && opts.noLabel) { try { measureDistanceState._noAreaLabel = true; } catch(eNP) {} } closeMeasurePolygon(); try { delete measureDistanceState._noAreaLabel; } catch(eND) {} }
                 } catch(e) {}
                 return;
             }
@@ -6863,14 +6869,14 @@ function statsSetFilters(on) {
 
             // Hit polylines pro vnější obrys i pro díry
             try {
-                var hitOuter = L.polyline(geoOuter, { color: '#e41e26', weight: 16, opacity: 0.01, interactive: true, pane: 'overlayPane', renderer: L.svg(), noClip: true }).addTo(measureLayerGroup);
+                var hitOuter = L.polyline(geoOuter, { color: '#e41e26', weight: 16, opacity: 0.01, interactive: false, pane: 'overlayPane', renderer: L.svg(), noClip: true }).addTo(measureLayerGroup);
                 hitOuter._measureType = 'polygon_hit';
                 hitOuter._measureIdx = measurePolygonCounter;
             } catch(eHO) {}
 
             for (var h = 0; h < geoHoles.length; h++) {
                 try {
-                    var hitHole = L.polyline(geoHoles[h], { color: '#e41e26', weight: 16, opacity: 0.01, interactive: true, pane: 'overlayPane', renderer: L.svg(), noClip: true }).addTo(measureLayerGroup);
+                    var hitHole = L.polyline(geoHoles[h], { color: '#e41e26', weight: 16, opacity: 0.01, interactive: false, pane: 'overlayPane', renderer: L.svg(), noClip: true }).addTo(measureLayerGroup);
                     hitHole._measureType = 'polygon_hit';
                     hitHole._measureIdx = measurePolygonCounter;
                 } catch(eHH) {}
@@ -6925,6 +6931,7 @@ function statsSetFilters(on) {
                 })
             }).addTo(measureLayerGroup);
             areaMarker._measureType = 'area_label';
+            if (opts && opts.noLabel) { try { measureLayerGroup.removeLayer(areaMarker); } catch(eAMR) {} }
 
             measurePolygonCounter++;
             measureLineCounter++;
@@ -6966,7 +6973,7 @@ function statsSetFilters(on) {
                 for (var i = 0; i < polys.length; i++) {
                     var pDef = polys[i];
                     if (!pDef) continue;
-                    injectMeasurePolygon(pDef);
+                    injectMeasurePolygon(pDef, {noLabel: true});
                     var outer = Array.isArray(pDef) ? pDef : pDef.outer;
                     if (outer) {
                         for (var j = 0; j < outer.length; j++) {
@@ -6975,6 +6982,9 @@ function statsSetFilters(on) {
                     }
                 }
 
+                        // 4b. Po vlozeni ze statistiky nesmi zustat aktivni rezim mereni,
+                        // jinak by kliky na polygony koncily ve stopPropagation a popup by nevyskocil.
+                        try { if (typeof measureDistanceState !== "undefined" && measureDistanceState) measureDistanceState.active = false; } catch(eA) {}
                 // 5. Pojistka: zkontrolovat, že panel měření je stále otevřený
                 try {
                     var mp2 = document.getElementById("measurePanel");
@@ -7190,7 +7200,7 @@ function statsSetFilters(on) {
             lo.pop(); up.pop();
             return lo.concat(up);
         }
-        function statsFarthestPair(pts) {
+        function statsFarthestPair(pts, prog) {
             var P = [], i;
             for (i = 0; i < pts.length; i++) {
                 var la = Number(pts[i][0]), lo = Number(pts[i][1]);
@@ -7206,9 +7216,11 @@ function statsSetFilters(on) {
             };
             var los = P.map(function(p) { return p.lo; }).sort(function(a, b) { return a - b; });
             var med = los[Math.floor(los.length / 2)];
+            if (prog) { try { prog(0.05); } catch(eP0) {} }
             var C = [], seen = [], ri, ci, cj;
             var add = function(p) { if (seen.indexOf(p) < 0) { seen.push(p); C.push(p); } };
             for (ri = 0; ri < 4; ri++) {
+                if (prog) { try { prog(0.05 + 0.3 * ri / 4); } catch(eP1) {} }
                 (function(c) {
                     var tmp = P.map(function(p) {
                         var l = p.lo;
@@ -7224,6 +7236,7 @@ function statsSetFilters(on) {
             add(N); add(S); add(E); add(W);
             var best = -1, ba = null, bb = null, d;
             for (ci = 0; ci < C.length; ci++) {
+                if (prog && C.length > 200 && (ci & 127) === 0) { try { prog(0.4 + 0.55 * ci / C.length); } catch(eP2) {} }
                 for (cj = ci + 1; cj < C.length; cj++) {
                     d = dh(C[ci], C[cj]);
                     if (d > best) { best = d; ba = C[ci]; bb = C[cj]; }
@@ -7554,6 +7567,8 @@ function fmtStatsCoordShort(la, lo) {
             statsPickState = null;
             try { document.body.style.cursor = ""; } catch(eC) {}
             document.getElementById("statsModalBackdrop").classList.remove("open");
+            try { statsAsyncTerminateAll(); } catch(eA3) {}
+            statsAsyncGen++;
         }
         function stRow(cells) {
             var h = "";
@@ -7633,9 +7648,113 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                     + "<span class=\"st-bar-val\">" + tot.toLocaleString((typeof currentLang !== "undefined" && currentLang === "en") ? "en-US" : "cs-CZ") + "</span></div>";
             } catch(e) { return ""; }
         }
+        var statsAsyncGen = 0;
+        var statsAsyncJobs = {};
+        var STATS_ASYNC_MIN_LOCS = 5000;
+        // Tezke prostorove vypocty (Nejhustsi okruh, Nejvzdalenejsi dvojice) bezi v Blob
+        // workeru, aby UI nezamrzlo. Vysledky se vraceji pres postMessage; synchronni
+        // fallback plati, kdyz Worker neni k dispozici.
+        function statsAsyncWorkerCode() {
+            var need = ["calcDistKm", "calcDistKmLL", "statsCrossLL", "statsHull", "statsFarthestPair", "statsDensest"];
+            var parts = [];
+            for (var i = 0; i < need.length; i++) {
+                var fn = null;
+                try { fn = window[need[i]]; } catch(e) { fn = null; }
+                if (typeof fn !== "function") throw new Error("statsAsync: missing " + need[i]);
+                parts.push("var " + need[i] + "=" + fn.toString() + ";");
+            }
+            parts.push("onmessage=function(e){var m=e.data||{};var P=function(f){try{postMessage({token:m.token,kind:m.kind,progress:f});}catch(e2){}};try{var r=null;if(m.kind===\"densest\"){r=statsDensest(m.locs,m.km,function(f){P(f*0.95);});}else if(m.kind===\"farthest\"){r=statsFarthestPair(m.pts,function(f){P(0.05+f*0.9);});}else{throw new Error(\"job\");}postMessage({token:m.token,kind:m.kind,done:true,result:r});}catch(err){postMessage({token:m.token,kind:m.kind,error:String((err&&err.message)||err)});}};");
+            return parts.join("\n");
+        }
+        function statsAsyncTerminate(kind) {
+            try {
+                var j = statsAsyncJobs[kind];
+                if (j) {
+                    try { if (j.url) URL.revokeObjectURL(j.url); } catch(eU) {}
+                    try { if (j.worker) j.worker.terminate(); } catch(eW) {}
+                }
+                delete statsAsyncJobs[kind];
+            } catch(e) {}
+        }
+        function statsAsyncTerminateAll() {
+            try {
+                for (var k in statsAsyncJobs) { if (statsAsyncJobs.hasOwnProperty(k)) statsAsyncTerminate(k); }
+                statsAsyncJobs = {};
+            } catch(e) {}
+        }
+        function statsAsyncProgress(kind, frac) {
+            try {
+                var id = (kind === "densest") ? "stRowDensest" : "stRowFarthest";
+                var el = document.getElementById(id);
+                if (!el) return;
+                var v = el.querySelector(".st-row-val");
+                if (v) v.textContent = Math.max(0, Math.min(99, Math.round(frac * 100))) + " %";
+            } catch(e) {}
+        }
+        function swapAsyncRow(id, html) {
+            try {
+                var el = document.getElementById(id);
+                if (!el) return;
+                if (!html) { el.remove(); } else { el.innerHTML = html; }
+            } catch(e) {}
+        }
+        function statsAsyncCancel(kind) {
+            try {
+                var j = statsAsyncJobs[kind];
+                delete statsAsyncJobs[kind];
+                if (j) {
+                    try { if (j.url) URL.revokeObjectURL(j.url); } catch(eU) {}
+                    try { if (j.worker) j.worker.terminate(); } catch(eW) {}
+                }
+                var id = (kind === "densest") ? "stRowDensest" : "stRowFarthest";
+                var el = document.getElementById(id);
+                if (el && j) {
+                    el.innerHTML = stRow([{label: j.label, val: j.cancelled}]);
+                }
+            } catch(e) {}
+        }
+        function statsAsyncStart(kind, payload, label, cancelled) {
+            try {
+                if (typeof Worker === "undefined" || typeof Blob === "undefined" || typeof URL === "undefined") return false;
+                var code = statsAsyncWorkerCode();
+                var url = URL.createObjectURL(new Blob([code], {type: "text/javascript;charset=utf-8"}));
+                var w = new Worker(url);
+                statsAsyncJobs[kind] = { worker: w, url: url, token: statsAsyncGen, done: false, payload: payload, finish: null, label: label, cancelled: cancelled };
+                w.onmessage = function(e) {
+                    var m = e.data;
+                    var j = statsAsyncJobs[kind];
+                    if (!j || j.done || !m || m.token !== j.token) return;
+                    if (m.progress !== undefined && m.progress !== null && !m.done) { statsAsyncProgress(kind, m.progress); return; }
+                    j.done = true;
+                    try { if (j.url) URL.revokeObjectURL(j.url); } catch(eU) {}
+                    try { if (j.worker) j.worker.terminate(); } catch(eW) {}
+                    if (m.error !== undefined && m.error !== null) { statsAsyncSyncFallback(kind); return; }
+                    var fin = j.finish;
+                    delete statsAsyncJobs[kind];
+                    if (typeof fin === "function") { try { fin(m.result); } catch(eF) {} }
+                };
+                w.onerror = function() { statsAsyncSyncFallback(kind); };
+                payload.token = statsAsyncGen;
+                w.postMessage(payload);
+                return true;
+            } catch(e) { return false; }
+        }
+        function statsAsyncSyncFallback(kind) {
+            var j = statsAsyncJobs[kind];
+            delete statsAsyncJobs[kind];
+            if (!j || typeof j.finish !== "function" || !j.payload) return;
+            var res = null;
+            try {
+                if (kind === "densest") res = statsDensest(j.payload.locs, j.payload.km);
+                else if (kind === "farthest") res = statsFarthestPair(j.payload.pts);
+            } catch(e) { res = null; }
+            try { j.finish(res); } catch(eF) {}
+        }
         function renderStats() {
             var body = document.getElementById("statsBody");
             if (!body) return;
+            try { statsAsyncTerminateAll(); } catch(eA) {}
+            statsAsyncGen++;
             var t = i18n[currentLang] || {};
             var loc = currentLang === "cs" ? "cs-CZ" : "en-US";
             var L_ = function(k, d) { return (t[k] !== undefined && t[k] !== null && t[k] !== "") ? t[k] : d; };
@@ -7869,7 +7988,23 @@ var dRef = [], dCen = [], farRef = null, farRefP = null, farCen = null, farCenP 
             }
                 var hullPts = [];
                 for (i = 0; i < locs.length; i++) hullPts.push(locs[i].ll);
-var fp = statsFarthestPair(hullPts);
+            var fp = null;
+            var _fpAsync = (locs.length >= STATS_ASYNC_MIN_LOCS);
+            var buildFpRow = function(fpV) {
+                if (!fpV) return "";
+                var iA = statsFocusList.push(fpV.a) - 1;
+                var iB = statsFocusList.push(fpV.b) - 1;
+                var prIdx = statsPairList.push([fpV.a, fpV.b]) - 1;
+                var pairSub = "<span class=\"st-row-sub\">"
+                    + "<span class=\"st-pick\" onclick=\"statsFocusIdx(" + iA + ")\" title=\"" + statsFileName(fpV.a) + " \u2013 " + fmtStatsCoord(fpV.a[0], fpV.a[1]) + "\">" + fmtStatsCoordShort(fpV.a[0], fpV.a[1]) + "</span>"
+                    + "<span class=\"st-picksep\"> \u21c4 </span>"
+                    + "<span class=\"st-pick\" onclick=\"statsFocusIdx(" + iB + ")\" title=\"" + statsFileName(fpV.b) + " \u2013 " + fmtStatsCoord(fpV.b[0], fpV.b[1]) + "\">" + fmtStatsCoordShort(fpV.b[0], fpV.b[1]) + "</span>"
+                    + "</span>";
+                return stRow([{ label: L_("statsFarthestPair", "Nejvzd\u00e1len\u011bj\u0161\u00ed dvojice"), val: fmtStatsKm(fpV.km),
+                    subHtml: pairSub, valClick: "statsFocusPair(" + prIdx + ")",
+                    valTitle: L_("statsLineHint", "Zobrazit m\u011b\u0159ic\u00ed \u010d\u00e1ru mezi ob\u011bma soubory") }]);
+            };
+            if (!_fpAsync) { fp = statsFarthestPair(hullPts); }
 
 H += "<div class=\"st-sec-box\"><div class=\"info-section-title\" title=\"" + L_("statsSecLocatedOnly", "Počítá se pouze z fotek s polohou.") + "\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"4\" cy=\"19\" r=\"2\"/><circle cx=\"20\" cy=\"5\" r=\"2\"/><line x1=\"5.5\" y1=\"17.5\" x2=\"18.5\" y2=\"6.5\"/><line x1=\"9\" y1=\"11\" x2=\"11\" y2=\"13\"/><line x1=\"13\" y1=\"7\" x2=\"15\" y2=\"9\"/></svg>" + L_("statsSecDistances", "Vzdálenosti") + "</div>";
             H += "<div class=\"st-rows\">";
@@ -7931,32 +8066,52 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     sub: ncName, subHtml: ncCell }, (nearCen > 0) ? circ(cenC, nearCen) : {})]);
             }
             H += "<div class=\"st-sep\"></div>";
-            if (fp) {
-                var iA = statsFocusList.push(fp.a) - 1;
-                var iB = statsFocusList.push(fp.b) - 1;
-                var prIdx = statsPairList.push([fp.a, fp.b]) - 1;
-                var pairSub = "<span class=\"st-row-sub\">"
-                    + "<span class=\"st-pick\" onclick=\"statsFocusIdx(" + iA + ")\" title=\"" + statsFileName(fp.a) + " – " + fmtStatsCoord(fp.a[0], fp.a[1]) + "\">" + fmtStatsCoordShort(fp.a[0], fp.a[1]) + "</span>"
-                    + "<span class=\"st-picksep\"> ⇄ </span>"
-                    + "<span class=\"st-pick\" onclick=\"statsFocusIdx(" + iB + ")\" title=\"" + statsFileName(fp.b) + " – " + fmtStatsCoord(fp.b[0], fp.b[1]) + "\">" + fmtStatsCoordShort(fp.b[0], fp.b[1]) + "</span>"
-                    + "</span>";
-                H += stRow([{ label: L_("statsFarthestPair", "Nejvzdálenější dvojice"), val: fmtStatsKm(fp.km),
-                    subHtml: pairSub, valClick: "statsFocusPair(" + prIdx + ")",
-                    valTitle: L_("statsLineHint", "Zobrazit měřicí čáru mezi oběma soubory") }]);
+            var _hFp = buildFpRow(fp);
+            if (_hFp) { H += _hFp; }
+            else if (_fpAsync) {
+                H += "<div id=\"stRowFarthest\">" + stRow([{ label: L_("statsFarthestPair", "Nejvzd\u00e1len\u011bj\u0161\u00ed dvojice"), val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027farthest\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
+                var _fwLbl = L_("statsFarthestPair", "Nejvzd\u00e1len\u011bj\u0161\u00ed dvojice");
+                var _fwCan = L_("statsCancelled", "Zru\u0161eno");
+                if (statsAsyncStart("farthest", {pts: hullPts}, _fwLbl, _fwCan)) {
+                    statsAsyncJobs["farthest"].finish = function(fp2) { swapAsyncRow("stRowFarthest", buildFpRow(fp2)); };
+                } else {
+                    var fpS = null;
+                    try { fpS = statsFarthestPair(hullPts); } catch(eFS) { fpS = null; }
+                    var _hFpS = buildFpRow(fpS);
+                    if (_hFpS) { H += _hFpS; }
+                }
             }
             /* --- Nejhustší okruh: pevný poloměr 1 km (nejde nastavit), vpravo počet fotek,
                    uprostřed souřadnice středu. Patri sem, protoze je to prostorova metrika
                    a kresli kruznici stejne jako ostatni radky v teto sekci. --- */
-            var dens = statsDensest(locs, 1);
-            if (dens && dens.ll) {
-                var dnTxt = fmtStatsCoord(dens.ll[0], dens.ll[1]);
-                var dnName = statsFileName(dens.p);
-                var dnPt = statsPointList.push([dens.ll[0], dens.ll[1]]) - 1;
+            var dens = null;
+            var _densAsync = (locs.length >= STATS_ASYNC_MIN_LOCS);
+            var buildDensRow = function(densV) {
+                if (!(densV && densV.ll)) return "";
+                var dnTxt = fmtStatsCoord(densV.ll[0], densV.ll[1]);
+                var dnName = statsFileName(densV.p);
+                var dnPt = statsPointList.push([densV.ll[0], densV.ll[1]]) - 1;
                 var dnSub = "<span class=\"st-row-sub\"><span class=\"st-pick\" onclick=\"statsFocusPoint(" + dnPt + ")\" title=\"" + dnName + "\">" + dnTxt + "</span></span>";
-                H += stRow([{ label: L_("statsDensest", "Nejhustší okruh"), val: nmb(dens.n),
+                return stRow([{ label: L_("statsDensest", "Nejhust\u0161\u00ed okruh"), val: nmb(densV.n),
                     sub: dnTxt, subHtml: dnSub,
-                    valClick: "statsFocusCircle(" + (statsCircleList.push([dens.ll, 1]) - 1) + ")",
-                    valTitle: fmtStatsPhotos(dens.n) + " \u00b7 1 km" }]);
+                    valClick: "statsFocusCircle(" + (statsCircleList.push([densV.ll, 1]) - 1) + ")",
+                    valTitle: fmtStatsPhotos(densV.n) + " \u00b7 1 km" }]);
+            };
+            if (!_densAsync) { dens = statsDensest(locs, 1); }
+            var _hDens = buildDensRow(dens);
+            if (_hDens) { H += _hDens; }
+            else if (_densAsync) {
+                H += "<div id=\"stRowDensest\">" + stRow([{ label: L_("statsDensest", "Nejhust\u0161\u00ed okruh"), val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027densest\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
+                var _dnLbl = L_("statsDensest", "Nejhust\u0161\u00ed okruh");
+                var _dnCan = L_("statsCancelled", "Zru\u0161eno");
+                if (statsAsyncStart("densest", {locs: locs, km: 1}, _dnLbl, _dnCan)) {
+                    statsAsyncJobs["densest"].finish = function(dens2) { swapAsyncRow("stRowDensest", buildDensRow(dens2)); };
+                } else {
+                    var densS = null;
+                    try { densS = statsDensest(locs, 1); } catch(eDS) { densS = null; }
+                    var _hDensS = buildDensRow(densS);
+                    if (_hDensS) { H += _hDensS; }
+                }
             }
             /* --- Obalová plocha (buffer) --- */
             if (locs.length) {
@@ -13530,7 +13685,7 @@ window.addEventListener('resize', function() {
                 var _pcKsRB = Object.keys(datasets);
                 for (var _pcIRB = 0; _pcIRB < _pcKsRB.length; _pcIRB++) {
                     var _pcDRB = datasets[_pcKsRB[_pcIRB]];
-                    if (_pcDRB._photoCardsMoveHandler) { try { map.off("moveend zoomend", _pcDRB._photoCardsMoveHandler); } catch(e){} _pcDRB._photoCardsMoveHandler = null; }
+                    if (_pcDRB._photoCardsMoveHandler) { try { map.off("moveend zoomend", _pcDRB._photoCardsMoveHandler); } catch(e){} _pcDRB._photoCardsMoveHandler = null; } if (_pcDRB._photoCardsMoveStartHandler) { try { map.off("movestart", _pcDRB._photoCardsMoveStartHandler); } catch(e2){} _pcDRB._photoCardsMoveStartHandler = null; }
                 }
                 photoClusterGroups.forEach(function(pg) { try { map.removeLayer(pg.group); } catch(e){} });
                 photoClusterGroups = [];
@@ -16723,6 +16878,7 @@ function startMeasureDistance() {
                     L.DomEvent.stopPropagation(e);
                 };
             }
+            if (measureDistanceState._noAreaLabel) { try { measureLayerGroup.removeLayer(measureDistanceState.areaLabel); } catch(eALR) {} try { map.removeLayer(measureDistanceState.areaLabel); } catch(eALM) {} measureDistanceState.areaLabel = null; }
             // (undo snapshot se zaznamená až po resetu níže)
             // Ulož stav jako dokončený
             measureDistanceState.completed = true;
@@ -22534,8 +22690,27 @@ if (fileEnd < fList.length || fileStart > 0) {
                                 _container.addLayer(cg);
                             }
                         }
-                        _d._photoCardsMoveHandler = _pcRebuild;
-                        map.on("moveend zoomend", _pcRebuild);
+                        var _pcTimer = null;
+                        var _pcRebuildDebounced = function() {
+                            _thumbQueue = []; // Okamžitě zastavit načítání thumbů předchozího výřezu
+                            if (_pcTimer) { clearTimeout(_pcTimer); }
+                            _pcTimer = setTimeout(_pcRebuild, 150);
+                        };
+                        // Priorita ovladani: pri pohybu mapy (mys, kolecko, dotyk) okamzite zastavit nacitani karet + skryt je, po zastaveni zase nacist.
+                        var _pcOnMoveStart = function() {
+                            _thumbGen++;
+                            _thumbQueue = [];
+                            if (_pcTimer) { clearTimeout(_pcTimer); _pcTimer = null; }
+                            try { map.getContainer().classList.add("pc-cards-suspended"); } catch(e) {}
+                        };
+                        var _pcOnMoveEnd = function() {
+                            try { map.getContainer().classList.remove("pc-cards-suspended"); } catch(e) {}
+                            _pcRebuildDebounced();
+                        };
+                        _d._photoCardsMoveHandler = _pcOnMoveEnd;
+                        _d._photoCardsMoveStartHandler = _pcOnMoveStart;
+                        map.on("movestart", _pcOnMoveStart);
+                        map.on("moveend zoomend", _pcOnMoveEnd);
                         _pcRebuild();
                     })(pcContainer, pts, d);
                     d._photoCardGroup = pcContainer;
@@ -22573,7 +22748,6 @@ if (fileEnd < fList.length || fileStart > 0) {
                         }
                     });
                     var pMarkers = [];
-                    var sharedDotOpRaw = (d.clustersOpacity !== undefined ? d.clustersOpacity : (d.dotOpacity !== undefined ? d.dotOpacity : 50));
                     var sharedDotOpRaw = (d.clustersOpacity !== undefined ? d.clustersOpacity : (d.dotOpacity !== undefined ? d.dotOpacity : 50));
                     var sharedDotOp = Math.max(0, Math.min(100, sharedDotOpRaw)) / 100;
                     var sharedDotIcon = L.divIcon({
@@ -24864,6 +25038,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"land":{"type":"GeometryCollect
     <!-- ========================================================================= -->
 </body>
 </html>
+
 
 
 
