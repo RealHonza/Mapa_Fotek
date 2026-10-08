@@ -4105,7 +4105,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try { timePrefix = "all"; } catch(e1) {}
             try { activedecade = null; } catch(e2) {}
             try { folderPrefix = null; } catch(e3) {}
-            try { areaFilter = null; } catch(e4) {}
+            try { areaFilter = null; areaSearchedPlaces = []; } catch(e4) {}
             try { if (typeof renderYearDropdown === "function") renderYearDropdown(); } catch(e5) {}
             try { if (typeof renderFolderDropdown === "function") renderFolderDropdown(); } catch(e6) {}
             try { if (typeof updateAreaLabel === "function") updateAreaLabel(); } catch(e7) {}
@@ -4191,6 +4191,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var heatZoomTimer = null, heatZoomBound = false;
         var folderPrefix = null;
         var areaFilter = null; // {kind:'place'|'sources'|'measure', rings:[{outer,holes}], circles:[{lat,lon,rKm}], label}
+        var areaSearchedPlaces = []; // [{kind:'place', rings, circles, label}]
         function ptInPolyLL(lat, lon, ring) {
             try {
                 var ins = false;
@@ -21794,7 +21795,16 @@ if (fileEnd < fList.length || fileStart > 0) {
                     var af = (typeof areaFilter === "undefined") ? null : areaFilter;
                     if (af && typeof af === "object") a = { kind: af.kind, rings: af.rings || [], circles: af.circles || [], label: af.label };
                 } catch(eA) { a = null; }
-                localStorage.setItem("mapa_fotek_filters_state", JSON.stringify({ t: timePrefix, f: f, a: a }));
+                var sp = [];
+                try {
+                    if (Array.isArray(areaSearchedPlaces)) {
+                        for (var pi = 0; pi < areaSearchedPlaces.length; pi++) {
+                            var p = areaSearchedPlaces[pi];
+                            if (p && typeof p === "object") sp.push({ kind: "place", rings: p.rings || [], circles: p.circles || [], label: p.label });
+                        }
+                    }
+                } catch(eSP) {}
+                localStorage.setItem("mapa_fotek_filters_state", JSON.stringify({ t: timePrefix, f: f, a: a, sp: sp }));
             } catch(e) {}
         }
         function restoreFiltersState() {
@@ -21807,10 +21817,32 @@ if (fileEnd < fList.length || fileStart > 0) {
                 if (!st || typeof st !== "object") return;
                 if (typeof st.t === "string" && (st.t === "all" || /^(?:\d{4}|\d{6}|\d{8}|\d{10})$/.test(st.t))) timePrefix = st.t;
                 if (st.f === null || typeof st.f === "string") folderPrefix = st.f;
+                if (Array.isArray(st.sp)) {
+                    areaSearchedPlaces = [];
+                    for (var spi = 0; spi < st.sp.length; spi++) {
+                        var spItem = st.sp[spi];
+                        if (spItem && spItem.kind === "place") {
+                            if (typeof areaNormalizeFilter === "function") {
+                                var normP = areaNormalizeFilter(spItem);
+                                if (normP) areaSearchedPlaces.push(normP);
+                            } else {
+                                areaSearchedPlaces.push(spItem);
+                            }
+                        }
+                    }
+                }
                 if (st.a && typeof st.a === "object" && (Array.isArray(st.a.rings) || Array.isArray(st.a.circles))) {
                     if (typeof areaNormalizeFilter === "function") { try { areaFilter = areaNormalizeFilter(st.a) || null; } catch(eN) {} }
                     else areaFilter = st.a;
                     try { if (areaFilter && typeof areaFilter === "object") delete areaFilter.match; } catch(eM) {}
+                    if (areaFilter && areaFilter.kind === "place") {
+                        if (!Array.isArray(areaSearchedPlaces)) areaSearchedPlaces = [];
+                        var hasCurP = false;
+                        for (var fpi = 0; fpi < areaSearchedPlaces.length; fpi++) {
+                            if (areaSearchedPlaces[fpi] && areaSearchedPlaces[fpi].label === areaFilter.label) { hasCurP = true; break; }
+                        }
+                        if (!hasCurP) areaSearchedPlaces.push(areaFilter);
+                    }
                 }
                 if (folderPrefix !== null && folderPrefix !== undefined) { try { if (countForFolder(folderPrefix) === 0) folderPrefix = null; } catch(eC) {} }
                 try { if (typeof renderYearDropdown === "function") renderYearDropdown(); } catch(e1) {}
@@ -22034,17 +22066,37 @@ if (fileEnd < fList.length || fileStart > 0) {
                 if (msg) showToast(msg);
             } catch(e) {}
         }
+        function areaZoomToFilter(af) {
+            if (!af) return;
+            try {
+                if (typeof map !== "undefined" && map && typeof L !== "undefined") {
+                    var _bb = null;
+                    (af.rings || []).forEach(function(r) { (r.outer || []).forEach(function(pt) { if (_bb) _bb.extend([pt[0], pt[1]]); else _bb = L.latLngBounds([[pt[0], pt[1]], [pt[0], pt[1]]]); }); });
+                    (af.circles || []).forEach(function(cc) { if (_bb) _bb.extend([cc.lat, cc.lon]); else _bb = L.latLngBounds([[cc.lat, cc.lon], [cc.lat, cc.lon]]); });
+                    if (_bb && _bb.isValid && _bb.isValid()) map.flyToBounds(_bb, { padding: [40, 40], maxZoom: 14 });
+                }
+            } catch(e) {}
+        }
         function applyAreaPlace(short, rings, circles) {
             try {
                 var _af = { kind: "place", rings: rings || [], circles: circles || [], label: short };
                 areaSearchText = "";
-                setAreaFilter(_af);
-                if (typeof map !== "undefined" && map && typeof L !== "undefined") {
-                    var _bb = null;
-                    (_af.rings || []).forEach(function(r) { (r.outer || []).forEach(function(pt) { if (_bb) _bb.extend([pt[0], pt[1]]); else _bb = L.latLngBounds([[pt[0], pt[1]], [pt[0], pt[1]]]); }); });
-                    (_af.circles || []).forEach(function(cc) { if (_bb) _bb.extend([cc.lat, cc.lon]); else _bb = L.latLngBounds([[cc.lat, cc.lon], [cc.lat, cc.lon]]); });
-                    if (_bb && _bb.isValid && _bb.isValid()) map.flyToBounds(_bb, { padding: [40, 40], maxZoom: 14 });
+                areaSearchResults = [];
+                if (!Array.isArray(areaSearchedPlaces)) areaSearchedPlaces = [];
+                var exIdx = -1;
+                for (var i = 0; i < areaSearchedPlaces.length; i++) {
+                    if (areaSearchedPlaces[i] && areaSearchedPlaces[i].label === short) {
+                        exIdx = i;
+                        break;
+                    }
                 }
+                if (exIdx >= 0) {
+                    areaSearchedPlaces[exIdx] = _af;
+                } else {
+                    areaSearchedPlaces.push(_af);
+                }
+                setAreaFilter(_af);
+                areaZoomToFilter(_af);
             } catch(e) {}
         }
         function areaResolveBoundary(r, cb) {
@@ -22172,15 +22224,69 @@ if (fileEnd < fList.length || fileStart > 0) {
             var tall = tallyFiltered();
             allItem.innerHTML = "<span>" + t.allWord + "</span><span class='item-count'>(" + tall.G.toLocaleString(loc) + ")</span>";
             allItem.title = fmtSTAV(tall, loc);
-            allItem.onclick = function() { areaSearchText = ""; areaSearchResults = []; setAreaFilter(null); };
+            allItem.onclick = function() { areaSearchText = ""; areaSearchResults = []; areaSearchedPlaces = []; setAreaFilter(null); };
             res.appendChild(allItem);
-            // Vybrane misto (na co je filtr aplikovan) – pod Vse
-            if (isActive && areaFilter && areaFilter.kind === "place") {
+            // Vyhledana mista (historie hledani s moznosti prepinani) – pod Vse
+            if (Array.isArray(areaSearchedPlaces) && areaSearchedPlaces.length > 0) {
+                for (var spi = 0; spi < areaSearchedPlaces.length; spi++) {
+                    (function(pObj) {
+                        if (!pObj) return;
+                        var isCur = (isActive && areaFilter && areaFilter.kind === "place" && areaFilter.label === pObj.label);
+                        var row = document.createElement("div");
+                        row.className = "dropdown-item" + (isCur ? " active" : "");
+                        row.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:6px;";
+                        var leftSpan = document.createElement("span");
+                        leftSpan.style.cssText = "flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;";
+                        var icon = (pObj.rings && pObj.rings.length) ? "⬟ " : "📍 ";
+                        leftSpan.textContent = icon + (pObj.label || "");
+                        var pc = 0;
+                        try { pc = countInShapes(pObj.rings || [], pObj.circles || []); } catch(e) {}
+                        var rightSpan = document.createElement("span");
+                        rightSpan.style.cssText = "display:flex;align-items:center;gap:4px;flex-shrink:0;";
+                        var countSpan = document.createElement("span");
+                        countSpan.className = "item-count";
+                        countSpan.textContent = "(" + pc.toLocaleString(loc) + ")";
+                        rightSpan.appendChild(countSpan);
+                        var delBtn = document.createElement("span");
+                        delBtn.innerHTML = "&times;";
+                        delBtn.title = (currentLang === "cs" ? "Odebrat z historie" : "Remove");
+                        delBtn.style.cssText = "cursor:pointer;padding:0 3px;font-size:13px;opacity:0.6;line-height:1;";
+                        delBtn.onmouseover = function() { this.style.opacity = "1"; };
+                        delBtn.onmouseout = function() { this.style.opacity = "0.6"; };
+                        delBtn.onclick = function(ev) {
+                            if (ev) ev.stopPropagation();
+                            var idx = areaSearchedPlaces.indexOf(pObj);
+                            if (idx >= 0) areaSearchedPlaces.splice(idx, 1);
+                            if (isCur) {
+                                if (areaSearchedPlaces.length > 0) {
+                                    var nextP = areaSearchedPlaces[areaSearchedPlaces.length - 1];
+                                    setAreaFilter(nextP);
+                                    areaZoomToFilter(nextP);
+                                } else {
+                                    setAreaFilter(null);
+                                }
+                            } else {
+                                try { saveFiltersState(); } catch(eS) {}
+                                try { renderAreaDropdown(); } catch(eR) {}
+                            }
+                        };
+                        rightSpan.appendChild(delBtn);
+                        row.appendChild(leftSpan);
+                        row.appendChild(rightSpan);
+                        row.title = pObj.label || "";
+                        row.onclick = function() {
+                            setAreaFilter(pObj);
+                            areaZoomToFilter(pObj);
+                        };
+                        res.appendChild(row);
+                    })(areaSearchedPlaces[spi]);
+                }
+            } else if (isActive && areaFilter && areaFilter.kind === "place") {
                 var sel = document.createElement("div");
                 sel.className = "dropdown-item active";
                 var pc = 0;
                 try { pc = countInShapes(areaFilter.rings || [], areaFilter.circles || []); } catch(e) {}
-                sel.innerHTML = "<span>" + escapeHtml(areaFilter.label || "") + "</span><span class='item-count'>(" + pc.toLocaleString(loc) + ")</span>";
+                sel.innerHTML = "<span>" + ((areaFilter.rings && areaFilter.rings.length) ? "⬟ " : "📍 ") + escapeHtml(areaFilter.label || "") + "</span><span class='item-count'>(" + pc.toLocaleString(loc) + ")</span>";
                 sel.title = sel.textContent;
                 res.appendChild(sel);
             }
