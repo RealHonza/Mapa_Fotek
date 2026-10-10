@@ -535,6 +535,16 @@
           border: 1px solid var(--green-border); border-radius: 6px; padding: 1px 4px; max-width: 108px;
           cursor: pointer; vertical-align: 1px; }
         .st-days-sel:hover { background: #ffffff; }
+        /* Grid pro volbu poctu dnu (Nejvice fotek za ...): 3 sloupce x 10 radku = 1-30 dni, razeno po sloupcich */
+        .st-days-btn { font-family: inherit; line-height: 1.4; white-space: nowrap; }
+        .st-daygrid { position: fixed; left: 0; top: 0; z-index: 10100; box-sizing: border-box; padding: 6px; background: #ffffff;
+          border: 1px solid var(--green-border); border-radius: 10px; box-shadow: 0 8px 28px rgba(0,0,0,.28);
+          display: grid; grid-template-columns: repeat(3, minmax(74px, 1fr)); grid-template-rows: repeat(10, auto);
+          grid-auto-flow: column; gap: 3px; max-width: calc(100vw - 16px); }
+        .st-daygrid button { font: inherit; font-size: 12px; color: #3c4043; background: #f8f9fa; border: 1px solid transparent;
+          border-radius: 6px; padding: 4px 8px; text-align: left; cursor: pointer; white-space: nowrap; }
+        .st-daygrid button:hover, .st-daygrid button:focus-visible { background: var(--green-bg); border-color: var(--green); color: var(--green); outline: none; }
+        .st-daygrid button.is-cur { background: var(--green); border-color: var(--green); color: #ffffff; font-weight: 700; }
         /* Radek "Nejvice fotek za ..." ma v popisku roletove menu - bez zlomu by se orizlo (bunky je 170px, nowrap). */
         .st-row-lbl.is-wrap { white-space: normal; overflow: visible; text-overflow: clip; }
         .st-row-lbl.is-wrap .st-days-sel { margin-top: 3px; min-width: 84px; }
@@ -2056,11 +2066,11 @@
                 <!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. -->
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblUpdated">Poslední aktualizace:</span>
-                    <span class="info-meta-val" id="valUpdated">6. 10. 2026</span>
+                    <span class="info-meta-val" id="valUpdated">10. 10. 2026</span>
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.14</span>
+                    <span class="info-meta-val">3.15</span>
                 </div>
             </div>
 
@@ -2809,7 +2819,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 modalTitle: "Mapa fotek",
                 lblAuthor: "Autor:",
                 lblUpdated: "Poslední aktualizace:",
-                valUpdated: "6. 10. 2026",
+                valUpdated: "10. 10. 2026",
                 lblVersion: "Verze:",
                 guideTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px' aria-hidden='true'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg> Návod:",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Cesta k archivu fotografií (kořenová složka) <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>:",
@@ -3159,7 +3169,7 @@ statsFarthestPair: "Farthest pair",
                 modalTitle: "Photo Mapper",
                 lblAuthor: "Author:",
                 lblUpdated: "Last update:",
-                valUpdated: "Oct 6, 2026",
+                valUpdated: "Oct 10, 2026",
                 lblVersion: "Version:",
                 guideTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px' aria-hidden='true'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg> User Guide:",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Photo archive path (root folder) <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>:",
@@ -4598,6 +4608,13 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 this._popupFn = opts.popupFn || null;
                 this._indexMap = opts.indexMap || null;
             },
+            // Živá změna stylu bez znovuvytvoření vrstvy (slidery průhlednosti / velikosti)
+            setStyle: function(o) {
+                if (!o) return;
+                if (o.opacity !== undefined) this._opacity = o.opacity;
+                if (o.px !== undefined) this._px = o.px;
+                this._redraw();
+            },
             onAdd: function(map) {
                 this._map = map;
                 var pane = map.getPane('markerPane');
@@ -5024,6 +5041,14 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 this._buckets = [];
                 this._mapClickFn = null;
             },
+            // Živá změna stylu bez znovuvytvoření vrstvy (slidery průhlednosti / rozostření / velikosti)
+            setStyle: function(o) {
+                if (!o) return;
+                if (o.opacity !== undefined) this._opacity = o.opacity;
+                if (o.blur !== undefined) this._blur = o.blur;
+                if (o.ageSize !== undefined) this._ageSize = o.ageSize;
+                this._redraw();
+            },
             _refreshSprites: function() {
                 if (!this._map) return;
                 var R = hpZ(this._map.getZoom()).r * this._ageSize;
@@ -5056,7 +5081,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     this._buckets.push(cv);
                 }
                 this._spriteR = S;
-                this._builtKey = R + "x" + B;
+                this._builtKey = R + "x" + B + "x" + this._agePalette;
             },
             _redraw: function() {
                 if (!this._map || !this._canvas) return;
@@ -5193,6 +5218,87 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     updView();
                 }, 30 - elapsed);
             }
+        }
+
+        // ---- Živá úprava stylu fotodat bez přestavby vrstev (updView) ----
+        // liveStyleApply vrací true, pokud se styl použil přímo na existující vrstvu (heatmapa, stáří,
+        // zóna, tečky vykreslované na canvasu). Jinak vrací false a volající spustí klasické updView().
+        // liveStyleSchedule to během tahu slideru volá nejvýše jednou za snímek (requestAnimationFrame).
+        var _liveStyleRaf = {};
+        function liveStyleSchedule(k, kind) {
+            var key = k + "|" + kind;
+            if (_liveStyleRaf[key]) return;
+            var run = function() { _liveStyleRaf[key] = 0; try { liveStyleApply(k, kind); } catch(eLS) {} };
+            _liveStyleRaf[key] = (typeof requestAnimationFrame === "function") ? requestAnimationFrame(run) : setTimeout(run, 16);
+        }
+        function liveStyleApply(k, kind) {
+            try {
+                var d = datasets[k];
+                if (!d || d.type !== "photos" || !d.active) return false;
+                var mode = d.mode || defaultPhotoMode;
+                var found = false, i;
+                if (mode === "heat") {
+                    var hop = (d.heatOpacity !== undefined ? d.heatOpacity : 100) / 100;
+                    var hz = hpZ(map.getZoom());
+                    var hblur = d.heatBlur !== undefined ? d.heatBlur : hz.b;
+                    var hsz = d.heatSize !== undefined ? d.heatSize : 1;
+                    for (i = 0; i < heatLayers.length; i++) {
+                        var he = heatLayers[i];
+                        if (!he || he.dsKey !== k || !he.layer || !he.hp) continue;
+                        if (kind === "opacity") {
+                            var iv = 0.75 * hop, hpArr = he.hp;
+                            for (var j = 0; j < hpArr.length; j++) hpArr[j][2] = iv;
+                        }
+                        he.opacity = hop; he.heatBlur = d.heatBlur; he.blur = hblur; he.heatSize = hsz;
+                        he.layer.setOptions({ radius: Math.max(1, hz.r * hsz), blur: hblur, minOpacity: hz.o * hop });
+                        found = true;
+                    }
+                    return found;
+                }
+                if (mode === "age") {
+                    for (i = 0; i < ageLayers.length; i++) {
+                        var al = ageLayers[i] && ageLayers[i].layer;
+                        if (!al || al._dsKey !== k || typeof al.setStyle !== "function") continue;
+                        al.setStyle({
+                            opacity: (d.ageOpacity !== undefined ? d.ageOpacity : 100) / 100,
+                            blur: d.ageBlur !== undefined ? d.ageBlur : 0,
+                            ageSize: d.ageSize !== undefined ? d.ageSize : 0.5
+                        });
+                        found = true;
+                    }
+                    return found;
+                }
+                if (mode === "zone") {
+                    if (!zoneLayerInstance || !zoneLayerInstance._colorGroups) return false;
+                    var zg = zoneLayerInstance._colorGroups;
+                    for (i = 0; i < zg.length; i++) {
+                        if (!zg[i] || zg[i].dsKey !== k) continue;
+                        zg[i].opacity = (d.zoneOpacity !== undefined ? d.zoneOpacity : 50);
+                        zg[i].km = parseZoneKm(d.zoneKm, 10);
+                        found = true;
+                    }
+                    if (found) zoneLayerInstance._redraw();
+                    return found;
+                }
+                if (mode === "dots") {
+                    // Jen tečky na canvasu (>= SYMBOL_CANVAS_THRESHOLD); DOM značky mají styl zapečený v HTML.
+                    var dop = (d.dotOpacity !== undefined ? d.dotOpacity : 50) / 100;
+                    var dpx = Math.round(parseDotSize(d.dotSize, 3.5) * 4);
+                    var holders = [d._layerGroup, canvasLayerGroup];
+                    for (var g = 0; g < holders.length; g++) {
+                        var G = holders[g];
+                        if (!G || typeof G.eachLayer !== "function") continue;
+                        G.eachLayer(function(l) {
+                            if (l && l._dsKey === k && l._iconKey !== undefined && typeof l.setStyle === "function") {
+                                l.setStyle({ opacity: dop, px: dpx });
+                                found = true;
+                            }
+                        });
+                    }
+                    return found;
+                }
+                return false;
+            } catch(eLA) { return false; }
         }
 
         // SVG ikony jednotlivých stylů zobrazení (pro přepínač v panelu Zdroje)
@@ -5805,6 +5911,7 @@ var STATS_SEL_KEY = "mapa_fotek_stats_sel";
 var statsStateSel = { G: true, D: true, S: true };
 var statsApplyFilters = true;
 var statsBusyDays = 1;
+var STATS_BUSY_MAX = 30; /* nejvyšší počet dní u "Nejvíce fotek za" (grid 3 sloupce x 10 řádků) */
 var statsChartAvgMed = false;
 var statsCoverageR = 25;
 function statsSelLoad() {
@@ -5817,7 +5924,7 @@ function statsSelLoad() {
                 /* 5. polozka = vychozi graf okna Statistiky (time|tod|dist|distCen) */
                 if (a.length >= 5 && /^(time|tod|dist|distCen)$/.test(String(a[4]))) statsChartMode = String(a[4]);
                 /* 6. polozka = po kolika dnech hledame maximum ("Nejvice fotek za ...") */
-                if (a.length >= 6) { var _bd = parseInt(String(a[5]), 10); if (_bd >= 1 && _bd <= 10) statsBusyDays = _bd; }
+                if (a.length >= 6) { var _bd = parseInt(String(a[5]), 10); if (_bd >= 1 && _bd <= STATS_BUSY_MAX) statsBusyDays = _bd; }
                 /* 7. polozka = caru prumeru a medianu v grafech (0/1) */
                 if (a.length >= 7) statsChartAvgMed = (String(a[6]) === "1");
                 /* 8. polozka = polomer obalove zony v km (0.5–5000) */
@@ -5835,7 +5942,7 @@ function statsSelLoad() {
             try {
                 /* typeof je bezpecne i kdyz statsChartMode v tomto kontextu neni - volaji nas to i testy v pisku */
                 var _cm = (typeof statsChartMode === "string" && (statsChartMode === "tod" || statsChartMode === "dist" || statsChartMode === "distCen")) ? statsChartMode : "time";
-                var _bd = (typeof statsBusyDays === "number" && isFinite(statsBusyDays) && statsBusyDays >= 1 && statsBusyDays <= 10) ? Math.round(statsBusyDays) : 1;
+                var _bd = (typeof statsBusyDays === "number" && isFinite(statsBusyDays) && statsBusyDays >= 1 && statsBusyDays <= STATS_BUSY_MAX) ? Math.round(statsBusyDays) : 1;
                 var _am = (statsChartAvgMed === true || statsChartAvgMed === 1 || statsChartAvgMed === "1") ? "1" : "0";
                 var _cr2 = (typeof statsCoverageR === "number" && isFinite(statsCoverageR) && statsCoverageR >= 0.5 && statsCoverageR <= 5000) ? statsCoverageR : 25;
                 localStorage.setItem(STATS_SEL_KEY, (statsStateSel.G ? "1" : "0") + "," + (statsStateSel.D ? "1" : "0") + ","
@@ -5930,7 +6037,7 @@ function statsSetFilters(on) {
                 var bds = document.getElementById("setStatsBusyDays");
                 if (bds) {
                     var oh = "";
-                    for (var bvi = 1; bvi <= 10; bvi++) oh += "<option value=\"" + bvi + "\"" + (bvi === statsBusyDays ? " selected" : "") + ">" + bvi + " " + statsDayWord(bvi) + "</option>";
+                    for (var bvi = 1; bvi <= STATS_BUSY_MAX; bvi++) oh += "<option value=\"" + bvi + "\"" + (bvi === statsBusyDays ? " selected" : "") + ">" + bvi + " " + statsDayWord(bvi) + "</option>";
                     bds.innerHTML = oh;
                     try { bds.value = String(statsBusyDays); } catch(eB) {}
                 }
@@ -6018,19 +6125,114 @@ function statsSetFilters(on) {
         /* Rozvijaci menu "po kolika dnech" u radku Nejvice fotek za ... */
         function setStatsBusyDays(n) {
             var v = parseInt(n, 10);
-            try { statsBusyDays = (isFinite(v) && v >= 1 && v <= 10) ? v : 1; } catch(e) { statsBusyDays = 1; }
+            try { statsBusyDays = (isFinite(v) && v >= 1 && v <= STATS_BUSY_MAX) ? v : 1; } catch(e) { statsBusyDays = 1; }
             statsSelSave();
             try { syncStatsSettings(); } catch(e2) {}
             try { renderStats(); } catch(e1) {}
         }
+        /* Grid pro volbu "po kolika dnech" (Nejvice fotek za ...): 3 sloupce x 10 radku = 1-30 dni, razeno po sloupcich.
+           Pop-up je v <body> (okno statistik se pri zmene prekresluje) a zavre se vyberem, Esc, kliknutim mimo, scrollem i zmenou okna. */
+        var _statsDayGrid = null;
+        function statsCloseDayGrid(refocus) {
+            var g = _statsDayGrid;
+            if (!g) return;
+            _statsDayGrid = null;
+            try { document.removeEventListener("mousedown", g.onOut, true); } catch(e1) {}
+            try { document.removeEventListener("touchstart", g.onOut, true); } catch(e2) {}
+            try { document.removeEventListener("keydown", g.onKey, true); } catch(e3) {}
+            try { document.removeEventListener("scroll", g.onScroll, true); } catch(e4) {}
+            try { window.removeEventListener("resize", g.onClose); } catch(e5) {}
+            try { if (g.el && g.el.parentNode) g.el.parentNode.removeChild(g.el); } catch(e6) {}
+            try { if (g.btn) g.btn.setAttribute("aria-expanded", "false"); } catch(e7) {}
+            if (refocus) { try { g.btn.focus(); } catch(e8) {} }
+        }
+        function statsOpenDayGrid(btn, ev) {
+            try {
+                if (_statsDayGrid) {
+                    var same = (_statsDayGrid.btn === btn);
+                    statsCloseDayGrid(false);
+                    if (same) return;
+                }
+                var cur = (typeof statsBusyDays === "number" && isFinite(statsBusyDays) && statsBusyDays >= 1 && statsBusyDays <= STATS_BUSY_MAX) ? Math.round(statsBusyDays) : 1;
+                var el = document.createElement("div");
+                el.className = "st-daygrid";
+                el.setAttribute("role", "group");
+                el.setAttribute("aria-label", btn.getAttribute("aria-label") || "");
+                var cells = [];
+                for (var v = 1; v <= STATS_BUSY_MAX; v++) {
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.textContent = v + " " + statsDayWord(v);
+                    b.setAttribute("data-v", String(v));
+                    b.setAttribute("aria-pressed", v === cur ? "true" : "false");
+                    if (v === cur) b.className = "is-cur";
+                    cells.push(b);
+                    el.appendChild(b);
+                }
+                el.addEventListener("click", function(e) {
+                    var t = e.target;
+                    while (t && t !== el && !(t.getAttribute && t.getAttribute("data-v"))) t = t.parentNode;
+                    if (!t || t === el) return;
+                    e.stopPropagation();
+                    var n = parseInt(t.getAttribute("data-v"), 10);
+                    var viaKey = (e.detail === 0);
+                    statsCloseDayGrid(false);
+                    setStatsBusyDays(n);
+                    if (viaKey) setTimeout(function() { var nb = document.querySelector("#statsBody .st-days-btn"); if (nb) { try { nb.focus(); } catch(eF) {} } }, 0);
+                });
+                document.body.appendChild(el);
+                // Poloha: pod tlacitkem, pri nedostatku mista nad nim; vzdy uvnitr okna
+                var r = btn.getBoundingClientRect();
+                var vw = window.innerWidth || document.documentElement.clientWidth;
+                var vh = window.innerHeight || document.documentElement.clientHeight;
+                var pw = el.offsetWidth, ph = el.offsetHeight;
+                var left = Math.max(8, Math.min(r.left, vw - pw - 8));
+                var top = r.bottom + 4;
+                if (top + ph > vh - 8) top = r.top - ph - 4;
+                if (top < 8) { top = 8; el.style.maxHeight = (vh - 16) + "px"; el.style.overflowY = "auto"; }
+                el.style.left = left + "px";
+                el.style.top = top + "px";
+                var g = { el: el, btn: btn };
+                g.onOut = function(e) { if (el.contains(e.target) || btn.contains(e.target)) return; statsCloseDayGrid(false); };
+                g.onScroll = function(e) { if (e.target === el || (e.target && el.contains && el.contains(e.target))) return; statsCloseDayGrid(false); };
+                g.onClose = function() { statsCloseDayGrid(false); };
+                g.onKey = function(e) {
+                    var k = e.key;
+                    if (k === "Escape") {
+                        e.preventDefault(); e.stopPropagation();
+                        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+                        statsCloseDayGrid(true);
+                        return;
+                    }
+                    var idx = cells.indexOf(document.activeElement);
+                    if (idx < 0) return;
+                    var ni = idx;
+                    if (k === "ArrowDown") ni = idx + 1;
+                    else if (k === "ArrowUp") ni = idx - 1;
+                    else if (k === "ArrowRight") ni = idx + 10;
+                    else if (k === "ArrowLeft") ni = idx - 10;
+                    else if (k === "Home") ni = 0;
+                    else if (k === "End") ni = cells.length - 1;
+                    else return;
+                    e.preventDefault(); e.stopPropagation();
+                    if (ni >= 0 && ni < cells.length) cells[ni].focus();
+                };
+                _statsDayGrid = g;
+                btn.setAttribute("aria-expanded", "true");
+                document.addEventListener("mousedown", g.onOut, true);
+                document.addEventListener("touchstart", g.onOut, true);
+                document.addEventListener("keydown", g.onKey, true);
+                document.addEventListener("scroll", g.onScroll, true);
+                window.addEventListener("resize", g.onClose);
+                try { cells[cur - 1].focus({ preventScroll: true }); } catch(eFo) {}
+            } catch(eGrid) { try { statsCloseDayGrid(false); } catch(eG2) {} }
+        }
         function statsBusyDaysSelect() {
             try {
                 var tip = statsL_("statsDaysTip", "Kolik dní zrovna hledáme maximum");
-                var o = "";
-                for (var v = 1; v <= 10; v++) {
-                    o += "<option value=\"" + v + "\"" + (v === statsBusyDays ? " selected" : "") + ">" + v + " " + statsDayWord(v) + "</option>";
-                }
-                return "<select class=\"st-days-sel\" title=\"" + String(tip).replace(/[<>&"]/g, "") + "\" aria-label=\"" + String(tip).replace(/[<>&"]/g, "") + "\" onclick=\"event.stopPropagation()\" onchange=\"setStatsBusyDays(this.value)\">" + o + "</select>";
+                var tipEsc = String(tip).replace(/[<>&"]/g, "");
+                var cur = (typeof statsBusyDays === "number" && isFinite(statsBusyDays) && statsBusyDays >= 1 && statsBusyDays <= STATS_BUSY_MAX) ? Math.round(statsBusyDays) : 1;
+                return "<button type=\"button\" class=\"st-days-sel st-days-btn\" title=\"" + tipEsc + "\" aria-label=\"" + tipEsc + "\" aria-haspopup=\"true\" aria-expanded=\"false\" onclick=\"event.stopPropagation(); statsOpenDayGrid(this, event)\">" + cur + " " + statsDayWord(cur) + " \u25BE</button>";
             } catch(e) { return ""; }
         }
         /* Volba vychoziho grafu z Nastaveni -> Statistiky. Ulozi se a prekresli graf, zbytek okna nemeni. */
@@ -7231,7 +7433,7 @@ function statsSetFilters(on) {
                 if (!times || !times.length) return null;
                 var N = Math.round(Number(days) || 1);
                 if (!isFinite(N) || N < 1) N = 1;
-                if (N > 10) N = 10;
+                if (N > STATS_BUSY_MAX) N = STATS_BUSY_MAX;
                 var g = Object.create(null), key, i;
                 for (i = 0; i < times.length; i++) {
                     var k = statsTimeKey(times[i]);
@@ -7983,6 +8185,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
         function renderStats() {
             var body = document.getElementById("statsBody");
             if (!body) return;
+            try { statsCloseDayGrid(false); } catch(eCG) {}
             try { statsAsyncTerminateAll(); } catch(eA) {}
             statsAsyncGen++;
             var t = i18n[currentLang] || {};
@@ -8127,7 +8330,7 @@ statsFocusList = [];
                         sub: spOld + " \u21c4 " + spNew, subHtml: spanSub, valTitle: spanFull }]);
                 }
             }
-            /* --- Nejvíce fotek za 1..10 dní: roletové menu volí délku okna, vpravo počet, uprostřed rozpětí --- */
+            /* --- Nejvíce fotek za 1..30 dní: grid (3 sloupce) volí délku okna, vpravo počet, uprostřed rozpětí --- */
             var busy = statsBusiestDay(times, statsBusyDays);
             if (busy) {
                 var bFirst = fmtStatsDay(busy.first), bLast = fmtStatsDay(busy.last);
@@ -9310,6 +9513,8 @@ H += "</div></div>";
             var cleanup = function(){ if (ov.parentNode) document.body.removeChild(ov); };
             var doWipe = function(){
                 cleanup();
+                // Zahodit odložený zápis stavu filtrů, aby po smazání nevrátil data zpět
+                try { clearTimeout(_filtersTimer); _filtersTimer = null; _filtersPending = null; _filtersRestored = false; } catch(eFW) {}
                 try {
                     try {
                         for (var i = localStorage.length - 1; i >= 0; i--) {
@@ -10223,72 +10428,6 @@ H += "</div></div>";
             else { loadScriptOnce(EXPORT_LIB_H2C, function(e) { if (e) { showToast(currentLang === "cs" ? "Chyba: html2canvas se nepodařilo načíst" : "Error: failed to load html2canvas"); return; } doExportPdf(); }); }
         }
 
-        function menuExportPdfVektor() {
-            closeMenuDropdown(); closeAllPopovers();
-
-            function doExportPdfVektor() {
-                showToast(currentLang === "cs" ? "🧪 PDF-vektor (nativní tisk)…" : "🧪 PDF-vector (native print)…");
-                var mapContainer = document.getElementById("map");
-                if (!mapContainer || !map) { showToast(currentLang === "cs" ? "Chyba" : "Error"); return; }
-
-                var ctrlContainer = mapContainer.querySelector(".leaflet-control-container");
-                if (ctrlContainer) ctrlContainer.style.display = "none";
-
-                var layers = [];
-                map.eachLayer(function(l) { if (l instanceof L.TileLayer) layers.push(l); });
-                var tileDone = false;
-                function onTilesReady() {
-                    if (tileDone) return;
-                    tileDone = true;
-                    setTimeout(printIt, 400);
-                }
-                if (layers.length === 0) { setTimeout(onTilesReady, 400); }
-                else {
-                    var rem = layers.length;
-                    var guard = setTimeout(onTilesReady, 6000);
-                    layers.forEach(function(l) {
-                        var h = function() { l.off("load", h); rem--; if (rem <= 0) { clearTimeout(guard); onTilesReady(); } };
-                        l.on("load", h);
-                    });
-                }
-
-                var restored = false;
-                function restore() {
-                    if (restored) return;
-                    restored = true;
-                    if (ctrlContainer) ctrlContainer.style.display = "";
-                    setTimeout(function() { try { map.invalidateSize({ animate: false }); } catch(e) {} }, 150);
-                }
-
-                var landscape = window.innerWidth >= window.innerHeight;
-
-                function printIt() {
-                    var ps = document.getElementById("print-orient");
-                    if (!ps) {
-                        ps = document.createElement("style");
-                        ps.id = "print-orient";
-                        document.head.appendChild(ps);
-                    }
-                    ps.textContent = "@media print{@page{size:" + (landscape ? "auto landscape" : "auto portrait") + ";margin:0}" +
-                        "body.print-export>*:not(#map){display:none!important}" +
-                        "body.print-export #map{position:fixed;left:0;top:0;margin:0;width:100%!important;height:100%!important;transform:none!important}" +
-                        "body.print-export *{box-shadow:none!important;text-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transition:none!important;animation:none!important}}";
-                    document.body.classList.add("print-export");
-                    try { map.invalidateSize({animate:false}); } catch(e) {}
-                    var onDone = function() {
-                        document.body.classList.remove("print-export");
-                        window.removeEventListener("afterprint", onDone);
-                        if (ps && ps.parentNode) ps.parentNode.removeChild(ps);
-                        restore();
-                    };
-                    window.addEventListener("afterprint", onDone);
-                    setTimeout(function() { window.print(); }, 300);
-                    window.setTimeout(onDone, 60000);
-                }
-            }
-
-            doExport();
-        }
                 function exportGeoJSON() {
             var t = i18n[currentLang];
             var features = [];
@@ -14582,6 +14721,16 @@ window.addEventListener('resize', function() {
                 tx.oncomplete = fin; tx.onerror = fin; tx.onabort = fin;
             } catch(e) { fin(); }
         }
+        function mfIdbGet(name, cb) {
+            var fin = function(v) { try { if (cb) cb(v); } catch(e) {} };
+            if (!MF_IDB.db) { fin(null); return; }
+            try {
+                var tx = MF_IDB.db.transaction([MF_IDB.store], "readonly");
+                var rq = tx.objectStore(MF_IDB.store).get(String(name));
+                rq.onsuccess = function() { fin(rq.result || null); };
+                rq.onerror = function() { fin(null); };
+            } catch(e) { fin(null); }
+        }
         function mfIdbAll(cb) {
             var fin = function(list) { try { if (cb) cb(list || []); } catch(e) {} };
             if (!MF_IDB.db) { fin([]); return; }
@@ -14676,7 +14825,7 @@ window.addEventListener('resize', function() {
                                 var name = en.name, content = en.raw;
                                 if (!name || content === null || content === undefined) return;
                                 if (datasets[name]) return;
-                                if (en.kind === "photo") return;
+                                if (en.kind === "photo" || en.kind === "state") return;
                                 try { _memRaw[String(name)] = content; } catch(e) {}
                                 var lower = String(name).toLowerCase(), trk = null;
                                 if (lower.endsWith(".txt")) { addDS(content, name); }
@@ -20068,11 +20217,13 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 ageOpNum.value = ageFmtOp(curOpSingle).replace(" %", "");
                                 var _ageOpTimer = null;
                                 function ageOpApply() {
+                                    d.ageOpacity = curOpSingle;
+                                    liveStyleSchedule(k, "opacity");
                                     scheduleStyleApply("opsingle:" + k, function() {
                                         d.ageOpacity = curOpSingle;
                                         lastEditedDataset = k;
                                         saveDatasetStyles();
-                                        throttledUpdView();
+                                        if (!liveStyleApply(k, "opacity")) throttledUpdView();
                                     });
                                 }
                                 function applyAgeOp(v, syncNum, deferChanged) {
@@ -20125,6 +20276,10 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 curOpSingle = n;
                                 opPill.innerHTML = PILL_OP_SVG + n + "%";
                             }, function() {
+                                if (dsMOp === "heat") d.heatOpacity = curOpSingle;
+                                else if (dsMOp === "dots") d.dotOpacity = curOpSingle;
+                                else if (dsMOp === "zone") d.zoneOpacity = curOpSingle;
+                                liveStyleSchedule(k, "opacity");
                                 scheduleStyleApply("opsingle:" + k, function() {
                                     if (dsMOp === "heat") d.heatOpacity = curOpSingle;
                                     else if (dsMOp === "age") d.ageOpacity = curOpSingle;
@@ -20134,7 +20289,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     else if (dsMOp === "clusters") d.clustersOpacity = curOpSingle;
                                     lastEditedDataset = k;
                                     saveDatasetStyles();
-                                    throttledUpdView();
+                                    if (!liveStyleApply(k, "opacity")) throttledUpdView();
                                 });
                             }, true);
                             }
@@ -20792,9 +20947,10 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 blurPill.innerHTML = PILL_BLUR_SVG + n + "px";
                                 slider.value = n;
                                 if (syncNum !== false) numInput.value = n;
+                                liveStyleSchedule(k, "blur");
                                 scheduleStyleApply("blur:" + k, function() {
                                     saveDatasetStyles();
-                                    throttledUpdView();
+                                    if (!liveStyleApply(k, "blur")) throttledUpdView();
                                 });
                             }
 
@@ -20880,9 +21036,10 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 ageSizePill.innerHTML = PILL_RING_SVG + n + "×";
                                 slider.value = n;
                                 if (syncNum !== false) numInput.value = n;
+                                liveStyleSchedule(k, "size");
                                 scheduleStyleApply("agesize:" + k, function() {
                                     saveDatasetStyles();
-                                    throttledUpdView();
+                                    if (!liveStyleApply(k, "size")) throttledUpdView();
                                 });
                             }
 
@@ -20966,9 +21123,10 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 heatSizePill.innerHTML = PILL_RING_SVG + n + "×";
                                 slider.value = n;
                                 if (syncNum !== false) numInput.value = n;
+                                liveStyleSchedule(k, "size");
                                 scheduleStyleApply("heatsize:" + k, function() {
                                     saveDatasetStyles();
-                                    throttledUpdView();
+                                    if (!liveStyleApply(k, "size")) throttledUpdView();
                                 });
                             }
 
@@ -21093,9 +21251,10 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     dszPill.innerHTML = PILL_RING_SVG + fmtDotSize(n) + "px";
                                     slider.value = n;
                                     if (syncNum !== false) numInput.value = fmtDotSize(n);
+                                    liveStyleSchedule(k, "dotsize");
                                     scheduleStyleApply("dsz:" + k, function() {
                                         saveDatasetStyles();
-                                        throttledUpdView();
+                                        if (!liveStyleApply(k, "dotsize")) throttledUpdView();
                                     });
                                 }
 
@@ -21178,9 +21337,10 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     zkPill.innerHTML = PILL_ZONE_SVG + fmtZoneKm(n) + "km";
                                     slider.value = zoneSliderFromKm(n);
                                     if (syncNum !== false) numInput.value = fmtZoneKm(n);
+                                    liveStyleSchedule(k, "zonekm");
                                     scheduleStyleApply("zk:" + k, function() {
                                         saveDatasetStyles();
-                                        throttledUpdView();
+                                        if (!liveStyleApply(k, "zonekm")) throttledUpdView();
                                     });
                                 }
 
@@ -22139,6 +22299,68 @@ if (q) {
             try { if (on) saveFiltersState(); } catch(e2) {}
             try { if (typeof syncAreaDetail === "function") syncAreaDetail(); } catch(e3) {}
         }
+        // ---- Stav filtrů (včetně geometrie vyhledaných polygonů) se ukládá do IndexedDB, ne do localStorage ----
+        // Záznam: store "zdroje", name "__filters_state__", kind "state". Starý záznam z localStorage se při
+        // prvním startu přesune do IndexedDB (a z localStorage se smaže). Pokud IndexedDB nejde, platí localStorage.
+        var FILTERS_STATE_IDB_KEY = "__filters_state__";
+        var _filtersIdbState = null;     // stav načtený z IndexedDB při startu
+        var _filtersMigrate = false;     // starý záznam z localStorage čeká na přesun
+        var _filtersRestored = false;    // do dokončení startu se neukládá (nepřepíše se uložený stav)
+        var _filtersPending = null, _filtersTimer = null;
+        setTimeout(function() { _filtersRestored = true; }, 15000); // pojistka, kdyby start nedoběhl
+        function filtersStateWriteLS(st) {
+            try { localStorage.setItem("mapa_fotek_filters_state", JSON.stringify(st)); return true; } catch(e) { return false; }
+        }
+        function filtersStateFlush() {
+            clearTimeout(_filtersTimer); _filtersTimer = null;
+            var st = _filtersPending; _filtersPending = null;
+            if (!st) return;
+            var put = function() {
+                mfIdbPut(FILTERS_STATE_IDB_KEY, "state", st, function(ok) {
+                    if (ok) { try { localStorage.removeItem("mapa_fotek_filters_state"); } catch(e) {} }
+                    else { filtersStateWriteLS(st); }
+                });
+            };
+            try {
+                if (MF_IDB.db) put();
+                else mfIdbOpen(function(ok) { if (ok && MF_IDB.db) put(); else filtersStateWriteLS(st); });
+            } catch(e) { filtersStateWriteLS(st); }
+        }
+        function filtersStateQueue(st) {
+            st._ts = Date.now();
+            if (!_filtersRestored) return;
+            _filtersPending = st;
+            clearTimeout(_filtersTimer);
+            _filtersTimer = setTimeout(filtersStateFlush, 300);
+        }
+        try {
+            window.addEventListener("pagehide", function() { try { if (_filtersPending) filtersStateFlush(); } catch(e) {} });
+            document.addEventListener("visibilitychange", function() { try { if (document.visibilityState === "hidden" && _filtersPending) filtersStateFlush(); } catch(e) {} });
+        } catch(eFL) {}
+        function filtersStateLoad(cb) {
+            var done = false;
+            var fin = function() { if (done) return; done = true; try { cb(); } catch(e) {} };
+            setTimeout(fin, 4000); // pojistka, kdyby IndexedDB neodpovědělo
+            try {
+                var get = function() {
+                    mfIdbGet(FILTERS_STATE_IDB_KEY, function(rec) {
+                        if (rec && rec.raw && typeof rec.raw === "object") _filtersIdbState = rec.raw;
+                        fin();
+                    });
+                };
+                if (MF_IDB.db) get();
+                else mfIdbOpen(function(ok) { if (ok && MF_IDB.db) get(); else fin(); });
+            } catch(e) { fin(); }
+        }
+        function filtersStateChoose() {
+            var idbSt = (_filtersIdbState && typeof _filtersIdbState === "object") ? _filtersIdbState : null;
+            var lsSt = null;
+            try { var raw = localStorage.getItem("mapa_fotek_filters_state"); if (raw) lsSt = JSON.parse(raw); } catch(e) { lsSt = null; }
+            if (lsSt && typeof lsSt !== "object") lsSt = null;
+            // localStorage vyhrává jen jako starý (dosud nepřesunutý) nebo novější záložní záznam
+            if (lsSt && (!idbSt || (lsSt._ts || 0) > (idbSt._ts || 0))) { _filtersMigrate = true; return lsSt; }
+            return idbSt;
+        }
         function saveFiltersState() {
             try {
                 var tpList = (Array.isArray(timePrefixes) && timePrefixes.length > 0) ? timePrefixes : (timePrefix !== "all" ? [timePrefix] : []);
@@ -22160,7 +22382,7 @@ if (q) {
                         }
                     }
                 } catch(eSP) {}
-                localStorage.setItem("mapa_fotek_filters_state", JSON.stringify({
+                filtersStateQueue({
                     t: timePrefix,
                     tp: tpList,
                     f: folderPrefix,
@@ -22168,16 +22390,13 @@ if (q) {
                     a: afList[0] || null,
                     afList: afList,
                     sp: sp
-                }));
+                });
             } catch(e) {}
         }
         function restoreFiltersState() {
             try {
                 if (!filtersPersistOn()) return;
-                var raw = null;
-                try { raw = localStorage.getItem("mapa_fotek_filters_state"); } catch(e) {}
-                if (!raw) return;
-                var st = JSON.parse(raw);
+                var st = filtersStateChoose();
                 if (!st || typeof st !== "object") return;
                 if (Array.isArray(st.tp) && st.tp.length > 0) {
                     timePrefixes = st.tp;
@@ -23164,12 +23383,9 @@ if (q) {
             for (var i = 0; i < heatLayers.length; i++) {
                 (function(e){
                     try {
+                        if (!e || !e.hp || !e.layer) return; // záznamy z stop (bez hp) řeší handler zoomend
                         if (e.band === band) return;
-                        var parent = e.parent || map;
-                        var nl = L.heatLayer(e.hp, { radius: Math.max(1, h.r * (e.heatSize || 1)), blur: e.blur, minOpacity: h.o * e.opacity, maxZoom: 17, gradient: e.gradient });
-                        try { parent.addLayer(nl); } catch(err2){ map.addLayer(nl); }
-                        try { parent.removeLayer(e.layer); } catch(err){}
-                        e.layer = nl;
+                        e.layer.setOptions({ radius: Math.max(1, h.r * (e.heatSize || 1)), blur: e.blur, minOpacity: h.o * e.opacity, gradient: e.gradient });
                         e.band = band;
                     } catch(err3){}
                 })(heatLayers[i]);
@@ -23226,7 +23442,7 @@ if (q) {
                     var blur = d.heatBlur !== undefined ? d.heatBlur : h.b;
                     var hl = L.heatLayer(hp, { radius: h.r * (d.heatSize !== undefined ? d.heatSize : 1), blur: blur, minOpacity: h.o * op, maxZoom: 17, gradient: grad });
                     if (lg) { lg.addLayer(hl); } else { map.addLayer(hl); }
-                    heatLayers.push({ layer: hl, palette: d.heatPalette || "classic", opacity: op, heatBlur: d.heatBlur, hp: hp, blur: blur, gradient: grad, heatSize: (d.heatSize !== undefined ? d.heatSize : 1), band: (h.r + "x" + Math.round(h.o * 100)), parent: (lg || null) });
+                    heatLayers.push({ dsKey: d.name, layer: hl, palette: d.heatPalette || "classic", opacity: op, heatBlur: d.heatBlur, hp: hp, blur: blur, gradient: grad, heatSize: (d.heatSize !== undefined ? d.heatSize : 1), band: (h.r + "x" + Math.round(h.o * 100)), parent: (lg || null) });
                     if (!heatZoomBound && typeof map !== "undefined" && map.on) { heatZoomBound = true; map.on("zoomend", scheduleHeatZoomRefresh); }
                 }
                 // STÁŘÍ (časová heatmapa: barva podle časového razítka, rozsah dle viditelných fotek)
@@ -23539,7 +23755,7 @@ if (q) {
                 // ZÓNA VÝSKYTU
                 else if (mode === "zone") {
                     if (!colorGroupsAcc) colorGroupsAcc = [];
-                    colorGroupsAcc.push({ colorKey: d.zoneColor || "blue", opacity: (d.zoneOpacity !== undefined ? d.zoneOpacity : 50), km: parseZoneKm(d.zoneKm, 10), pts: pts });
+                    colorGroupsAcc.push({ dsKey: d.name, colorKey: d.zoneColor || "blue", opacity: (d.zoneOpacity !== undefined ? d.zoneOpacity : 50), km: parseZoneKm(d.zoneKm, 10), pts: pts });
                 }
             }
 
@@ -23584,7 +23800,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                             var grad = heatPalettes[item.palette] || heatPalettes.classic;
                             var op = item.opacity !== undefined ? item.opacity : 0.75;
                             var blur = item.heatBlur !== undefined ? item.heatBlur : h.b;
-                            item.layer.setOptions({ radius: h.r, blur: blur, minOpacity: h.o * op, gradient: grad });
+                            item.layer.setOptions({ radius: Math.max(1, h.r * (item.heatSize !== undefined ? item.heatSize : 1)), blur: blur, minOpacity: h.o * op, gradient: grad });
                         }
                     }
                 });
@@ -25294,8 +25510,13 @@ var sd = getSavedDatasetStyle(pname);
             if (_ov0) { try { _ov0.style.display = "flex"; } catch(e) {} }
             var _bootDone = function() {
                 try { if (_ov0) _ov0.style.display = "none"; } catch(e) {}
-                try { if (typeof restoreFiltersState === "function") restoreFiltersState(); } catch(eRF) {}
-                setTimeout(function() { if (typeof restoreLBPersistence === "function") restoreLBPersistence(); }, 100);
+                var _afterFilters = function() {
+                    try { if (typeof restoreFiltersState === "function") restoreFiltersState(); } catch(eRF) {}
+                    _filtersRestored = true;
+                    try { if (_filtersMigrate) { _filtersMigrate = false; saveFiltersState(); } } catch(eFM) {}
+                    setTimeout(function() { if (typeof restoreLBPersistence === "function") restoreLBPersistence(); }, 100);
+                };
+                try { filtersStateLoad(_afterFilters); } catch(eFS) { _afterFilters(); }
             };
             var _bootPhotos = function() {
                 try {
