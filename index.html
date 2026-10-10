@@ -2060,7 +2060,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.12</span>
+                    <span class="info-meta-val">3.13</span>
                 </div>
             </div>
 
@@ -23225,8 +23225,8 @@ if (q) {
                             }
                             if (_vis.length === 0) return;
 
-                            // 2. Rozvětvení: při > 1500 fotkách rychlé mřížkové shlukování, při <= 1500 plný detail
-                            if (_vis.length > 1500) {
+                            // 2. Rozvětvení: při > 500 fotkách rychlé mřížkové shlukování, při <= 500 plný detail
+                            if (_vis.length > 500) {
                                 var sz = map.getSize();
                                 var wPx = (sz && sz.x > 0) ? sz.x : (window.innerWidth || 1200);
                                 var hPx = (sz && sz.y > 0) ? sz.y : (window.innerHeight || 800);
