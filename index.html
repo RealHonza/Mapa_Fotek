@@ -530,6 +530,8 @@
             border: 1px solid #dadce0; border-radius: 12px; background: #ffffff; color: #5f6368; }
         .st-chart-tab:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
         .st-chart-tab.active { border-color: var(--green); background: var(--green); color: #ffffff; font-weight: 700; }
+        .st-chart-expand { border: 1px solid #dadce0; background: #ffffff; color: #5f6368; width: 26px; height: 26px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; flex-shrink: 0; }
+        .st-chart-expand:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
         /* Rozvijaci menu "po kolika dnech" u radku Nejvice fotek za ... */
         .st-days-sel { font-size: 11px; font-weight: 700; color: var(--green); background: var(--green-bg);
           border: 1px solid var(--green-border); border-radius: 6px; padding: 1px 4px; max-width: 108px;
@@ -2070,7 +2072,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.15</span>
+                    <span class="info-meta-val">3.16</span>
                 </div>
             </div>
 
@@ -4190,6 +4192,21 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var hasMod = !!(ev && ev.shiftKey);
             return mm ? !hasMod : hasMod;
         }
+        function areaInvertedOn() {
+            try { return localStorage.getItem("mapa_fotek_area_inverted") === "1"; } catch(e) { return false; }
+        }
+        function toggleAreaInvert() {
+            try {
+                var now = areaInvertedOn();
+                localStorage.setItem("mapa_fotek_area_inverted", now ? "0" : "1");
+            } catch(e) {}
+            try { if (typeof updView === "function") updView(); } catch(e1) {}
+            try { if (typeof drawAreaHighlight === "function") drawAreaHighlight(); } catch(e2) {}
+            try { if (typeof renderAreaDropdown === "function") renderAreaDropdown(); } catch(e3) {}
+            try { if (typeof renderFolderDropdown === "function") renderFolderDropdown(); } catch(e4) {}
+            try { if (typeof renderYearDropdown === "function") renderYearDropdown(); } catch(e5) {}
+            try { if (typeof updateAreaLabel === "function") updateAreaLabel(); } catch(e6) {}
+        }
         function multiHintSuffix() {
             try {
                 var t = i18n[currentLang] || {};
@@ -4488,19 +4505,22 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         }
         function areaPass(p) {
             try {
+                var result;
                 if (areaFilters && areaFilters.length > 0) {
+                    result = false;
                     for (var i = 0; i < areaFilters.length; i++) {
                         var af = areaFilters[i];
                         if (af) {
-                            if (af.match) { if (af.match.has(p)) return true; }
-                            else if (areaMatchPhoto(af, p)) return true;
+                            if (af.match) { if (af.match.has(p)) { result = true; break; } }
+                            else if (areaMatchPhoto(af, p)) { result = true; break; }
                         }
                     }
-                    return false;
+                } else if (!areaFilter) {
+                    return true; // žádný filter — propustit vždy (inverze se neuplatní)
+                } else {
+                    result = areaFilter.match ? areaFilter.match.has(p) : areaMatchPhoto(areaFilter, p);
                 }
-                if (!areaFilter) return true;
-                if (areaFilter.match) return areaFilter.match.has(p);
-                return areaMatchPhoto(areaFilter, p);
+                return areaInvertedOn() ? !result : result;
             } catch(e) { return true; }
         }
         function photoPassesFilters(p) {
@@ -6266,6 +6286,8 @@ function statsSetFilters(on) {
                     var b = document.getElementById(ids[k]);
                     if (b) b.className = "st-chart-tab" + (k === m ? " active" : "");
                 }
+                try { var ovB = document.getElementById("stChartOverlayBody"); if (ovB) { var fn2 = (typeof window !== "undefined") ? window.statsChartNow : null; ovB.innerHTML = fn2 ? fn2() : ""; } } catch(eO) {}
+                try { var ovT = document.getElementById("stChartOverlayTabs"); if (ovT) { var ob = ovT.querySelectorAll("button[data-ovmode]"); for (var oi = 0; oi < ob.length; oi++) { try { ob[oi].className = "st-chart-tab" + (ob[oi].getAttribute("data-ovmode") === m ? " active" : ""); } catch(eOB) {} } } } catch(eOT) {}
             } catch(e) {}
         }
         function statsCollect(ignoreStateSel, ignoreFilters) {
@@ -7565,6 +7587,7 @@ function statsSetFilters(on) {
                 var box = document.getElementById("stChartBox");
                 if (box && typeof statsChartNow === "function") box.innerHTML = statsChartNow();
             } catch(e2) {}
+            try { var ovB2 = document.getElementById("stChartOverlayBody"); if (ovB2) { var fnA = (typeof window !== "undefined") ? window.statsChartNow : null; ovB2.innerHTML = fnA ? fnA() : ""; } } catch(e3) {}
         }
         // Slovo "souboru/files" v popiscich tabu grafu nahradi ikonkou fotaku, "Pocet"/"Number of" symbolem sumy.
         function statsChartFileIcon(s) {
@@ -8569,9 +8592,10 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             }
 
             /* --- Grafy a tabulky --- */
-            H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/><line x1=\"3\" y1=\"15\" x2=\"21\" y2=\"15\"/><line x1=\"9\" y1=\"3\" x2=\"9\" y2=\"21\"/></svg>" + L_("statsSecTable", "Tabulka") + "</h3>";
+            H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/><line x1=\"3\" y1=\"15\" x2=\"21\" y2=\"15\"/><line x1=\"9\" y1=\"3\" x2=\"9\" y2=\"21\"/></svg>" + L_("statsSecTable", "Tabulka") + "</span><button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsTableCSV()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z\"/><polyline points=\"17 21 17 13 7 13 7 21\"/><polyline points=\"7 3 7 8 15 8\"/></svg></button></h3>";
 
-            var yKeys = Object.keys(byYear);
+                try { window.statsTableData = null; } catch(eTD0) {}
+                var yKeys = Object.keys(byYear);
             if (yKeys.length) {
                 var bUnit = L_("statsUnitBytes", "b");
                 var sk = statsYearSort.key, sd = statsYearSort.dir;
@@ -8627,6 +8651,14 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                      "<td class=\"num\">" + nmb(totN) + "</td>" +
                      "<td class=\"num\" title=\"" + nmb(totB) + " " + bUnit + "\">" + fmtStatsBytes(totB) + "</td>";
                 H += "</tr></tfoot></table></div></div>";
+                try {
+                    var _tRows = [];
+                    for (var _ri = 0; _ri < yKeys.length; _ri++) {
+                        var _RY = byYear[yKeys[_ri]];
+                        _tRows.push({ year: yKeys[_ri], oldFile: (_RY.old ? String(_RY.old[3] || "") : ""), newFile: (_RY.new ? String(_RY.new[3] || "") : ""), n: _RY.n, bytes: _RY.bytes });
+                    }
+                    window.statsTableData = { rows: _tRows, totN: totN, totB: totB, totOldFile: (totOld ? String(totOld[3] || "") : ""), totNewFile: (totNew ? String(totNew[3] || "") : "") };
+                } catch(eTD) { try { window.statsTableData = null; } catch(eTD2) {} }
             }
             // --- Spocet souboru se spodnim cislem: "1 fotka" / "2 fotky" / "5 fotek" ---
         function fmtStatsPhotos(n) {
@@ -8693,6 +8725,8 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             if (typeof window.stChartTipShow !== "function") {
                 // prepinac grafu (statsSetChartMode) je globalni a potrebuje vykreslit graf
                 window.statsChartNow = statsChartNow;
+                window.expandStatsChart = expandStatsChart;
+                window.collapseStatsChart = collapseStatsChart;
                 window.stChartTipEl = stChartTipEl;
                 window.stChartTipShow = stChartTipShow;
                 window.stChartTipMove = stChartTipMove;
@@ -9078,6 +9112,63 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 return statsChartSvg(d.times);
             } catch(e) { return ""; }
         }
+        // --- Graf pres celou obrazovku (fullscreen overlay) ---
+        function expandStatsChart() {
+            try {
+                if (document.getElementById("stChartOverlay")) return;
+                var src = document.getElementById("stChartBox");
+                var ov = document.createElement("div");
+                ov.id = "stChartOverlay";
+                ov.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:10050;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;";
+                var box = document.createElement("div");
+                box.style.cssText = "background:#ffffff;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.3);width:min(1100px,96vw);max-height:94vh;overflow:auto;padding:14px 18px 18px;position:relative;box-sizing:border-box;";
+                var cs = (typeof currentLang !== "undefined" && currentLang === "cs");
+                var head = document.createElement("div");
+                head.style.cssText = "display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;";
+                var cap = document.createElement("span");
+                cap.style.cssText = "font-size:13px;font-weight:700;color:var(--green);";
+                cap.textContent = (typeof L_ === "function") ? L_("statsSecGraphs", "Grafy") : "Grafy";
+                cap.id = "stChartOverlayCap";
+                var shut = document.createElement("button");
+                shut.type = "button";
+                shut.className = "st-chart-expand";
+                shut.style.cssText = "width:28px;height:28px;";
+                var shutT = cs ? "Zmenšit graf (Esc)" : "Shrink chart (Esc)";
+                shut.title = shutT;
+                shut.setAttribute("aria-label", shutT);
+                shut.innerHTML = "<svg viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3v3a2 2 0 0 1-2 2H3'/><path d='M21 8h-3a2 2 0 0 1-2-2V3'/><path d='M3 16h3a2 2 0 0 1 2 2v3'/><path d='M16 21v-3a2 2 0 0 1 2-2h3'/></svg>";
+                shut.onclick = function(e) { if (e) e.stopPropagation(); collapseStatsChart(); };
+                head.appendChild(cap);
+                head.appendChild(shut);
+                var clones = document.createElement("div");
+                clones.id = "stChartOverlayBody";
+                clones.innerHTML = src ? src.innerHTML : "";
+                box.appendChild(head);
+                var tabsHost = document.createElement("div");
+                tabsHost.id = "stChartOverlayTabs";
+                try {
+                    var th = (typeof statsChartTabs === "function") ? statsChartTabs() : "";
+                    th = String(th).replace(/ id="stChartTab([A-Za-z]+)"/g, function(mt, pp) {
+                        var mm = { Time: "time", Tod: "tod", Dist: "dist", DistCen: "distCen" };
+                        return " data-ovmode=\"" + (mm[pp] || String(pp).toLowerCase()) + "\"";
+                    });
+                    tabsHost.innerHTML = th;
+                } catch(eTH) {}
+                box.appendChild(tabsHost);
+                box.appendChild(clones);
+                ov.appendChild(box);
+                ov.onclick = function(e) { if (e && e.target === ov) collapseStatsChart(); };
+                document.body.appendChild(ov);
+                document.addEventListener("keydown", statsChartEsc);
+            } catch(e) {}
+        }
+        function statsChartEsc(e) {
+            try { if (e && e.key === "Escape" && document.getElementById("stChartOverlay")) collapseStatsChart(); } catch(e2) {}
+        }
+        function collapseStatsChart() {
+            try { var ov = document.getElementById("stChartOverlay"); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); } catch(e) {}
+            try { document.removeEventListener("keydown", statsChartEsc); } catch(e2) {}
+        }
         // --- Graf: pocet souboru v case. SVG v textu, sloupce proportionalni k delce obdobi ---
         function statsChartSvg(times) {
             try {
@@ -9226,7 +9317,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             } catch(e) { return ""; }
         }
         /* --- Grafy: graf pocetu souboru v case --- */
-            H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 3v18h18\"/><path d=\"M7 16v-5\"/><path d=\"M12 16V8\"/><path d=\"M17 16v-8\"/></svg>" + L_("statsSecGraphs", "Grafy") + "</h3>";
+            H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 3v18h18\"/><path d=\"M7 16v-5\"/><path d=\"M12 16V8\"/><path d=\"M17 16v-8\"/></svg>" + L_("statsSecGraphs", "Grafy") + "</span><button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Zvětšit graf" : "Enlarge chart") + "\" aria-label=\"" + (currentLang === "cs" ? "Zvětšit graf" : "Enlarge chart") + "\" onclick=\"expandStatsChart()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 3h6v6\"/><path d=\"M9 21H3v-6\"/><path d=\"M21 3l-7 7\"/><path d=\"M3 21l7-7\"/></svg></button></h3>";
             // data pro prepinac grafu. Prekresleni jineho grafu nesmi data prepocitat,
             // u 250 tis. fotek to trva desetky sekund.
             try { window.statsChartData = { times: times, locs: locs, cen: cen }; } catch(eCD) {}
@@ -9282,6 +9373,22 @@ H += "</div></div>";
 
             H += "<div class=\"st-note\">" + (statsApplyFilters ? L_("statsScopeOn", "") : L_("statsScopeOff", "")) + " " + L_("statsNote", "Karta s hodnotou i název souboru jsou kliknutelné – mapa se přesune na daný soubor a zobrazí jeho bublinu.") + "</div>";
             body.innerHTML = H;
+            // Fullscreen graf: pri prekresleni statistiky (napr. prepnuti jazyka) prekreslit i overlay
+            try {
+                if (document.getElementById("stChartOverlay")) {
+                    var _rB = document.getElementById("stChartOverlayBody");
+                    if (_rB) _rB.innerHTML = statsChartNow();
+                    var _rT = document.getElementById("stChartOverlayTabs");
+                    if (_rT && typeof statsChartTabs === "function") {
+                        _rT.innerHTML = String(statsChartTabs()).replace(/ id="stChartTab([A-Za-z]+)"/g, function(mt, pp) {
+                            var mm = { Time: "time", Tod: "tod", Dist: "dist", DistCen: "distCen" };
+                            return " data-ovmode=\"" + (mm[pp] || String(pp).toLowerCase()) + "\"";
+                        });
+                    }
+                    var _rC = document.getElementById("stChartOverlayCap");
+                    if (_rC) _rC.textContent = L_("statsSecGraphs", "Grafy");
+                }
+            } catch(eROv) {}
         }
         function gotoSettings() { try { closeInfoModal(); } catch(e) {} openSettingsModal(); }
 
@@ -10426,6 +10533,24 @@ H += "</div></div>";
 
             if (typeof html2canvas !== "undefined") { doExportPdf(); }
             else { loadScriptOnce(EXPORT_LIB_H2C, function(e) { if (e) { showToast(currentLang === "cs" ? "Chyba: html2canvas se nepodařilo načíst" : "Error: failed to load html2canvas"); return; } doExportPdf(); }); }
+        }
+
+        // Export tabulky ze statistiky do CSV (hlavicka v aktualnim jazyce, velikosti v bajtech presne).
+        // Data se ukladaji pri vykresleni tabulky do window.statsTableData (vcetne radku CELKEM).
+        function exportStatsTableCSV() {
+            try {
+                var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {};
+                var d = (typeof window !== "undefined") ? window.statsTableData : null;
+                if (!d || !d.rows || !d.rows.length) { showToast(t.toastNoData || (currentLang === "cs" ? "Žádná data k exportu" : "No data to export")); return; }
+                var cs = (typeof currentLang !== "undefined" && currentLang === "cs");
+                var head = [t.statsColYear || (cs ? "Rok" : "Year"), t.statsColOldest || (cs ? "Nejstarší soubor" : "Oldest file"), t.statsColNewest || (cs ? "Nejnovější soubor" : "Newest file"), t.statsColCount || (cs ? "Počet souborů" : "File count"), (t.statsColSize || (cs ? "Velikost" : "Size")) + " (b)"];
+                var q = function(v) { v = String(v === null || v === undefined ? "" : v); return (v.indexOf(";") >= 0 || v.indexOf('"') >= 0 || v.indexOf("\n") >= 0 || v.indexOf("\r") >= 0) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+                var lines = [head.map(q).join(";\t")];
+                for (var i = 0; i < d.rows.length; i++) { var r = d.rows[i]; lines.push([q(r.year), q(r.oldFile), q(r.newFile), r.n, r.bytes].join(";\t")); }
+                var totLbl = t.statsTotalLabel || "CELKEM";
+                lines.push([q(totLbl), q(d.totOldFile), q(d.totNewFile), d.totN, d.totB].join(";\t"));
+                downloadBlob(new Blob(["\uFEFF" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" }), stamp() + "_tabulka.csv");
+            } catch(e) {}
         }
 
                 function exportGeoJSON() {
@@ -13687,6 +13812,10 @@ window.addEventListener('resize', function() {
             var lb = document.getElementById("lightbox");
             var isLbActive = lb && lb.classList.contains("active");
             if (e.key === "Escape") {
+                try {
+                    var _stOv = document.getElementById("stChartOverlay");
+                    if (_stOv) { if (typeof collapseStatsChart === "function") collapseStatsChart(); e.preventDefault(); e.stopPropagation(); return; }
+                } catch(eSCO) {}
                 try {
                     var _cpop = document.getElementById("lbTlCalPop");
                     var _tpop = document.getElementById("lbTlTimePop");
@@ -22846,29 +22975,48 @@ if (q) {
             allItem.title = fmtSTAV(tall, loc);
             allItem.onclick = function() { areaSearchText = ""; areaSearchResults = []; setAreaFilter(null); };
             res.appendChild(allItem);
-            // Vyhledana mista (historie hledani s moznosti prepinani) – pod Vse
+            // Nástrojový řádek vyhledaných míst – zobrazen vždy
+            var histHasItems = Array.isArray(areaSearchedPlaces) && areaSearchedPlaces.length > 0;
+            var histClrRow = document.createElement("div");
+            histClrRow.style.cssText = "display:flex;gap:6px;padding:2px 2px 4px;";
+            // Tlačítko: Uložit vyhledané polygony
+            var histSave = document.createElement("button");
+            histSave.type = "button";
+            histSave.className = "source-export-btn";
+            histSave.style.cssText = "flex:1;display:flex;align-items:center;justify-content:center;padding:2px 0;height:auto;" + (histHasItems ? "" : "opacity:0.35;pointer-events:none;");
+            histSave.innerHTML = "<svg viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg>";
+            histSave.title = currentLang === "cs" ? "Uložit vyhledané polygony do GeoJSON" : "Save searched polygons as GeoJSON";
+            histSave.setAttribute("aria-label", histSave.title);
+            histSave.onclick = function(e) { if (e) e.stopPropagation(); exportAreaPlacesGeoJSON(); };
+            histClrRow.appendChild(histSave);
+            // Tlačítko: Obrátit výběr (uvnitř ↔ mimo)
+            var hasAnyArea = hasMultiA || !!areaFilter;
+            var isInverted = areaInvertedOn();
+            var histInvert = document.createElement("button");
+            histInvert.type = "button";
+            histInvert.className = "source-export-btn";
+            histInvert.style.cssText = "flex:1;display:flex;align-items:center;justify-content:center;padding:2px 0;height:auto;font-size:14px;" +
+                (hasAnyArea ? (isInverted ? "background:var(--accent,#1a73e8);color:#fff;border-color:var(--accent,#1a73e8);" : "") : "opacity:0.35;pointer-events:none;");
+            histInvert.textContent = "⇄";
+            histInvert.title = currentLang === "cs"
+                ? (isInverted ? "Obrátit výběr: nyní filtruji MIMO oblast — kliknutím přepnout na uvnitř" : "Obrátit výběr: nyní filtruji UVNITŘ oblasti — kliknutím přepnout na mimo")
+                : (isInverted ? "Invert selection: currently filtering OUTSIDE — click to switch to inside" : "Invert selection: currently filtering INSIDE — click to switch to outside");
+            histInvert.setAttribute("aria-label", histInvert.title);
+            histInvert.onclick = function(e) { if (e) e.stopPropagation(); toggleAreaInvert(); };
+            histClrRow.appendChild(histInvert);
+            // Tlačítko: Vymazat historii hledání
+            var histClr = document.createElement("button");
+            histClr.type = "button";
+            histClr.className = "filter-multi-clear";
+            histClr.style.cssText = "flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;" + (histHasItems ? "" : "opacity:0.35;pointer-events:none;");
+            histClr.textContent = "✕";
+            histClr.title = currentLang === "cs" ? "Vymazat historii hledání" : "Clear search history";
+            histClr.setAttribute("aria-label", histClr.title);
+            histClr.onclick = function(e) { if (e) e.stopPropagation(); clearAreaHistory(); };
+            histClrRow.appendChild(histClr);
+            res.appendChild(histClrRow);
+            // Vyhledana mista (historie hledani s moznosti prepinani) – pod nastrojovym radkem
             if (Array.isArray(areaSearchedPlaces) && areaSearchedPlaces.length > 0) {
-                var histClrRow = document.createElement("div");
-                histClrRow.style.cssText = "display:flex;gap:6px;padding:2px 2px 4px;";
-                var histSave = document.createElement("button");
-                histSave.type = "button";
-                histSave.className = "source-export-btn";
-                histSave.style.cssText = "flex:1;display:flex;align-items:center;justify-content:center;padding:2px 0;height:auto;";
-                histSave.innerHTML = "<svg viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg>";
-                histSave.title = currentLang === "cs" ? "Uložit vyhledané polygony do GeoJSON" : "Save searched polygons as GeoJSON";
-                histSave.setAttribute("aria-label", histSave.title);
-                histSave.onclick = function(e) { if (e) e.stopPropagation(); exportAreaPlacesGeoJSON(); };
-                histClrRow.appendChild(histSave);
-                var histClr = document.createElement("button");
-                histClr.type = "button";
-                histClr.className = "filter-multi-clear";
-                histClr.style.cssText = "flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;";
-                histClr.textContent = "✕";
-                histClr.title = currentLang === "cs" ? "Vymazat historii hledání" : "Clear search history";
-                histClr.setAttribute("aria-label", histClr.title);
-                histClr.onclick = function(e) { if (e) e.stopPropagation(); clearAreaHistory(); };
-                histClrRow.appendChild(histClr);
-                res.appendChild(histClrRow);
                 for (var spi = 0; spi < areaSearchedPlaces.length; spi++) {
                     (function(pObj) {
                         if (!pObj) return;
