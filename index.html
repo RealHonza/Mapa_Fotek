@@ -4192,14 +4192,26 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             var hasMod = !!(ev && ev.shiftKey);
             return mm ? !hasMod : hasMod;
         }
+        var _areaInverted = null; // cache příznaku "mimo oblast"; localStorage se čte jen jednou
         function areaInvertedOn() {
-            try { return localStorage.getItem("mapa_fotek_area_inverted") === "1"; } catch(e) { return false; }
+            if (_areaInverted === null) {
+                try { _areaInverted = localStorage.getItem("mapa_fotek_area_inverted") === "1"; } catch(e) { _areaInverted = false; }
+            }
+            return _areaInverted;
+        }
+        function setAreaInverted(v) {
+            _areaInverted = !!v;
+            try { localStorage.setItem("mapa_fotek_area_inverted", _areaInverted ? "1" : "0"); } catch(e) {}
+        }
+        // Po odebrání poslední oblasti se obrácený výběr vynuluje (jinak by byla další nově vybraná oblast nepozorovaně obrácená)
+        function areaInvertAutoReset() {
+            try {
+                var anyArea = (areaFilters && areaFilters.length > 0) || !!areaFilter;
+                if (!anyArea && areaInvertedOn()) setAreaInverted(false);
+            } catch(e) {}
         }
         function toggleAreaInvert() {
-            try {
-                var now = areaInvertedOn();
-                localStorage.setItem("mapa_fotek_area_inverted", now ? "0" : "1");
-            } catch(e) {}
+            setAreaInverted(!areaInvertedOn());
             try { if (typeof updView === "function") updView(); } catch(e1) {}
             try { if (typeof drawAreaHighlight === "function") drawAreaHighlight(); } catch(e2) {}
             try { if (typeof renderAreaDropdown === "function") renderAreaDropdown(); } catch(e3) {}
@@ -4228,6 +4240,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try { activedecade = null; } catch(e2) {}
             try { folderPrefix = null; folderPrefixes = []; folderNav = null; } catch(e3) {}
             try { areaFilter = null; areaFilters = []; areaSearchedPlaces = []; } catch(e4) {}
+            try { areaInvertAutoReset(); } catch(e4b) {}
             try { if (typeof renderYearDropdown === "function") renderYearDropdown(); } catch(e5) {}
             try { if (typeof renderFolderDropdown === "function") renderFolderDropdown(); } catch(e6) {}
             try { if (typeof updateAreaLabel === "function") updateAreaLabel(); } catch(e7) {}
@@ -21719,21 +21732,54 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
             }
             return c;
         }
+        // ---- Cache souhrnných počtů (tally, roky) ----
+        // Počty v závorkách se při jedné akci (např. přepnutí reverze) žádaly 5–6× s plným průchodem všech dat.
+        // Klíč = identita a délka rawData + čas + složky + oblasti (identita a velikost množiny match) + reverze.
+        // Pokud stav nejde bezpečně vyjádřit klíčem (oblast bez předpočítané množiny match), cache se nepoužije.
+        var _fsIdMap = (typeof WeakMap === "function") ? new WeakMap() : null, _fsIdSeq = 0;
+        function fsObjId(o) {
+            if (!o || typeof o !== "object") return 0;
+            var v = _fsIdMap.get(o);
+            if (!v) { v = ++_fsIdSeq; _fsIdMap.set(o, v); }
+            return v;
+        }
+        function filterStateKey(withTime) {
+            try {
+                if (!_fsIdMap) return null;
+                var key = fsObjId(rawData) + ":" + rawData.length + "|" + (areaInvertedOn() ? 1 : 0) + "|" + String(folderPrefix) + "|" + (folderPrefixes ? folderPrefixes.join("\u0001") : "") + "|";
+                if (areaFilters && areaFilters.length > 0) {
+                    for (var i = 0; i < areaFilters.length; i++) {
+                        var af = areaFilters[i];
+                        if (!af) continue;
+                        if (!af.match) return null;
+                        key += fsObjId(af) + "." + fsObjId(af.match) + "." + af.match.size + ",";
+                    }
+                } else if (areaFilter) {
+                    if (!areaFilter.match) return null;
+                    key += "s" + fsObjId(areaFilter) + "." + fsObjId(areaFilter.match) + "." + areaFilter.match.size;
+                }
+                if (withTime) key += "|" + String(timePrefix) + "|" + (timePrefixes ? timePrefixes.join("\u0001") : "");
+                return key;
+            } catch(e) { return null; }
+        }
+        var _tallyMemo = { key: null, val: null };
+        var _ycMemo = { key: null, val: null };
         function tallyFiltered() {
+            var key = filterStateKey(true);
+            if (key !== null && _tallyMemo.key === key && _tallyMemo.val) {
+                var m = _tallyMemo.val;
+                return { G: m.G, D: m.D, S: m.S };
+            }
             var c = { G: 0, D: 0, S: 0 };
             for (var i = 0; i < rawData.length; i++) {
                 var p = rawData[i];
                 if (photoPassesFilters(p)) c[stOf(p)]++;
             }
+            if (key !== null) { _tallyMemo.key = key; _tallyMemo.val = { G: c.G, D: c.D, S: c.S }; }
             return c;
         }
         function countAllFiltered() {
-            var c = 0;
-            for (var i = 0; i < rawData.length; i++) {
-                var p = rawData[i];
-                if (stOf(p) === "G" && photoPassesFilters(p)) c++;
-            }
-            return c;
+            return tallyFiltered().G;
         }
         function setTimeFilter(pfx, isMultiToggle) {
             if (!pfx || pfx === "all") {
@@ -22343,6 +22389,7 @@ if (q) {
                     areaFilter = normF;
                     areaFilters = [normF];
                 }
+                areaInvertAutoReset();
                 updateAreaLabel();
                 var _ad = document.getElementById("areaDropdown");
                 if (_ad && _ad.classList.contains("open") && typeof renderAreaDropdown === "function") renderAreaDropdown();
@@ -22382,6 +22429,7 @@ if (q) {
                 areaFilters = keep;
                 areaFilter = keep.length > 0 ? keep[0] : null;
             } catch(e2) {}
+            try { areaInvertAutoReset(); } catch(e2b) {}
             try { if (typeof renderAreaDropdown === "function") renderAreaDropdown(); } catch(e3) {}
             try { if (typeof renderYearDropdown === "function") renderYearDropdown(); } catch(e4) {}
             try { if (typeof renderFolderDropdown === "function") renderFolderDropdown(); } catch(e5) {}
@@ -23173,15 +23221,20 @@ if (q) {
             if (!dd) return;
 
             // dostupné roky a jejich počty (respektuj složky a oblast)
-            var yc = {};
-            for (var i = 0; i < rawData.length; i++) {
-                if (!folderPass(normFolderPath(rawData[i][5]), rawData[i][3])) continue;
-                var dstr = String(rawData[i][2]);
-                if (dstr.length >= 4) {
-                    var yk = dstr.substring(0, 4);
-                    if (!yc[yk]) yc[yk] = { G: 0, D: 0, S: 0 };
-                    if (areaPass(rawData[i])) yc[yk][stOf(rawData[i])]++;
+            var _ycKey = filterStateKey(false);
+            var yc = (_ycKey !== null && _ycMemo.key === _ycKey) ? _ycMemo.val : null;
+            if (!yc) {
+                yc = {};
+                for (var i = 0; i < rawData.length; i++) {
+                    if (!folderPass(normFolderPath(rawData[i][5]), rawData[i][3])) continue;
+                    var dstr = String(rawData[i][2]);
+                    if (dstr.length >= 4) {
+                        var yk = dstr.substring(0, 4);
+                        if (!yc[yk]) yc[yk] = { G: 0, D: 0, S: 0 };
+                        if (areaPass(rawData[i])) yc[yk][stOf(rawData[i])]++;
+                    }
                 }
+                if (_ycKey !== null) { _ycMemo.key = _ycKey; _ycMemo.val = yc; }
             }
             var years = Object.keys(yc).sort().reverse();
             years = years.filter(function(yr) { return yc[yr] && yc[yr].G > 0; });
@@ -25660,6 +25713,7 @@ var sd = getSavedDatasetStyle(pname);
                 try { if (_ov0) _ov0.style.display = "none"; } catch(e) {}
                 var _afterFilters = function() {
                     try { if (typeof restoreFiltersState === "function") restoreFiltersState(); } catch(eRF) {}
+                    try { areaInvertAutoReset(); } catch(eIR) {}
                     _filtersRestored = true;
                     try { if (_filtersMigrate) { _filtersMigrate = false; saveFiltersState(); } } catch(eFM) {}
                     setTimeout(function() { if (typeof restoreLBPersistence === "function") restoreLBPersistence(); }, 100);
