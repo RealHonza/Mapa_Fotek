@@ -17864,7 +17864,7 @@ function startMeasureDistance() {
                 showCoordsState.popup=L.popup({closeButton:false, autoClose:false, closeOnClick:false, autoPan:false, className:'show-coords-popup', offset:[0,0]}).setLatLng(ll).setContent('<div style="background:#fff;color:#333;padding:2px 6px;border-radius:0;font-size:11px;font-family:monospace;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,0.25);border:1px solid #333;">'+txt+'</div>').openOn(map);
                 map.getContainer().style.cursor=snapped?"pointer":"crosshair";
             };
-            map.on("mousemove", showCoordsState.moveHandler); map.on("touchmove", showCoordsState.moveHandler); map.on("touchmove", showCoordsState.moveHandler);
+            map.on("mousemove", showCoordsState.moveHandler); map.on("touchmove", showCoordsState.moveHandler);
             showCoordsState.clickHandler=function(e){
                 if(showCoordsDrawActive()) return;
                 var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng);
@@ -18028,7 +18028,7 @@ function startMeasureDistance() {
                     updateDynamicInputState('parallel', null, e.latlng);
                 }
             };
-            map.on("mousemove", parallelState.moveHandler); map.on("touchmove", parallelState.moveHandler); map.on("touchmove", parallelState.moveHandler);
+            map.on("mousemove", parallelState.moveHandler); map.on("touchmove", parallelState.moveHandler);
             parallelState.clickHandler=function(e){
                 var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 addParallelLine(ll.lat);
@@ -18093,7 +18093,7 @@ if(measureDistanceState.active) stopMeasureDistance();
                     updateDynamicInputState('meridian', null, e.latlng);
                 }
             };
-            map.on("mousemove", meridianState.moveHandler); map.on("touchmove", meridianState.moveHandler); map.on("touchmove", meridianState.moveHandler);
+            map.on("mousemove", meridianState.moveHandler); map.on("touchmove", meridianState.moveHandler);
             meridianState.clickHandler=function(e){
                 var ll=e.latlng || (e.touches && e.touches[0] ? map.mouseEventToLatLng(e.touches[0]) : e.latlng); var s=snapToPoint(ll); if(s) ll=s;
                 addMeridianLine(ll.lng);
@@ -24107,6 +24107,7 @@ if (q) {
                 for (var _pcIUV = 0; _pcIUV < _pcKsUV.length; _pcIUV++) {
                     var _pcDUV = datasets[_pcKsUV[_pcIUV]];
                     if (_pcDUV._photoCardsMoveHandler) { try { map.off("moveend zoomend", _pcDUV._photoCardsMoveHandler); } catch(e){} _pcDUV._photoCardsMoveHandler = null; }
+                    if (_pcDUV._photoCardsMoveStartHandler) { try { map.off("movestart", _pcDUV._photoCardsMoveStartHandler); } catch(e2){} _pcDUV._photoCardsMoveStartHandler = null; }
                 }
                 photoClusterGroups.forEach(function(pg) { try { pg.group.remove(); } catch(e){} });
                 photoClusterGroups = [];
