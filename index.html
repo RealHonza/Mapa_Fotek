@@ -4684,39 +4684,61 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         L.ZoneCanvasLayer = L.Layer.extend({
             initialize: function(colorGroups) {
                 this._colorGroups = colorGroups || [];
+                this._canvases = [];
             },
             onAdd: function(map) {
                 this._map = map;
-                var pane = map.getPane('zonePane');
-                this._canvas = L.DomUtil.create('canvas', 'leaflet-zone-canvas', pane);
-                this._ctx = this._canvas.getContext('2d'); // Ponecháno GPU akcelerované
-                var size = map.getSize();
-                this._canvas.width = size.x;
-                this._canvas.height = size.y;
+                this._pane = map.getPane('zonePane') || map.getPanes().overlayPane;
                 map.on('moveend zoomend resize viewreset', this._redraw, this);
                 this._redraw();
             },
             onRemove: function(map) {
-                if (this._canvas) L.DomUtil.remove(this._canvas);
+                if (this._canvases) {
+                    for (var i = 0; i < this._canvases.length; i++) {
+                        if (this._canvases[i] && this._canvases[i].canvas) {
+                            L.DomUtil.remove(this._canvases[i].canvas);
+                        }
+                    }
+                }
                 if (this._map) this._map.off('moveend zoomend resize viewreset', this._redraw, this);
-                this._canvas = null;
-                this._ctx = null;
+                this._canvases = [];
+                this._map = null;
             },
             setColorGroups: function(colorGroups) {
                 this._colorGroups = colorGroups || [];
                 this._redraw();
             },
             _redraw: function() {
-                if (!this._map || !this._canvas) return;
+                if (!this._map) return;
                 var map = this._map;
+                var pane = this._pane || map.getPane('zonePane') || map.getPanes().overlayPane;
                 var size = map.getSize();
                 var W = size.x, H = size.y;
-                this._canvas.width = W;
-                this._canvas.height = H;
-                L.DomUtil.setPosition(this._canvas, map.containerPointToLayerPoint([0, 0]));
+                var layerPos = map.containerPointToLayerPoint([0, 0]);
 
-                var ctx = this._ctx;
-                ctx.clearRect(0, 0, W, H);
+                var activeGroups = [];
+                for (var g = 0; g < (this._colorGroups || []).length; g++) {
+                    var grpItem = this._colorGroups[g];
+                    if (grpItem && grpItem.pts && grpItem.pts.length > 0) {
+                        activeGroups.push(grpItem);
+                    }
+                }
+
+                // Každý aktivní zdroj / barevná skupina má svůj vlastní canvas element pro nezávislou barvu i průhlednost
+                while (this._canvases.length < activeGroups.length) {
+                    var cnv = L.DomUtil.create('canvas', 'leaflet-zone-canvas', pane);
+                    var ctx = cnv.getContext('2d');
+                    this._canvases.push({ canvas: cnv, ctx: ctx });
+                }
+                while (this._canvases.length > activeGroups.length) {
+                    var popped = this._canvases.pop();
+                    if (popped && popped.canvas) L.DomUtil.remove(popped.canvas);
+                }
+
+                this._canvas = this._canvases[0] ? this._canvases[0].canvas : null;
+                this._ctx = this._canvases[0] ? this._canvases[0].ctx : null;
+
+                if (!activeGroups.length) return;
 
                 var zoom = map.getZoom();
                 var mppEq = 40075016.686 / Math.pow(2, zoom + 8);
@@ -4739,15 +4761,25 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     return tpl;
                 }
 
-                for (var c = 0; c < this._colorGroups.length; c++) {
-                    var grp = this._colorGroups[c];
+                for (var c = 0; c < activeGroups.length; c++) {
+                    var grp = activeGroups[c];
                     var pts = grp.pts || [];
-                    if (!pts.length) continue;
+                    var cnvObj = this._canvases[c];
+                    var canvas = cnvObj.canvas;
+                    var ctx = cnvObj.ctx;
+
+                    if (canvas.width !== W || canvas.height !== H) {
+                        canvas.width = W;
+                        canvas.height = H;
+                    }
+                    L.DomUtil.setPosition(canvas, layerPos);
+                    ctx.clearRect(0, 0, W, H);
+
                     var colDef = dotColors[grp.colorKey] || dotColors.blue;
                     var alpha = (grp.opacity !== undefined ? grp.opacity : 50) / 100;
                     
-                    // Nastavíme průhlednost přímo celému elementu plátna, aby se překrývající kružnice nikdy nesčítaly!
-                    this._canvas.style.opacity = Math.max(0.02, Math.min(1.0, alpha));
+                    // Nastavíme průhlednost přímo celému elementu plátna, aby se překrývající kružnice uvnitř stejné skupiny nesčítaly!
+                    canvas.style.opacity = Math.max(0.02, Math.min(1.0, alpha));
                     ctx.globalAlpha = 1.0;
                     ctx.fillStyle = colDef.fill;
                     var grpKm = (grp.km === undefined || grp.km === null) ? 10 : parseFloat(grp.km);
@@ -6946,10 +6978,13 @@ function statsSetFilters(on) {
                 boxMap.forEach(function(pointsInBox) {
                     var by = pointsInBox[0].by;
                     var bx = pointsInBox[0].bx;
+                    var byLat = (by * boxSize) / kmPerDegLat;
+                    var cosBy = Math.cos(byLat * Math.PI / 180);
+                    var stepBx = Math.ceil(cosLat / Math.max(0.05, cosBy));
                     var neighborCount = pointsInBox.length;
 
                     for (var dy = -1; dy <= 1; dy++) {
-                        for (var dx = -1; dx <= 1; dx++) {
+                        for (var dx = -stepBx; dx <= stepBx; dx++) {
                             if (dy === 0 && dx === 0) continue;
                             var nbKey = (by + dy + BY_OFF) * BX_WIDTH + (bx + dx + BX_OFF);
                             var nb = boxMap.get(nbKey);
@@ -6968,7 +7003,7 @@ function statsSetFilters(on) {
 
                 var totalArea = isolatedCircles * Math.PI * R * R;
 
-                // Fáze 2: Pro překrývající se body aplikujeme jemnou mřížku s předpočítaným kernelem
+                // Fáze 2: Pro překrývající se body aplikujeme jemnou mřížku s geodeticky škálovaným kernelem
                 var m = clusterPoints.length;
                 if (m > 0) {
                     var K = 8;
@@ -6995,34 +7030,66 @@ function statsSetFilters(on) {
                     if (centerCells.size === 1) {
                         totalArea += Math.PI * R * R;
                     } else {
-                        // Předpočítaná kruhová šablona relativních buněk
-                        var kernel = [];
                         var stepsR = Math.ceil(R / cellSize);
                         var RSq = R * R;
-                        var kernelCellCount = 0;
+                        var unscaledCellCount = 0;
                         for (var dy = -stepsR; dy <= stepsR; dy++) {
                             var dyKm = dy * cellSize;
                             var remSq = RSq - dyKm * dyKm;
                             if (remSq < 0) continue;
                             var dxMax = Math.floor(Math.sqrt(remSq) / cellSize);
-                            for (var dx = -dxMax; dx <= dxMax; dx++) {
-                                kernel.push(dy * CX_WIDTH + dx);
-                                kernelCellCount++;
+                            unscaledCellCount += (2 * dxMax + 1);
+                        }
+                        var baseEffArea = (Math.PI * RSq) / unscaledCellCount;
+
+                        var kernelCache = new Map();
+                        function getKernel(cy) {
+                            var k = kernelCache.get(cy);
+                            if (k) return k;
+                            var cLat = (cy * cellSize) / kmPerDegLat;
+                            var cosL = Math.cos(cLat * Math.PI / 180);
+                            if (!(cosL > 0.001)) cosL = 0.001;
+                            var ratio = cosLat / cosL;
+                            k = [];
+                            for (var dy = -stepsR; dy <= stepsR; dy++) {
+                                var dyKm = dy * cellSize;
+                                var remSq = RSq - dyKm * dyKm;
+                                if (remSq < 0) continue;
+                                var dxMax = Math.floor((Math.sqrt(remSq) / cellSize) * ratio);
+                                var rowOffset = dy * CX_WIDTH;
+                                for (var dx = -dxMax; dx <= dxMax; dx++) {
+                                    k.push(rowOffset + dx);
+                                }
                             }
+                            kernelCache.set(cy, k);
+                            return k;
                         }
 
-                        // Efektivní plocha buňky kalibrovaná na analytický kruh
-                        var effectiveCellArea = (Math.PI * RSq) / kernelCellCount;
                         var covered = new Set();
-                        var kLen = kernel.length;
-
                         centerCells.forEach(function(centerCode) {
-                            for (var k = 0; k < kLen; k++) {
-                                covered.add(centerCode + kernel[k]);
+                            var cY = Math.floor(centerCode / CX_WIDTH) - CY_OFF;
+                            var kern = getKernel(cY);
+                            for (var k = 0; k < kern.length; k++) {
+                                covered.add(centerCode + kern[k]);
                             }
                         });
 
-                        totalArea += covered.size * effectiveCellArea;
+                        var rowAreaCache = new Map();
+                        var clusterArea = 0;
+                        covered.forEach(function(code) {
+                            var cY = Math.floor(code / CX_WIDTH) - CY_OFF;
+                            var rArea = rowAreaCache.get(cY);
+                            if (rArea === undefined) {
+                                var cLat = (cY * cellSize) / kmPerDegLat;
+                                var cosL = Math.cos(cLat * Math.PI / 180);
+                                if (!(cosL > 0.001)) cosL = 0.001;
+                                rArea = baseEffArea * (cosL / cosLat);
+                                rowAreaCache.set(cY, rArea);
+                            }
+                            clusterArea += rArea;
+                        });
+
+                        totalArea += clusterArea;
                     }
                 }
 
