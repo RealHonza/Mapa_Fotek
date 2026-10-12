@@ -10785,11 +10785,11 @@ H += "</div></div>";
                     a.href = "Mapa_Fotek_aktualizace_dat.bat";
                     a.setAttribute("download", "Mapa_Fotek_aktualizace_dat.bat");
                     a.className = "source-pill-btn";
-                    a.style.cssText = "margin-left:6px;text-decoration:none;white-space:nowrap;";
-                    var lbl = (typeof currentLang !== "undefined" && currentLang === "en") ? "Download BAT" : "Stáhnout BAT";
+                    a.style.cssText = "margin-left:6px;text-decoration:none;white-space:nowrap;background:var(--green-bg);border-color:var(--green-border);";
+                    var lbl = (typeof currentLang !== "undefined" && currentLang === "en") ? "Download Mapa_Fotek_aktualizace_dat.bat" : "Stáhnout Mapa_Fotek_aktualizace_dat.bat";
                     a.title = lbl;
                     a.setAttribute("aria-label", lbl);
-                    a.innerHTML = "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1 2-2V7Z'/><path d='M14 2v4a2 2 0 0 0 2 2h4'/><path d='M9 15h6'/><path d='M12 18v-6'/></svg> " + lbl;
+                    a.innerHTML = "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1 2-2V7Z'/><path d='M14 2v4a2 2 0 0 0 2 2h4'/><path d='M9 15h6'/><path d='M12 18v-6'/></svg>";
                     a.onclick = function(e) { if (e) e.stopPropagation(); };
                     slots[i].appendChild(a);
                 }
