@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Mapa fotek • Photo Mapper</title>  
     <!-- Vektorová SVG Favicon (čtvercová zaoblená fotokartička s transparentním alfa kanálem) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%3E%20%3C!--%20Zaoblen%C3%BD%20zelen%C3%BD%20podklad%20s%20pr%C5%AFhledn%C3%BDm%20okol%C3%ADm%20v%20roz%C3%ADch%20--%3E%20%3Crect%20width%3D%22200%22%20height%3D%22200%22%20rx%3D%2242%22%20fill%3D%22%231e8544%22%2F%3E%20%3C!--%20B%C3%ADl%C3%BD%20r%C3%A1me%C4%8Dek%20fotografie%20se%20zaoblen%C3%BDmi%20rohy%20--%3E%20%3Crect%20x%3D%2214%22%20y%3D%2214%22%20width%3D%22172%22%20height%3D%22172%22%20rx%3D%2228%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%2212%22%20stroke-linejoin%3D%22round%22%2F%3E%20%3C!--%20M%C4%9Bs%C3%ADc%20a%20hora%20ze%20sou%C5%99adnic%20p%C5%99edlohy%20napasovan%C3%A9%20do%20r%C3%A1me%C4%8Dku%20--%3E%20%3Cg%20transform%3D%22translate(100%2C%20100)%20scale(0.85)%20translate(-250%2C%20-210)%22%3E%20%3C!--%20M%C4%9Bs%C3%ADc%20--%3E%20%3Cpath%20d%3D%22m%20278%2C165%20a%2015%2C15%200%201%200%2015%2C25%2018%2C18%200%200%201%20-15%2C-25%20z%22%20fill%3D%22%23ffffff%22%2F%3E%20%3C!--%20Hora%20se%20st%C3%ADnem%20a%20stromkem%20--%3E%20%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M%20169.11061%2C247.75455%20188.05%2C231.2945%20l%2020.7989%2C-21.90083%2014.39394%2C-22.31405%205.57851%2C-13.22314%205.37191%2C3.30579%207.30027%2C6.95592%2010.19284%2C21.14325%204.54545%2C18.31956%208.74656%2C11.63912%2012.67218%2C8.67769%2013.63636%2C0.27548%20-0.13774%2C-2.41047%20-12.87879%2C-0.20661%209.15978%2C-11.77686%20-6.40496%2C-0.0689%208.12672%2C-12.53444%20h%20-6.47383%20l%2012.25896%2C-15.427%2012.25895%2C14.66943%20-6.06061%2C0.13774%208.33334%2C13.15427%20-6.61157%2C-0.20661%209.84848%2C12.53443%20-13.42975%2C-0.34432%20-0.13774%2C2.41047%208.81543%2C0.20661%2012.32782%2C2.27273%2011.84573%2C3.09917%200.55096%2C25.20661%20-166.25344%2C0.13774%20-0.20661%2C-26.30854%20z%22%2F%3E%20%3C%2Fg%3E%20%3C%2Fsvg%3E">
@@ -2265,6 +2265,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         } catch(e) {}
 
         var currentLang = (savedLang === "cs" || savedLang === "en") ? savedLang : "cs";
+        try { document.documentElement.lang = currentLang; } catch(e) {}
         var lbHideMode = 0;
         try {
             var _hsv = parseInt(localStorage.getItem("mapa_fotek_hide_s") || "x", 10);
@@ -5783,6 +5784,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
         function setLanguage(l) {
             currentLang = l;
+            try { document.documentElement.lang = l; } catch(e) {}
             try { localStorage.setItem("mapa_fotek_lang", l); } catch(e) {}
             var t = i18n[l];
             function setT(id, v){ var el = document.getElementById(id); if (el && v !== undefined && v !== null) el.textContent = v; }
