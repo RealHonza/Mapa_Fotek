@@ -2720,7 +2720,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsDensest: "Nejhustší okruh",
             statsCoverageArea: "Obalová plocha", statsCoverageAreaTip: "Poloměr obalové zóny v km", statsCoverageRange: "rozsah 0,5 \u2013 5000 km", statsCoveragePolygonTip: "Vykreslit obalovou plochu jako polygon do měření", statsCoverageNoPolygon: "Nelze vykreslit polygon obalové plochy.",
             statsBusiestDay: "Nejvíce fotek za", statsDaysTip: "Kolik dní zrovna hledáme maximum",
-            statsPhotoOne: "fotka", statsPhotoFew: "fotky", statsPhotoMany: "fotek", statsYearOne: "rok", statsYearFew: "roky", statsYearMany: "let", statsCalLegend: "Roky focení v daný den", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní",
+            statsPhotoOne: "fotka", statsPhotoFew: "fotky", statsPhotoMany: "fotek", statsYearOne: "rok", statsYearFew: "roky", statsYearMany: "let", statsCalLegend: "Roky focení v daný den", statsCalMaxTip: "Nejvyšší počet let s focením v jeden den", statsCalMinTip: "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní",
             statsOldest: "Nejstarší soubor",
             statsNewest: "Nejnovější soubor",
             statsLargest: "Největší soubor",
@@ -3071,7 +3071,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsDensest: "Densest area",
             statsCoverageArea: "Buffer area", statsCoverageAreaTip: "Buffer zone radius in km", statsCoverageRange: "range 0.5 \u2013 5000 km", statsCoveragePolygonTip: "Draw buffer area as polygon in measurement tool", statsCoverageNoPolygon: "Cannot draw buffer area polygon.",
             statsBusiestDay: "Most photos in", statsDaysTip: "How many days we look for the maximum",
-            statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsYearOne: "year", statsYearFew: "years", statsYearMany: "years", statsCalLegend: "Years with photos on a given day", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
+            statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsYearOne: "year", statsYearFew: "years", statsYearMany: "years", statsCalLegend: "Years with photos on a given day", statsCalMaxTip: "Highest number of years with photos on a single day", statsCalMinTip: "Lowest number of years with photos on a single day (including days with no photos)", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
             statsOldest: "Oldest file",
             statsNewest: "Newest file",
             statsLargest: "Largest file",
@@ -9744,9 +9744,10 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     nDates++;
                 }
                 if (!nDates) return "<div class=\"st-sec-note\">" + statsL_("statsGraphsNote", "Bez datumu není co zobrazit.") + "</div>";
-                // Max/min pres neprazdne bunky (jazykove neutralni, bez novych klicu).
-                var maxN = 0, minN = 0, kk, vv;
-                for (kk in cells) { vv = cells[kk].n; if (vv > maxN) maxN = vv; if (minN === 0 || vv < minN) minN = vv; }
+                // Max/min: minimum bere v potaz i dny bez fotky (366 datovych bunek).
+                var maxN = 0, minN = 0, kk, vv, nCells = 0;
+                for (kk in cells) { vv = cells[kk].n; if (vv > maxN) maxN = vv; if (minN === 0 || vv < minN) minN = vv; nCells++; }
+                if (nCells < 366) minN = 0;
                 // Stupnice: 0, 1, 2-3, 4-5, 6-9, 10-19, 20+ (cerna).
                 var pal = ["#e8eaed", "#b3e5c3", "#5cc47f", "#0AA94C", "#08702e", "#034d1f", "#000000"];
                 var colOf = function(n) { if (n <= 0) return pal[0]; if (n === 1) return pal[1]; if (n <= 3) return pal[2]; if (n <= 5) return pal[3]; if (n <= 9) return pal[4]; if (n < 20) return pal[5]; return pal[6]; };
@@ -9861,7 +9862,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     if (bi === 0) sw = "<svg width=\"11\" height=\"11\" viewBox=\"0 0 11 11\" style=\"display:inline-block;vertical-align:-1px;\"><rect x=\"0.5\" y=\"0.5\" width=\"10\" height=\"10\" rx=\"3\" fill=\"" + pal[0] + "\"/><path d=\"M3.5 3.5L7.5 7.5M7.5 3.5L3.5 7.5\" stroke=\"#d93025\" stroke-width=\"1.2\" stroke-linecap=\"round\" fill=\"none\"/></svg>";
                     lg += "<span style=\"display:inline-flex;align-items:center;gap:3px;\">" + sw + bands[bi] + "</span>";
                 }
-                lg += "<span style=\"margin-left:6px;\">(Max: " + maxN + ", Min: " + minN + ")</span>";
+                lg += "<span style=\"margin-left:6px;\">(<span title=\"" + escapeHtml(statsL_("statsCalMaxTip", "Nejvyšší počet let s focením v jeden den")) + "\">Max: " + maxN + "</span>, <span title=\"" + escapeHtml(statsL_("statsCalMinTip", "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)")) + "\">Min: " + minN + "</span>)</span>";
                 lg += "</div>";
                 var out = s + lg;
                 statsChartCalCacheFor = times;
