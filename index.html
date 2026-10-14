@@ -970,6 +970,9 @@
         .c-btn-mapycz:hover { background: var(--green-bg); color: var(--green) !important; }
         .c-btn-secondary { background: #f1f3f4; color: #3c4043 !important; }
         .c-btn-secondary:hover { background: var(--green-bg); color: var(--green) !important; }
+        .c-btn-place { background: #1a73e8; color: #ffffff !important; cursor: pointer; border: none; font-family: inherit; }
+        .c-btn-place:hover { background: #1765cc; color: #ffffff !important; }
+        .c-btn-off { background: #f1f3f4; color: #9aa0a6 !important; cursor: default; opacity: 0.65; }
         
         #lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; }
         #lightbox.active { display: flex; }
@@ -2131,7 +2134,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.23</span>
+                    <span class="info-meta-val">3.24</span>
                 </div>
             </div>
 
@@ -2851,6 +2854,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 mTPZone: "Zóna",
                 btnMapy: "Mapy.com ↗",
                 btnGoogle: "Google ↗",
+                btnPlace: "Místo",
                 btnFull: "Plná vel. ↗",
                 zoomBadge: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-2px'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>",
                 noThumb: "Náhled nedostupný",
@@ -3202,6 +3206,7 @@ statsFarthestPair: "Farthest pair",
                 mTPZone: "Zone",
                 btnMapy: "Mapy.com ↗",
                 btnGoogle: "Google ↗",
+                btnPlace: "Place",
                 btnFull: "Full size ↗",
                 zoomBadge: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-2px'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>",
                 noThumb: "No preview",
@@ -9748,6 +9753,13 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 var maxN = 0, minN = 0, kk, vv, nCells = 0;
                 for (kk in cells) { vv = cells[kk].n; if (vv > maxN) maxN = vv; if (minN === 0 || vv < minN) minN = vv; nCells++; }
                 if (nCells < 366) minN = 0;
+                // Prumer a median ze vsech 366 dni (vzhledem k Min vcetne nul).
+                var calVals = [], cmi, cdi, cco;
+                var calDim = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                for (cmi = 1; cmi <= 12; cmi++) { for (cdi = 1; cdi <= calDim[cmi - 1]; cdi++) { cco = cells[cmi + "-" + cdi]; calVals.push(cco ? cco.n : 0); } }
+                var calAvg = nDates / 366;
+                var calMed = (typeof statsMedian === "function") ? statsMedian(calVals) : 0;
+                var fmt2 = function(v) { try { return (Math.round(Number(v) * 10) / 10).toLocaleString(loc); } catch(e) { return String(v); } };
                 // Stupnice: 0, 1, 2-3, 4-5, 6-9, 10-19, 20+ (cerna).
                 var pal = ["#e8eaed", "#b3e5c3", "#5cc47f", "#0AA94C", "#08702e", "#034d1f", "#000000"];
                 var colOf = function(n) { if (n <= 0) return pal[0]; if (n === 1) return pal[1]; if (n <= 3) return pal[2]; if (n <= 5) return pal[3]; if (n <= 9) return pal[4]; if (n < 20) return pal[5]; return pal[6]; };
@@ -9863,6 +9875,11 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     lg += "<span style=\"display:inline-flex;align-items:center;gap:3px;\">" + sw + bands[bi] + "</span>";
                 }
                 lg += "<span style=\"margin-left:6px;\">(<span title=\"" + escapeHtml(statsL_("statsCalMaxTip", "Nejvyšší počet let s focením v jeden den")) + "\">Max: " + maxN + "</span>, <span title=\"" + escapeHtml(statsL_("statsCalMinTip", "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)")) + "\">Min: " + minN + "</span>)</span>";
+                var avgTip = (currentLang === "cs") ? "Průměrný počet let s focením na jeden den v roce" : "Average number of years with photos per day of year";
+                var medTip = (currentLang === "cs") ? "Medián počtu let s focením na jeden den v roce" : "Median number of years with photos per day of year";
+                var medLbl = (currentLang === "cs") ? "Medián" : "Median";
+                lg += "<span style=\"color:#d93025;\" title=\"" + escapeHtml(avgTip) + "\">Ø: " + fmt2(calAvg) + "</span>";
+                lg += "<span style=\"color:#1a73e8;\" title=\"" + escapeHtml(medTip) + "\">" + escapeHtml(medLbl) + ": " + fmt2(calMed) + "</span>";
                 lg += "</div>";
                 var out = s + lg;
                 statsChartCalCacheFor = times;
@@ -14559,6 +14576,7 @@ window.addEventListener('resize', function() {
             currentLBPhotos = [];
             currentLBKeys = [];
             currentLBIndex = -1;
+            try { if (typeof clearPlaceTmpFilter === "function") clearPlaceTmpFilter(); } catch(e) {}
         }
 
         document.addEventListener("keydown", function(e) {
@@ -23383,7 +23401,7 @@ if (q) {
                 var activeAreas = (Array.isArray(areaFilters) && areaFilters.length > 0) ? areaFilters : (areaFilter ? [areaFilter] : []);
                 for (var ai = 0; ai < activeAreas.length; ai++) {
                     var af = activeAreas[ai];
-                    if (af && typeof af === "object") {
+                    if (af && typeof af === "object" && !af._tmp) { // docasny filtr z popupu se neuklada
                         afList.push({ kind: af.kind, rings: af.rings || [], circles: af.circles || [], label: af.label });
                     }
                 }
@@ -24464,6 +24482,86 @@ if (q) {
             if (__yb) __yb.classList.toggle("filter-active", hasMultiT || timePrefix !== "all" || timeInvertedOn());
         }
 
+        // --- Tlacitko "Misto" v popupu: docasny kruhovy oblastni filtr ---
+        // Predchozi stav oblasti pro navrat pri zavreni prohlizecky.
+        var prevPlaceArea = null;
+        // Zebricek polomeru (km): nejmensi s alespon 1 jinou fotkou v okoli.
+        function photoPlaceLadder(lat, lon, selfP) {
+            try {
+                lat = Number(lat); lon = Number(lon);
+                if (!isFinite(lat) || !isFinite(lon)) return null;
+                if (typeof calcDistKmLL !== "function") return null;
+                var steps = [0.1, 0.2, 0.5, 1];
+                var cnt = [0, 0, 0, 0];
+                var selfDt = selfP ? String(selfP[2] || "") : "", selfFn = selfP ? String(selfP[3] || "") : "";
+                var ks = Object.keys(datasets || {});
+                for (var ki = 0; ki < ks.length; ki++) {
+                    var dd = datasets[ks[ki]];
+                    if (!dd || !dd.active) continue;
+                    var pts = (typeof photoItemsOf === "function") ? photoItemsOf(ks[ki]) : (dd.items || []);
+                    for (var pi = 0; pi < pts.length; pi++) {
+                        var q = pts[pi];
+                        if (q === selfP) continue;
+                        if (selfDt && selfFn && String(q[2] || "") === selfDt && String(q[3] || "") === selfFn) continue;
+                        var qla = q ? Number(q[0]) : NaN, qlo = q ? Number(q[1]) : NaN;
+                        if (!isFinite(qla) || !isFinite(qlo)) continue;
+                        if (typeof photoPassesFilters === "function" && !photoPassesFilters(q)) continue;
+                        var dist = calcDistKmLL([qla, qlo], [lat, lon]);
+                        if (!isFinite(dist)) continue;
+                        for (var si = 0; si < steps.length; si++) { if (dist <= steps[si]) cnt[si]++; }
+                    }
+                }
+                for (var ri = 0; ri < steps.length; ri++) { if (cnt[ri] > 0) return { n: cnt[ri], rKm: steps[ri] }; }
+                return null;
+            } catch(e) { return null; }
+        }
+        function photoPlaceBtn(lat, lon, p, fu, dsk) {
+            try {
+                var t = i18n[currentLang] || {};
+                var label = t.btnPlace || (currentLang === "cs" ? "Místo" : "Place");
+                if (!isFinite(Number(lat)) || !isFinite(Number(lon))) return "";
+                var info = (typeof photoPlaceLadder === "function") ? photoPlaceLadder(Number(lat), Number(lon), p) : null;
+                if (!info) {
+                    var tipOff = (currentLang === "cs") ? "V okolí 1 km žádné další fotky" : "No other photos within 1 km";
+                    return "<span class=\"c-btn c-btn-off\" title=\"" + escapeHtml(tipOff) + "\" aria-disabled=\"true\">" + escapeHtml(label) + "</span>";
+                }
+                var rLbl = info.rKm >= 1 ? (info.rKm + " km") : (Math.round(info.rKm * 1000) + " m");
+                var cntTxt = (typeof fmtStatsPhotos === "function") ? fmtStatsPhotos(info.n) : (info.n + "x");
+                var tip = cntTxt + ((currentLang === "cs") ? (" do " + rLbl) : (" within " + rLbl));
+                var dtA = (p && p[2] !== undefined && p[2] !== null) ? p[2] : "";
+                var fnA = (p && p[3] !== undefined && p[3] !== null) ? p[3] : "";
+                return "<button type=\"button\" class=\"c-btn c-btn-place\" title=\"" + escapeHtml(tip) + "\" onclick=\"event.stopPropagation(); photoPlaceFilter(" + Number(lat) + "," + Number(lon) + "," + info.rKm + "," + jsArg(fu || "") + "," + jsArg(fnA) + "," + jsArg(dtA) + "," + jsArg(dsk || "") + ");\">" + escapeHtml(label) + "</button>";
+            } catch(e) { return ""; }
+        }
+        // Navrat oblasti po docasnem filtru z popupu (volano ze zavreni prohlizecky).
+        function clearPlaceTmpFilter() {
+            try {
+                if (!prevPlaceArea) return;
+                var pf = prevPlaceArea;
+                prevPlaceArea = null;
+                if (typeof setAreaFilter !== "function") return;
+                var list = (pf && Array.isArray(pf.filters)) ? pf.filters : [];
+                if (!list.length) { setAreaFilter(null); return; }
+                setAreaFilter(list[0]);
+                for (var i = 1; i < list.length; i++) { try { setAreaFilter(list[i], true); } catch(e) {} }
+                try { areaFilter = pf.filter || null; } catch(e) {}
+                try { if (typeof updateAreaLabel === "function") updateAreaLabel(); } catch(e) {}
+            } catch(e) {}
+        }
+        // Docasny filtr (_tmp: neuklada se do profilu ani historie) + otevreni prohlizecky.
+        function photoPlaceFilter(lat, lon, rKm, fu, fn, dt, dsk) {
+            try {
+                lat = Number(lat); lon = Number(lon); rKm = Number(rKm);
+                if (!isFinite(lat) || !isFinite(lon) || !isFinite(rKm) || rKm <= 0) return;
+                var rLbl = rKm >= 1 ? (rKm + " km") : (Math.round(rKm * 1000) + " m");
+                var lbl = (currentLang === "cs") ? ("Okolí fotky – " + rLbl) : ("Photo surroundings – " + rLbl);
+                var f = { kind: "place", rings: [], circles: [{ lat: lat, lon: lon, rKm: rKm }], label: lbl, _tmp: true };
+                try { prevPlaceArea = { filters: (Array.isArray(areaFilters) ? areaFilters.slice() : []), filter: areaFilter || null }; } catch(eS) { prevPlaceArea = { filters: [], filter: null }; }
+                if (typeof setAreaFilter === "function") setAreaFilter(f);
+                // Otevrit prohlizecku na puvodni fotce (seznam uz obsahuje filtr vcetne nove kruznice).
+                try { if (typeof openLB === "function") openLB(fu || "", fn || "", dt || "", dsk || null); } catch(eO) {}
+            } catch(e) {}
+        }
         function createPopupContent(p, dsk) {
             var t = i18n[currentLang];
             var lat = p[0], lon = p[1], dt = p[2], rawFn = p[3] || "Photo", fs = p[4] || 0, rp = p[5] || "";
@@ -24488,7 +24586,7 @@ if (q) {
             } else {
                 th = renderNoThumbHtml(t.noThumb);
             }
-            return th + "<div class=\"card-body\"><div class=\"card-title\" title=\""+fn+"\">"+fn+"</div><div class=\"card-meta\"><span"+(_dtip?" title=\""+escapeHtml(_dtip)+"\"": "")+">"+df+"</span><span>"+lat.toFixed(4)+", "+lon.toFixed(4)+"</span></div>"+(sz ? "<div class=\"card-size\">"+sz+"</div>" : "") + "<div class=\"card-actions\"><a href=\""+gm+"\" target=\"_blank\" class=\"c-btn c-btn-secondary\">"+t.btnGoogle+"</a><a href=\""+my+"\" target=\"_blank\" class=\"c-btn c-btn-mapycz\">"+t.btnMapy+"</a>"+((fu && !isSingle) ? "<a href=\""+fu+"\" target=\"_blank\" class=\"c-btn c-btn-primary\">"+t.btnFull+"</a>" : "")+"</div></div>";
+            return th + "<div class=\"card-body\"><div class=\"card-title\" title=\""+fn+"\">"+fn+"</div><div class=\"card-meta\"><span"+(_dtip?" title=\""+escapeHtml(_dtip)+"\"": "")+">"+df+"</span><span>"+lat.toFixed(4)+", "+lon.toFixed(4)+"</span></div>"+(sz ? "<div class=\"card-size\">"+sz+"</div>" : "") + "<div class=\"card-actions\"><a href=\""+gm+"\" target=\"_blank\" class=\"c-btn c-btn-secondary\">"+t.btnGoogle+"</a><a href=\""+my+"\" target=\"_blank\" class=\"c-btn c-btn-mapycz\">"+t.btnMapy+"</a>"+photoPlaceBtn(lat, lon, p, fu, dsk)+((fu && !isSingle) ? "<a href=\""+fu+"\" target=\"_blank\" class=\"c-btn c-btn-primary\">"+t.btnFull+"</a>" : "")+"</div></div>";
         }
 
         function scheduleHeatZoomRefresh() {
