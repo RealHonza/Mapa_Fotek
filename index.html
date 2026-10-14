@@ -9876,12 +9876,10 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     if (bi === 0) sw = "<svg width=\"11\" height=\"11\" viewBox=\"0 0 11 11\" style=\"display:inline-block;vertical-align:-1px;\"><rect x=\"0.5\" y=\"0.5\" width=\"10\" height=\"10\" rx=\"3\" fill=\"" + pal[0] + "\"/><path d=\"M3.5 3.5L7.5 7.5M7.5 3.5L3.5 7.5\" stroke=\"#d93025\" stroke-width=\"1.2\" stroke-linecap=\"round\" fill=\"none\"/></svg>";
                     lg += "<span style=\"display:inline-flex;align-items:center;gap:3px;\">" + sw + bands[bi] + "</span>";
                 }
-                lg += "<span style=\"margin-left:6px;\">(<span title=\"" + escapeHtml(statsL_("statsCalMaxTip", "Nejvyšší počet let s focením v jeden den")) + "\">Max: " + maxN + "</span>, <span title=\"" + escapeHtml(statsL_("statsCalMinTip", "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)")) + "\">Min: " + minN + "</span>)</span>";
                 var avgTip = (currentLang === "cs") ? "Průměrný počet let s focením na jeden den v roce" : "Average number of years with photos per day of year";
                 var medTip = (currentLang === "cs") ? "Medián počtu let s focením na jeden den v roce" : "Median number of years with photos per day of year";
-                var medLbl = (currentLang === "cs") ? "Medián" : "Median";
-                lg += "<span style=\"color:#d93025;\" title=\"" + escapeHtml(avgTip) + "\">Ø: " + fmt2(calAvg) + "</span>";
-                lg += "<span style=\"color:#1a73e8;\" title=\"" + escapeHtml(medTip) + "\">" + escapeHtml(medLbl) + ": " + fmt2(calMed) + "</span>";
+                var medIco = "<svg width=\"11\" height=\"11\" viewBox=\"0 0 14 14\" style=\"vertical-align:-1px;\" aria-hidden=\"true\"><line x1=\"1\" y1=\"7\" x2=\"13\" y2=\"7\" stroke=\"currentColor\" stroke-width=\"1.8\"/><line x1=\"7\" y1=\"3.5\" x2=\"7\" y2=\"10.5\" stroke=\"currentColor\" stroke-width=\"1.8\"/></svg>";
+                lg += "<span style=\"margin-left:6px;\">(<span title=\"" + escapeHtml(statsL_("statsCalMaxTip", "Nejvyšší počet let s focením v jeden den")) + "\">Max: " + maxN + "</span>, <span title=\"" + escapeHtml(statsL_("statsCalMinTip", "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)")) + "\">Min: " + minN + "</span>, <span style=\"color:#d93025;\" title=\"" + escapeHtml(avgTip) + "\">Ø: " + fmt2(calAvg) + "</span>, <span style=\"color:#1a73e8;\" title=\"" + escapeHtml(medTip) + "\">" + medIco + ": " + fmt2(calMed) + "</span>)</span>";
                 lg += "</div>";
                 var out = s + lg;
                 statsChartCalCacheFor = times;
