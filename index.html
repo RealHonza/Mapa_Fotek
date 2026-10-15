@@ -530,6 +530,7 @@
         .st-chart-grid { stroke: #e8eaed; stroke-width: 1; shape-rendering: crispEdges; }
         .st-chart-axis { stroke: #dadce0; stroke-width: 1; shape-rendering: crispEdges; }
         .st-chart-txt { fill: #5f6368; }
+        .st-chart text { pointer-events: none; user-select: none; -webkit-user-select: none; }
         .st-chart-bar { fill: #0AA94C; }
         .st-chart-bar.pick { cursor: pointer; }
         .st-chart-hit { fill: transparent; }
@@ -9874,7 +9875,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     if (!sv) {
                         s += "<rect x=\"" + sx + "\" y=\"" + yStrip + "\" width=\"" + srw + "\" height=\"" + stripH + "\" rx=\"4\" fill=\"" + pal[0] + "\" data-tip-a=\"" + escapeHtml(dwL) + "\" data-tip-b=\"" + escapeHtml(tipB2) + "\"" + oc + "/>";
                     } else {
-                        s += "<rect class=\"st-cal-cell hot\" x=\"" + sx + "\" y=\"" + yStrip + "\" width=\"" + srw + "\" height=\"" + stripH + "\" rx=\"4\" fill=\"#0AA94C\" fill-opacity=\"" + Math.round(op * 100) / 100 + "\" data-tip-a=\"" + escapeHtml(dwL) + "\" data-tip-b=\"" + escapeHtml(tipB2) + "\"" + oc + "/>";
+                        s += "<rect class=\"st-cal-cell hot\" x=\"" + sx + "\" y=\"" + yStrip + "\" width=\"" + srw + "\" height=\"" + stripH + "\" rx=\"4\" fill=\"#0AA94C\" fill-opacity=\"" + Math.round(op * 100) / 100 + "\" data-tip-a=\"" + escapeHtml(dwL) + "\" data-tip-b=\"" + escapeHtml(tipB2) + "\"" + oc + " onclick=\"event.stopPropagation(); statsChartWeekdayClick(" + si + ");\"/>";
                     }
                     s += "<text x=\"" + Math.round((sx + srw / 2) * 10) / 10 + "\" y=\"" + Math.round((yStrip + stripH / 2 + fsTxt * 0.35) * 10) / 10 + "\" text-anchor=\"middle\" font-weight=\"700\"" + (op > 0.55 ? " fill=\"#ffffff\"" : " fill=\"#3c4043\"") + ">" + sv + "</text>";
                 }
@@ -12709,6 +12710,36 @@ window.addEventListener('resize', function() {
                     rows.push({ p: p, k: keyOf.has(p) ? keyOf.get(p) : null });
                 }
                 if (!rows.length) return;
+                currentLBTransient = { label: lab || "" };
+                openLBTransientGrid(statsChartSortRows(rows));
+            } catch(e) {}
+        }
+        // Klik na den v tydnu v pasu: fotky daneho dne (Po=0..Ne=6, napric daty) + mrizka.
+        function statsChartWeekdayClick(dow) {
+            try {
+                dow = parseInt(dow, 10);
+                if (!isFinite(dow) || dow < 0 || dow > 6) return;
+                var T = (typeof window !== "undefined" && window.statsChartData && window.statsChartData.times) || [];
+                if (!T || !T.length) return;
+                var loc = (currentLang === "cs") ? "cs-CZ" : "en-US";
+                var keyOf = statsPhotoKeyMap();
+                var rows = [];
+                for (var i = 0; i < T.length; i++) {
+                    var p = T[i];
+                    var k = statsTimeKey(p);
+                    if (!k || k.length < 8) continue;
+                    var d8 = k.substring(0, 8);
+                    var y = parseInt(d8.substring(0, 4), 10), mo = parseInt(d8.substring(4, 6), 10), dd = parseInt(d8.substring(6, 8), 10);
+                    if (!isFinite(y) || mo < 1 || mo > 12 || dd < 1 || dd > 31) continue;
+                    var dt = Date.UTC(y, mo - 1, dd);
+                    var chk = new Date(dt);
+                    if (chk.getUTCFullYear() !== y || chk.getUTCMonth() !== mo - 1 || chk.getUTCDate() !== dd) continue;
+                    if ((chk.getUTCDay() + 6) % 7 !== dow) continue;
+                    rows.push({ p: p, k: keyOf.has(p) ? keyOf.get(p) : null });
+                }
+                if (!rows.length) return;
+                var lab = "";
+                try { lab = new Date(Date.UTC(2018, 0, 1 + dow)).toLocaleString(loc, { weekday: "short", timeZone: "UTC" }); } catch(e) {}
                 currentLBTransient = { label: lab || "" };
                 openLBTransientGrid(statsChartSortRows(rows));
             } catch(e) {}
