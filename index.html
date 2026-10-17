@@ -2166,7 +2166,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.30</span>
+                    <span class="info-meta-val">3.31</span>
                 </div>
             </div>
 
@@ -7103,7 +7103,7 @@ function statsSetFilters(on) {
                 if (typeof calcDistKm !== "function") return null;
                 var rKm = Number(km);
                 if (!isFinite(rKm) || rKm <= 0) return null;
-                var n = locs.length, cellDeg = rKm / 111.32, i, j, cnt = 0;
+                var n = locs.length, cellDeg = rKm / 111.0, i, j, cnt = 0;
                 var la = new Float64Array(n), lo = new Float64Array(n), orig = new Int32Array(n);
                 var rows = Object.create(null), maxAbs = 0;
                 for (i = 0; i < n; i++) {
@@ -7146,6 +7146,7 @@ function statsSetFilters(on) {
                 }
                 list.sort(function(x, y) { return y.blk - x.blk; });
                 var bestN = 0, bestI = -1;
+                var rIn2 = rKm * rKm * 0.990, rOut2 = rKm * rKm * 1.010, kLat = 111.1949266;
                 for (var ci = 0; ci < list.length; ci++) {
                     var C = list[ci];
                     if (prog && list.length > 50 && (ci & 63) === 0) { try { prog(ci / list.length); } catch(eP) {} }
@@ -7155,6 +7156,7 @@ function statsSetFilters(on) {
                         if (bestN >= C.blk) break;        // dosahl jsem odhadu pro tuto bunku
                         var i0 = own[oi];
                         var got = 1;
+                        var lat0 = la[i0], lon0 = lo[i0], kLon = kLat * Math.cos(lat0 * Math.PI / 180);
                         for (var dr = -1; dr <= 1; dr++) {
                             var RR = rows[C.r + dr];
                             if (!RR) continue;
@@ -7164,7 +7166,16 @@ function statsSetFilters(on) {
                                 for (j = 0; j < arr.length; j++) {
                                     var ix = arr[j];
                                     if (ix === i0) continue;
-                                    if (calcDistKm(la[i0], lo[i0], la[ix], lo[ix]) <= rKm) got++;
+                                    var dLatKm = (la[ix] - lat0) * kLat;
+                                    var dLon = lo[ix] - lon0;
+                                    if (dLon > 180) dLon -= 360; else if (dLon < -180) dLon += 360;
+                                    var dLonKm = dLon * kLon;
+                                    var dFlat2 = dLatKm * dLatKm + dLonKm * dLonKm;
+                                    if (dFlat2 <= rIn2) {
+                                        got++;
+                                    } else if (dFlat2 <= rOut2) {
+                                        if (calcDistKm(lat0, lon0, la[ix], lo[ix]) <= rKm) got++;
+                                    }
                                 }
                             }
                         }
@@ -8386,10 +8397,29 @@ function statsSetFilters(on) {
             if (P.length < 2) return null;
             if (P.length === 2) return { a: P[0].row, b: P[1].row, km: calcDistKmLL([P[0].la, P[0].lo], [P[1].la, P[1].lo]) };
             var dh = function(a, b) { return calcDistKmLL([a.la, a.lo], [b.la, b.lo]); };
+            var nP = P.length;
+            var ux = new Float64Array(nP), uy = new Float64Array(nP), uz = new Float64Array(nP);
+            var d2r = Math.PI / 180;
+            for (i = 0; i < nP; i++) {
+                var rLat = P[i].la * d2r, rLon = P[i].lo * d2r;
+                var cosLat = Math.cos(rLat);
+                ux[i] = cosLat * Math.cos(rLon);
+                uy[i] = cosLat * Math.sin(rLon);
+                uz[i] = Math.sin(rLat);
+                P[i]._idx = i;
+            }
             var farthestFrom = function(q) {
-                var bestP = null, bd = -1, k, d;
-                for (k = 0; k < P.length; k++) { d = dh(q, P[k]); if (d > bd) { bd = d; bestP = P[k]; } }
-                return { p: bestP, km: bd };
+                var qIdx = (q && typeof q._idx === "number") ? q._idx : -1;
+                var qx = (qIdx >= 0) ? ux[qIdx] : (Math.cos(q.la * d2r) * Math.cos(q.lo * d2r));
+                var qy = (qIdx >= 0) ? uy[qIdx] : (Math.cos(q.la * d2r) * Math.sin(q.lo * d2r));
+                var qz = (qIdx >= 0) ? uz[qIdx] : Math.sin(q.la * d2r);
+                var bestP = null, minDot = 2, k, dot;
+                for (k = 0; k < nP; k++) {
+                    dot = qx * ux[k] + qy * uy[k] + qz * uz[k];
+                    if (dot < minDot) { minDot = dot; bestP = P[k]; }
+                }
+                var km = bestP ? dh(q, bestP) : 0;
+                return { p: bestP, km: km };
             };
             var los = P.map(function(p) { return p.lo; }).sort(function(a, b) { return a - b; });
             var med = los[Math.floor(los.length / 2)];
@@ -8411,14 +8441,17 @@ function statsSetFilters(on) {
             var N = P[0], S = P[0], E = P[0], W = P[0];
             P.forEach(function(p) { if (p.la > N.la) N = p; if (p.la < S.la) S = p; if (p.lo > E.lo) E = p; if (p.lo < W.lo) W = p; });
             add(N); add(S); add(E); add(W);
-            var best = -1, ba = null, bb = null, d;
+            var minDot = 2, ba = null, bb = null, dot;
             for (ci = 0; ci < C.length; ci++) {
                 if (prog && C.length > 200 && (ci & 127) === 0) { try { prog(0.4 + 0.55 * ci / C.length); } catch(eP2) {} }
+                var i1 = C[ci]._idx, x1 = ux[i1], y1 = uy[i1], z1 = uz[i1];
                 for (cj = ci + 1; cj < C.length; cj++) {
-                    d = dh(C[ci], C[cj]);
-                    if (d > best) { best = d; ba = C[ci]; bb = C[cj]; }
+                    var i2 = C[cj]._idx;
+                    dot = x1 * ux[i2] + y1 * uy[i2] + z1 * uz[i2];
+                    if (dot < minDot) { minDot = dot; ba = C[ci]; bb = C[cj]; }
                 }
             }
+            var best = (ba && bb) ? dh(ba, bb) : -1;
             var sd = 7;
             var rnd = function() { sd = (sd * 1103515245 + 12345) & 0x7fffffff; return sd / 0x7fffffff; };
             var seeds = [ba, bb, N, S, E, W], gs = 0, sp, si;
@@ -15895,7 +15928,7 @@ window.addEventListener('resize', function() {
             var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                     Math.sin(dLon/2) * Math.sin(dLon/2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(Math.max(0, 1 - a)));
             return R * c;
         }
 
@@ -15995,7 +16028,7 @@ window.addEventListener('resize', function() {
             var sinLat = Math.sin(dLat / 2), sinLon = Math.sin(dLon / 2);
             var aa = sinLat * sinLat +
                      Math.cos(a[0] * Math.PI / 180) * Math.cos(b[0] * Math.PI / 180) * sinLon * sinLon;
-            return R * 2 * Math.atan2(Math.sqrt(aa), Math.sqrt(1 - aa));
+            return R * 2 * Math.atan2(Math.sqrt(aa), Math.sqrt(Math.max(0, 1 - aa)));
         }
 
         // Orthodromická interpolace: pro segment delší než 100 km vloží mezilehlé body každých ~100 km
