@@ -7241,6 +7241,7 @@ function statsSetFilters(on) {
         // Top-10 shluku: hladove s odebiranim pres stejny zebricek. Vraci [{c, n, r}].
         // Jeden hladovy pruchod danym R s volitelnym min. rozestupem stredu (minSep, 0 = bez).
         // Pri kolizi se stred zahodi (clenove vypadnou z poolu), jinak by smycka nekoncila.
+        var _statsTopIters = 0;
         function statsTopGreedy(locs, R, minSep, prog) {
             var out = [];
             try {
@@ -7248,6 +7249,7 @@ function statsSetFilters(on) {
                 var pool = locs.slice(), guard = 0, best, mem, i, o, dd, k, clash, drop, kept;
                 while (out.length < 10 && pool.length > 0 && guard < 60) {
                     guard++;
+                    try { _statsTopIters++; } catch(eIt) {}
                     best = null;
                     try { best = statsDensest(pool, R); } catch(e) { best = null; }
                     if (!best || !best.n) break;
@@ -7292,30 +7294,36 @@ function statsSetFilters(on) {
                 var ladder = [1, 2, 5, 10, 20, 50];
                 var bestList = [];
                 var li, out;
+                try { _statsTopIters = 0; } catch(eI0) {}
                 var P = function(f) { try { if (typeof prog === "function") prog(f); } catch(e) {} };
+                /* Po ukonceni pripojime pocet iteraci greedy (diagnostika vykonu). */
+                var withIters = function(list) {
+                    try { if (list && typeof list === "object") list.greedyIters = _statsTopIters; } catch(eWI) {}
+                    return list;
+                };
                 // Faze 1: s volitelnym rozestupem stredu (sm * R).
                 for (li = 0; li < ladder.length; li++) {
                     out = statsTopGreedy(locs, ladder[li], sm * ladder[li], function(k) { P((li + k / 10) / (ladder.length * 2)); });
                     /* sepKm = skutecne pouzita izolace (R x nasobek rozestupu) pro tooltip; fase 2 ji nuluje. */
                     try { out.sepKm = sm * ladder[li]; } catch(e) {}
                     if (out.length > bestList.length) bestList = out;
-                    if (out.length >= 3) return out;
+                    if (out.length >= 3) return withIters(out);
                 }
                 // Pokud uzivatel zvolil vetsi odstup (> 2R) a nasla se aspon 1-2 mista, vratime je primo (nespadnout do 0R)
                 if (sm > 2 && bestList.length > 0) {
                     try { if (typeof prog === "function") prog(1); } catch(e) {}
-                    return bestList;
+                    return withIters(bestList);
                 }
                 // Faze 2 (fallback): bez rozestupu, kdyz v 1. fazi nevysla aspon 3 mista.
                 for (li = 0; li < ladder.length; li++) {
                     out = statsTopGreedy(locs, ladder[li], 0, function(k) { P(0.5 + (li + k / 10) / (ladder.length * 2)); });
                     try { out.sepKm = 0; } catch(e) {}
                     if (out.length > bestList.length) bestList = out;
-                    if (out.length >= 3) return out;
+                    if (out.length >= 3) return withIters(out);
                 }
                 try { if (typeof prog === "function") prog(1); } catch(e) {}
                 try { if (bestList.length && typeof bestList.sepKm !== "number") bestList.sepKm = 0; } catch(e) {}
-                return bestList;
+                return withIters(bestList);
             } catch(e) { return []; }
         }
         // Plocha pokrytá obalovou zónou (buffer) — adaptivní geodetická mřížka s před-deduplikací a diskovým kernelem.
@@ -8798,12 +8806,6 @@ function fmtStatsCoordShort(la, lo) {
             } catch(e) {}
             renderStats();
         }
-        function statsFolderFilterGo(path) {
-            try {
-                if (typeof setFolderFilter === "function") setFolderFilter(path);
-            } catch(e) {}
-            try { if (typeof closeStatsModal === "function") closeStatsModal(); } catch(e) {}
-        }
         function openStatsModal() {
             recordModalOpener();
             try {
@@ -9703,8 +9705,8 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     return "<th style=\"width:" + w + "\" class=\"" + (isNum ? "num " : "") + (act ? "active" : "") + "\" onclick=\"statsSortFolderTable('" + k + "')\" title=\"" + tAttr + "\">" + label + "<span class=\"st-sort-ind\">" + ind + "</span></th>";
                 };
                 H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\"/></svg>" + L_("statsSecFolderTable", "Tabulka (složková)") + "</span><span style=\"display:inline-flex;gap:4px;\">" +
-                    "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(true);\" title=\"" + tExpAll + "\" aria-label=\"" + tExpAll + "\" style=\"font-size:10px;\">▼</button>" +
-                    "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(false);\" title=\"" + tColAll + "\" aria-label=\"" + tColAll + "\" style=\"font-size:10px;\">▲</button>" +
+                "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(true);\" title=\"" + tExpAll + "\" aria-label=\"" + tExpAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button>" +
+                "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(false);\" title=\"" + tColAll + "\" aria-label=\"" + tColAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m18 15-6-6-6 6\"/></svg></button>" +
                     "<button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsFolderCsv()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button></span></h3>";
                 H += "<div class=\"st-table-wrap\">";
                 H += "<table class=\"st-table st-folder-table\"><thead><tr>";
@@ -16518,7 +16520,7 @@ window.addEventListener('resize', function() {
             if (MF_IDB.db) { done(true); return; }
             if (!mfIdbSupported()) { done(false); return; }
             try {
-                timer = setTimeout(function() { done(false); }, 1500);
+                timer = setTimeout(function() { done(false); }, 5000);
             } catch(eTo) {}
             try {
                 var rq = indexedDB.open(MF_IDB.name, 1);
