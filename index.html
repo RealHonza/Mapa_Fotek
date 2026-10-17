@@ -7123,13 +7123,20 @@ function statsSetFilters(on) {
                 var cosMin = Math.cos(maxAbs * Math.PI / 180);
                 if (!(cosMin > 0.000001)) cosMin = 0.000001;
                 var colDeg = cellDeg / cosMin;
+                var numCols = Math.max(1, Math.ceil(360 / colDeg));
+                var actColDeg = 360 / numCols;
                 for (i = 0; i < cnt; i++) {
-                    var ra2 = Math.floor(la[i] / cellDeg), ca2 = Math.floor(lo[i] / colDeg);
+                    var ra2 = Math.floor(la[i] / cellDeg);
+                    var lonNorm = lo[i] + 180;
+                    while (lonNorm >= 360) lonNorm -= 360;
+                    while (lonNorm < 0) lonNorm += 360;
+                    var ca2 = Math.floor(lonNorm / actColDeg);
+                    if (ca2 >= numCols) ca2 = numCols - 1;
                     var rw = rows[ra2];
                     if (!rw) rw = rows[ra2] = { cols: Object.create(null) };
                     (rw.cols[ca2] || (rw.cols[ca2] = [])).push(i);
                 }
-                // horni odhad pro kazdou neprazdnou bunku = pocet bodu v jejim 3x3 okoli
+                // horni odhad pro kazdou neprazdnou bunku = pocet bodu v jejim 3x3 okoli (s cyklickym propojenim sloupcu pres +-180)
                 var list = [], rk, ck, ra2, ca2, da, db, R2, A2;
                 for (rk in rows) {
                     ra2 = +rk;
@@ -7139,7 +7146,13 @@ function statsSetFilters(on) {
                         for (da = -1; da <= 1; da++) {
                             R2 = rows[ra2 + da];
                             if (!R2) continue;
-                            for (db = -1; db <= 1; db++) { A2 = R2.cols[ca2 + db]; if (A2) s += A2.length; }
+                            var seenDb = {};
+                            for (db = -1; db <= 1; db++) {
+                                var cIdx = (ca2 + db + numCols) % numCols;
+                                if (seenDb[cIdx]) continue;
+                                seenDb[cIdx] = true;
+                                A2 = R2.cols[cIdx]; if (A2) s += A2.length;
+                            }
                         }
                         list.push({ r: ra2, c: ca2, blk: s });
                     }
@@ -7160,8 +7173,12 @@ function statsSetFilters(on) {
                         for (var dr = -1; dr <= 1; dr++) {
                             var RR = rows[C.r + dr];
                             if (!RR) continue;
+                            var seenDc = {};
                             for (var dc = -1; dc <= 1; dc++) {
-                                var arr = RR.cols[C.c + dc];
+                                var colIdx = (C.c + dc + numCols) % numCols;
+                                if (seenDc[colIdx]) continue;
+                                seenDc[colIdx] = true;
+                                var arr = RR.cols[colIdx];
                                 if (!arr) continue;
                                 for (j = 0; j < arr.length; j++) {
                                     var ix = arr[j];
@@ -7370,12 +7387,12 @@ function statsSetFilters(on) {
                 var kmPerDegLat = 110.574;
                 var kmPerDegLon = 111.32 * cosLat;
 
-                // Fáze 1: Detekce izolovaných kruhů v mřížce 2*R
+                // Fáze 1: Detekce izolovaných kruhů v mřížce 2*R s cyklickým propojením přes +-180°
                 // Pokud bod nemá v buňce 2*R ani v 8 sousedech jiný bod, nepřekrývá se s ničím -> přesně π·R²
                 var boxSize = 2 * R;
                 var BY_OFF = Math.ceil(10100 / boxSize) + 10;
-                var BX_OFF = Math.ceil(20200 / boxSize) + 10;
-                var BX_WIDTH = 2 * BX_OFF + 1;
+                var W_km = 360 * kmPerDegLon;
+                var numBX = Math.max(1, Math.round(W_km / boxSize));
 
                 var boxMap = new Map();
                 for (i = 0; i < n; i++) {
@@ -7384,8 +7401,9 @@ function statsSetFilters(on) {
                     if (!isFinite(lat) || !isFinite(lon)) continue;
 
                     var by = Math.floor((lat * kmPerDegLat) / boxSize);
-                    var bx = Math.floor((lon * kmPerDegLon) / boxSize);
-                    var bKey = (by + BY_OFF) * BX_WIDTH + (bx + BX_OFF);
+                    var lonNorm = ((lon % 360) + 360) % 360;
+                    var bx = Math.floor((lonNorm / 360) * numBX) % numBX;
+                    var bKey = (by + BY_OFF) * numBX + bx;
 
                     var arr = boxMap.get(bKey);
                     if (!arr) {
@@ -7409,7 +7427,8 @@ function statsSetFilters(on) {
                     for (var dy = -1; dy <= 1; dy++) {
                         for (var dx = -stepBx; dx <= stepBx; dx++) {
                             if (dy === 0 && dx === 0) continue;
-                            var nbKey = (by + dy + BY_OFF) * BX_WIDTH + (bx + dx + BX_OFF);
+                            var nbX = (bx + dx + numBX) % numBX;
+                            var nbKey = (by + dy + BY_OFF) * numBX + nbX;
                             var nb = boxMap.get(nbKey);
                             if (nb) neighborCount += nb.length;
                         }
@@ -7438,16 +7457,16 @@ function statsSetFilters(on) {
 
                     var cellSize = Math.max(R / K, 0.001);
                     var CY_OFF = Math.ceil(10100 / cellSize) + 50;
-                    var CX_OFF = Math.ceil(20200 / cellSize) + 50;
-                    var CX_WIDTH = 2 * CX_OFF + 1;
+                    var numCX = Math.max(1, Math.round(W_km / cellSize));
 
-                    // Deduplikace středů do buněk mřížky (spatial hashing)
+                    // Deduplikace středů do buněk mřížky (spatial hashing s cyklickou délkou přes +-180°)
                     var centerCells = new Set();
                     for (i = 0; i < m; i++) {
                         var pt = clusterPoints[i];
                         var cy0 = Math.round((pt.lat * kmPerDegLat) / cellSize);
-                        var cx0 = Math.round((pt.lon * kmPerDegLon) / cellSize);
-                        centerCells.add((cy0 + CY_OFF) * CX_WIDTH + (cx0 + CX_OFF));
+                        var lonNorm2 = ((pt.lon % 360) + 360) % 360;
+                        var cx0 = Math.floor((lonNorm2 / 360) * numCX) % numCX;
+                        centerCells.add((cy0 + CY_OFF) * numCX + cx0);
                     }
 
                     if (centerCells.size === 1) {
@@ -7479,10 +7498,7 @@ function statsSetFilters(on) {
                                 var remSq = RSq - dyKm * dyKm;
                                 if (remSq < 0) continue;
                                 var dxMax = Math.floor((Math.sqrt(remSq) / cellSize) * ratio);
-                                var rowOffset = dy * CX_WIDTH;
-                                for (var dx = -dxMax; dx <= dxMax; dx++) {
-                                    k.push(rowOffset + dx);
-                                }
+                                k.push({ dy: dy, dxMax: dxMax });
                             }
                             kernelCache.set(cy, k);
                             return k;
@@ -7490,17 +7506,24 @@ function statsSetFilters(on) {
 
                         var covered = new Set();
                         centerCells.forEach(function(centerCode) {
-                            var cY = Math.floor(centerCode / CX_WIDTH) - CY_OFF;
+                            var cY = Math.floor(centerCode / numCX) - CY_OFF;
+                            var cX = centerCode % numCX;
                             var kern = getKernel(cY);
                             for (var k = 0; k < kern.length; k++) {
-                                covered.add(centerCode + kern[k]);
+                                var rowY = cY + kern[k].dy;
+                                var rowOffset = (rowY + CY_OFF) * numCX;
+                                var dxMax = kern[k].dxMax;
+                                for (var dx = -dxMax; dx <= dxMax; dx++) {
+                                    var colX = (cX + dx + numCX) % numCX;
+                                    covered.add(rowOffset + colX);
+                                }
                             }
                         });
 
                         var rowAreaCache = new Map();
                         var clusterArea = 0;
                         covered.forEach(function(code) {
-                            var cY = Math.floor(code / CX_WIDTH) - CY_OFF;
+                            var cY = Math.floor(code / numCX) - CY_OFF;
                             var rArea = rowAreaCache.get(cY);
                             if (rArea === undefined) {
                                 var cLat = (cY * cellSize) / kmPerDegLat;
