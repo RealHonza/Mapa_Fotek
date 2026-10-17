@@ -2162,11 +2162,11 @@
                 <!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. -->
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblUpdated">Poslední aktualizace:</span>
-                    <span class="info-meta-val" id="valUpdated">11. 10. 2026</span>
+                    <span class="info-meta-val" id="valUpdated">17. 10. 2026</span>
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.31</span>
+                    <span class="info-meta-val">3.32</span>
                 </div>
             </div>
 
@@ -7159,7 +7159,7 @@ function statsSetFilters(on) {
                 }
                 list.sort(function(x, y) { return y.blk - x.blk; });
                 var bestN = 0, bestI = -1;
-                var rIn2 = rKm * rKm * 0.990, rOut2 = rKm * rKm * 1.010, kLat = 111.1949266;
+                var kLat = 111.1949266, d2r = Math.PI / 180, rSq = rKm * rKm;
                 for (var ci = 0; ci < list.length; ci++) {
                     var C = list[ci];
                     if (prog && list.length > 50 && (ci & 63) === 0) { try { prog(ci / list.length); } catch(eP) {} }
@@ -7169,7 +7169,14 @@ function statsSetFilters(on) {
                         if (bestN >= C.blk) break;        // dosahl jsem odhadu pro tuto bunku
                         var i0 = own[oi];
                         var got = 1;
-                        var lat0 = la[i0], lon0 = lo[i0], kLon = kLat * Math.cos(lat0 * Math.PI / 180);
+                        var lat0 = la[i0], lon0 = lo[i0];
+                        var lat0Rad = lat0 * d2r;
+                        var kLon0 = kLat * Math.cos(lat0Rad);
+                        var kLonDeriv = 0.5 * kLat * Math.sin(lat0Rad) * d2r;
+                        var tanLat = Math.abs(Math.tan(Math.min(88.5, Math.abs(lat0)) * d2r));
+                        var tolMargin = Math.min(0.08, Math.max(0.005, (rKm / 6371) * tanLat * 0.05 + 0.005));
+                        var rIn2 = rSq * (1 - tolMargin) * (1 - tolMargin);
+                        var rOut2 = rSq * (1 + tolMargin) * (1 + tolMargin);
                         for (var dr = -1; dr <= 1; dr++) {
                             var RR = rows[C.r + dr];
                             if (!RR) continue;
@@ -7183,9 +7190,11 @@ function statsSetFilters(on) {
                                 for (j = 0; j < arr.length; j++) {
                                     var ix = arr[j];
                                     if (ix === i0) continue;
-                                    var dLatKm = (la[ix] - lat0) * kLat;
+                                    var dLatDeg = la[ix] - lat0;
+                                    var dLatKm = dLatDeg * kLat;
                                     var dLon = lo[ix] - lon0;
                                     if (dLon > 180) dLon -= 360; else if (dLon < -180) dLon += 360;
+                                    var kLon = kLon0 - kLonDeriv * dLatDeg;
                                     var dLonKm = dLon * kLon;
                                     var dFlat2 = dLatKm * dLatKm + dLonKm * dLonKm;
                                     if (dFlat2 <= rIn2) {
