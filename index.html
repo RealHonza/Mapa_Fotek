@@ -6338,9 +6338,9 @@ function statsSelLoad() {
                 var _bd = (typeof statsBusyDays === "number" && isFinite(statsBusyDays) && statsBusyDays >= 1 && statsBusyDays <= STATS_BUSY_MAX) ? Math.round(statsBusyDays) : 1;
                 var _am = (statsChartAvgMed === true || statsChartAvgMed === 1 || statsChartAvgMed === "1") ? "1" : "0";
                 var _cr2 = (typeof statsCoverageR === "number" && isFinite(statsCoverageR) && statsCoverageR >= 0.5 && statsCoverageR <= 5000) ? statsCoverageR : 25;
-                localStorage.setItem(STATS_SEL_KEY, (statsStateSel.G ? "1" : "0") + "," + (statsStateSel.D ? "1" : "0") + ","
+                try { localStorage.setItem(STATS_SEL_KEY, (statsStateSel.G ? "1" : "0") + "," + (statsStateSel.D ? "1" : "0") + ","
                     + (statsStateSel.S ? "1" : "0") + "," + (statsApplyFilters ? "1" : "0") + "," + _cm + "," + _bd + "," + _am + "," + _cr2
-                    + "," + (STATS_TOP_SEP_OPTS.indexOf(statsTopSepMult) !== -1 ? statsTopSepMult : 2));
+                    + "," + (STATS_TOP_SEP_OPTS.indexOf(statsTopSepMult) !== -1 ? statsTopSepMult : 2)); } catch(eSS) {}
             } catch(e) {}
         }
         statsSelLoad();
@@ -6401,8 +6401,8 @@ function statsSetFilters(on) {
                 var d = (typeof SETTINGS_PROFILE_DEFAULTS !== "undefined" && SETTINGS_PROFILE_DEFAULTS) ? SETTINGS_PROFILE_DEFAULTS : null;
                 var defSel = (d && d[STATS_SEL_KEY] !== undefined) ? String(d[STATS_SEL_KEY]) : "1,1,1,1,time,1,0,25,2";
                 var defRef = (d && d[STATS_REF_KEY] !== undefined) ? String(d[STATS_REF_KEY]) : "";
-                localStorage.setItem(STATS_SEL_KEY, defSel);
-                localStorage.setItem(STATS_REF_KEY, defRef);
+                try { localStorage.setItem(STATS_SEL_KEY, defSel); } catch(eS1) {}
+                try { localStorage.setItem(STATS_REF_KEY, defRef); } catch(eS2) {}
                 statsCoverageR = 25;
                 statsTopSepMult = 2;
                 statsSelLoad();
@@ -9017,6 +9017,22 @@ function stBar(label, value, max, text, pctText, chkHtml) {
             } catch(e) { res = null; }
             try { j.finish(res); } catch(eF) {}
         }
+        
+        function fmtStatsPhotos(n) {
+            try { window.fmtStatsPhotos = fmtStatsPhotos; } catch(eW) {}
+            try {
+                var v = Number(n);
+                if (!isFinite(v)) return String(n);
+                var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {};
+                var w = t.statsPhotoMany || ((typeof currentLang !== "undefined" && currentLang === "en") ? "photos" : "fotek");
+                if (v === 1) w = t.statsPhotoOne || ((typeof currentLang !== "undefined" && currentLang === "en") ? "photo" : "fotka");
+                else if (v >= 2 && v <= 4) w = t.statsPhotoFew || ((typeof currentLang !== "undefined" && currentLang === "en") ? "photos" : "fotky");
+                var loc = (typeof currentLang !== "undefined" && currentLang === "cs") ? "cs-CZ" : "en-US";
+                return v.toLocaleString(loc) + " " + w;
+            } catch(e) { return String(n); }
+        }
+        try { window.fmtStatsPhotos = fmtStatsPhotos; } catch(e) {}
+
         function renderStats() {
             var body = document.getElementById("statsBody");
             if (!body) return;
@@ -11016,7 +11032,7 @@ H += "</div></div>";
                             if (SETTINGS_PROFILE_KEYS.indexOf(k) === -1) continue;
                             try { localStorage.setItem(k, String(data[k])); } catch(e7) {}
                         }
-                        localStorage.setItem("mapa_fotek_profile_on", "1");
+                        try { localStorage.setItem("mapa_fotek_profile_on", "1"); } catch(ePOn) {}
                     } catch(e8) {}
                     setTimeout(function() { try { location.reload(); } catch(e9) {} }, 300);
                 }
@@ -11034,7 +11050,7 @@ H += "</div></div>";
                         if (SETTINGS_PROFILE_KEYS.indexOf(k) === -1) continue;
                         try { localStorage.setItem(k, String(data[k])); } catch(e2) {}
                     }
-                    localStorage.setItem("mapa_fotek_profile_on", "1");
+                    try { localStorage.setItem("mapa_fotek_profile_on", "1"); } catch(ePOn2) {}
                 } catch(e3) {}
                 setTimeout(function() { try { location.reload(); } catch(e4) {} }, 300);
             } catch(e) { console.error(e); }
@@ -17213,12 +17229,29 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
                 return seq[idx % seq.length];
             } catch(e) { return seq[idx % seq.length]; }
         }
+        
+        function getTrackIconOptions() {
+            var isCs = (typeof currentLang !== "undefined" && currentLang === "cs");
+            return [
+                { key: "dot", title: isCs ? "Kolečko" : "Dot" },
+                { key: "pin", title: isCs ? "Špendlík" : "Pin" },
+                { key: "flag", title: isCs ? "Praporek" : "Flag" },
+                { key: "peak", title: isCs ? "Vrchol" : "Peak" },
+                { key: "camera", title: isCs ? "Fotoaparát" : "Camera" },
+                { key: "cross", title: isCs ? "Křížek" : "Cross" },
+                { key: "camp", title: isCs ? "Kemp" : "Camp" },
+                { key: "star", title: isCs ? "Symbol" : "Symbol" }
+            ];
+        }
+        var trackIconOptions = getTrackIconOptions();
+        try { window.trackIconOptions = trackIconOptions; } catch(e) {}
+
         function apriGisIcon() {
             try {
                 var v = apriGGet("point_icon", null);
                 var arr = [];
                 try {
-                    var _arr = (typeof trackIconOptions !== "undefined" && trackIconOptions) || [];
+                    var _arr = (typeof getTrackIconOptions === "function") ? getTrackIconOptions() : ((typeof trackIconOptions !== "undefined" && trackIconOptions) || []);
                     for (var i = 0; i < _arr.length; i++) arr.push(_arr[i].key);
                 } catch(e) {}
                 if (!arr.length) arr = ["dot", "pin", "flag", "peak", "camera", "cross", "camp", "star"];
@@ -21628,7 +21661,8 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                 { fill: "#795548", title: currentLang === "cs" ? "Hnědá" : "Brown" }
             ];
 
-            var trackIconOptions = [
+            trackIconOptions = getTrackIconOptions();
+            var _oldTrackIcons = [
                 { key: "dot", title: currentLang === "cs" ? "Kolečko" : "Dot" },
                 { key: "pin", title: currentLang === "cs" ? "Špendlík" : "Pin" },
                 { key: "flag", title: currentLang === "cs" ? "Praporek" : "Flag" },
