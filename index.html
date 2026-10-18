@@ -215,8 +215,11 @@
         
         /* 3. Hamburger menu (jazyk + informace) */
         .main-menu-btn svg { width: 20px; height: 20px; }
-        .main-menu-dropdown { width: 220px; }
+        .dropdown-menu.main-menu-dropdown { width: 220px; max-height: none; overflow-y: visible; }
         .main-menu-dropdown .dropdown-item { padding: 10px 10px; font-size: 12.5px; }
+        @media (max-height: 380px) {
+            .dropdown-menu.main-menu-dropdown { max-height: calc(100vh - 46px); overflow-y: auto; }
+        }
         
         /* 4. Zoom tlačítka */
         .zoom-group { display: flex; align-items: center; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; height: 32px; }
@@ -507,6 +510,11 @@
         #infoModalBackdrop .info-modal-header { position: sticky; top: -22px; z-index: 5; margin: -22px -24px 14px; padding: 22px 24px 10px; background: #ffffff; }
         #settingsModalBackdrop .info-modal-header { position: sticky; top: -22px; z-index: 5; margin: -22px -24px 14px; padding: 22px 24px 10px; background: #ffffff; }
         .info-modal-title { font-size: 18px; font-weight: 700; color: #202124; display: flex; align-items: center; gap: 12px; margin: 0; }
+        /* Nadpis okna Informace: velka pismena ve zelene barve loga (fill #1e8544). */
+        .info-modal-title .ttl-upper { text-transform: uppercase; color: #1e8544; letter-spacing: 0.5px; font-size: 20px; word-spacing: 4px; }
+        /* Nadpis okna Informace: text vycentrovan v cele sirce okna (logo zustava vlevo).
+           Header je position:sticky, takze je nadpisum nadrazkem absolutniho polozeni. */
+        #infoModalBackdrop .info-modal-title .ttl-upper { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
         .modal-close-btn { border: none; background: transparent; font-size: 22px; color: #5f6368; cursor: pointer; line-height: 1; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
         .modal-close-btn:hover { background: #f1f3f4; color: #202124; }
         .info-modal-logo-btn { cursor: zoom-in; transition: transform 0.15s ease, filter 0.15s ease; border-radius: 6px; }
@@ -822,6 +830,12 @@
                 max-width: calc(100vw - 20px);
                 max-height: 280px;
             }
+            .dropdown-menu.main-menu-dropdown {
+                width: 220px;
+                max-width: calc(100vw - 20px);
+                max-height: none;
+                overflow-y: visible;
+            }
             .sources-dropdown {
                 width: 360px;
                 max-width: calc(100vw - 16px);
@@ -945,9 +959,11 @@
             .ui-btn.icon-only-btn {
                 width: 30px;
             }
-            .main-menu-dropdown {
+            .dropdown-menu.main-menu-dropdown {
                 width: calc(100vw - 60px);
                 max-width: 220px;
+                max-height: none;
+                overflow-y: visible;
             }
             .sources-dropdown {
                 position: fixed;
@@ -2149,7 +2165,7 @@
         <div class="info-modal" onclick="event.stopPropagation()">
             <div class="info-modal-header">
                 <h2 class="info-modal-title">
-                    <span class="info-modal-logo info-modal-logo-btn" onclick="openLogoModal()" title="Zobrazit logo v plné velikosti" style="display:inline-flex;align-items:center;margin-right:12px;"><svg viewBox="0 0 500 500" width="96" height="96" aria-hidden="true"><use href="#ico-app-logo"/></svg></span><span id="txtModalTitle">Mapa fotek</span>
+                    <span class="info-modal-logo info-modal-logo-btn" onclick="openLogoModal()" title="Zobrazit logo v plné velikosti" style="display:inline-flex;align-items:center;margin-right:12px;"><svg viewBox="0 0 500 500" width="96" height="96" aria-hidden="true"><use href="#ico-app-logo"/></svg></span><span id="txtModalTitle" class="ttl-upper">MAPA FOTEK</span>
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy">&times;</button>
             </div>
@@ -2166,7 +2182,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.38</span>
+                    <span class="info-meta-val">3.39</span>
                 </div>
             </div>
 
@@ -2943,7 +2959,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 guideSearchPH: "Hledat v návodu…",
                 guideKeysTh1: "Zkratka",
                 guideKeysTh2: "Akce",
-                modalTitle: "Mapa fotek",
+                modalTitle: "MAPA FOTEK",
                 lblAuthor: "Autor:",
                 lblUpdated: "Poslední aktualizace:",
                 valUpdated: "10. 10. 2026",
@@ -3300,7 +3316,7 @@ statsFarthestPair: "Farthest pair",
                 guideSearchPH: "Search guide…",
                 guideKeysTh1: "Shortcut",
                 guideKeysTh2: "Action",
-                modalTitle: "Photo Mapper",
+                modalTitle: "PHOTO MAPPER",
                 lblAuthor: "Author:",
                 lblUpdated: "Last update:",
                 valUpdated: "Oct 10, 2026",
