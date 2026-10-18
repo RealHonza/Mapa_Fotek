@@ -2166,7 +2166,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.37</span>
+                    <span class="info-meta-val">3.38</span>
                 </div>
             </div>
 
@@ -24697,7 +24697,18 @@ if (q) {
                     for (var j = 0; j < polys.length; j++) {
                         var pg = polys[j];
                         if (!pg) continue;
-                        if (pg.outer && pg.outer.length >= 3) { var _rr = { outer: pg.outer, holes: pg.holes || [] }; srcRings.push(_rr); pR.push(_rr); }
+                        if (pg.outer && pg.outer.length >= 3) {
+                            var _out = (typeof geodesicRing === "function") ? geodesicRing(pg.outer) : pg.outer;
+                            var _hls = [];
+                            if (pg.holes && pg.holes.length > 0) {
+                                for (var _hi = 0; _hi < pg.holes.length; _hi++) {
+                                    _hls.push((typeof geodesicRing === "function") ? geodesicRing(pg.holes[_hi]) : pg.holes[_hi]);
+                                }
+                            }
+                            var _rr = { outer: _out, holes: _hls };
+                            srcRings.push(_rr);
+                            pR.push(_rr);
+                        }
                         else if (pg.centerLat !== undefined && pg.centerLng !== undefined && pg.radiusKm) { var _cc = { lat: +pg.centerLat, lon: +pg.centerLng, rKm: +pg.radiusKm }; srcCircles.push(_cc); pC.push(_cc); }
                     }
                     if (pR.length + pC.length > 0) perSrc.push({ name: ks[i], rings: pR, circles: pC });
@@ -24747,6 +24758,15 @@ if (q) {
                             var tol = 0.0001, out = r.outer, g = 0;
                             while (out.length > 2000 && g < 14) { out = areaSimplifyDP(r.outer, tol); tol *= 1.5; g++; }
                             if (out && out.length >= 3 && out.length < r.outer.length) r.outer = out;
+                        }
+                        if (r.holes && r.holes.length > 0 && typeof areaSimplifyDP === "function") {
+                            for (var hk = 0; hk < r.holes.length; hk++) {
+                                if (r.holes[hk] && r.holes[hk].length > 2000) {
+                                    var hTol = 0.0001, hOut = r.holes[hk], hg = 0;
+                                    while (hOut.length > 2000 && hg < 14) { hOut = areaSimplifyDP(r.holes[hk], hTol); hTol *= 1.5; hg++; }
+                                    if (hOut && hOut.length >= 3 && hOut.length < r.holes[hk].length) r.holes[hk] = hOut;
+                                }
+                            }
                         }
                         try { if (typeof areaRingBBox === "function") r.bbox = areaRingBBox(r.outer); } catch(e) {}
                     }
