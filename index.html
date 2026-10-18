@@ -2182,7 +2182,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.39</span>
+                    <span class="info-meta-val">3.40</span>
                 </div>
             </div>
 
@@ -2771,10 +2771,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsTimeSpan: "Časový rozptyl",
             statsDensest: "Nejhustší okruh",
             statsTopPlaces: "Top 10 míst", statsTopSepTip: "Minimální rozestup středů kružnic Top 10 (násobek poloměru R)", statsTopSepOpt2: "2× R (dotyk / min. odstup)", statsTopSepOpt5: "5× R (mírný rozestup)", statsTopSepOpt10: "10× R (město a okolí)", statsTopSepOpt20: "20× R (sousední města)", statsTopSepOpt50: "50× R (okresní rozestup)", statsTopSepOpt100: "100× R (krajský rozestup)", statsTopSepOpt200: "200× R (celostátní / celá ČR)", statsTopSepOpt500: "500× R (mezinárodní / kontinentální)",
-            statsTopAllTip: "Zobrazit všechny kružnice Top 10", statsTopIso: "izolace", statsTopIsoNone: "bez rozestupu",
+            statsTopAllTip: "Zobrazit všechny kružnice Top 10", statsTopIso: "izolace", statsTopIsoNone: "bez rozestupu", statsTopFoundOne: "nalezeno", statsTopFoundFew: "nalezeny", statsTopFoundMany: "nalezeno",
             statsCoverageArea: "Obalová plocha", statsCoverageAreaTip: "Poloměr obalové zóny v km", statsCoverageRange: "rozsah 0,5 \u2013 5000 km", statsCoveragePolygonTip: "Vykreslit obalovou plochu jako polygon do měření", statsCoverageNoPolygon: "Nelze vykreslit polygon obalové plochy.",
             statsBusiestDay: "Nejvíce fotek za", statsDaysTip: "Kolik dní zrovna hledáme maximum",
-            statsPhotoOne: "fotka", statsPhotoFew: "fotky", statsPhotoMany: "fotek", statsYearOne: "rok", statsYearFew: "roky", statsYearMany: "let", statsCalLegend: "Roky focení v daný den", statsCalMaxTip: "Nejvyšší počet let s focením v jeden den", statsCalMinTip: "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní",
+            statsPhotoOne: "fotka", statsPhotoFew: "fotky", statsPhotoMany: "fotek", statsPlaceOne: "místo", statsPlaceFew: "místa", statsPlaceMany: "míst", statsYearOne: "rok", statsYearFew: "roky", statsYearMany: "let", statsCalLegend: "Roky focení v daný den", statsCalMaxTip: "Nejvyšší počet let s focením v jeden den", statsCalMinTip: "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní",
             statsOldest: "Nejstarší soubor",
             statsNewest: "Nejnovější soubor",
             statsLargest: "Největší soubor",
@@ -3128,10 +3128,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsTimeSpan: "Time span",
             statsDensest: "Densest area",
             statsTopPlaces: "Top 10 places", statsTopSepTip: "Minimum separation of Top 10 circle centers (multiplier of radius R)", statsTopSepOpt2: "2× R (touching / min. separation)", statsTopSepOpt5: "5× R (slight separation)", statsTopSepOpt10: "10× R (city & surroundings)", statsTopSepOpt20: "20× R (neighboring cities)", statsTopSepOpt50: "50× R (district separation)", statsTopSepOpt100: "100× R (regional separation)", statsTopSepOpt200: "200× R (countrywide separation)", statsTopSepOpt500: "500× R (international / continental)",
-            statsTopAllTip: "Show all Top 10 circles", statsTopIso: "isolation", statsTopIsoNone: "no separation",
+            statsTopAllTip: "Show all Top 10 circles", statsTopIso: "isolation", statsTopIsoNone: "no separation", statsTopFoundOne: "found", statsTopFoundFew: "found", statsTopFoundMany: "found",
             statsCoverageArea: "Buffer area", statsCoverageAreaTip: "Buffer zone radius in km", statsCoverageRange: "range 0.5 \u2013 5000 km", statsCoveragePolygonTip: "Draw buffer area as polygon in measurement tool", statsCoverageNoPolygon: "Cannot draw buffer area polygon.",
             statsBusiestDay: "Most photos in", statsDaysTip: "How many days we look for the maximum",
-            statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsYearOne: "year", statsYearFew: "years", statsYearMany: "years", statsCalLegend: "Years with photos on a given day", statsCalMaxTip: "Highest number of years with photos on a single day", statsCalMinTip: "Lowest number of years with photos on a single day (including days with no photos)", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
+            statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsPlaceOne: "place", statsPlaceFew: "places", statsPlaceMany: "places", statsYearOne: "year", statsYearFew: "years", statsYearMany: "years", statsCalLegend: "Years with photos on a given day", statsCalMaxTip: "Highest number of years with photos on a single day", statsCalMinTip: "Lowest number of years with photos on a single day (including days with no photos)", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
             statsOldest: "Oldest file",
             statsNewest: "Newest file",
             statsLargest: "Largest file",
@@ -9301,6 +9301,33 @@ function stBar(label, value, max, text, pctText, chkHtml) {
         }
         try { window.fmtStatsPhotos = fmtStatsPhotos; } catch(e) {}
 
+        // Pocet nalezenych shluku (misto / mista / mist) - pro tooltip Top 10.
+        function fmtStatsPlaces(n) {
+            try {
+                var v = Number(n);
+                if (!isFinite(v)) return String(n);
+                var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {};
+                var w = t.statsPlaceMany || "míst";
+                if (v === 1) w = t.statsPlaceOne || "místo";
+                else if (v >= 2 && v <= 4) w = t.statsPlaceFew || "místa";
+                var loc = (currentLang === "cs") ? "cs-CZ" : "en-US";
+                return v.toLocaleString(loc) + " " + w;
+            } catch(e) { return String(n); }
+        }
+        try { window.fmtStatsPlaces = fmtStatsPlaces; } catch(e) {}
+
+        // Slovakne "nalezeno/nalezeny" podle poctu: 1 -> nalezeno, 2-4 -> nalezeny, 5+ -> nalezeno.
+        function statsTopFoundWord(n) {
+            try {
+                var v = Number(n);
+                var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {};
+                if (isFinite(v) && v >= 2 && v <= 4) return t.statsTopFoundFew || "nalezeny";
+                if (isFinite(v) && v === 1) return t.statsTopFoundOne || "nalezeno";
+                return t.statsTopFoundMany || "nalezeno";
+            } catch(e) { return "nalezeno"; }
+        }
+        try { window.statsTopFoundWord = statsTopFoundWord; } catch(e) {}
+
         function renderStats() {
             var body = document.getElementById("statsBody");
             if (!body) return;
@@ -9702,7 +9729,10 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                         : fmtStatsKm(_sepKm);
                     allTip += " (" + L_("statsTopIso", "izolace") + " " + _isoTxt + ")";
                 } else {
-                    allTip += " (" + L_("statsTopIsoNone", "bez rozestupu") + ")";
+                    /* Rozestup se nepodarilo dodrzet (fallback bez rozestupu) -> pravdivy tooltip
+                       s pocatem nalezenych shluku, aby bylo jasne, proc padla podminka X x R. */
+                    allTip += " (" + L_("statsTopIsoNone", "bez rozestupu")
+                        + " · " + statsTopFoundWord(arr.length) + " " + fmtStatsPlaces(arr.length) + ")";
                 }
                 return stRow([{ label: topLbl, labelTitle: topTitle, lblWrap: true, val: allIco, valClick: "statsTopPlacesShowAll()", valTitle: allTip, subHtml: "<span class=\"st-row-sub st-top-btns\">" + btns + "</span>" }]);
             };
