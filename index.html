@@ -2166,7 +2166,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.36</span>
+                    <span class="info-meta-val">3.37</span>
                 </div>
             </div>
 
@@ -8592,7 +8592,12 @@ function statsSetFilters(on) {
 
             var heap = new MinHeap();
             function getLB(n1, n2) {
-                return (n1.cx * n2.cx + n1.cy * n2.cy + n1.cz * n2.cz) - n1.r - n2.r;
+                // Přesná úhlová dolní mez: součet třech obloukových vzdáleností na jednotkové sféře.
+                // Těsná pro kompaktní sady (oblouk je přesně první řád, kosinová rezerva r1+r2 pouze prvního řádu s druhoústupným skutečným rozdílem).
+                var cd = n1.cx * n2.cx + n1.cy * n2.cy + n1.cz * n2.cz;
+                if (cd > 1) cd = 1; else if (cd < -1) cd = -1;
+                var ang = Math.acos(cd) + 2 * Math.asin(Math.min(1, n1.r * 0.5)) + 2 * Math.asin(Math.min(1, n2.r * 0.5));
+                return ang >= Math.PI ? -1 : Math.cos(ang);
             }
 
             heap.push({ n1: root, n2: root, lb: getLB(root, root) });
