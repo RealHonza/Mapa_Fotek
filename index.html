@@ -1401,8 +1401,9 @@
         /* Levý panel složek */
         .lb-folder-panel {
           width: 400px;
-          min-width: 200px;
-          max-width: 420px;
+          min-width: 0;
+          /* nikdy víc než 40 % šířky kontejneru (úzký displej, split-view), na širokém displeji max. 420 px jako dřív */
+          max-width: min(420px, 40%);
           background: rgba(255,255,255,0.05);
           border: 1px solid rgba(255,255,255,0.14);
           border-radius: 8px;
@@ -1523,6 +1524,16 @@
         .lb-folder-pg-btn:hover { background: rgba(10,169,76,0.22); color: #34d399; }
         .lb-folder-pg-btn.active { background: rgba(10,169,76,0.35); color: #0AA94C; font-weight: 700; border-color: #0AA94C; }
         .lb-folder-pg-btn:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+        @media (max-width: 600px) {
+          .lb-folder-panel { padding: 4px; max-width: 38%; }
+          .lb-folder-item { padding: 7px 6px; gap: 4px; font-size: 12px; }
+          .lb-folder-item .lb-fi-icon { font-size: 12px; }
+          .lb-folder-item .lb-fi-count { font-size: 10px; }
+          .lb-folder-up-bar { padding: 9px 6px; margin: 4px 2px 4px 2px; gap: 3px; }
+          .lb-folder-up-bar .lb-up-label { font-size: 11.5px; }
+          .lb-folder-pagination { padding: 6px 2px; }
+          .lb-folder-pg-btn { padding: 2px 6px; }
+        }
         /* Souřadnice a akční ikonky v lb-header řádku 1 */
         .lbh-coords {
           font-size: 11.5px;
@@ -14196,7 +14207,7 @@ function calcLBGridPageSize() {
     var MAX_COLS = isSplit ? 5 : 7;
     var MAX_ROWS = 7;
     var MAX_TILE = 180;
-    var MIN_TILE = 100;
+    var MIN_TILE = (wrapW < 640) ? 72 : 100; // úzký displej: menší minimální dlaždice, aby se vedle panelu složek vešly 2 sloupce
 
     var tileW7 = Math.floor((gridW - (MAX_COLS - 1) * gap) / MAX_COLS);
     var tileH7 = Math.floor((availH - (MAX_ROWS - 1) * gap) / MAX_ROWS);
@@ -14239,28 +14250,48 @@ function calcLBGridPageSize() {
     try { lbGridCols = cols; } catch(e) {}
     return cols * rows;
 }
+var _lbGridResizeTimer = null;
 window.addEventListener('resize', function() {
-    var lb = document.getElementById('lightbox');
-    if (lb && lb.classList.contains('lb-mode-grid')) {
-        LB_GRID_PAGE_SIZE = calcLBGridPageSize();
-        var newTotal = Math.ceil(currentLBGridItems.length / LB_GRID_PAGE_SIZE);
-        var newPage = Math.min(currentLBGridPage, Math.max(0, newTotal - 1));
-        renderLBGridPage(newPage);
-    }
+    // Debounce: při tažení okna se mřížka nepřekresluje (a nerestartuje načítání obrázků) při každém pixelu
+    if (_lbGridResizeTimer) clearTimeout(_lbGridResizeTimer);
+    _lbGridResizeTimer = setTimeout(function() {
+        _lbGridResizeTimer = null;
+        var lb = document.getElementById('lightbox');
+        if (lb && lb.classList.contains('lb-mode-grid')) {
+            LB_GRID_PAGE_SIZE = calcLBGridPageSize();
+            var newTotal = Math.ceil(currentLBGridItems.length / LB_GRID_PAGE_SIZE);
+            var newPage = Math.min(currentLBGridPage, Math.max(0, newTotal - 1));
+            renderLBGridPage(newPage, true);
+        }
+    }, 150);
 });
 
         /* ── Podsložky: detekce a výpočet ── */
+        // Složka každé fotky aktuálního výběru – počítá se jednou (cache podle identity a délky pole currentLBPhotos),
+        // ne při každém přepnutí složky (3 regexy × N fotek).
+        var _lbFolderCache = { src: null, len: -1, arr: null };
+        function lbPhotoFolders() {
+            var src = currentLBPhotos;
+            if (!src) return [];
+            var c = _lbFolderCache;
+            if (c.arr && c.src === src && c.len === src.length) return c.arr;
+            var arr = new Array(src.length);
+            for (var i = 0; i < src.length; i++) {
+                var p = src[i];
+                arr[i] = getPhotoFolder((p && p[5]) || "", (p && p[3]) || "");
+            }
+            _lbFolderCache = { src: src, len: src.length, arr: arr };
+            return arr;
+        }
         function getSubFolders(targetFolder) {
             // Vrátí pole {path, name, count} přímých podsložek targetFolder
             // count = kumulativní počet fotek (rekurzivně přes všechny potomky)
             var prefix = targetFolder === '' ? '' : targetFolder + '/';
             var subMap = {}; // podslozka -> Set indexů fotek (kumulativně)
 
+            var _lbFoldersSF = lbPhotoFolders();
             for (var i = 0; i < currentLBPhotos.length; i++) {
-                var p = currentLBPhotos[i];
-                var rp = p[5] || '';
-                var rawFn = p[3] || '';
-                var pf = getPhotoFolder(rp, rawFn);
+                var pf = _lbFoldersSF[i];
                 // Musí začínat prefixem
                 if (targetFolder === '') {
                     if (pf === '') continue; // fotky přímo v ROOT nepatří do panelu
@@ -14461,11 +14492,10 @@ window.addEventListener('resize', function() {
             // Filtrovat fotky POUZE v dané složce (bez podsložek!)
             currentLBGridItems = [];
             var activeIdxInFolder = -1;
+            var _lbFolders = lbPhotoFolders();
             for (var i = 0; i < currentLBPhotos.length; i++) {
                 var p = currentLBPhotos[i];
-                var rp = p[5] || "";
-                var rawFn = p[3] || "Photo";
-                var pf = getPhotoFolder(rp, rawFn);
+                var pf = _lbFolders[i];
                 // Pouze přesná shoda se složkou (žádné vnořené podsložky)
                 if (pf === targetFolder) {
                     if (i === currentLBIndex) {
@@ -14475,13 +14505,8 @@ window.addEventListener('resize', function() {
                 }
             }
 
-            // Určit výchozí stránku podle toho, na které stránce leží aktuální fotka
-            LB_GRID_PAGE_SIZE = calcLBGridPageSize();
-            if (activeIdxInFolder !== -1) {
-                currentLBGridPage = Math.floor(activeIdxInFolder / LB_GRID_PAGE_SIZE);
-            } else {
-                currentLBGridPage = 0;
-            }
+            // Výchozí stránka se určí až po zobrazení panelu podsložek (jediný přepočet velikosti stránky níže)
+            currentLBGridPage = 0;
 
             // Sestavit a zobrazit panel podsložek
             currentLBSubFolders = getSubFolders(targetFolder);
@@ -14496,8 +14521,8 @@ window.addEventListener('resize', function() {
                 currentLBGridPage = Math.floor(activeIdxInFolder / LB_GRID_PAGE_SIZE);
             }
 
-            // Vykreslit aktuální stránku
-            renderLBGridPage(currentLBGridPage);
+            // Vykreslit aktuální stránku (velikost stránky je právě přepočtena)
+            renderLBGridPage(currentLBGridPage, true);
             // Dvojity rAF: po usednuti layoutu (panel, fonty) premerit a pripadne sesadit sloupce.
             try {
                 if (typeof requestAnimationFrame === "function") requestAnimationFrame(function() {
@@ -14556,13 +14581,13 @@ window.addEventListener('resize', function() {
                 if (it && typeof selectLBPhotoFromGrid === "function") selectLBPhotoFromGrid(it.index);
             } catch(e) {}
         }
-        function renderLBGridPage(pageIndex) {
+        function renderLBGridPage(pageIndex, skipCalc) {
             var lbGrid = document.getElementById("lbGrid");
             var lbPag = document.getElementById("lbGridPagination");
             if (!lbGrid) return;
             var tG = i18n[currentLang];
 
-            LB_GRID_PAGE_SIZE = calcLBGridPageSize();
+            if (!skipCalc) LB_GRID_PAGE_SIZE = calcLBGridPageSize();
             var totalItems = currentLBGridItems.length;
             var totalPages = Math.ceil(totalItems / LB_GRID_PAGE_SIZE) || 1;
             if (pageIndex < 0) pageIndex = 0;
@@ -14667,19 +14692,27 @@ window.addEventListener('resize', function() {
                         var bPh = bItem.ph;
                         if (tSrc) {
                             (function(imgEl, phEl) {
-                                imgEl.onload = function() {
+                                // Dlaždice se odkryje až po dekódování (decode), ne už při onload – jinak dekódování probíhá před očima a seká skrolování/listování.
+                                var _shown = false;
+                                function _reveal() {
+                                    if (_shown) return;
+                                    _shown = true;
                                     imgEl.className = "";
                                     if (phEl && phEl.parentNode) phEl.parentNode.removeChild(phEl);
-                                };
+                                }
                                 imgEl.onerror = function() {
                                     imgEl.className = "lb-img-loading";
                                 };
+                                try { imgEl.decoding = "async"; } catch(eD) {}
                                 imgEl.src = tSrc;
                                 if (imgEl.decode) {
-                                    imgEl.decode().then(function() {
-                                        imgEl.className = "";
-                                        if (phEl && phEl.parentNode) phEl.parentNode.removeChild(phEl);
-                                    }).catch(function() {});
+                                    imgEl.decode().then(_reveal).catch(function() {
+                                        // decode() může selhat i u platného obrázku (např. přerušené načtení) – záložní cesta přes onload / complete
+                                        if (imgEl.complete && imgEl.naturalWidth) _reveal();
+                                        else imgEl.onload = _reveal;
+                                    });
+                                } else {
+                                    imgEl.onload = _reveal;
                                 }
                             })(tImg, bPh);
                         } else {
