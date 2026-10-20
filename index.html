@@ -1128,7 +1128,31 @@
         .lb-tl-timepop .tm-pill:hover { background: rgba(10,169,76,0.35); border-color: rgba(10,169,76,0.6); }
         .lb-tl-timepop .tm-pill.off { opacity: 0.3; cursor: default; }
         @media (max-width: 600px) {
-          .lb-time-btn { top: 12px !important; right: 132px !important; width: 36px !important; height: 36px !important; }
+          .lb-close {
+            top: 12px !important;
+            right: 12px !important;
+            width: 36px !important;
+            height: 36px !important;
+            font-size: 26px !important;
+          }
+          .lb-split-btn {
+            top: 12px !important;
+            right: 52px !important;
+            width: 36px !important;
+            height: 36px !important;
+          }
+          .lb-slide-btn {
+            top: 12px !important;
+            right: 92px !important;
+            width: 36px !important;
+            height: 36px !important;
+          }
+          .lb-time-btn {
+            top: 12px !important;
+            right: 132px !important;
+            width: 36px !important;
+            height: 36px !important;
+          }
           .lb-timeline { height: 28px; padding: 3px 54px; }
           .lb-with-timeline .lb-strip { bottom: 28px; }
         }
@@ -1597,7 +1621,7 @@
           cursor: pointer;
           position: relative;
           background: #202124;
-          border: 2px solid transparent;
+          border: 2px solid rgba(255, 255, 255, 0.08);
           box-sizing: border-box;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
           transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
@@ -1628,10 +1652,30 @@
           max-width: 100% !important;
           max-height: 100% !important;
           object-fit: cover !important;
-          display: block !important;
+          display: block;
           border-radius: 6px !important;
           box-shadow: none !important;
           border: none !important;
+        }
+        #lbGrid .lb-grid-tile img.lb-img-loading,
+        #lbGrid .lb-grid-tile img:not([src]) {
+          display: none !important;
+        }
+        .lb-grid-ph {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          pointer-events: none;
+          z-index: 1;
+        }
+        .lb-grid-ph svg {
+          width: 38px;
+          height: 38px;
+          display: block;
+          opacity: 0.28;
+          color: #dadce0;
         }
         .lb-grid-tile .lb-grid-overlay {
           position: absolute;
@@ -1710,7 +1754,7 @@
           .lb-pg-info { font-size: 12px; }
         }
         @media (max-width: 600px) {
-          .lb-header { padding: 8px 175px 20px 45px; gap: 2px; }
+          .lb-header { gap: 2px; }
           .lb-header .lbh-item { font-size: 11px; }
           .lb-header .lbh-item.lbh-name { font-size: 12px; }
           .lb-header .lbh-sep { margin: 0 5px; font-size: 13px; }
@@ -1782,14 +1826,39 @@
           box-shadow: 0 0 12px rgba(10, 169, 76, 0.75);
         }
         @media (max-width: 600px) {
-          .lb-header { padding: 10px 175px 18px 96px; }
+          .lb-header { padding: 10px 176px 18px 92px; }
           .lb-header .lbh-row:first-child { max-width: 100%; }
           .lb-header .lbh-item { font-size: 11px; }
           .lb-header .lbh-item.lbh-name { font-size: 12px; }
-          .lb-header .lbh-sep { margin: 0 6px; }
+          .lb-header .lbh-sep { margin: 0 4px; }
           .lb-strip-thumb { width: 46px; height: 46px; }
           .lb-strip-w { width: 46px; height: 46px; }
           .lb-empty-text { bottom: 100px; font-size: 12px; }
+        }
+        @media (max-width: 380px) {
+          .lb-close {
+            right: 8px !important;
+            width: 34px !important;
+            height: 34px !important;
+            font-size: 24px !important;
+          }
+          .lb-split-btn {
+            right: 46px !important;
+            width: 34px !important;
+            height: 34px !important;
+          }
+          .lb-slide-btn {
+            right: 84px !important;
+            width: 34px !important;
+            height: 34px !important;
+          }
+          .lb-time-btn {
+            right: 122px !important;
+            width: 34px !important;
+            height: 34px !important;
+          }
+          .lb-header { padding: 10px 162px 18px 80px !important; }
+          .lb-counter { left: 8px !important; padding: 2px 5px !important; font-size: 10.5px !important; }
         }
         @media (max-width: 900px) and (min-width: 601px) {
           .lb-header { padding-left: 100px; }
@@ -2183,7 +2252,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.42</span>
+                    <span class="info-meta-val">3.43</span>
                 </div>
             </div>
 
@@ -9524,7 +9593,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                     if (!isFinite(la) || !isFinite(lo)) continue;
                     if (la < -90 || la > 90) continue;
                     lat = la; lon = wrap(lo);
-                    pts.push([lat, lon]);
+                    pts.push([lat, lon, i]);
                     if (lat < minLat) minLat = lat;
                     if (lat > maxLat) maxLat = lat;
                     if (lon < minLon) minLon = lon;
@@ -9551,8 +9620,6 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 };
             } catch(e) { return null; }
         }
-        /* Nejhrubsi deleni, nejvic listu a nejvic fotek na jednu bunku pro dalsi deleni. */
-        var STATS_GEO_MIN_STEP = 0.01, STATS_GEO_SPLIT_MIN = 1, STATS_GEO_BUDGET = 4000;
         /* Uroven casoveho kose: rok / mesic / den / hodina (min. 3 ruzne obdobi, at vznikla barva). */
         function statsGeoTimeLevel(locs) {
             try {
@@ -9659,7 +9726,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 var kmW0 = w0 * 111.32 * cosLat0;
                 var kmH0 = h0 * 110.574;
                 var asp = (kmW0 > 0 && kmH0 > 0) ? kmH0 / kmW0 : 1;
-                asp = Math.max(0.2, Math.min(5, asp));
+                asp = Math.max(1 / 3, Math.min(3, asp));
                 var nCols, nRows;
                 if (asp <= 1) {
                     nCols = nBase;
@@ -9690,7 +9757,8 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                     if (col < 0) col = 0; if (col >= nCols) col = nCols - 1;
                     if (row < 0) row = 0; if (row >= nRows) row = nRows - 1;
                     var ck2 = row + ',' + col;
-                    var tk3 = times[i];
+                    var origIdx = (typeof p[2] === "number") ? p[2] : i;
+                    var tk3 = times[origIdx];
                     var kk = statsGeoKeyOf(tk3, level);
                     if (!cellMap[ck2]) cellMap[ck2] = { row: row, col: col, n: 0, firstKey: null, lastKey: null, firstDateKey: null, lastDateKey: null };
                     cellMap[ck2].n++;
@@ -13925,6 +13993,7 @@ H += "</div></div>";
         var currentLBGridFolder = null;
         var currentLBGridItems = [];
         var currentLBGridPage = 0;
+        var _lbGridRenderGen = 0;
         var LB_GRID_PAGE_SIZE = 28;
         var lbGridSelIdx = 0;
         var lbGridPrevFocus = null;
@@ -14482,67 +14551,111 @@ window.addEventListener('resize', function() {
             } else {
                 lbGrid.style.gridTemplateColumns = "";
                 lbGrid.style.gridAutoRows = "";
-                // Vyčistit grid ihned — dlaždice přidávat postupně v idle čase
+                // Vyčistit grid a IHNED vykreslit prázdné statické dlaždice pro celou stránku
                 lbGrid.innerHTML = "";
+                var _thisGen = ++_lbGridRenderGen;
                 var _gridPageIdx = pageIndex;
                 var _batchPos = 0;
                 var _batchSize = 8;
                 var _ric = (typeof requestIdleCallback === "function")
                     ? requestIdleCallback
                     : function(cb, opts) { setTimeout(function() { cb({ timeRemaining: function() { return 16; } }); }, (opts && opts.timeout) ? 0 : 10); };
+
+                var pageCount = end - start;
+                var frag = document.createDocumentFragment();
+                var _batchImages = [];
+
+                for (var b = 0; b < pageCount; b++) {
+                    var j = start + b;
+                    var item = currentLBGridItems[j];
+                    var tp = item.photo;
+                    var tIdx = item.index;
+                    var tFn = escapeHtml(tp[3] || "");
+                    var isCurr = (tIdx === currentLBIndex) ? " active-photo" : "";
+                    var isSel = (j === lbGridSelIdx) ? " lb-grid-sel" : "";
+                    var isVidTile = false;
+                    try { isVidTile = (typeof isVideoFn === "function") && isVideoFn(tp[3]); } catch(eVT) {}
+                    var isVidPlay = false;
+                    if (isVidTile) {
+                        var trp0 = tp[5] || "";
+                        var tKey0 = currentLBKeys ? currentLBKeys[tIdx] : undefined;
+                        var trr0 = resolvePhotoUrl(trp0 || tp[3], tKey0);
+                        try { isVidPlay = (typeof isPlayerVideo === "function") && (isPlayerVideo(tp[3]) || (trr0 && isPlayerVideo(trr0))); } catch(eVP) {}
+                    }
+                    var tile = document.createElement("div");
+                    tile.className = "lb-grid-tile" + isCurr + isSel + (isVidTile ? " lb-is-video" : "");
+                    tile.tabIndex = -1;
+                    tile.title = tFn;
+                    tile.onclick = (function(tii) { return function(e) { e.stopPropagation(); selectLBPhotoFromGrid(tii); }; })(tIdx);
+
+                    var ph = document.createElement("div");
+                    ph.className = "lb-grid-ph";
+                    ph.innerHTML = '<svg viewBox="0 0 500 500" aria-hidden="true"><use href="#ico-app-logo"/></svg>';
+                    tile.appendChild(ph);
+
+                    var tImg = document.createElement("img");
+                    tImg.alt = "";
+                    tImg.className = "lb-img-loading";
+                    tile.appendChild(tImg);
+
+                    if (isVidTile) {
+                        var badge = document.createElement("div");
+                        badge.className = "lb-grid-vbadge" + (isVidPlay ? "" : " lb-grid-vbadge-no");
+                        badge.setAttribute("aria-hidden", "true");
+                        badge.textContent = "▶";
+                        tile.appendChild(badge);
+                    }
+                    var overlay = document.createElement("div");
+                    overlay.className = "lb-grid-overlay";
+                    overlay.textContent = tp[3] || "";
+                    tile.appendChild(overlay);
+
+                    frag.appendChild(tile);
+                    _batchImages.push({ img: tImg, item: item, ph: ph });
+                }
+                lbGrid.appendChild(frag);
+                if (typeof lbGridFocusSel === "function") lbGridFocusSel();
+
                 (function _renderBatch(deadline) {
-                    // Pokud se stránka přepnula, zastavit rendering
-                    if (currentLBGridPage !== _gridPageIdx) return;
+                    // Pokud se mezitím spustilo nové vykreslení nebo přepnula stránka, zastavit starou dávku
+                    if (_thisGen !== _lbGridRenderGen || currentLBGridPage !== _gridPageIdx) return;
                     var timeLeft = (deadline && typeof deadline.timeRemaining === "function") ? deadline.timeRemaining() : 16;
                     var limit = _batchPos + Math.max(_batchSize, Math.floor(timeLeft / 2));
-                    while (_batchPos < (end - start) && _batchPos < limit) {
-                        var j = start + _batchPos;
-                        var item = currentLBGridItems[j];
-                        var tp = item.photo;
-                        var tIdx = item.index;
+                    while (_batchPos < pageCount && _batchPos < limit) {
+                        if (_thisGen !== _lbGridRenderGen || currentLBGridPage !== _gridPageIdx) return;
+                        var bItem = _batchImages[_batchPos];
+                        var tp = bItem.item.photo;
+                        var tIdx = bItem.item.index;
                         var trp = tp[5] || "";
                         var tKey = currentLBKeys ? currentLBKeys[tIdx] : undefined;
                         var trr = resolvePhotoUrl(trp || tp[3], tKey);
                         var tSrc = trr ? (trr.indexOf("data:") === 0 ? trr : encodeURI(trr)) : "";
-                        var tFn = escapeHtml(tp[3] || "");
-                        var isCurr = (tIdx === currentLBIndex) ? " active-photo" : "";
-                        var isSel = (j === lbGridSelIdx) ? " lb-grid-sel" : "";
-                        var isVidTile = false;
-                        try { isVidTile = (typeof isVideoFn === "function") && isVideoFn(tp[3]); } catch(eVT) {}
-                        var isVidPlay = false;
-                        try { isVidPlay = isVidTile && (typeof isPlayerVideo === "function") && (isPlayerVideo(tp[3]) || (trr && isPlayerVideo(trr))); } catch(eVP) {}
-                        var tile = document.createElement("div");
-                        tile.className = "lb-grid-tile" + isCurr + isSel + (isVidTile ? " lb-is-video" : "");
-                        tile.tabIndex = -1;
-                        tile.title = tFn;
-                        tile.onclick = (function(tii) { return function(e) { e.stopPropagation(); selectLBPhotoFromGrid(tii); }; })(tIdx);
-                        var tImg = document.createElement("img");
-                        tImg.alt = tFn;
-                        tImg.onerror = function() { lbThumbErr(this); };
-                        tile.appendChild(tImg);
-                        if (isVidTile) {
-                            var badge = document.createElement("div");
-                            badge.className = "lb-grid-vbadge" + (isVidPlay ? "" : " lb-grid-vbadge-no");
-                            badge.setAttribute("aria-hidden", "true");
-                            badge.textContent = "▶";
-                            tile.appendChild(badge);
-                        }
-                        var overlay = document.createElement("div");
-                        overlay.className = "lb-grid-overlay";
-                        overlay.textContent = tp[3] || "";
-                        tile.appendChild(overlay);
-                        lbGrid.appendChild(tile);
-                        // Nastavit src až po vložení do DOM — pak decode() neblokuje vlákno
+                        var tImg = bItem.img;
+                        var bPh = bItem.ph;
                         if (tSrc) {
-                            tImg.src = tSrc;
-                            if (tImg.decode) { tImg.decode().catch(function() {}); }
+                            (function(imgEl, phEl) {
+                                imgEl.onload = function() {
+                                    imgEl.className = "";
+                                    if (phEl && phEl.parentNode) phEl.parentNode.removeChild(phEl);
+                                };
+                                imgEl.onerror = function() {
+                                    imgEl.className = "lb-img-loading";
+                                };
+                                imgEl.src = tSrc;
+                                if (imgEl.decode) {
+                                    imgEl.decode().then(function() {
+                                        imgEl.className = "";
+                                        if (phEl && phEl.parentNode) phEl.parentNode.removeChild(phEl);
+                                    }).catch(function() {});
+                                }
+                            })(tImg, bPh);
+                        } else {
+                            tImg.className = "lb-img-loading";
                         }
                         _batchPos++;
                     }
-                    if (_batchPos < (end - start) && currentLBGridPage === _gridPageIdx) {
+                    if (_batchPos < pageCount && _thisGen === _lbGridRenderGen && currentLBGridPage === _gridPageIdx) {
                         _ric(_renderBatch, { timeout: 500 });
-                    } else if (currentLBGridPage === _gridPageIdx) {
-                        if (typeof lbGridFocusSel === "function") lbGridFocusSel();
                     }
                 })({ timeRemaining: function() { return 16; } });
             }
