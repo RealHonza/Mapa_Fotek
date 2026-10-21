@@ -3991,7 +3991,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 mkPills("dthPal", hp, g("heat_pal", "classic"), "heat_pal");
                 var ap2 = [];
                 try {
-                    var aks = Object.keys(agePalettes || {});
+                    var aks = Object.keys(agePalettes || {}).filter(function(k){ return k !== "zelena1"; });
                     for (var ai = 0; ai < aks.length; ai++) {
                         var ap = agePalettes[aks[ai]];
                         ap2.push({ v: aks[ai], t: (ap && (ap["title" + ((typeof currentLang !== "undefined" && currentLang === "en") ? "En" : "Cs")] || ap.title)) || aks[ai], css: "background:" + ((ap && ap.grad) || "#888") + ";" });
@@ -4092,7 +4092,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 mkPills("sthPal", hp, g("heat_pal", "classic"), "heat_pal");
                 var ap2 = [];
                 try {
-                    var aks = Object.keys(agePalettes || {});
+                    var aks = Object.keys(agePalettes || {}).filter(function(k){ return k !== "zelena1"; });
                     for (var ai = 0; ai < aks.length; ai++) {
                         var ap = agePalettes[aks[ai]];
                         ap2.push({ v: aks[ai], t: (ap && (ap["title" + ((typeof currentLang !== "undefined" && currentLang === "en") ? "En" : "Cs")] || ap.title)) || aks[ai], css: "background:" + ((ap && ap.grad) || "#888") + ";" });
@@ -5396,6 +5396,11 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 grad: "linear-gradient(90deg, #370000, #990000, #e53935, #ff6d00, #ffd600)",
                 stops: [[55,0,0],[153,0,0],[229,57,53],[255,109,0],[255,214,0]]
             },
+            mono: {
+                titleCs: "Stupně šedi", titleEn: "Grayscale",
+                grad: "linear-gradient(90deg, #202124, #5f6368, #9aa0a6, #dadce0, #ffffff)",
+                stops: [[32,33,36],[95,99,104],[154,160,166],[218,220,224],[255,255,255]]
+            },
             zelena1: {
                 titleCs: "Zelená – 1 barva", titleEn: "Green – 1 color",
                 grad: "linear-gradient(90deg, #0AA94C, #0AA94C)",
@@ -6607,7 +6612,7 @@ function statsSetFilters(on) {
                 }
                 var spa = document.getElementById("setStatsGeoPal");
                 if (spa) {
-                    var poh = "", pkk = ageSeqKeys();
+                    var poh = "", pkk = ageSeqKeys().filter(function(k){ return k !== "mono"; });
                     for (var pi = 0; pi < pkk.length; pi++) {
                         var pn = (agePalettes[pkk[pi]] && agePalettes[pkk[pi]].titleCs) ? agePalettes[pkk[pi]].titleCs : pkk[pi];
                         var pnEn = (agePalettes[pkk[pi]] && agePalettes[pkk[pi]].titleEn) ? agePalettes[pkk[pi]].titleEn : pkk[pi];
@@ -8617,7 +8622,7 @@ function statsSetFilters(on) {
                 var modeSel = "<label style=\"display:inline-flex;align-items:center;gap:4px;\"><span>" + escapeHtml(statsL_("statsGeoModeLabel", "Obarvit dle")) + ":</span>" +
                     "<select class=\"st-stats-geo-mode\" onchange=\"event.stopPropagation();statsSetGeoMode(this.value)\" style=\"border:1.5px solid #dadce0;border-radius:8px;padding:2px 4px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;\">" + moh + "</select></label>";
 
-                var poh = "", pkk = (typeof ageSeqKeys === "function") ? ageSeqKeys() : [];
+                var poh = "", pkk = (typeof ageSeqKeys === "function") ? ageSeqKeys().filter(function(k){ return k !== "mono"; }) : [];
                 for (var pi = 0; pi < pkk.length; pi++) {
                     var pn = (typeof agePalettes !== "undefined" && agePalettes[pkk[pi]] && agePalettes[pkk[pi]].titleCs) ? agePalettes[pkk[pi]].titleCs : pkk[pi];
                     var pnEn = (typeof agePalettes !== "undefined" && agePalettes[pkk[pi]] && agePalettes[pkk[pi]].titleEn) ? agePalettes[pkk[pi]].titleEn : pkk[pi];
