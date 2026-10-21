@@ -2269,7 +2269,7 @@
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.45</span>
+                    <span class="info-meta-val">3.46</span>
                 </div>
             </div>
 
@@ -5396,10 +5396,10 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 grad: "linear-gradient(90deg, #370000, #990000, #e53935, #ff6d00, #ffd600)",
                 stops: [[55,0,0],[153,0,0],[229,57,53],[255,109,0],[255,214,0]]
             },
-            mono: {
-                titleCs: "Stupně šedi", titleEn: "Grayscale",
-                grad: "linear-gradient(90deg, #202124, #5f6368, #9aa0a6, #dadce0, #ffffff)",
-                stops: [[32,33,36],[95,99,104],[154,160,166],[218,220,224],[255,255,255]]
+            zelena1: {
+                titleCs: "Zelená – 1 barva", titleEn: "Green – 1 color",
+                grad: "linear-gradient(90deg, #0AA94C, #0AA94C)",
+                stops: [[10,169,76],[10,169,76]]
             }
         };
 
@@ -6610,7 +6610,8 @@ function statsSetFilters(on) {
                     var poh = "", pkk = ageSeqKeys();
                     for (var pi = 0; pi < pkk.length; pi++) {
                         var pn = (agePalettes[pkk[pi]] && agePalettes[pkk[pi]].titleCs) ? agePalettes[pkk[pi]].titleCs : pkk[pi];
-                        poh += "<option value=\"" + pkk[pi] + "\"" + (pkk[pi] === statsGeoPal ? " selected" : "") + ">" + escapeHtml((currentLang === "cs") ? pn : pkk[pi]) + "</option>";
+                        var pnEn = (agePalettes[pkk[pi]] && agePalettes[pkk[pi]].titleEn) ? agePalettes[pkk[pi]].titleEn : pkk[pi];
+                        poh += "<option value=\"" + pkk[pi] + "\"" + (pkk[pi] === statsGeoPal ? " selected" : "") + ">" + escapeHtml((currentLang === "cs") ? pn : pnEn) + "</option>";
                     }
                     spa.innerHTML = poh;
                     try { spa.value = statsGeoPal; } catch(eP) {}
@@ -8619,7 +8620,8 @@ function statsSetFilters(on) {
                 var poh = "", pkk = (typeof ageSeqKeys === "function") ? ageSeqKeys() : [];
                 for (var pi = 0; pi < pkk.length; pi++) {
                     var pn = (typeof agePalettes !== "undefined" && agePalettes[pkk[pi]] && agePalettes[pkk[pi]].titleCs) ? agePalettes[pkk[pi]].titleCs : pkk[pi];
-                    poh += "<option value=\"" + pkk[pi] + "\"" + (pkk[pi] === statsGeoPal ? " selected" : "") + ">" + escapeHtml((currentLang === "cs") ? pn : pkk[pi]) + "</option>";
+                    var pnEn = (typeof agePalettes !== "undefined" && agePalettes[pkk[pi]] && agePalettes[pkk[pi]].titleEn) ? agePalettes[pkk[pi]].titleEn : pkk[pi];
+                    poh += "<option value=\"" + pkk[pi] + "\"" + (pkk[pi] === statsGeoPal ? " selected" : "") + ">" + escapeHtml((currentLang === "cs") ? pn : pnEn) + "</option>";
                 }
                 var palSel = "<label style=\"display:inline-flex;align-items:center;gap:4px;\"><span>" + escapeHtml(statsL_("statsGeoPalLabel", "Paleta")) + ":</span>" +
                     "<select class=\"st-stats-geo-pal\" onchange=\"event.stopPropagation();statsSetGeoPal(this.value)\" style=\"border:1.5px solid #dadce0;border-radius:8px;padding:2px 4px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;\">" + poh + "</select></label>";
