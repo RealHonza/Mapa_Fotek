@@ -7056,6 +7056,7 @@ function statsSetFilters(on) {
                 try { var ovT = document.getElementById("stChartOverlayTabs"); if (ovT) { var ob = ovT.querySelectorAll("button[data-ovmode]"); for (var oi = 0; oi < ob.length; oi++) { try { ob[oi].className = "st-chart-tab" + (ob[oi].getAttribute("data-ovmode") === m ? " active" : ""); } catch(eOB) {} } } } catch(eOT) {}
                 try { syncStatsSettings(); } catch(eSync) {}
                 try { statsGeoPlayRefreshBtns(); } catch(eGPR2) {}
+                try { statsCalLegendFitLater(); } catch(eFit1) {}
             } catch(e) {}
         }
         function statsCollect(ignoreStateSel, ignoreFilters) {
@@ -11830,6 +11831,7 @@ window.statsChartSave = statsChartSave;
                 ov.onclick = function(e) { if (e && e.target === ov) collapseStatsChart(); };
                 document.body.appendChild(ov);
                 try { statsGeoPlayRefreshBtns(); } catch(eGPR3) {}
+                try { statsCalLegendFitLater(); } catch(eFit2) {}
                 document.addEventListener("keydown", statsChartEsc);
             } catch(e) {}
         }
@@ -12112,6 +12114,59 @@ window.statsChartSave = statsChartSave;
         }
         /* --- Kalendarovy heatbar 53x7: v kolika letech se v dany den fotilo --- */
         var statsChartCalCacheFor = null, statsChartCalCacheHtml = "", statsChartCalCacheLang = "";
+        // Legenda grafu c. 5: zavorky s poctem dnu (.st-cal-n) se ukazou jen tehdy, vejde-li se
+        // cela legenda (vcetne Max/Min/Ø/medianu) na jeden radek. Meri se v DOM po vykresleni,
+        // protoze stejny HTML retezec se pouziva v okne statistik i ve zvetsenem grafu.
+        var statsCalFitBusy = false, statsCalFitTimers = [];
+        // Rozlozeni se po vlozeni grafu jeste meni (posuvnik okna, vyska grafu), proto se mereni
+        // opakuje po vykresleni a po ustaleni layoutu.
+        function statsCalLegendFitLater() {
+            try {
+                statsCalLegendFit();
+                var i;
+                for (i = 0; i < statsCalFitTimers.length; i++) clearTimeout(statsCalFitTimers[i]);
+                statsCalFitTimers = [];
+                if (typeof requestAnimationFrame === "function") requestAnimationFrame(function() { statsCalLegendFit(); requestAnimationFrame(function() { statsCalLegendFit(); }); });
+                statsCalFitTimers.push(setTimeout(function() { statsCalLegendFit(); }, 60));
+                statsCalFitTimers.push(setTimeout(function() { statsCalLegendFit(); }, 250));
+            } catch(e) {}
+        }
+        function statsCalLegendFit() {
+            try {
+                if (statsCalFitBusy) return;
+                statsCalFitBusy = true;
+                try { if (window.statsCalROHook) window.statsCalROHook(); } catch(eH) {}
+                var roots = [document.getElementById("stChartBox"), document.getElementById("stChartOverlayBody")];
+                for (var ri = 0; ri < roots.length; ri++) {
+                    if (!roots[ri]) continue;
+                    var lgs = roots[ri].querySelectorAll(".st-cal-lg");
+                    for (var li = 0; li < lgs.length; li++) {
+                        var lg = lgs[li], ns = lg.querySelectorAll(".st-cal-n"), ni;
+                        for (ni = 0; ni < ns.length; ni++) ns[ni].style.display = "";
+                        if (!(lg.clientWidth > 0)) continue;
+                        var oldWrap = lg.style.flexWrap, oldWs = lg.style.whiteSpace;
+                        lg.style.flexWrap = "nowrap"; lg.style.whiteSpace = "nowrap";
+                        var over = lg.scrollWidth > lg.clientWidth + 1;
+                        lg.style.flexWrap = oldWrap; lg.style.whiteSpace = oldWs;
+                        if (over) { for (ni = 0; ni < ns.length; ni++) ns[ni].style.display = "none"; }
+                    }
+                }
+            } catch(e) {}
+            statsCalFitBusy = false;
+        }
+        try { window.addEventListener("resize", function() { statsCalLegendFit(); }); } catch(eRsz) {}
+        try {
+            if (typeof ResizeObserver === "function") {
+                var statsCalRO = new ResizeObserver(function() { if (!statsCalFitBusy) statsCalLegendFit(); });
+                var statsCalROHook = function() {
+                    try {
+                        var ids = ["stChartBox", "stChartOverlayBody"];
+                        for (var q = 0; q < ids.length; q++) { var el = document.getElementById(ids[q]); if (el && !el.__calRO) { el.__calRO = 1; statsCalRO.observe(el); } }
+                    } catch(e) {}
+                };
+                window.statsCalROHook = statsCalROHook;
+            }
+        } catch(eRO) {}
         function statsChartCalSvg(times) {
             try {
                 if (statsChartCalCacheFor === times && statsChartCalCacheLang === currentLang && statsChartCalCacheHtml) return statsChartCalCacheHtml;
@@ -12151,6 +12206,9 @@ window.statsChartSave = statsChartSave;
                 for (cmi = 1; cmi <= 12; cmi++) { for (cdi = 1; cdi <= calDim[cmi - 1]; cdi++) { cco = cells[cmi + "-" + cdi]; calVals.push(cco ? cco.n : 0); } }
                 var calAvg = nDates / 366;
                 var calMed = (typeof statsMedian === "function") ? statsMedian(calVals) : 0;
+                // Pocet dnu v roce (z 366) v kazde skale legendy: 0, 1, 2-3, 4-5, 6-9, 10-19, 20+.
+                var bandCnt = [0, 0, 0, 0, 0, 0, 0], bci, bcn;
+                for (bci = 0; bci < calVals.length; bci++) { bcn = calVals[bci]; bandCnt[(bcn <= 0) ? 0 : (bcn === 1) ? 1 : (bcn <= 3) ? 2 : (bcn <= 5) ? 3 : (bcn <= 9) ? 4 : (bcn < 20) ? 5 : 6]++; }
                 var fmt2 = function(v) { try { return (Math.round(Number(v) * 10) / 10).toLocaleString(loc); } catch(e) { return String(v); } };
                 // Stupnice: 0, 1, 2-3, 4-5, 6-9, 10-19, 20+ (cerna).
                 var pal = ["#e8eaed", "#b3e5c3", "#5cc47f", "#0AA94C", "#08702e", "#034d1f", "#000000"];
@@ -12263,11 +12321,14 @@ window.statsChartSave = statsChartSave;
                 s += "</svg>";
                 // Legenda stupnice.
                 var bands = ["0", "1", "2\u20133", "4\u20135", "6\u20139", "10\u201319", "20+"];
-                var lg = "<div style=\"display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:8px;font-size:11px;color:#5f6368;\"><span>" + escapeHtml(statsL_("statsCalLegend", "Roky focení v daný den")) + ":</span>";
+                var lg = "<div class=\"st-cal-lg\" style=\"display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:8px;font-size:11px;color:#5f6368;\"><span>" + escapeHtml(statsL_("statsCalLegend", "Roky focení v daný den")) + ":</span>";
                 for (var bi = 0; bi < bands.length; bi++) {
                     var sw = "<i style=\"display:inline-block;width:11px;height:11px;border-radius:3px;background:" + pal[bi] + ";border:1px solid rgba(0,0,0,0.12);\"></i>";
                     if (bi === 0) sw = "<svg width=\"11\" height=\"11\" viewBox=\"0 0 11 11\" style=\"display:inline-block;vertical-align:-1px;\"><rect x=\"0.5\" y=\"0.5\" width=\"10\" height=\"10\" rx=\"3\" fill=\"" + pal[0] + "\"/><path d=\"M3.5 3.5L7.5 7.5M7.5 3.5L3.5 7.5\" stroke=\"#d93025\" stroke-width=\"1.2\" stroke-linecap=\"round\" fill=\"none\"/></svg>";
-                    lg += "<span style=\"display:inline-flex;align-items:center;gap:3px;\">" + sw + bands[bi] + "</span>";
+                    var bandTip = (currentLang === "cs")
+                        ? ((bi === 0) ? "Počet dnů v roce (z 366) bez jediné fotky: " : "Počet dnů v roce (z 366) s fotkami z tohoto počtu let (" + bands[bi] + "): ") + bandCnt[bi]
+                        : ((bi === 0) ? "Days of the year (of 366) with no photo: " : "Days of the year (of 366) with photos from this many years (" + bands[bi] + "): ") + bandCnt[bi];
+                    lg += "<span title=\"" + escapeHtml(bandTip) + "\" style=\"display:inline-flex;align-items:center;gap:3px;\">" + sw + "<span style=\"color:#000000;\">" + bands[bi] + "</span>" + "<span class=\"st-cal-n\" style=\"color:#80868b;\">(" + bandCnt[bi] + ")</span></span>";
                 }
                 var avgTip = (currentLang === "cs") ? "Průměrný počet let s focením na jeden den v roce" : "Average number of years with photos per day of year";
                 var medTip = (currentLang === "cs") ? "Medián počtu let s focením na jeden den v roce" : "Median number of years with photos per day of year";
@@ -12339,6 +12400,7 @@ H += "</div></div>";
             H += "<div class=\"st-note\">" + (statsApplyFilters ? L_("statsScopeOn", "") : L_("statsScopeOff", "")) + " " + L_("statsNote", "Karta s hodnotou i název souboru jsou kliknutelné – mapa se přesune na daný soubor a zobrazí jeho bublinu.") + "</div>";
             body.innerHTML = H;
             try { statsGeoPlayRefreshBtns(); } catch(eGPR) {}
+            try { statsCalLegendFitLater(); } catch(eFit0) {}
             // Fullscreen graf: pri prekresleni statistiky (napr. prepnuti jazyka) prekreslit i overlay
             try {
                 if (document.getElementById("stChartOverlay")) {
@@ -12355,6 +12417,7 @@ H += "</div></div>";
                     if (_rC) _rC.textContent = L_("statsSecGraphs", "Grafy");
                 }
             } catch(eROv) {}
+            try { statsCalLegendFitLater(); } catch(eFit3) {}
         }
         function gotoSettings() { try { closeInfoModal(); } catch(e) {} openSettingsModal(); }
 
