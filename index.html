@@ -550,6 +550,28 @@
         .st-chart-hit.pick { cursor: pointer; }
         .st-axis-hit { fill: transparent; cursor: help; pointer-events: all; }
         .st-chart-tabs { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 7px 0; }
+        /* Segmentovy prepinac grafu: 1 radek; v uzkem kontejneru jen ikony (container query) */
+        .st-chart-tabs.st-chart-tabs-seg { display: block; container-type: inline-size; }
+        .st-chart-seg { display: inline-flex; max-width: 100%; vertical-align: top; border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; background: #ffffff; }
+        .st-chart-seg .st-chart-tab { display: inline-flex; align-items: center; justify-content: center; gap: 4px; flex: 1 1 auto; min-width: 0;
+            margin: 0; border: 0; border-left: 1px solid #dadce0; border-radius: 0; padding: 5px 8px; white-space: nowrap; background: #ffffff; color: #5f6368; }
+        .st-chart-seg .st-chart-tab:first-child { border-left: 0; }
+        .st-chart-seg .st-chart-tab:hover { border-color: #dadce0; }
+        .st-chart-seg .st-chart-tab.active { background: var(--green); color: #ffffff; font-weight: 700; }
+        .st-chart-seg .st-chart-tab:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+        .st-chart-seg .st-chart-tab.active:focus-visible { outline-color: #0b5e2e; }
+        .st-chart-seg .st-tab-ico { width: 13px; height: 13px; flex-shrink: 0; }
+        .st-chart-seg .st-tab-lbl { display: inline-flex; flex-direction: column; overflow: hidden; text-overflow: ellipsis; }
+        /* rezerva sirky pro tucny text -> lista pri prepnuti neposkakuje */
+        .st-chart-seg .st-tab-lbl::after { content: attr(data-t); font-weight: 700; height: 0; visibility: hidden; overflow: hidden; }
+        .st-chart-tabcap { font-size: 12px; font-weight: 700; color: #3c4043; margin-top: 6px; }
+        @container (max-width: 545px) {
+            .st-chart-seg { display: flex; width: 100%; }
+            .st-chart-seg .st-tab-lbl { display: none; }
+            .st-chart-seg .st-chart-tab { padding: 6px 0; }
+            .st-chart-seg .st-tab-ico { width: 15px; height: 15px; }
+        }
+        @supports not (container-type: inline-size) { .st-chart-seg { flex-wrap: wrap; } }
         .st-chart-tab { font-size: 11px; line-height: 1.2; padding: 4px 9px; cursor: pointer;
             border: 1px solid #dadce0; border-radius: 12px; background: #ffffff; color: #5f6368; }
         .st-chart-tab:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
@@ -2272,11 +2294,11 @@
                 <!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. -->
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblUpdated">Poslední aktualizace:</span>
-                    <span class="info-meta-val" id="valUpdated">17. 10. 2026</span>
+                    <span class="info-meta-val" id="valUpdated">22. 10. 2026</span>
                 </div>
                 <div class="info-meta-row">
                     <span class="info-meta-label" id="lblVersion">Verze:</span>
-                    <span class="info-meta-val">3.49</span>
+                    <span class="info-meta-val">3.50</span>
                 </div>
             </div>
 
@@ -2853,6 +2875,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsSecDistances: "Vzdálenosti",
             statsSecTable: "Tabulka (časová)", statsSecFolderTable: "Tabulka (složková)", statsColOrder: "Řád", statsColFolder: "Složka", statsColFrom: "Od", statsColTo: "Do", statsExpandAll: "Rozbalit vše", statsCollapseAll: "Sbalit vše", statsSecGraphs: "Grafy", statsGraphsNote: "Bez datumu není co zobrazit.", statsChartCap: "Počet souborů v čase",
             statsDistAndMore: "km a více",
+            statsTabTime: "V čase", statsTabTod: "Denní doba", statsTabDist: "Od RB", statsTabDistCen: "Od těžiště", statsTabCal: "Kalendář", statsTabGeo: "Území", statsTabsAria: "Výběr grafu",
             statsChartCapTod: "Počet souborů v denní době", statsChartCapDist: "Počet souborů na vzdálenost od RB", statsChartCapDistCen: "Počet souborů na vzdálenost od těžiště", statsChartCapCal: "Počet let s focením v daný den", statsChartAvgMed: "Průměr a medián",
             statsAxisX: "Osa X", statsAxisY: "Osa Y", statsAxisYPhotos: "Počet fotek (ks)", statsAxisXTime: "Čas pořízení (datum)", statsAxisXTod: "Denní doba (hodiny [h], 00–23h)", statsAxisXDist: "Vzdálenost od referenčního bodu (kilometry [km])", statsAxisXDistCen: "Vzdálenost od těžiště (kilometry [km])", statsAxisYCalMonths: "Měsíc v roce (leden–prosinec)", statsAxisXCalDays: "Den v měsíci (1–31)", statsAxisCalWeekdays: "Den v týdnu", statsAxisCalWeekdaysB: "Počet dnů s focením (pondělí–neděle)", statsAxisYGeoLat: "Zeměpisná šířka (stupně [°], severní/jižní šířka)", statsAxisXGeoLon: "Zeměpisná délka (stupně [°], východní/západní délka)",
             statsBandNight: "noc", statsBandMorning: "ráno", statsBandForenoon: "dopoledne",
@@ -3062,7 +3085,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 modalTitle: "MAPA FOTEK",
                 lblAuthor: "Autor:",
                 lblUpdated: "Poslední aktualizace:",
-                valUpdated: "10. 10. 2026",
+                valUpdated: "22. 10. 2026",
                 lblVersion: "Verze:",
                 guideTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px' aria-hidden='true'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg> Návod:",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Cesta k archivu fotografií (kořenová složka) <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>:",
@@ -3216,6 +3239,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsSecDistances: "Distances",
             statsSecTable: "Table (time)", statsSecFolderTable: "Table (folders)", statsColOrder: "Level", statsColFolder: "Folder", statsColFrom: "From", statsColTo: "To", statsExpandAll: "Expand all", statsCollapseAll: "Collapse all", statsSecGraphs: "Charts", statsGraphsNote: "No dated photos to chart.", statsChartCap: "Number of files over time",
             statsDistAndMore: "km and more",
+            statsTabTime: "Over time", statsTabTod: "Time of day", statsTabDist: "From RP", statsTabDistCen: "From centroid", statsTabCal: "Calendar", statsTabGeo: "Territory", statsTabsAria: "Chart selection",
             statsChartCapTod: "Number of files by time of day", statsChartCapDist: "Number of files by distance from RP", statsChartCapDistCen: "Number of files by distance from centroid", statsChartCapCal: "Number of years with photos on a given day", statsChartAvgMed: "Average and median",
             statsAxisX: "X axis", statsAxisY: "Y axis", statsAxisYPhotos: "Number of photos (pcs)", statsAxisXTime: "Capture time (date)", statsAxisXTod: "Time of day (hours [h], 00–23h)", statsAxisXDist: "Distance from reference point (kilometres [km])", statsAxisXDistCen: "Distance from centroid (kilometres [km])", statsAxisYCalMonths: "Month of year (January–December)", statsAxisXCalDays: "Day of month (1–31)", statsAxisCalWeekdays: "Day of week", statsAxisCalWeekdaysB: "Days with photos (Monday–Sunday)", statsAxisYGeoLat: "Latitude (degrees [°], North/South)", statsAxisXGeoLon: "Longitude (degrees [°], East/West)",
             statsBandNight: "night", statsBandMorning: "morning", statsBandForenoon: "late morning",
@@ -3425,7 +3449,7 @@ statsFarthestPair: "Farthest pair",
                 modalTitle: "PHOTO MAPPER",
                 lblAuthor: "Author:",
                 lblUpdated: "Last update:",
-                valUpdated: "Oct 10, 2026",
+                valUpdated: "Oct 22, 2026",
                 lblVersion: "Version:",
                 guideTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px' aria-hidden='true'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg> User Guide:",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Photo archive path (root folder) <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>:",
@@ -6275,6 +6299,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (_errToastLock) return;
             try {
                 var msg = (e && e.message) ? String(e.message) : "Unknown error";
+                // Neskodne varovani prohlizece (ne chyba aplikace) -> nezobrazovat
+                if (/ResizeObserver loop/i.test(msg)) return;
                 if (msg.length > 160) msg = msg.substring(0, 160) + "…";
                 _errToastLock = true;
                 setTimeout(function(){ _errToastLock = false; }, 5000);
@@ -7039,6 +7065,82 @@ function statsSetFilters(on) {
         }
         // Prepinac grafu. TADY JE GLOBALNI, protoze se volaji z onclick v HTML.
         // Prekresluje POJEN graf, ne cely modal - neprepocitava data nad RB.
+        // --- Prepinac grafu: segmentova lista v aktualnim poradi 1-6 ---
+        // Globalni (mimo renderovani statistik): pouziva se v okne statistik, na cele obrazovce (id se tam prepisi na data-ovmode) i v Nastaveni (vychozi graf).
+        var STATS_CHART_ORDER = ["time", "tod", "dist", "distCen", "cal", "geo"];
+        function statsChartTabInfo(m) {
+            // Klice jsou LITERALNE v statsL_(), jinak by je audit nepovazoval za pouzite.
+            switch (m) {
+                case "tod": return { id: "Tod", s: statsL_("statsTabTod", "Denní doba"), f: statsL_("statsChartCapTod", "Počet souborů v denní době") };
+                case "dist": return { id: "Dist", s: statsL_("statsTabDist", "Od RB"), f: statsL_("statsChartCapDist", "Počet souborů na vzdálenost od RB") };
+                case "distCen": return { id: "DistCen", s: statsL_("statsTabDistCen", "Od těžiště"), f: statsL_("statsChartCapDistCen", "Počet souborů na vzdálenost od těžiště") };
+                case "cal": return { id: "Cal", s: statsL_("statsTabCal", "Kalendář"), f: statsL_("statsChartCapCal", "Počet let s focením v daný den") };
+                case "geo": return { id: "Geo", s: statsL_("statsTabGeo", "Území"), f: statsL_("statsChartCapGeo", "Objevení území fotkami v čase") };
+                default: return { id: "Time", s: statsL_("statsTabTime", "V čase"), f: statsL_("statsChartCap", "Počet souborů v čase") };
+            }
+        }
+        function statsChartTabIcon(m) {
+            var p = {
+                time: "<line x1=\"18\" y1=\"20\" x2=\"18\" y2=\"10\"/><line x1=\"12\" y1=\"20\" x2=\"12\" y2=\"4\"/><line x1=\"6\" y1=\"20\" x2=\"6\" y2=\"14\"/>",
+                tod: "<circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/>",
+                dist: "<circle cx=\"12\" cy=\"12\" r=\"10\"/><circle cx=\"12\" cy=\"12\" r=\"6\"/><circle cx=\"12\" cy=\"12\" r=\"1.5\" fill=\"currentColor\"/>",
+                distCen: "<circle cx=\"12\" cy=\"12\" r=\"7\"/><line x1=\"12\" y1=\"1.5\" x2=\"12\" y2=\"7\"/><line x1=\"12\" y1=\"17\" x2=\"12\" y2=\"22.5\"/><line x1=\"1.5\" y1=\"12\" x2=\"7\" y2=\"12\"/><line x1=\"17\" y1=\"12\" x2=\"22.5\" y2=\"12\"/>",
+                cal: "<rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"16\" y1=\"2\" x2=\"16\" y2=\"6\"/><line x1=\"8\" y1=\"2\" x2=\"8\" y2=\"6\"/><line x1=\"3\" y1=\"10\" x2=\"21\" y2=\"10\"/>",
+                geo: "<polygon points=\"12 1.5 15 9 22.5 12 15 15 12 22.5 9 15 1.5 12 9 9\"/><circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"currentColor\" stroke=\"none\"/>"
+            };
+            return "<svg class=\"st-tab-ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">" + (p[m] || p.time) + "</svg>";
+        }
+        // idPrefix: "stChartTab" (okno statistik) nebo "setChart" (Nastaveni); clickFn: nazev funkce, ktera prepne graf
+        function statsChartSegHtml(idPrefix, clickFn, extraStyle) {
+            var cur = (STATS_CHART_ORDER.indexOf(statsChartMode) >= 0) ? statsChartMode : "time";
+            var h = "<div class=\"st-chart-tabs st-chart-tabs-seg\"" + (extraStyle ? " style=\"" + extraStyle + "\"" : "") + ">"
+                + "<div class=\"st-chart-seg\" role=\"tablist\" aria-label=\"" + escapeHtml(statsL_("statsTabsAria", "Výběr grafu")) + "\" onkeydown=\"statsChartTabKey(event)\">";
+            for (var i = 0; i < STATS_CHART_ORDER.length; i++) {
+                var m = STATS_CHART_ORDER[i], inf = statsChartTabInfo(m), on = (m === cur);
+                h += "<button type=\"button\" id=\"" + idPrefix + inf.id + "\" data-mode=\"" + m + "\" class=\"st-chart-tab" + (on ? " active" : "") + "\""
+                    + " role=\"tab\" aria-selected=\"" + (on ? "true" : "false") + "\" tabindex=\"" + (on ? "0" : "-1") + "\""
+                    + " title=\"" + escapeHtml((i + 1) + ". " + inf.f) + "\" aria-label=\"" + escapeHtml(inf.f) + "\""
+                    + " onclick=\"event.stopPropagation();" + clickFn + "('" + m + "')\">"
+                    + statsChartTabIcon(m) + "<span class=\"st-tab-lbl\" data-t=\"" + escapeHtml(inf.s) + "\">" + escapeHtml(inf.s) + "</span></button>";
+            }
+            h += "</div><div class=\"st-chart-tabcap\">" + escapeHtml(statsChartTabInfo(cur).f) + "</div></div>";
+            return h;
+        }
+        // Po prepnuti grafu: aria-selected, tabindex a titulek ve vsech listach (statistiky, cela obrazovka, Nastaveni)
+        function statsChartTabsSync(m) {
+            try {
+                var bs = document.querySelectorAll(".st-chart-seg button[data-mode]");
+                for (var i = 0; i < bs.length; i++) {
+                    var on = bs[i].getAttribute("data-mode") === m;
+                    bs[i].setAttribute("aria-selected", on ? "true" : "false");
+                    bs[i].setAttribute("tabindex", on ? "0" : "-1");
+                }
+                var caps = document.querySelectorAll(".st-chart-tabcap"), f = statsChartTabInfo(m).f;
+                for (var c = 0; c < caps.length; c++) caps[c].textContent = f;
+            } catch(e) {}
+        }
+        // Klavesnice v liste: sipky vlevo/vpravo (dokola), Home/End
+        function statsChartTabKey(e) {
+            try {
+                var k = e && e.key;
+                if (k !== "ArrowLeft" && k !== "ArrowRight" && k !== "Home" && k !== "End") return;
+                var bar = e.currentTarget, bs = bar ? bar.querySelectorAll("button[data-mode]") : [];
+                if (!bs.length) return;
+                var idx = 0;
+                for (var i = 0; i < bs.length; i++) if (bs[i].classList.contains("active")) { idx = i; break; }
+                if (k === "ArrowLeft") idx = (idx - 1 + bs.length) % bs.length;
+                else if (k === "ArrowRight") idx = (idx + 1) % bs.length;
+                else if (k === "Home") idx = 0;
+                else idx = bs.length - 1;
+                e.preventDefault();
+                e.stopPropagation();
+                bs[idx].click();
+                // lista se nekde (cela obrazovka) muze prekreslit -> fokus na aktualni tlacitko se stejnym data-mode
+                var m = bs[idx].getAttribute("data-mode");
+                var nb = bar.isConnected ? bs[idx] : document.querySelector(".st-chart-seg button[data-mode=\"" + m + "\"]");
+                if (nb) nb.focus();
+            } catch(e2) {}
+        }
         function statsSetChartMode(m) {
             try {
                 if (m !== "tod" && m !== "dist" && m !== "distCen" && m !== "cal" && m !== "geo") m = "time";
@@ -7054,9 +7156,10 @@ function statsSetFilters(on) {
                     var b = document.getElementById(ids[k]);
                     if (b) b.className = "st-chart-tab" + (k === m ? " active" : "");
                 }
-                try { var ovB = document.getElementById("stChartOverlayBody"); if (ovB) { var fn2 = (typeof window !== "undefined") ? window.statsChartNow : null; ovB.innerHTML = fn2 ? fn2() : ""; } } catch(eO) {}
+                try { if (document.getElementById("stChartOverlayBody")) window.statsChartOverlayRender(); } catch(eO) {}
                 try { var ovT = document.getElementById("stChartOverlayTabs"); if (ovT) { var ob = ovT.querySelectorAll("button[data-ovmode]"); for (var oi = 0; oi < ob.length; oi++) { try { ob[oi].className = "st-chart-tab" + (ob[oi].getAttribute("data-ovmode") === m ? " active" : ""); } catch(eOB) {} } } } catch(eOT) {}
                 try { syncStatsSettings(); } catch(eSync) {}
+                try { statsChartTabsSync(m); } catch(eTS) {}
                 try { statsGeoPlayRefreshBtns(); } catch(eGPR2) {}
                 try { statsCalLegendFitLater(); } catch(eFit1) {}
             } catch(e) {}
@@ -8658,7 +8761,7 @@ function statsSetFilters(on) {
                 var box = document.getElementById("stChartBox");
                 if (box && typeof statsChartNow === "function") box.innerHTML = statsChartNow();
             } catch(e2) {}
-            try { var ovB2 = document.getElementById("stChartOverlayBody"); if (ovB2) { var fnA = (typeof window !== "undefined") ? window.statsChartNow : null; ovB2.innerHTML = fnA ? fnA() : ""; } } catch(e3) {}
+            try { if (document.getElementById("stChartOverlayBody")) window.statsChartOverlayRender(); } catch(e3) {}
         }
         /* Radek s prepinaci 6. grafu (rezim obarveni, volba palety, znacky RB a teziste). */
         function statsGeoMarkRow() {
@@ -8702,7 +8805,7 @@ function statsSetFilters(on) {
                 var box = document.getElementById("stChartBox");
                 if (box && typeof statsChartNow === "function") box.innerHTML = statsChartNow();
             } catch(e2) {}
-            try { var ovB2 = document.getElementById("stChartOverlayBody"); if (ovB2) { var fnA = (typeof window !== "undefined") ? window.statsChartNow : null; ovB2.innerHTML = fnA ? fnA() : ""; } } catch(e3) {}
+            try { if (document.getElementById("stChartOverlayBody")) window.statsChartOverlayRender(); } catch(e3) {}
         }
         // Slovo "souboru/files" v popiscich tabu grafu nahradi ikonkou fotaku, "Pocet"/"Number of" symbolem sumy.
         function statsChartFileIcon(s) {
@@ -10200,6 +10303,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                     }
                 } catch(e1) {}
                 if (!(realW > 100)) realW = 572;
+                if (window._stChartForceW > 100) realW = window._stChartForceW; // fullscreen: kreslit pro skutecnou sirku prekryvu
                 var scale = realW / W;
                 if (!(scale > 0)) scale = 1;
                 var fsTxt = Math.round(11 / scale * 10) / 10;
@@ -10326,12 +10430,17 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 /* Osy: plná čára pod buňkami, poloprůhledná plná čára nad buňkami (v buňkách) */
                 var t;
                 var baseLines = "", overLines = "", axisTexts = "";
+                /* Levy dolni roh: kdyz je prvni popisek delky u leveho okraje, nejnizsi popisek sirky by se s nim prekryl. */
+                var lonT0 = Math.ceil(bb.minLon / stLon) * stLon;
+                var lonHalf0 = (statsGeoFmtDeg(lonT0, stLon) + "\u00b0").length * fsTxt * 0.31;
+                var lonNearLeft = (xOf(lonT0) - mL) < lonHalf0 + 2;
                 for (t = Math.ceil(bb.minLat / stLat) * stLat; t <= bb.maxLat + 1e-9; t += stLat) {
                     var ty = yOf(t);
                     var tyR = Math.round(ty * 10) / 10;
+                    var latSkipLbl = lonNearLeft && (mT + pH - ty) < fsTxt * 1.2;
                     baseLines += "<line x1=\"" + mL + "\" y1=\"" + tyR + "\" x2=\"" + (mL + pW) + "\" y2=\"" + tyR + "\" stroke=\"#e8eaed\" stroke-width=\"1\"/>";
                     overLines += "<line x1=\"" + mL + "\" y1=\"" + tyR + "\" x2=\"" + (mL + pW) + "\" y2=\"" + tyR + "\" stroke=\"#e8eaed\" stroke-width=\"1\" opacity=\"0.35\"/>";
-                    axisTexts += "<text class=\"st-chart-txt\" x=\"" + (mL - 5) + "\" y=\"" + (Math.round((ty + fsTxt * 0.35) * 10) / 10) + "\" text-anchor=\"end\" style=\"shape-rendering:auto\">" + escapeHtml(statsGeoFmtDeg(t, stLat) + "\u00b0") + "</text>";
+                    if (!latSkipLbl) axisTexts += "<text class=\"st-chart-txt\" x=\"" + (mL - 5) + "\" y=\"" + (Math.round((ty + fsTxt * 0.35) * 10) / 10) + "\" text-anchor=\"end\" style=\"shape-rendering:auto\">" + escapeHtml(statsGeoFmtDeg(t, stLat) + "\u00b0") + "</text>";
                 }
                 axisTexts += "<rect class=\"st-axis-hit\" data-tip-a=\"" + escapeHtml(L_("statsAxisY", "Osa Y")) + "\" data-tip-b=\"" + escapeHtml(L_("statsAxisYGeoLat", "Zeměpisná šířka (stupně [°], severní/jižní šířka)")) + "\" x=\"0\" y=\"" + mT + "\" width=\"" + mL + "\" height=\"" + pH + "\" onmouseenter=\"stChartTipShow(event)\" onmousemove=\"stChartTipMove(event)\" onmouseleave=\"stChartTipHide()\"/>";
 
@@ -11370,6 +11479,18 @@ window.statsChartSave = statsChartSave;
         // cats: [{ n, p, lab, tip, col }]  - col je volitelna barva (index 0-5 pro denni dobu).
         // Stejne delaji graf v denni dobe a graf vzdalenosti od referencniho bodu: oba maji pevne kategorie.
         // pick(hi, cat) -> onclick retezec pro mrizku (jinak puvodni zoom na fotku).
+        // Hezka osa Y: rovnomerne kroky 1/2/2,5/5 x 10^n (~4 dilky), maximum tesne nad nejvyssi hodnotou.
+        function statsNiceAxis(max, target) {
+            target = target || 4;
+            max = Math.max(1, Number(max) || 0);
+            var raw = max / target, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10)), nrm = raw / mag;
+            var step = (nrm <= 1 ? 1 : nrm <= 2 ? 2 : nrm <= 2.5 ? 2.5 : nrm <= 5 ? 5 : 10) * mag;
+            if (step < 1) step = 1; // pocty souboru jsou cela cisla
+            if (step % 1) step = Math.ceil(step); // 2,5 -> 3 (zadne desetinne dilky u poctu fotek)
+            var yMax = Math.ceil(max / step - 1e-9) * step, ticks = [];
+            for (var v = 0; v <= yMax + 1e-9; v += step) ticks.push(Math.round(v * 100) / 100);
+            return { yMax: yMax, ticks: ticks };
+        }
         function statsBarsSvg(cats, noteKey, noteDef, marks, pick, axisTips) {
             try {
                 var note = "<div class=\"st-sec-note\">" + L_(noteKey, noteDef) + "</div>";
@@ -11394,6 +11515,7 @@ window.statsChartSave = statsChartSave;
                     }
                 } catch(e) {}
                 if (!(realW > 100)) realW = 572;
+                if (window._stChartForceW > 100) realW = window._stChartForceW; // fullscreen: kreslit pro skutecnou sirku prekryvu
                 var scale = realW / W;
                 if (!(scale > 0)) scale = 1;
                 var fsTxt = Math.round(11 / scale * 10) / 10;
@@ -11401,9 +11523,7 @@ window.statsChartSave = statsChartSave;
                 var fmtN = function(v) { try { return Number(v).toLocaleString(loc); } catch(e2) { return String(v); } };
                 var gapLbl = Math.round(fsTxt * 1.2);
                 var mT = Math.max(8, Math.round(fsTxt * 0.9 + 4));
-                var mag = Math.pow(10, Math.floor(Math.log(Math.max(1, max)) / Math.LN10));
-                var norm = max / mag, nice = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10);
-                var yMax = Math.max(1, nice * mag);
+                var yAx = statsNiceAxis(max), yMax = yAx.yMax;
                 var maxStr = fmtN(yMax);
                 var mL = Math.max(34, Math.round((maxStr.length + 0.6) * fsTxt * 0.55 + 6));
                 var mB = Math.max(72, Math.round(13 * fsTxt * 0.62 * 0.7071 + gapLbl + fsTxt * 0.7071 + 6));
@@ -11416,8 +11536,8 @@ window.statsChartSave = statsChartSave;
                 var s = "<svg class=\"st-chart\" style=\"font-size:" + fsTxt + "px\" viewBox=\"0 0 " + W + " " + Hh + "\" role=\"img\">";
                 // mrizky a cisla osy Y (stejne hodnoty neopakujeme)
                 var prevGv = null;
-                for (var gI = 0; gI <= 3; gI++) {
-                    var gv = Math.round(yMax * gI / 3);
+                for (var gI = 0; gI < yAx.ticks.length; gI++) {
+                    var gv = yAx.ticks[gI];
                     if (gv === prevGv) continue;
                     prevGv = gv;
                     var gy = Math.round(yOf(gv)) + 0.5;
@@ -11461,13 +11581,23 @@ window.statsChartSave = statsChartSave;
                 // osa X
                 s += "<line class=\"st-chart-axis\" x1=\"" + mL + "\" y1=\"" + (mT + pH + 0.5) + "\" x2=\"" + (mL + pW) + "\" y2=\"" + (mT + pH + 0.5) + "\"/>";
                 // popisky osy X sklonene o 45 deg, od konce, s kontrolou kolme vzdalenosti
-                var minGapX = fsTxt * 1.02;
-                var fitPx = Math.max(16, Math.round(fsTxt * 0.7071 + 6));
+                // Popisky jsou sklonene o 45 deg: kolma mezera mezi sousedy = vodorovna * 0,7071,
+                // takze aby se nepresahovaly, musi byt vodorovne od sebe aspon vyska pisma / 0,7071.
+                var minGapX = fsTxt * 1.45;
+                var fitPx = Math.max(16, Math.round(fsTxt * 1.45));
                 var budget = Math.max(2, Math.floor(pW / fitPx));
                 var step = Math.max(1, Math.ceil(cats.length / budget));
+                var startI = cats.length - 1;
+                // 24 hodin: vynechavat po hezkych krocich (00, 02, 04 … / 00, 03, 06 …) a zacinat od 00h
+                if (cats.length === 24 && step > 1) {
+                    var hSteps = [2, 3, 4, 6, 8, 12], hs;
+                    for (hs = 0; hs < hSteps.length && hSteps[hs] < step; hs++) {}
+                    step = hSteps[Math.min(hs, hSteps.length - 1)];
+                    startI = Math.floor((cats.length - 1) / step) * step;
+                }
                 var baseY = mT + pH + gapLbl;
                 var placedX = null;
-                for (var tI = cats.length - 1; tI >= 0; tI -= step) {
+                for (var tI = startI; tI >= 0; tI -= step) {
                     var c2 = cats[tI];
                     if (!c2 || !c2.lab) continue;
                     var tx = mL + tI * slot + slot / 2;
@@ -11736,30 +11866,7 @@ window.statsChartSave = statsChartSave;
         }
         // --- Tlacitka: sest grafu vedle sebe ---
         function statsChartTabs() {
-            try {
-                // Klice jsou LITERALNE v L_(), jinak by je audit nepovazoval za pouzite.
-                var act = function(mode) { return statsChartMode === mode ? " active" : ""; };
-                var cTime = L_("statsChartCap", "Počet souborů v čase");
-                var cTod = L_("statsChartCapTod", "Počet souborů v denní době");
-                var cDist = L_("statsChartCapDist", "Počet souborů na vzdálenost od RB");
-                var cDistCen = L_("statsChartCapDistCen", "Počet souborů na vzdálenost od těžiště");
-                var cCal = L_("statsChartCapCal", "Počet let s focením v daný den");
-                var cGeo = L_("statsChartCapGeo", "Objevení území fotkami v čase");
-                return "<div class=\"st-chart-tabs\">"
-                    + "<button type=\"button\" id=\"stChartTabTime\" class=\"st-chart-tab" + act("time") + "\" title=\"" + escapeHtml("1. " + cTime) + "\" onclick=\"statsSetChartMode('time')\">"
-                        + statsChartFileIcon(cTime) + "</button>"
-                    + "<button type=\"button\" id=\"stChartTabTod\" class=\"st-chart-tab" + act("tod") + "\" title=\"" + escapeHtml("2. " + cTod) + "\" onclick=\"statsSetChartMode('tod')\">"
-                        + statsChartFileIcon(cTod) + "</button>"
-                    + "<button type=\"button\" id=\"stChartTabDist\" class=\"st-chart-tab" + act("dist") + "\" title=\"" + escapeHtml("3. " + cDist) + "\" onclick=\"statsSetChartMode('dist')\">"
-                        + statsChartFileIcon(cDist) + "</button>"
-                    + "<button type=\"button\" id=\"stChartTabDistCen\" class=\"st-chart-tab" + act("distCen") + "\" title=\"" + escapeHtml("4. " + cDistCen) + "\" onclick=\"statsSetChartMode('distCen')\">"
-                        + statsChartFileIcon(cDistCen) + "</button>"
-                    + "<button type=\"button\" id=\"stChartTabCal\" class=\"st-chart-tab" + act("cal") + "\" title=\"" + escapeHtml("5. " + cCal) + "\" onclick=\"statsSetChartMode('cal')\">"
-                        + statsChartFileIcon(cCal) + "</button>"
-                    + "<button type=\"button\" id=\"stChartTabGeo\" class=\"st-chart-tab" + act("geo") + "\" title=\"" + escapeHtml("6. " + cGeo) + "\" onclick=\"statsSetChartMode('geo')\">"
-                        + statsChartFileIcon(cGeo) + "</button>"
-                    + "</div>";
-            } catch(e) { return ""; }
+            try { return statsChartSegHtml("stChartTab", "statsSetChartMode", ""); } catch(e) { return ""; }
         }
         // --- Aktualni graf podle zvoleneho tlacitka ---
         function statsChartNow() {
@@ -11775,6 +11882,52 @@ window.statsChartSave = statsChartSave;
             } catch(e) { return ""; }
         }
         // --- Graf pres celou obrazovku (fullscreen overlay) ---
+        // --- Fullscreen: graf se kresli znovu pro skutecnou sirku prekryvu (ne pro sirku okna statistik) ---
+        // a zmensi se tak, aby se vesel na vysku obrazovky bez scrollovani.
+        window._stChartForceW = 0;
+        function statsChartOverlayRender() {
+            var ovB = document.getElementById("stChartOverlayBody");
+            if (!ovB) return;
+            var fn = (typeof window !== "undefined") ? window.statsChartNow : null;
+            if (!fn) { ovB.innerHTML = ""; return; }
+            var box = ovB.parentNode;
+            var sizeSvgs = function(w) {
+                var svgs = ovB.querySelectorAll("svg.st-chart");
+                for (var i = 0; i < svgs.length; i++) { svgs[i].style.width = w + "px"; svgs[i].style.maxWidth = "100%"; svgs[i].style.display = "block"; svgs[i].style.margin = "0 auto"; }
+                return svgs.length ? svgs[0] : null;
+            };
+            try {
+                var full = Math.max(320, Math.floor(ovB.clientWidth || 0) || 572);
+                window._stChartForceW = full;
+                ovB.innerHTML = fn();
+                var svg = sizeSvgs(full);
+                var cw = full;
+                for (var it = 0; it < 3 && svg && box; it++) {
+                    var over = box.scrollHeight - box.clientHeight;
+                    if (over <= 1) break;
+                    var sh = svg.getBoundingClientRect().height;
+                    if (!(sh > over)) break;
+                    var w2 = Math.max(320, Math.floor(cw * (sh - over) / sh) - 2);
+                    if (w2 >= cw) break;
+                    cw = w2;
+                    window._stChartForceW = cw;
+                    ovB.innerHTML = fn();
+                    svg = sizeSvgs(cw);
+                }
+            } catch(e) {
+                try { ovB.innerHTML = fn(); } catch(e2) {}
+            } finally {
+                window._stChartForceW = 0;
+            }
+            try { statsCalLegendFitLater(); } catch(eF) {}
+        }
+        try { window.statsChartOverlayRender = statsChartOverlayRender; } catch(eWR) {}
+        var _stChartOvRszT = null;
+        try { window.addEventListener("resize", function() {
+            if (!document.getElementById("stChartOverlay")) return;
+            if (_stChartOvRszT) clearTimeout(_stChartOvRszT);
+            _stChartOvRszT = setTimeout(function() { _stChartOvRszT = null; statsChartOverlayRender(); }, 150);
+        }); } catch(eOR) {}
         function expandStatsChart() {
             try {
                 if (document.getElementById("stChartOverlay")) return;
@@ -11815,7 +11968,6 @@ window.statsChartSave = statsChartSave;
                 head.appendChild(hb);
                 var clones = document.createElement("div");
                 clones.id = "stChartOverlayBody";
-                clones.innerHTML = src ? src.innerHTML : "";
                 box.appendChild(head);
                 var tabsHost = document.createElement("div");
                 tabsHost.id = "stChartOverlayTabs";
@@ -11832,6 +11984,7 @@ window.statsChartSave = statsChartSave;
                 ov.appendChild(box);
                 ov.onclick = function(e) { if (e && e.target === ov) collapseStatsChart(); };
                 document.body.appendChild(ov);
+                try { statsChartOverlayRender(); } catch(eOvR) { clones.innerHTML = src ? src.innerHTML : ""; }
                 try { statsGeoPlayRefreshBtns(); } catch(eGPR3) {}
                 try { statsCalLegendFitLater(); } catch(eFit2) {}
                 document.addEventListener("keydown", statsChartEsc);
@@ -12011,6 +12164,7 @@ window.statsChartSave = statsChartSave;
                     }
                 } catch(e) {}
                 if (!(realW > 100)) realW = 572; // 620 - 2x24 = plna sirka okna na desktopu
+                if (window._stChartForceW > 100) realW = window._stChartForceW; // fullscreen: kreslit pro skutecnou sirku prekryvu
                 var scale = realW / W;
                 if (!(scale > 0)) scale = 1;
                 var fsTxt = Math.round(11 / scale * 10) / 10;
@@ -12022,8 +12176,7 @@ window.statsChartSave = statsChartSave;
                 var gapLbl = Math.round(fsTxt * 1.2);
                 mT = Math.max(8, Math.round(fsTxt * 0.9 + 4));
                 // Okraj podle skutecne delky nejvyssiho cisla na ose Y (jako u sloupcovych grafu).
-                var _mxT = Math.max(1, C.max), _mgT = Math.pow(10, Math.floor(Math.log(_mxT) / Math.LN10)), _nmT = _mxT / _mgT;
-                var _yMT = Math.max(1, (_nmT <= 1 ? 1 : _nmT <= 2 ? 2 : _nmT <= 5 ? 5 : 10) * _mgT), _msT;
+                var _yMT = statsNiceAxis(C.max).yMax, _msT;
                 try { _msT = Number(_yMT).toLocaleString(currentLang === "cs" ? "cs-CZ" : "en-US"); } catch(eMs) { _msT = String(_yMT); }
                 var mL = Math.max(42, Math.round((_msT.length + 0.6) * fsTxt * 0.55 + 6));
                 var mB = Math.max(72, Math.round(13 * fsTxt * 0.62 * 0.7071 + gapLbl + fsTxt * 0.7071 + 6));
@@ -12036,17 +12189,15 @@ window.statsChartSave = statsChartSave;
                 var loc = (currentLang === "cs") ? "cs-CZ" : "en-US";
                 var fmtN = function(v) { try { return Number(v).toLocaleString(loc); } catch(e) { return String(v); } };
                 // hezké maximum osy Y (1/2/5 x 10^n)
-                var top = C.max, mag = Math.pow(10, Math.floor(Math.log(Math.max(1, top)) / Math.LN10));
-                var norm = top / mag, nice = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10);
-                var yMax = Math.max(1, nice * mag);
+                var yAx = statsNiceAxis(C.max), yMax = yAx.yMax;
                 var xOf = function(dayNo) { return mL + (dayNo - C.lo) / C.axisSpan * pW; };
                 var yOf = function(v) { return mT + pH - (v / yMax) * pH; };
                 var s = "<svg class=\"st-chart\" style=\"font-size:" + fsTxt + "px\" viewBox=\"0 0 " + W + " " + Hh + "\" role=\"img\" aria-label=\"" + L_("statsChartCap", "Počet souborů v čase") + "\">";
                 // mrizky a cisla osy Y. Pri malem maxu by 1/3 a 2/3 spadly na stejne
                 // cislo a mrizka by se opakovala - proto stejne hodnoty preskakujeme.
                 var prevGv = null;
-                for (var gI = 0; gI <= 3; gI++) {
-                    var gv = Math.round(yMax * gI / 3);
+                for (var gI = 0; gI < yAx.ticks.length; gI++) {
+                    var gv = yAx.ticks[gI];
                     if (gv === prevGv) continue;
                     prevGv = gv;
                     var gy = Math.round(yOf(gv)) + 0.5;
@@ -12117,12 +12268,12 @@ window.statsChartSave = statsChartSave;
                 s += "<line class=\"st-chart-axis\" x1=\"" + mL + "\" y1=\"" + (mT + pH + 0.5) + "\" x2=\"" + (mL + pW) + "\" y2=\"" + (mT + pH + 0.5) + "\"/>";
                 // Popisky osy X sklonene o 45 deg doleva, takze se vejdou vedle sebe.
                 // Sikmy popisek zabere vodorovne jen svou vysku, takze jich muze byt vic.
-                var fitPx = Math.max(16, Math.round(fsTxt * 1.05 + 6)), budget = Math.max(2, Math.floor(pW / fitPx));
+                var fitPx = Math.max(16, Math.round(fsTxt * 1.45)), budget = Math.max(2, Math.floor(pW / fitPx));
                 var step = Math.max(1, Math.ceil(n / budget));
                 var baseY = mT + pH + gapLbl;
                 // Dva popisky jsou rovnobezne sikme cary: kolma vzdalenost = Δ*0.7071.
-                // Aby se nedotkly, musi Δ > vyska pisma / 0.7071 ≈ 1.02 * fsTxt.
-                var minGapX = fsTxt * 1.02;
+                // Aby se nedotkly, musi Δ > vyska pisma / 0.7071 ≈ 1.41 * fsTxt (+ mala rezerva).
+                var minGapX = fsTxt * 1.45;
                 var placedX = null;
                 for (var tI = n - 1; tI >= 0; tI -= step) {
                     var tb = B[tI], lab = fmtStatsBucketLabel(tb, res);
@@ -12144,7 +12295,7 @@ window.statsChartSave = statsChartSave;
             } catch(e) { return ""; }
         }
         /* --- Kalendarovy heatbar 53x7: v kolika letech se v dany den fotilo --- */
-        var statsChartCalCacheFor = null, statsChartCalCacheHtml = "", statsChartCalCacheLang = "";
+        var statsChartCalCacheFor = null, statsChartCalCacheHtml = "", statsChartCalCacheLang = "", statsChartCalCacheW = 0;
         // Legenda grafu c. 5: zavorky s poctem dnu (.st-cal-n) se ukazou jen tehdy, vejde-li se
         // cela legenda (vcetne Max/Min/Ø/medianu) na jeden radek. Meri se v DOM po vykresleni,
         // protoze stejny HTML retezec se pouziva v okne statistik i ve zvetsenem grafu.
@@ -12188,7 +12339,14 @@ window.statsChartSave = statsChartSave;
         try { window.addEventListener("resize", function() { statsCalLegendFit(); }); } catch(eRsz) {}
         try {
             if (typeof ResizeObserver === "function") {
-                var statsCalRO = new ResizeObserver(function() { if (!statsCalFitBusy) statsCalLegendFit(); });
+                // Prepocet legendy az v dalsim snimku -> zadna smycka ResizeObserveru (varovani "loop completed ...")
+                var statsCalROPending = false;
+                var statsCalRO = new ResizeObserver(function() {
+                    if (statsCalFitBusy || statsCalROPending) return;
+                    statsCalROPending = true;
+                    var run = function() { statsCalROPending = false; if (!statsCalFitBusy) statsCalLegendFit(); };
+                    if (typeof requestAnimationFrame === "function") requestAnimationFrame(run); else setTimeout(run, 0);
+                });
                 var statsCalROHook = function() {
                     try {
                         var ids = ["stChartBox", "stChartOverlayBody"];
@@ -12200,7 +12358,7 @@ window.statsChartSave = statsChartSave;
         } catch(eRO) {}
         function statsChartCalSvg(times) {
             try {
-                if (statsChartCalCacheFor === times && statsChartCalCacheLang === currentLang && statsChartCalCacheHtml) return statsChartCalCacheHtml;
+                if (statsChartCalCacheFor === times && statsChartCalCacheLang === currentLang && statsChartCalCacheW === (window._stChartForceW || 0) && statsChartCalCacheHtml) return statsChartCalCacheHtml;
                 var loc = (currentLang === "cs") ? "cs-CZ" : "en-US";
                 // Agregace: distinct YYYYMMDD -> bunka (mesic, den) + pas dnu v tydnu.
                 // Stejny den ve stejnem roce = 1 vyskyt, i kdyz ma vice fotek.
@@ -12265,6 +12423,7 @@ window.statsChartSave = statsChartSave;
                     }
                 } catch(e) {}
                 if (!(realW > 100)) realW = 572;
+                if (window._stChartForceW > 100) realW = window._stChartForceW; // fullscreen: kreslit pro skutecnou sirku prekryvu
                 var scale = realW / W;
                 if (!(scale > 0)) scale = 1;
                 var fsTxt = Math.round(11 / scale * 10) / 10;
@@ -12369,6 +12528,7 @@ window.statsChartSave = statsChartSave;
                 var out = s + lg;
                 statsChartCalCacheFor = times;
                 statsChartCalCacheLang = currentLang;
+                statsChartCalCacheW = window._stChartForceW || 0; // fullscreen se kresli pro jinou sirku
                 statsChartCalCacheHtml = out;
                 return out;
             } catch(e) { return ""; }
@@ -12436,7 +12596,7 @@ H += "</div></div>";
             try {
                 if (document.getElementById("stChartOverlay")) {
                     var _rB = document.getElementById("stChartOverlayBody");
-                    if (_rB) _rB.innerHTML = statsChartNow();
+                    if (_rB) window.statsChartOverlayRender();
                     var _rT = document.getElementById("stChartOverlayTabs");
                     if (_rT && typeof statsChartTabs === "function") {
                         _rT.innerHTML = String(statsChartTabs()).replace(/ id="stChartTab([A-Za-z]+)"/g, function(mt, pp) {
@@ -13228,14 +13388,7 @@ H += "</div></div>";
                         "<input id=\"setStatsCoverageR\" type=\"number\" min=\"0.5\" max=\"5000\" step=\"any\" onfocus=\"this.select();\" onchange=\"setStatsCoverageR(this.value, true)\" onkeydown=\"if(event.key==='Enter')this.blur();\" title=\"" + (t.statsCoverageAreaTip || "") + "\" style=\"width:60px;border:1.5px solid #dadce0;border-radius:8px;padding:3px 6px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;text-align:right;\" /><span>km</span>" +
                         "<span style=\"color:#5f6368;font-size:10px;\">(" + (t.statsCoverageRange || (currentLang === "cs" ? "rozsah 0,5 \u2013 5000 km" : "range 0.5 \u2013 5000 km")) + ")</span></label>" +
                         "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;\">" + (t.setStatsChart || "Vychozi graf") + "</div>" +
-                        "<div class=\"st-chart-tabs\" style=\"margin:6px 0 0 0;\">" +
-                        "<button type=\"button\" class=\"st-chart-tab\" id=\"setChartTime\" title=\"" + escapeHtml("1. " + (t.statsChartCap || "")) + "\" onclick=\"event.stopPropagation();setStatsChartSetting('time')\">" + statsChartFileIcon(t.statsChartCap || "") + "</button>" +
-                        "<button type=\"button\" class=\"st-chart-tab\" id=\"setChartTod\" title=\"" + escapeHtml("2. " + (t.statsChartCapTod || "")) + "\" onclick=\"event.stopPropagation();setStatsChartSetting('tod')\">" + statsChartFileIcon(t.statsChartCapTod || "") + "</button>" +
-                        "<button type=\"button\" class=\"st-chart-tab\" id=\"setChartDist\" title=\"" + escapeHtml("3. " + (t.statsChartCapDist || "")) + "\" onclick=\"event.stopPropagation();setStatsChartSetting('dist')\">" + statsChartFileIcon(t.statsChartCapDist || "") + "</button>" +
-                        "<button type=\"button\" class=\"st-chart-tab\" id=\"setChartDistCen\" title=\"" + escapeHtml("4. " + (t.statsChartCapDistCen || "")) + "\" onclick=\"event.stopPropagation();setStatsChartSetting('distCen')\">" + statsChartFileIcon(t.statsChartCapDistCen || "") + "</button>" +
-                        "<button type=\"button\" class=\"st-chart-tab\" id=\"setChartCal\" title=\"" + escapeHtml("5. " + (t.statsChartCapCal || "")) + "\" onclick=\"event.stopPropagation();setStatsChartSetting('cal')\">" + statsChartFileIcon(t.statsChartCapCal || "") + "</button>" +
-                        "<button type=\"button\" class=\"st-chart-tab\" id=\"setChartGeo\" title=\"" + escapeHtml("6. " + (t.statsChartCapGeo || "")) + "\" onclick=\"event.stopPropagation();setStatsChartSetting('geo')\">" + statsChartFileIcon(t.statsChartCapGeo || "") + "</button>" +
-                        "</div>" +
+                        statsChartSegHtml("setChart", "setStatsChartSetting", "margin:6px 0 0 0;") +
                         "<div id=\"stGeoSettings\" style=\"display:" + (statsChartMode === "geo" ? "block" : "none") + ";margin:6px 0 0 0;\">" +
                         "<div style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;color:#3c4043;\">" +
                         "<label style=\"display:inline-flex;align-items:center;gap:4px;cursor:pointer;\" title=\"" + escapeHtml(t.statsGeoLandTip || "Zobrazit podkres pevniny v grafu (z offline mapy)") + "\"><input id=\"setStatsGeoLand\" class=\"st-stats-geo-land\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"event.stopPropagation();statsSetGeoLand(this.checked)\" /><span>" + escapeHtml(t.statsGeoLand || "Pevnina") + "</span></label>" +
