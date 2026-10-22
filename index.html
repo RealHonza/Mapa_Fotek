@@ -683,6 +683,14 @@
         .st-bar-val { flex: 0 0 auto; font-weight: 700; color: #202124; min-width: 60px; text-align: right; }
         .st-empty { font-size: 12px; color: #80868b; padding: 10px 2px; }
         .st-table-wrap { overflow-x: hidden; }
+        /* Zvetsena tabulka (overlay): hlavicka sekce pevne, telo se posouva, zahlavi sloupcu prilepene */
+        .st-tbl-ov { background: #ffffff; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); width: min(1100px, 96vw); max-height: 94vh;
+            display: flex; flex-direction: column; padding: 14px 18px 18px; position: relative; box-sizing: border-box; }
+        .st-tbl-ov-head h3 { margin: 0 0 8px 0 !important; }
+        .st-tbl-ov-body { flex: 1 1 auto; min-height: 0; overflow: auto; }
+        .st-tbl-ov-body .st-table-wrap { overflow: visible; }
+        .st-tbl-ov-body .st-table { font-size: 13px; min-width: 600px; } /* uzky displej: vodorovne posouvani misto orezu */
+        .st-tbl-ov-body .st-table thead th { position: sticky; top: 0; z-index: 2; box-shadow: inset 0 -1px 0 #e8eaed; }
         .st-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 11.5px; }
         .st-table th { background: #f8f9fa; color: #5f6368; font-weight: 700; text-align: left; padding: 5px 8px; border: 1px solid #e8eaed; cursor: pointer; white-space: nowrap; overflow: hidden; user-select: none; transition: background .15s, color .15s; }
         .st-table th:hover { background: var(--green-bg); color: var(--green); }
@@ -7065,6 +7073,93 @@ function statsSetFilters(on) {
         }
         // Prepinac grafu. TADY JE GLOBALNI, protoze se volaji z onclick v HTML.
         // Prekresluje POJEN graf, ne cely modal - neprepocitava data nad RB.
+        // --- Zvetseni tabulky (analogie "Zvetsit graf") ---
+        // Overlay je kopie sekce z okna statistik; po kazdem renderStats() (razeni, rozbaleni slozek, jazyk) se obnovi.
+        var statsTableOvKey = null;
+        var STATS_ICO_EXPAND = "<svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 3h6v6\"/><path d=\"M9 21H3v-6\"/><path d=\"M21 3l-7 7\"/><path d=\"M3 21l7-7\"/></svg>";
+        var STATS_ICO_SHRINK = "<svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3v3a2 2 0 0 1-2 2H3\"/><path d=\"M21 8h-3a2 2 0 0 1-2-2V3\"/><path d=\"M3 16h3a2 2 0 0 1 2 2v3\"/><path d=\"M16 21v-3a2 2 0 0 1 2-2h3\"/></svg>";
+        function statsTableExpandBtnHtml(key) {
+            var t = (currentLang === "cs") ? "Zvětšit tabulku" : "Enlarge table";
+            return "<button type=\"button\" class=\"st-chart-expand st-tbl-expand\" data-sttbl-btn=\"" + key + "\" title=\"" + t + "\" aria-label=\"" + t + "\""
+                + " onclick=\"event.stopPropagation();expandStatsTable('" + key + "')\">" + STATS_ICO_EXPAND + "</button>";
+        }
+        function statsTableOverlayRender() {
+            var ov = document.getElementById("stTableOverlay");
+            if (!ov) return;
+            var src = document.querySelector("#statsBody [data-sttbl=\"" + statsTableOvKey + "\"]");
+            if (!src) { collapseStatsTable(true); return; }
+            var head = document.getElementById("stTableOverlayHead"), body = document.getElementById("stTableOverlayBody");
+            if (!head || !body) return;
+            var hadFocus = ov.contains(document.activeElement), st = body.scrollTop, sl = body.scrollLeft;
+            var h3 = null, rest = "";
+            for (var i = 0; i < src.children.length; i++) {
+                var ch = src.children[i];
+                if (!h3 && ch.tagName === "H3") { h3 = ch; continue; }
+                rest += ch.outerHTML;
+            }
+            head.innerHTML = h3 ? h3.outerHTML : "";
+            var eb = head.querySelector(".st-tbl-expand");
+            if (eb) {
+                var t = (currentLang === "cs") ? "Zmenšit tabulku (Esc)" : "Shrink table (Esc)";
+                eb.className = "st-chart-expand st-tbl-shrink";
+                eb.removeAttribute("data-sttbl-btn");
+                eb.title = t;
+                eb.setAttribute("aria-label", t);
+                eb.setAttribute("onclick", "event.stopPropagation();collapseStatsTable()");
+                eb.innerHTML = STATS_ICO_SHRINK;
+            }
+            body.innerHTML = rest;
+            body.scrollTop = st;
+            body.scrollLeft = sl;
+            if (hadFocus && !ov.contains(document.activeElement)) { var fb = head.querySelector(".st-tbl-shrink"); if (fb) fb.focus(); }
+        }
+        function expandStatsTable(key) {
+            try {
+                if (document.getElementById("stTableOverlay")) collapseStatsTable(true);
+                statsTableOvKey = key;
+                var ov = document.createElement("div");
+                ov.id = "stTableOverlay";
+                ov.setAttribute("role", "dialog");
+                ov.setAttribute("aria-modal", "true");
+                ov.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:10050;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;";
+                var box = document.createElement("div");
+                box.className = "st-tbl-ov";
+                var head = document.createElement("div");
+                head.id = "stTableOverlayHead";
+                head.className = "st-tbl-ov-head";
+                var body = document.createElement("div");
+                body.id = "stTableOverlayBody";
+                body.className = "st-tbl-ov-body";
+                box.appendChild(head);
+                box.appendChild(body);
+                ov.appendChild(box);
+                ov.onclick = function(e) { if (e && e.target === ov) collapseStatsTable(); };
+                document.body.appendChild(ov);
+                statsTableOverlayRender();
+                try { var fb = head.querySelector(".st-tbl-shrink"); if (fb) fb.focus(); } catch(eF) {}
+                document.addEventListener("keydown", statsTableEsc);
+            } catch(e) {}
+        }
+        function statsTableEsc(e) {
+            try {
+                if (e && e.key === "Escape" && document.getElementById("stTableOverlay")) { e.preventDefault(); e.stopPropagation(); collapseStatsTable(); }
+            } catch(e2) {}
+        }
+        function collapseStatsTable(noFocus) {
+            var key = statsTableOvKey;
+            try { var ov = document.getElementById("stTableOverlay"); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); } catch(e) {}
+            try { document.removeEventListener("keydown", statsTableEsc); } catch(e2) {}
+            statsTableOvKey = null;
+            if (!noFocus) {
+                try { var b = document.querySelector("#statsBody [data-sttbl-btn=\"" + key + "\"]"); if (b) b.focus(); } catch(e3) {}
+            }
+        }
+        try {
+            window.expandStatsTable = expandStatsTable;
+            window.collapseStatsTable = collapseStatsTable;
+            window.statsTableOverlayRender = statsTableOverlayRender;
+            window.statsTableExpandBtnHtml = statsTableExpandBtnHtml;
+        } catch(eTW) {}
         // --- Prepinac grafu: segmentova lista v aktualnim poradi 1-6 ---
         // Globalni (mimo renderovani statistik): pouziva se v okne statistik, na cele obrazovce (id se tam prepisi na data-ovmode) i v Nastaveni (vychozi graf).
         var STATS_CHART_ORDER = ["time", "tod", "dist", "distCen", "cal", "geo"];
@@ -9496,6 +9591,8 @@ function fmtStatsCoordShort(la, lo) {
         }
         function closeStatsModal() {
             try { statsGeoPlayStop(true); } catch(eGPM) {}
+            try { if (document.getElementById("stTableOverlay")) collapseStatsTable(true); } catch(eCT) {}
+            try { if (document.getElementById("stChartOverlay")) collapseStatsChart(); } catch(eCC) {}
             statsPickState = null;
             try { document.body.style.cursor = ""; } catch(eC) {}
             document.getElementById("statsModalBackdrop").classList.remove("open");
@@ -11128,7 +11225,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             }
 
             /* --- Grafy a tabulky --- */
-            H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/><line x1=\"3\" y1=\"15\" x2=\"21\" y2=\"15\"/><line x1=\"9\" y1=\"3\" x2=\"9\" y2=\"21\"/></svg>" + L_("statsSecTable", "Tabulka") + "</span><button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsTableCSV()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button></h3>";
+            H += "<div class=\"st-sec-box\" data-sttbl=\"year\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/><line x1=\"3\" y1=\"15\" x2=\"21\" y2=\"15\"/><line x1=\"9\" y1=\"3\" x2=\"9\" y2=\"21\"/></svg>" + L_("statsSecTable", "Tabulka") + "</span><span style=\"display:inline-flex;gap:5px;\"><button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsTableCSV()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" + statsTableExpandBtnHtml("year") + "</span></h3>";
 
                 var yKeys = Object.keys(byYear);
             if (yKeys.length) {
@@ -11349,10 +11446,10 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     var tAttr = tip || label;
                     return "<th style=\"width:" + w + "\" class=\"" + (isNum ? "num " : "") + (act ? "active" : "") + "\" onclick=\"statsSortFolderTable('" + k + "')\" title=\"" + tAttr + "\">" + label + "<span class=\"st-sort-ind\">" + ind + "</span></th>";
                 };
-                H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\"/></svg>" + L_("statsSecFolderTable", "Tabulka (složková)") + "</span><span style=\"display:inline-flex;gap:4px;\">" +
+                H += "<div class=\"st-sec-box\" data-sttbl=\"folder\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\"/></svg>" + L_("statsSecFolderTable", "Tabulka (složková)") + "</span><span style=\"display:inline-flex;gap:4px;\">" +
                 "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(true);\" title=\"" + tExpAll + "\" aria-label=\"" + tExpAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button>" +
                 "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(false);\" title=\"" + tColAll + "\" aria-label=\"" + tColAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m18 15-6-6-6 6\"/></svg></button>" +
-                    "<button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsFolderCsv()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button></span></h3>";
+                    "<button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsFolderCsv()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" + statsTableExpandBtnHtml("folder") + "</span></h3>";
                 H += "<div class=\"st-table-wrap\">";
                 H += "<table class=\"st-table st-folder-table\"><thead><tr>";
                 H += thSortF("name", L_("statsColFolder", "Složka"), false, "36%");
@@ -12608,6 +12705,8 @@ H += "</div></div>";
                     if (_rC) _rC.textContent = L_("statsSecGraphs", "Grafy");
                 }
             } catch(eROv) {}
+            // Zvetsena tabulka: obnovit z prave vykreslene sekce (razeni, rozbaleni slozek, jazyk)
+            try { if (document.getElementById("stTableOverlay")) statsTableOverlayRender(); } catch(eRTb) {}
             try { statsCalLegendFitLater(); } catch(eFit3) {}
         }
         function gotoSettings() { try { closeInfoModal(); } catch(e) {} openSettingsModal(); }
@@ -17645,6 +17744,8 @@ window.addEventListener('resize', function() {
                 try {
                     var _stOv = document.getElementById("stChartOverlay");
                     if (_stOv) { if (typeof collapseStatsChart === "function") collapseStatsChart(); e.preventDefault(); e.stopPropagation(); return; }
+                    var _stTo = document.getElementById("stTableOverlay");
+                    if (_stTo) { if (typeof collapseStatsTable === "function") collapseStatsTable(); e.preventDefault(); e.stopPropagation(); return; }
                 } catch(eSCO) {}
                 try {
                     var _cpop = document.getElementById("lbTlCalPop");
