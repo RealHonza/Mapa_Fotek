@@ -2852,6 +2852,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsSecExtremes: "Krajní body",
             statsSecDistances: "Vzdálenosti",
             statsSecTable: "Tabulka (časová)", statsSecFolderTable: "Tabulka (složková)", statsColOrder: "Řád", statsColFolder: "Složka", statsColFrom: "Od", statsColTo: "Do", statsExpandAll: "Rozbalit vše", statsCollapseAll: "Sbalit vše", statsSecGraphs: "Grafy", statsGraphsNote: "Bez datumu není co zobrazit.", statsChartCap: "Počet souborů v čase",
+            statsDistAndMore: "km a více",
             statsChartCapTod: "Počet souborů v denní době", statsChartCapDist: "Počet souborů na vzdálenost od RB", statsChartCapDistCen: "Počet souborů na vzdálenost od těžiště", statsChartCapCal: "Počet let s focením v daný den", statsChartAvgMed: "Průměr a medián",
             statsAxisX: "Osa X", statsAxisY: "Osa Y", statsAxisYPhotos: "Počet fotek (ks)", statsAxisXTime: "Čas pořízení (datum)", statsAxisXTod: "Denní doba (hodiny [h], 00–23h)", statsAxisXDist: "Vzdálenost od referenčního bodu (kilometry [km])", statsAxisXDistCen: "Vzdálenost od těžiště (kilometry [km])", statsAxisYCalMonths: "Měsíc v roce (leden–prosinec)", statsAxisXCalDays: "Den v měsíci (1–31)", statsAxisCalWeekdays: "Den v týdnu", statsAxisCalWeekdaysB: "Počet dnů s focením (pondělí–neděle)", statsAxisYGeoLat: "Zeměpisná šířka (stupně [°], severní/jižní šířka)", statsAxisXGeoLon: "Zeměpisná délka (stupně [°], východní/západní délka)",
             statsBandNight: "noc", statsBandMorning: "ráno", statsBandForenoon: "dopoledne",
@@ -3214,6 +3215,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsSecExtremes: "Extreme points",
             statsSecDistances: "Distances",
             statsSecTable: "Table (time)", statsSecFolderTable: "Table (folders)", statsColOrder: "Level", statsColFolder: "Folder", statsColFrom: "From", statsColTo: "To", statsExpandAll: "Expand all", statsCollapseAll: "Collapse all", statsSecGraphs: "Charts", statsGraphsNote: "No dated photos to chart.", statsChartCap: "Number of files over time",
+            statsDistAndMore: "km and more",
             statsChartCapTod: "Number of files by time of day", statsChartCapDist: "Number of files by distance from RP", statsChartCapDistCen: "Number of files by distance from centroid", statsChartCapCal: "Number of years with photos on a given day", statsChartAvgMed: "Average and median",
             statsAxisX: "X axis", statsAxisY: "Y axis", statsAxisYPhotos: "Number of photos (pcs)", statsAxisXTime: "Capture time (date)", statsAxisXTod: "Time of day (hours [h], 00–23h)", statsAxisXDist: "Distance from reference point (kilometres [km])", statsAxisXDistCen: "Distance from centroid (kilometres [km])", statsAxisYCalMonths: "Month of year (January–December)", statsAxisXCalDays: "Day of month (1–31)", statsAxisCalWeekdays: "Day of week", statsAxisCalWeekdaysB: "Days with photos (Monday–Sunday)", statsAxisYGeoLat: "Latitude (degrees [°], North/South)", statsAxisXGeoLon: "Longitude (degrees [°], East/West)",
             statsBandNight: "night", statsBandMorning: "morning", statsBandForenoon: "late morning",
@@ -11653,7 +11655,7 @@ window.statsChartSave = statsChartSave;
                 }
                 for (i = 0; i < nb; i++) {
                     var c = cats[i];
-                    if (c.to === null) { c.lab = fmtN(c.from) + "+"; c.tip = fmtN(c.from) + " km a vice"; }
+                    if (c.to === null) { c.lab = fmtN(c.from) + "+"; c.tip = fmtN(c.from) + " " + statsL_("statsDistAndMore", "km a více"); }
                     else { c.lab = fmtN(c.from) + "\u2013" + fmtN(c.to); c.tip = fmtN(c.from) + "\u2013" + fmtN(c.to) + " km"; }
                 }
                 var distMarks = null;
@@ -11707,7 +11709,7 @@ window.statsChartSave = statsChartSave;
                 }
                 for (i = 0; i < nb; i++) {
                     var c = cats[i];
-                    if (c.to === null) { c.lab = fmtN(c.from) + "+"; c.tip = fmtN(c.from) + " km a vice"; }
+                    if (c.to === null) { c.lab = fmtN(c.from) + "+"; c.tip = fmtN(c.from) + " " + statsL_("statsDistAndMore", "km a více"); }
                     else { c.lab = fmtN(c.from) + "\u2013" + fmtN(c.to); c.tip = fmtN(c.from) + "\u2013" + fmtN(c.to) + " km"; }
                 }
                 var distMarks = null;
@@ -11931,6 +11933,31 @@ window.statsChartSave = statsChartSave;
                 for (var ki = 0; ki < kids.length; ki++) {
                     if (kids[ki].querySelector && kids[ki].querySelector("select,input,button")) body.removeChild(kids[ki]);
                 }
+                // Cary prumeru/medianu: v obrazku by byly bez vysvetleni, proto pod graf pridame legendu.
+                try {
+                    var dl = body.querySelectorAll("svg.st-chart line[stroke-dasharray]"), lgItems = [], seenC = {};
+                    for (var di = 0; di < dl.length; di++) {
+                        var dc = dl[di].getAttribute("stroke"), dtt = dl[di].querySelector("title");
+                        if (!dc || !dtt || !dtt.textContent || seenC[dc]) continue;
+                        seenC[dc] = 1;
+                        lgItems.push({ c: dc, t: dtt.textContent });
+                    }
+                    if (lgItems.length) {
+                        var lgd = document.createElement("div");
+                        lgd.style.cssText = "display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:6px;font-size:11px;color:#3c4043;";
+                        for (var li2 = 0; li2 < lgItems.length; li2++) {
+                            var it = document.createElement("span");
+                            it.style.cssText = "display:inline-flex;align-items:center;gap:5px;";
+                            var sw2 = document.createElement("span");
+                            sw2.style.cssText = "display:inline-block;width:16px;height:0;border-top:2px dashed " + lgItems[li2].c + ";";
+                            var tx2 = document.createElement("span");
+                            tx2.textContent = lgItems[li2].t;
+                            it.appendChild(sw2); it.appendChild(tx2);
+                            lgd.appendChild(it);
+                        }
+                        body.appendChild(lgd);
+                    }
+                } catch(eLg) {}
                 var css = statsChartCssFor(body);
                 var svgs = body.querySelectorAll("svg.st-chart");
                 for (var si = 0; si < svgs.length; si++) {
@@ -11994,7 +12021,11 @@ window.statsChartSave = statsChartSave;
                 // gapLbl - VZDAJENOST popisku od osy. drivej je 4, coz text lepilo na graf.
                 var gapLbl = Math.round(fsTxt * 1.2);
                 mT = Math.max(8, Math.round(fsTxt * 0.9 + 4));
-                var mL = Math.max(42, Math.round(6 * fsTxt * 0.62 + 8));
+                // Okraj podle skutecne delky nejvyssiho cisla na ose Y (jako u sloupcovych grafu).
+                var _mxT = Math.max(1, C.max), _mgT = Math.pow(10, Math.floor(Math.log(_mxT) / Math.LN10)), _nmT = _mxT / _mgT;
+                var _yMT = Math.max(1, (_nmT <= 1 ? 1 : _nmT <= 2 ? 2 : _nmT <= 5 ? 5 : 10) * _mgT), _msT;
+                try { _msT = Number(_yMT).toLocaleString(currentLang === "cs" ? "cs-CZ" : "en-US"); } catch(eMs) { _msT = String(_yMT); }
+                var mL = Math.max(42, Math.round((_msT.length + 0.6) * fsTxt * 0.55 + 6));
                 var mB = Math.max(72, Math.round(13 * fsTxt * 0.62 * 0.7071 + gapLbl + fsTxt * 0.7071 + 6));
                 var pW = W - mL - mR;
                 // Plocha, do ktere se kresli bary, ma pomer stran 4:3 (delska:vyska)
