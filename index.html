@@ -19771,7 +19771,7 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
                     if (!l || l.indexOf("//") === 0 || l.indexOf("DATUM") === 0 || l.indexOf("window.") === 0 || l === "`;") continue;
                     var p = l.split(";");
                     if (p.length >= 4) {
-                        var dt = p[0].trim(), fn = p[1].trim(), la = parseFloat(p[2].trim()), lo = parseFloat(p[3].trim()), sz = p.length > 4 ? parseInt(p[4].trim()) || 0 : 0, rp = p.length > 5 ? p[5].trim() : "";
+                        var dt = p[0].trim(), fn = p[1].trim(), la = parseFloat(p[2].trim().replace(",", ".")), lo = parseFloat(p[3].trim().replace(",", ".")), sz = p.length > 4 ? parseInt(p[4].trim()) || 0 : 0, rp = p.length > 5 ? p[5].trim() : "";
                         var st = p.length > 6 ? p[6].trim().toUpperCase() : "G";
                         if (st !== "G" && st !== "D" && st !== "S") st = "G";
                         if (st === "S") { it.push([NaN, NaN, dt, fn, sz, rp, "S"]); }
@@ -29312,7 +29312,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                         if (!l || l.indexOf("//") === 0 || l.indexOf("DATUM") === 0 || l.indexOf("window.") === 0 || l === "`;") continue;
                         var p = l.split(";");
                         if (p.length >= 4) {
-                            var dt = p[0].trim(), fn = p[1].trim(), la = parseFloat(p[2].trim()), lo = parseFloat(p[3].trim()), sz = p.length > 4 ? parseInt(p[4].trim()) || 0 : 0, rp = p.length > 5 ? p[5].trim() : "";
+                            var dt = p[0].trim(), fn = p[1].trim(), la = parseFloat(p[2].trim().replace(",", ".")), lo = parseFloat(p[3].trim().replace(",", ".")), sz = p.length > 4 ? parseInt(p[4].trim()) || 0 : 0, rp = p.length > 5 ? p[5].trim() : "";
                             var st = p.length > 6 ? p[6].trim().toUpperCase() : "G";
                             if (st !== "G" && st !== "D" && st !== "S") st = "G";
                             if (st === "S") { it.push([NaN, NaN, dt, fn, sz, rp, "S"]); }
