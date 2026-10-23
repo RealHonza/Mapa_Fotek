@@ -6834,7 +6834,7 @@ function statsSetFilters(on) {
                     var viaKey = (e.detail === 0);
                     statsCloseDayGrid(false);
                     setStatsBusyDays(n);
-                    if (viaKey) setTimeout(function() { var nb = document.querySelector("#statsBody .st-days-btn"); if (nb) { try { nb.focus(); } catch(eF) {} } }, 0);
+                    if (viaKey) setTimeout(function() { var nb = document.querySelector("#stSectionOverlayBody .st-days-btn") || document.querySelector("#statsBody .st-days-btn"); if (nb) { try { nb.focus(); } catch(eF) {} } }, 0);
                 });
                 document.body.appendChild(el);
                 // Poloha: pod tlacitkem, pri nedostatku mista nad nim; vzdy uvnitr okna
@@ -6977,7 +6977,7 @@ function statsSetFilters(on) {
                     var viaKey = (e.detail === 0);
                     statsCloseTopSepMenu(false);
                     setStatsTopSep(n);
-                    if (viaKey) setTimeout(function() { var nb = document.querySelector("#statsBody .st-topsep-btn"); if (nb) { try { nb.focus(); } catch(eF) {} } }, 0);
+                    if (viaKey) setTimeout(function() { var nb = document.querySelector("#stSectionOverlayBody .st-topsep-btn") || document.querySelector("#statsBody .st-topsep-btn"); if (nb) { try { nb.focus(); } catch(eF) {} } }, 0);
                 });
                 document.body.appendChild(el);
                 var r = btn.getBoundingClientRect();
@@ -7267,6 +7267,7 @@ function statsSetFilters(on) {
             }
             // Asynchronni radky maji v puvodni sekci id; v kopii je prejmenujeme, aby nevzniklo duplicitni id.
             rest = rest.replace(/ id="(stRow[A-Za-z]*)"/g, " data-ovrow=\"$1\"");
+            rest = rest.replace(/ id="stCoverageInput"/g, " data-ovid=\"stCoverageInput\"");
             head.innerHTML = (h3 ? h3.outerHTML : "") + statsSecOvTabsHtml();
             var eb = head.querySelector(".st-sec-expand");
             if (eb) {
