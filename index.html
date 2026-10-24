@@ -1148,6 +1148,8 @@
         #lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; }
         #lightbox.active { display: flex; }
         .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.85); font-size: 28px; background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.2); width: 48px; height: 64px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s, color 0.15s, opacity 0.15s; user-select: none; -webkit-user-select: none; z-index: 10001; }
+        .lb-nav svg, .lb-folder-pg-btn svg { display: block; pointer-events: none; flex: 0 0 auto; }
+        .lb-folder-pg-btn svg { display: inline-block; vertical-align: middle; }
         .lb-nav:hover:not(:disabled) { background: rgba(255, 255, 255, 0.25); color: #fff; }
         .lb-nav:disabled { opacity: 0.15; cursor: default; pointer-events: none; }
         .lb-prev { left: 20px; }
@@ -1317,9 +1319,9 @@
           border-color: var(--green) !important;
         }
         .lb-close:hover { background: rgba(255,255,255,0.2); }
-        .lb-slide-badge { position: absolute; top: 70px; right: 22px; z-index: 10010; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.22); color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; padding: 4px 10px; border-radius: 6px; cursor: pointer; user-select: none; -webkit-user-select: none; display: inline-flex; align-items: center; gap: 6px; }
+        .lb-slide-badge { position: absolute; top: 62px; right: 16px; z-index: 10010; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.22); color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; padding: 4px 10px; border-radius: 6px; cursor: pointer; user-select: none; -webkit-user-select: none; display: inline-flex; align-items: center; gap: 6px; }
         .lb-slide-badge:hover { border-color: rgba(255,255,255,0.6); }
-        @media (max-width: 600px) { .lb-slide-badge { top: 56px; right: 12px; font-size: 10px; padding: 3px 7px; } }
+        @media (max-width: 600px) { .lb-slide-badge { top: 54px; right: 12px; font-size: 10px; padding: 3px 7px; } }
         .lb-empty { position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; pointer-events: none; }
         .lb-empty-logo { display: inline-flex; align-items: center; opacity: 0.95; }
         .lb-empty-text { position: absolute; left: 24px; right: 24px; bottom: 118px; text-align: center; color: rgba(255,255,255,0.85); font-size: 13px; line-height: 1.7; pointer-events: none; }
@@ -1670,27 +1672,28 @@
           user-select: text;
           pointer-events: auto;
         }
-        .lbh-actions {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          margin-left: 4px;
-          vertical-align: middle;
-          pointer-events: auto;
-          flex-shrink: 0;
-        }
+        /* Hlavicka: [nazev  datum · velikost · rozliseni]  [skupina polohy]. Skupina polohy = JEDEN ramecek (jako #lbToolbar),
+           uvnitr segmenty oddelene jen tenkou svislou carou; ikony nemaji vlastni ramecek ani pozadi. */
+        .lbh-main { display: flex; align-items: center; min-width: 0; flex: 0 1 auto; max-width: 100%; }
+        /* Pri dlouhem nazvu se zkracuje NAZEV (flex-shrink 2), metadata a skupina polohy zustavaji cela */
+        .lbh-meta { display: flex; align-items: center; flex: 0 0 auto; margin-left: 15px; }
+        .lb-header .lbh-meta .lbh-item { color: #b9bec4; font-size: 12px; flex-shrink: 0; max-width: none; }
+        .lb-header .lbh-dot { color: rgba(255,255,255,0.35); margin: 0 7px; font-size: 12px; font-weight: 700; flex-shrink: 0; line-height: 1; user-select: none; -webkit-user-select: none; }
+        .lb-header .lbh-row.lbh-row-main { column-gap: 16px; row-gap: 3px; }
+        .lbh-geo-line { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; pointer-events: auto; }
+        .lb-header .lbh-item.lbh-noloc { color: rgba(255,255,255,0.45); font-style: italic; font-size: 12px; max-width: none; }
         .lbh-action-btn {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 24px;
-          height: 24px;
-          border-radius: 5px;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.12);
+          box-sizing: border-box;
+          width: 30px;
+          height: 30px;
+          border: none;
+          border-radius: 0;
+          background: transparent;
           cursor: pointer;
-          transition: background 0.15s, border-color 0.15s, color 0.15s;
-          vertical-align: middle;
+          transition: background 0.15s, color 0.15s;
           text-decoration: none;
           color: #dadce0;
           flex-shrink: 0;
@@ -1698,9 +1701,18 @@
         }
         .lbh-action-btn:hover {
           background: rgba(10,169,76,0.22);
-          border-color: rgba(10,169,76,0.4);
           color: #34d399;
         }
+        .lbh-geo { display: inline-flex; align-items: stretch; box-sizing: border-box; height: 30px; flex: 0 0 auto; pointer-events: auto; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); overflow: hidden; }
+        .lbh-geo > * { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-left: 1px solid rgba(255,255,255,0.12); }
+        .lbh-geo > :first-child { border-left: none; }
+        .lbh-geo > .lbh-coords { padding: 0 10px; }
+        .lbh-geo-pill { padding: 0 6px; }
+        .lbh-geo .lbh-state { height: 20px; min-width: 20px; padding: 0 4px 0 5px; gap: 5px; border-radius: 5px; background: transparent; }
+        .lbh-geo .lbh-state:hover { background: rgba(255,255,255,0.14); }
+        .lbh-geo .lbh-state:focus-visible { outline: 2px solid #ffffff; outline-offset: 1px; }
+        .lbh-action-btn:focus-visible { outline: 2px solid #ffffff; outline-offset: -3px; }
+        @media (pointer: coarse) { .lbh-geo { height: 42px; } .lbh-action-btn { width: 42px; height: 42px; } }
         .lbh-action-btn:hover img {
           filter: grayscale(100%) brightness(1.5) !important;
           opacity: 1 !important;
@@ -1947,6 +1959,7 @@
         #lightbox.lb-img-fullscreen .lb-header,
         #lightbox.lb-img-fullscreen .lb-strip,
         #lightbox.lb-img-fullscreen .lb-nav,
+        #lightbox.lb-img-fullscreen .lb-toolbar,
         #lightbox.lb-img-fullscreen .lb-close,
         #lightbox.lb-img-fullscreen .lb-split-btn,
         #lightbox.lb-img-fullscreen .lb-slide-btn,
@@ -2001,6 +2014,25 @@
           .lb-header { padding-left: 100px; }
           .lb-header .lbh-row:first-child { max-width: 100%; }
         }
+        /* Nevejde-li se hlavicka: nejdriv se skryje rozliseni, pak velikost souboru, a az kdyz se ani potom nevejde nazev + datum + poloha
+           na jeden radek, prepne se na radkove rozlozeni (nazev / datum / poloha). Tridy nastavuje lbHeaderFit() podle skutecne sirky
+           (plati stejne pro plnou prohlizecku i split). Velikost a rozliseni zustavaji v tooltipu nazvu. */
+        .lb-header.lbh-hdr-stack { padding: 54px 12px 18px 12px !important; }
+        body.lb-split .lb-header.lbh-hdr-stack { padding: 54px 12px 16px 12px !important; }
+        .lbh-row-main.lbh-hide-res #lbhRes, .lbh-row-main.lbh-hide-res #lbhResSep { display: none !important; }
+        .lbh-row-main.lbh-hide-size .lbh-size, .lbh-row-main.lbh-hide-size .lbh-dot { display: none !important; }
+        .lb-header .lbh-row.lbh-row-main.lbh-stack { flex-wrap: wrap; justify-content: center; }
+        .lb-header .lbh-row-main.lbh-stack .lbh-main { flex: 0 0 100%; flex-direction: column; align-items: center; max-width: 100%; }
+        .lb-header .lbh-row-main.lbh-stack .lbh-meta { margin-left: 0; justify-content: center; max-width: 100%; }
+        .lb-header .lbh-row-main.lbh-stack .lbh-item.lbh-name { max-width: 100%; font-size: 13px; }
+        .lb-header .lbh-row-main.lbh-stack .lbh-meta .lbh-item { max-width: 100%; font-size: 11.5px; }
+        body.lb-split .lb-header .lbh-row-main.lbh-stack .lbh-item.lbh-name, body.lb-split .lb-header .lbh-row-main.lbh-stack .lbh-meta .lbh-item { max-width: 100% !important; }
+        @media (max-width: 600px) { .lbh-geo > .lbh-coords { padding: 0 8px; font-size: 11px; } }
+        @media (max-width: 380px) {
+          .lbh-geo > .lbh-coords { padding: 0 6px; font-size: 10.5px; }
+          .lbh-geo-pill { padding: 0 4px; }
+        }
+        @media (max-width: 330px) { .lbh-action-btn.lbh-act-mapy { display: none; } }
         
         #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: rgba(32, 33, 36, 0.95); color: white; padding: 9px 18px; border-radius: 8px; font-size: 12px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 10060; display: none; align-items: center; gap: 6px; backdrop-filter: blur(8px); }
         
@@ -2088,6 +2120,34 @@
             grid-template-columns: repeat(5, minmax(100px, 180px));
             max-width: calc(5 * 180px + 4 * 10px + 20px);
             grid-auto-rows: minmax(100px, 180px);
+        }
+        /* --- Jednotná lišta vpravo nahoře (slideshow, rozdělení, časová osa, zavření) + počítadlo ve stejném stylu --- */
+        #lightbox .lb-toolbar { position: absolute; top: 16px; right: 16px; z-index: 20; display: flex; align-items: stretch; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); overflow: hidden; }
+        #lightbox .lb-toolbar > button { position: static !important; top: auto !important; right: auto !important; width: 38px !important; height: 36px !important; margin: 0; padding: 0; border: none !important; border-left: 1px solid rgba(255,255,255,0.12) !important; border-radius: 0 !important; background: transparent !important; color: rgba(255,255,255,0.88) !important; font-size: 18px !important; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; }
+        #lightbox .lb-toolbar > button:first-child { border-left: none !important; }
+        #lightbox .lb-toolbar > button:hover { background: rgba(255,255,255,0.18) !important; color: #ffffff !important; }
+        #lightbox .lb-toolbar > button:focus-visible { outline: 2px solid #ffffff; outline-offset: -3px; }
+        #lightbox .lb-toolbar > button.active { background: rgba(10,169,76,0.6) !important; color: #ffffff !important; }
+        #lightbox .lb-counter { top: 16px; left: 16px; height: 38px !important; border-radius: 10px !important; background: rgba(0,0,0,0.5) !important; border: 1px solid rgba(255,255,255,0.2) !important; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+        @media (pointer: coarse) { #lightbox .lb-toolbar > button { width: 44px !important; height: 42px !important; } #lightbox .lb-counter { height: 44px !important; } }
+        @media (max-width: 600px) {
+          #lightbox .lb-toolbar { top: 12px; right: 12px; }
+          #lightbox .lb-toolbar > button { width: 36px !important; height: 34px !important; }
+          #lightbox .lb-counter { top: 12px; left: 12px; height: 36px !important; }
+        }
+        @media (max-width: 600px) and (pointer: coarse) { #lightbox .lb-toolbar > button { width: 42px !important; height: 40px !important; } #lightbox .lb-counter { height: 42px !important; } }
+        @media (max-width: 380px) { #lightbox .lb-toolbar > button { width: 33px !important; } }
+        body.lb-split #lightbox .lb-toolbar { top: 12px; right: 12px; }
+        body.lb-split #lightbox .lb-toolbar > button { width: 36px !important; height: 34px !important; }
+        body.lb-split #lightbox .lb-counter { top: 12px !important; left: 12px !important; height: 36px !important; }
+        /* Při zobrazené časové ose se fotka vejde nad filmový pás i časovou osu (nepřekrývá se s nimi) */
+        body:not(.lb-split) #lightbox.lb-with-timeline:not(.lb-img-fullscreen):not(.lb-mode-grid) { padding: 56px 0 108px; }
+        body:not(.lb-split) #lightbox.lb-with-timeline:not(.lb-img-fullscreen):not(.lb-mode-grid) > #lbImg,
+        body:not(.lb-split) #lightbox.lb-with-timeline:not(.lb-img-fullscreen):not(.lb-mode-grid) > #lbVideo { max-height: min(85vh, calc(100vh - 164px)); }
+        @media (max-width: 600px) {
+          body:not(.lb-split) #lightbox.lb-with-timeline:not(.lb-img-fullscreen):not(.lb-mode-grid) { padding: 60px 0 98px; }
+          body:not(.lb-split) #lightbox.lb-with-timeline:not(.lb-img-fullscreen):not(.lb-mode-grid) > #lbImg,
+          body:not(.lb-split) #lightbox.lb-with-timeline:not(.lb-img-fullscreen):not(.lb-mode-grid) > #lbVideo { max-height: min(85vh, calc(100vh - 158px)); }
         }
         .lb-grid-tile {
             aspect-ratio: 1 / 1 !important;
@@ -2360,7 +2420,7 @@
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy">&times;</button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.57</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.58</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';"><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -2422,14 +2482,16 @@
 
     <!-- LIGHTBOX -->
     <div id="lightbox" onclick="handleLBBgClick(event)">
-        <button class="lb-slide-btn" onclick="event.stopPropagation(); toggleLBSlideshow();" id="lbSlideBtn" aria-label="Slideshow" title="Spustit slideshow (mezerník) • Shift+Mezerník: Export trasy a fotek do GeoJSON"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
-        <button class="lb-split-btn" onclick="event.stopPropagation(); toggleLBSplitMode();" id="lbSplitBtn" aria-label="Rozdělené zobrazení" title="Rozdělené zobrazení (prohlížečka vlevo, mapa vpravo)"><svg aria-hidden="true" viewBox="0 0 20 15" width="18" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="18" height="13" rx="1.5"/><line x1="10" y1="1" x2="10" y2="14"/></svg></button>
-        <button class="lb-time-btn" onclick="event.stopPropagation(); toggleLBTimeline();" id="lbTimeBtn" aria-label="Časová osa" title="Časová osa"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></button>
-        <button class="lb-close" onclick="closeLightbox()" id="btnLightboxClose" aria-label="Zavřít náhled fotografie">&times;</button>
+        <div class="lb-toolbar" id="lbToolbar" onclick="event.stopPropagation()">
+            <button class="lb-time-btn" onclick="event.stopPropagation(); toggleLBTimeline();" id="lbTimeBtn" aria-label="Časová osa" title="Časová osa"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></button>
+            <button class="lb-slide-btn" onclick="event.stopPropagation(); toggleLBSlideshow();" id="lbSlideBtn" aria-label="Slideshow" title="Spustit slideshow (mezerník) • Shift+Mezerník: Export trasy a fotek do GeoJSON"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+            <button class="lb-split-btn" onclick="event.stopPropagation(); toggleLBSplitMode();" id="lbSplitBtn" aria-label="Rozdělené zobrazení" title="Rozdělené zobrazení (prohlížečka vlevo, mapa vpravo)"><svg aria-hidden="true" viewBox="0 0 20 15" width="18" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="18" height="13" rx="1.5"/><line x1="10" y1="1" x2="10" y2="14"/></svg></button>
+            <button class="lb-close" onclick="closeLightbox()" id="btnLightboxClose" aria-label="Zavřít náhled fotografie"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
         <div class="lb-counter" id="lbCounter" onclick="event.stopPropagation(); lbRefreshPhotos();"></div>
         <div class="lb-slide-badge" id="lbSlideBadge" style="display:none" onclick="event.stopPropagation(); if (typeof toggleLBSlideshow === 'function') toggleLBSlideshow();"></div>
         <div class="lb-header" id="lbHeader" onclick="event.stopPropagation()"></div>
-        <button class="lb-nav lb-prev" id="lbPrev" onclick="event.stopPropagation(); prevLBPhoto();" aria-label="Předchozí fotografie" title="Předchozí fotografie (← / kolečko myši)">&#10094;</button>
+        <button class="lb-nav lb-prev" id="lbPrev" onclick="event.stopPropagation(); prevLBPhoto();" aria-label="Předchozí fotografie" title="Předchozí fotografie (← / kolečko myši)"><svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
         <img id="lbImg" src="" alt="Fotografie" onclick="event.stopPropagation(); if(event.button===0) toggleLBImgFullscreen();">
         <img id="lbImgFx" src="" alt="" aria-hidden="true" style="display:none;" onclick="event.stopPropagation();">
         <video id="lbVideo" controls playsinline preload="metadata" style="display:none;" onclick="event.stopPropagation();"></video>
@@ -2444,9 +2506,9 @@
                 <div class="lb-grid-pagination" id="lbGridPagination"></div>
             </div>
         </div>
-        <button class="lb-nav lb-next" id="lbNext" onclick="event.stopPropagation(); nextLBPhoto();" aria-label="Další fotografie" title="Další fotografie (→ / kolečko myši)">&#10095;</button>
-        <button class="lb-nav lb-first" onclick="event.stopPropagation(); showLBPhotoByIndex(0);" id="btnLBFirst" aria-label="První fotografie" title="První fotografie (Home)">&#9198;</button>
-        <button class="lb-nav lb-last" onclick="event.stopPropagation(); showLBPhotoByIndex(currentLBPhotos.length - 1);" id="btnLBLast" aria-label="Poslední fotografie" title="Poslední fotografie (End)">&#9197;</button>
+        <button class="lb-nav lb-next" id="lbNext" onclick="event.stopPropagation(); nextLBPhoto();" aria-label="Další fotografie" title="Další fotografie (→ / kolečko myši)"><svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button class="lb-nav lb-first" onclick="event.stopPropagation(); showLBPhotoByIndex(0);" id="btnLBFirst" aria-label="První fotografie" title="První fotografie (Home)"><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14"/><path d="M19 5l-8 7 8 7"/></svg></button>
+        <button class="lb-nav lb-last" onclick="event.stopPropagation(); showLBPhotoByIndex(currentLBPhotos.length - 1);" id="btnLBLast" aria-label="Poslední fotografie" title="Poslední fotografie (End)"><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5v14"/><path d="M5 5l8 7-8 7"/></svg></button>
         <div class="lb-timeline" id="lbTimeline" style="display:none;" onclick="event.stopPropagation()">
             <div class="lb-tl-track" id="lbTlTrack"><div class="lb-tl-pos" id="lbTlPos"></div></div>
             <button class="lb-tl-cal" id="lbTlCal" aria-label="Kalendář"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button>
@@ -2856,7 +2918,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 daySun: "Neděle", dayMon: "Pondělí", dayTue: "Úterý", dayWed: "Středa", dayThu: "Čtvrtek", dayFri: "Pátek", daySat: "Sobota",
                 tipFileSize: "Velikost souboru",
                 noLocation: "bez polohy",
-                tipZoomPhoto: "Přiblížit na tuto fotku v mapě (M)",
+                lbhGeoGroup: "Poloha fotky", tipZoomPhoto: "Přiblížit na tuto fotku v mapě (M)",
                 lbStateTitle: "Stav fotky",
                 lbStateDescG: "s polohou",
                 lbStateDescD: "duplicita s polohou",
@@ -3228,7 +3290,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 daySun: "Sunday", dayMon: "Monday", dayTue: "Tuesday", dayWed: "Wednesday", dayThu: "Thursday", dayFri: "Friday", daySat: "Saturday",
                 tipFileSize: "File size",
                 noLocation: "no location",
-                tipZoomPhoto: "Zoom to this photo on the map (M)",
+                lbhGeoGroup: "Photo location", tipZoomPhoto: "Zoom to this photo on the map (M)",
                 lbStateTitle: "Photo state",
                 lbStateDescG: "located",
                 lbStateDescD: "located duplicate",
@@ -15374,7 +15436,71 @@ H += "</div></div>";
             var d = (st === "G") ? (tt.lbStateDescG || "s polohou") : ((st === "D") ? (tt.lbStateDescD || "duplicita s polohou") : (tt.noLocation || "bez polohy"));
             var a = (lbHideMode === 0) ? (tt.lbGoGD || "klik/H: jen s polohou (G+D)") : ((lbHideMode === 1) ? (tt.lbGoG || "klik/H: jen unikáty (G)") : (tt.lbGoAll || "klik/H: zobrazit vše"));
             var title = (tt.lbStateTitle || "Stav fotky") + ": " + st + " – " + d + " · " + (cs ? "filtr" : "filter") + ": " + fl + " (" + a + ")";
-            return '<span class="lbh-state st-' + st + '" title="' + escapeHtml(title) + '" onclick="event.stopPropagation(); cycleLBShow();"><span>' + st + '</span><span class="lbh-sc">' + sc + '</span></span>';
+            return '<span class="lbh-state st-' + st + '" role="button" tabindex="0" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(title) + '" onkeydown="lbhActKey(event, this)" onclick="event.stopPropagation(); cycleLBShow();"><span>' + st + '</span><span class="lbh-sc">' + sc + '</span></span>';
+        }
+        // Klavesnice (Enter / mezernik) pro ikony hlavicky, ktere jsou <span role="button">
+        // Prizpusobeni hlavicky skutecne sirce (plna prohlizecka i split). Priorita (od nejmene dulezite): rozliseni -> velikost souboru -> radkove rozlozeni.
+        // 1) vse na jednom radku, 2) bez rozliseni, 3) bez velikosti, 4) nazev smi klesnout az na ~120 px, 5) jinak radky: nazev / datum / poloha.
+        function lbHeaderFit() {
+            try {
+                var lb = document.getElementById("lightbox");
+                var hdr = document.getElementById("lbHeader");
+                var row = document.querySelector("#lbHeader .lbh-row-main");
+                if (!lb || !hdr || !row || !lb.classList.contains("active")) return;
+                var cls = row.classList;
+                if (!(row.clientWidth > 0)) return;
+                cls.remove("lbh-hide-res", "lbh-hide-size", "lbh-stack");
+                hdr.classList.remove("lbh-hdr-stack");
+                try { syncLBCounterReserveCore(); } catch(eR0) {}   // rezerva pro pocitadlo/listu v zakladnim (jednoradkovem) rozlozeni
+                var cs = getComputedStyle(row);
+                var avail = row.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+                if (!(avail > 0)) return;
+                var name = row.querySelector(".lbh-name"), main = row.querySelector(".lbh-main");
+                var oWrap = row.style.flexWrap, oMain = main ? main.style.flexShrink : "", oName = name ? name.style.flexShrink : "";
+                row.style.flexWrap = "nowrap";
+                if (main) main.style.flexShrink = "0";
+                if (name) name.style.flexShrink = "0";
+                var gap = parseFloat(cs.columnGap) || 0;
+                var natural = function() {
+                    var sum = 0, n = 0;
+                    for (var i = 0; i < row.children.length; i++) { var w = row.children[i].getBoundingClientRect().width; if (w > 0) { sum += w; n++; } }
+                    return sum + gap * Math.max(0, n - 1);
+                };
+                var stack = false;
+                if (natural() > avail + 1) {
+                    cls.add("lbh-hide-res");
+                    if (natural() > avail + 1) {
+                        cls.add("lbh-hide-size");
+                        var nat = natural(), nw = name ? name.getBoundingClientRect().width : 0;
+                        var give = Math.max(0, nw - Math.min(nw, 120));
+                        if (nat - give > avail + 1) stack = true;
+                    }
+                }
+                row.style.flexWrap = oWrap;
+                if (main) main.style.flexShrink = oMain;
+                if (name) name.style.flexShrink = oName;
+                if (stack) {
+                    // Radkove rozlozeni: obsah hlavicky pod pocitadlo a listu (jako na telefonu), aby se nepotreboval horizontalni rezerva
+                    cls.add("lbh-stack");
+                    hdr.classList.add("lbh-hdr-stack");
+                    try { syncLBCounterReserveCore(); } catch(eR1) {}
+                }
+            } catch(e) {}
+        }
+        (function initLBHeaderFit() {
+            try {
+                var h = document.getElementById("lbHeader");
+                if (h && typeof ResizeObserver !== "undefined") {
+                    var lastW = -1;
+                    new ResizeObserver(function() {
+                        var w = Math.round(h.getBoundingClientRect().width);
+                        if (w !== lastW) { lastW = w; lbHeaderFit(); }   // napr. prepnuti splitu, zmena okna
+                    }).observe(h);
+                }
+            } catch(e) {}
+        })();
+        function lbhActKey(e, el) {
+            try { if (e && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); e.stopPropagation(); el.click(); } } catch(x) {}
         }
         function cycleLBShow() {
             lbHideMode = ((lbHideMode || 0) + 1) % 3;
@@ -15522,6 +15648,10 @@ H += "</div></div>";
 
         // Dynamicka rezerva 1. radku podle skutecne sirky citace – text nesmi pod citac.
         function syncLBCounterReserve() {
+            try { syncLBCounterReserveCore(); } catch(e) {}
+            try { lbHeaderFit(); } catch(e2) {}
+        }
+        function syncLBCounterReserveCore() {
             try {
                 var lb = document.getElementById("lightbox");
                 var header = document.getElementById("lbHeader");
@@ -15542,14 +15672,14 @@ H += "</div></div>";
                     if (!cs || cs.display === "none") { row.style.paddingLeft = ""; }
                     else {
                         var c = counter.getBoundingClientRect();
-                        var need = c.right - r.left + gap;
+                        var need = (c.bottom <= r.top) ? 0 : (c.right - r.left + gap);   // pocitadlo nad radkem (uzke okno) -> bez rezervy
                         if (need < 0) need = 0;
                         if (need > maxP) need = maxP;
                         row.style.paddingLeft = need > 0 ? Math.ceil(need) + "px" : "";
                     }
                 }
                 var minL = Infinity;
-                var btnIds = ["btnLightboxClose", "lbSplitBtn", "lbSlideBtn"];
+                var btnIds = ["lbToolbar"];
                 for (var bi = 0; bi < btnIds.length; bi++) {
                     var be = document.getElementById(btnIds[bi]);
                     if (!be) continue;
@@ -15557,7 +15687,7 @@ H += "</div></div>";
                     try { bs = window.getComputedStyle(be); } catch(e) {}
                     if (!bs || bs.display === "none") continue;
                     var br = be.getBoundingClientRect();
-                    if (br && br.width > 0 && br.left < minL) minL = br.left;
+                    if (br && br.width > 0 && br.bottom > r.top && br.left < minL) minL = br.left;   // lista nad radkem -> bez rezervy
                 }
                 if (minL === Infinity) { row.style.paddingRight = ""; return; }
                 var needR = r.right - minL + gap;
@@ -15992,9 +16122,9 @@ window.addEventListener('resize', function() {
             // Stránkování panelu (jen pokud je víc než 1 stránka)
             if (totalPages > 1) {
                 listHTML += '<div class="lb-folder-pagination">';
-                listHTML += '<button class="lb-folder-pg-btn"' + (currentLBFolderPage === 0 ? ' disabled' : '') + ' onclick="event.stopPropagation(); lbFolderPrevPage()">&#10094;</button>';
+                listHTML += '<button class="lb-folder-pg-btn"' + (currentLBFolderPage === 0 ? ' disabled' : '') + ' onclick="event.stopPropagation(); lbFolderPrevPage()" aria-label="' + (currentLang === 'cs' ? 'Předchozí stránka' : 'Previous page') + '"><svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>';
                 listHTML += '<span style="font-size:11px;color:#aaa;">' + (currentLBFolderPage + 1) + ' / ' + totalPages + '</span>';
-                listHTML += '<button class="lb-folder-pg-btn"' + (currentLBFolderPage >= totalPages - 1 ? ' disabled' : '') + ' onclick="event.stopPropagation(); lbFolderNextPage()">&#10095;</button>';
+                listHTML += '<button class="lb-folder-pg-btn"' + (currentLBFolderPage >= totalPages - 1 ? ' disabled' : '') + ' onclick="event.stopPropagation(); lbFolderNextPage()" aria-label="' + (currentLang === 'cs' ? 'Další stránka' : 'Next page') + '"><svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>';
                 listHTML += '</div>';
             }
 
@@ -18228,6 +18358,9 @@ window.addEventListener('resize', function() {
                     elRes.title = rText;
                     elRes.style.display = "inline";
                     if (elSep) elSep.style.display = "inline";
+                    // Na uzkem displeji je rozliseni skryte -> je aspon v tooltipu nazvu
+                    try { var _nm = document.getElementById("lbhName"); if (_nm) _nm.title = (_nm.getAttribute("data-base") || "") + " · " + lbImg.naturalWidth + "×" + lbImg.naturalHeight; } catch(eNm) {}
+                    try { lbHeaderFit(); } catch(eFit) {}
                 }
             }
             if (isVid) {
@@ -18254,21 +18387,23 @@ window.addEventListener('resize', function() {
             if (lbHeader) {
                 var folderIconSvg = "<svg viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink:0;vertical-align:-2px;'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg>";
                 
-                // 1. řádek: Název | Datum a čas | Velikost | Rozlišení
+                // 1. řádek: [Název  Datum · Velikost · Rozlišení]  [skupina polohy v jednom rámečku]
                 var r1 = [];
-                r1.push('<span class=\"lbh-item lbh-name\" title=\"' + escapeHtml((i18n[currentLang].tipFileName || "Název souboru") + ": " + rawFn) + '\">' + escapeHtml(rawFn) + '</span>');
+                var _nameTitle = (i18n[currentLang].tipFileName || "Název souboru") + ": " + rawFn + (sz ? " · " + sz : "");
+                var _mainHtml = '<span class="lbh-item lbh-name" id="lbhName" data-base="' + escapeHtml(_nameTitle) + '" title="' + escapeHtml(_nameTitle) + '">' + escapeHtml(rawFn) + '</span>';
+                var _metaParts = [];
                 if (df) {
-                    r1.push('<span class="lbh-sep">|</span>');
                     var _wd = weekdayName(p[2]);
-                    r1.push('<span class=\"lbh-item\" title=\"' + escapeHtml((_wd ? _wd + " " : "") + df) + '\">' + escapeHtml(df) + '</span>');
+                    _metaParts.push('<span class="lbh-item lbh-date" title="' + escapeHtml((_wd ? _wd + " " : "") + df) + '">' + escapeHtml(df) + '</span>');
                 }
                 if (sz) {
-                    r1.push('<span class="lbh-sep">|</span>');
-                    r1.push('<span class=\"lbh-item lbh-size\" title=\"' + escapeHtml((i18n[currentLang].tipFileSize || "Velikost souboru") + ": " + sz) + '\">' + escapeHtml(sz) + '</span>');
+                    _metaParts.push('<span class="lbh-item lbh-size" title="' + escapeHtml((i18n[currentLang].tipFileSize || "Velikost souboru") + ": " + sz) + '">' + escapeHtml(sz) + '</span>');
                 }
-                // 4. pozice: Rozlišení (vyplní updateResDisplay z lbImg)
-                r1.push('<span class="lbh-sep" id="lbhResSep" style="display:none;">|</span>');
-                r1.push('<span class="lbh-item lbh-res" id="lbhRes" style="display:none;" title="' + escapeHtml(i18n[currentLang].tipResolution || "Rozlišení") + '"></span>');
+                var _metaHtml = _metaParts.join('<span class="lbh-dot" aria-hidden="true">·</span>');
+                // Rozlišení vyplní updateResDisplay z lbImg (tečka před ním se ukáže spolu s ním)
+                if (_metaParts.length) _metaHtml += '<span class="lbh-dot" id="lbhResSep" aria-hidden="true" style="display:none;">·</span>';
+                _metaHtml += '<span class="lbh-item lbh-res" id="lbhRes" style="display:none;" title="' + escapeHtml(i18n[currentLang].tipResolution || "Rozlišení") + '"></span>';
+                r1.push('<span class="lbh-main">' + _mainHtml + '<span class="lbh-meta">' + _metaHtml + '</span></span>');
 
                 // 5. pozice: Souřadnice + 3 akční ikonky (jen pokud má fotka GNSS)
                 var lat = p[0], lon = p[1];
@@ -18276,14 +18411,13 @@ window.addEventListener('resize', function() {
                     var coordText = lat.toFixed(6) + ', ' + lon.toFixed(6);
                     var gmUrl = 'https://www.google.com/maps?q=' + lat + ',' + lon;
                     var myUrl = 'https://mapy.cz/zakladni?q=' + lat + '%2C' + lon;
-                    r1.push('<span class="lbh-sep">|</span>');
-                    r1.push('<span class="lbh-item lbh-coords" title="GNSS: ' + coordText + '">' + coordText + '</span>');
-                    r1.push('<span class="lbh-sep">|</span>');
+                    var _geoParts = [];
+                    _geoParts.push('<span class="lbh-coords" title="GNSS: ' + coordText + '">' + coordText + '</span>');
                     var _lbs = "G";
                     try { if (typeof stOf === "function") _lbs = stOf(p) || "G"; } catch(e) {}
                     var _lbt = i18n[currentLang] || {};
                     var _lbd = (_lbs === "G") ? (_lbt.lbStateDescG || "s polohou") : ((_lbs === "D") ? (_lbt.lbStateDescD || "duplicita s polohou") : (_lbt.noLocation || "bez polohy"));
-                    r1.push(lbStatePillHtml(_lbs, _lbt));
+                    _geoParts.push('<span class="lbh-geo-pill">' + lbStatePillHtml(_lbs, _lbt) + '</span>');
                     if (typeof lbSplitMode !== 'undefined' && lbSplitMode && typeof map !== 'undefined' && map) {
                         syncMapToLBPhoto(lat, lon, false);
                     }
@@ -18293,29 +18427,32 @@ window.addEventListener('resize', function() {
                                    (currentLang === 'cs' ? (isSplit ? "Zrušit rozdělené zobrazení" : "Rozdělené zobrazení (prohlížečka vlevo, mapa vpravo)") : (isSplit ? "Disable split view" : "Split view (viewer left, map right)"));
                     var splitSvg = '<svg viewBox="0 0 20 15" width="16" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="18" height="13" rx="1.5"/><line x1="10" y1="1" x2="10" y2="14"/></svg>';
 
-                    r1.push('<span class="lbh-actions">' +
-                        '<span class="lbh-action-btn" onclick="event.stopPropagation(); lbZoomToPhoto(' + lat + ',' + lon + ');" title="' + escapeHtml(i18n[currentLang].tipZoomPhoto || "Přiblížit na tuto fotku v mapě (M)") + '">' +
+                    var _tZoom = escapeHtml(i18n[currentLang].tipZoomPhoto || "Přiblížit na tuto fotku v mapě (M)");
+                    var _tGm = escapeHtml(i18n[currentLang].tipOpenGoogle || "Otevřít v Google Maps");
+                    var _tMy = escapeHtml(i18n[currentLang].tipOpenMapy || "Otevřít v Mapy.com");
+                    _geoParts.push(
+                        '<span class="lbh-action-btn lbh-act-zoom" role="button" tabindex="0" onkeydown="lbhActKey(event, this)" onclick="event.stopPropagation(); lbZoomToPhoto(' + lat + ',' + lon + ');" title="' + _tZoom + '" aria-label="' + _tZoom + '">' +
                             '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx=\"12\" cy=\"12\" r=\"6\"/><path d=\"M12 2v4M12 18v4M2 12h4M18 12h4\"/></svg>' +
                         '</span>' +
-                        '<a class="lbh-action-btn" href="' + gmUrl + '" target="_blank" onclick="event.stopPropagation();" title="' + escapeHtml(i18n[currentLang].tipOpenGoogle || "Otevřít v Google Maps") + '">' +
+                        '<a class="lbh-action-btn lbh-act-gm" href="' + gmUrl + '" target="_blank" onclick="event.stopPropagation();" title="' + _tGm + '" aria-label="' + _tGm + '">' +
                             '<svg width="12" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92.3 132.3" fill="currentColor"><path fill="currentColor" d="M60.2 2.2C55.8.8 51 0 46.1 0 32 0 19.3 6.4 10.8 16.5l21.8 18.3L60.2 2.2z"/><path fill="currentColor" d="M10.8 16.5C4.1 24.5 0 34.9 0 46.1c0 8.7 1.7 15.7 4.6 22l28-33.3-21.8-18.3z"/><path fill="currentColor" d="M46.2 28.5c9.8 0 17.7 7.9 17.7 17.7 0 4.3-1.6 8.3-4.2 11.4 0 0 13.9-16.6 27.5-32.7-5.6-10.8-15.3-19-27-22.7L32.6 34.8c3.3-3.8 8.1-6.3 13.6-6.3"/><path fill="currentColor" d="M46.2 63.8c-9.8 0-17.7-7.9-17.7-17.7 0-4.3 1.5-8.3 4.1-11.3l-28 33.3c4.8 10.6 12.8 19.2 21 29.9l34.1-40.5c-3.3 3.9-8.1 6.3-13.5 6.3"/><path fill="currentColor" d="M59.1 109.2c15.4-24.1 33.3-35 33.3-63 0-7.7-1.9-14.9-5.2-21.3L25.6 98c2.6 3.4 5.3 7.3 7.9 11.3 9.4 14.5 6.8 23.1 12.8 23.1s3.4-8.7 12.8-23.2"/></svg>' +
                         '</a>' +
-                        '<a class="lbh-action-btn" href="' + myUrl + '" target="_blank" onclick="event.stopPropagation();" title="' + escapeHtml(i18n[currentLang].tipOpenMapy || "Otevřít v Mapy.com") + '">' +
+                        '<a class="lbh-action-btn lbh-act-mapy" href="' + myUrl + '" target="_blank" onclick="event.stopPropagation();" title="' + _tMy + '" aria-label="' + _tMy + '">' +
                             '<img src="data:image/png;base64,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" width="15" height="15" style="border-radius:2px; filter: grayscale(100%) brightness(1.25); opacity: 0.82;" alt="Mapy.com">' +
-                        '</a>' +
-                    '</span>');
+                        '</a>');
+                    r1.push('<span class="lbh-geo" role="group" aria-label="' + escapeHtml(i18n[currentLang].lbhGeoGroup || (currentLang === "cs" ? "Poloha fotky" : "Photo location")) + '">' + _geoParts.join('') + '</span>');
                 } else {
-                    r1.push('<span class="lbh-sep">|</span>');
-                    r1.push('<span class="lbh-item" style="color:rgba(255,255,255,0.45);font-style:italic;" title="' + escapeHtml(i18n[currentLang].noLocation || "bez polohy") + '">' + escapeHtml(i18n[currentLang].noLocation || "bez polohy") + '</span>');
-                    r1.push('<span class="lbh-sep">|</span>');
+                    var _nolocTxt = escapeHtml(i18n[currentLang].noLocation || "bez polohy");
+                    var _nolocHtml = '<span class="lbh-item lbh-noloc" title="' + _nolocTxt + '">' + _nolocTxt + '</span>';
+
                     var _lbs2 = "S";
                     try { if (typeof stOf === "function") _lbs2 = stOf(p) || "S"; } catch(e) {}
                     var _lbt2 = i18n[currentLang] || {};
                     var _lbd2 = (_lbs2 === "G") ? (_lbt2.lbStateDescG || "s polohou") : ((_lbs2 === "D") ? (_lbt2.lbStateDescD || "duplicita s polohou") : (_lbt2.noLocation || "bez polohy"));
-                    r1.push(lbStatePillHtml(_lbs2, _lbt2));
+                    r1.push('<span class="lbh-geo-line">' + _nolocHtml + '<span class="lbh-geo" role="group" aria-label="' + escapeHtml(i18n[currentLang].lbhGeoGroup || (currentLang === "cs" ? "Poloha fotky" : "Photo location")) + '"><span class="lbh-geo-pill">' + lbStatePillHtml(_lbs2, _lbt2) + '</span></span></span>');
                 }
 
-                var outHtml = '<div class="lbh-row" onclick="event.stopPropagation()">' + r1.join('') + '</div>';
+                var outHtml = '<div class="lbh-row lbh-row-main" onclick="event.stopPropagation()">' + r1.join('') + '</div>';
 
                 // 2. řádek: Složka jako interaktivní drobečková navigace (breadcrumbs) + klikací ROOT ikonka
                 var crumbsHtml = renderFolderBreadcrumbs(folder, currentLBGridFolder);
