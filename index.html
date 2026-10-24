@@ -638,6 +638,10 @@
         .st-ref-row input[type="text"] { width: 78px; text-align: center; border: 1.5px solid #dadce0; border-radius: 8px; padding: 3px 4px; font-size: 11px; font-weight: 700; color: var(--green); background: #ffffff; min-height: 26px; outline: none; box-sizing: border-box; touch-action: manipulation; }
         .st-ref-row input[type="text"]:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(var(--green-rgb),0.18); }
         .st-ref-btn { height: 26px; border: 1px solid #dadce0; background: #fff; border-radius: 13px; padding: 0 12px; font-size: 11.5px; color: #3c4043; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: background .15s, border-color .15s, color .15s; }
+        .st-ref-btn { min-width: 104px; justify-content: center; white-space: nowrap; }
+        .st-ref-btn svg { flex: 0 0 auto; }
+        .st-ref-row input[type="text"].st-ref-flash { border-color: var(--green); box-shadow: 0 0 0 3px rgba(var(--green-rgb),0.30); background: var(--green-bg); }
+        @media (max-width: 620px) { .st-ref-box .st-ref-row .st-ref-sp { flex: 1 0 100%; height: 0; } .st-ref-box .st-ref-row .st-ref-btn { flex: 1 1 0; min-width: 0; } }
         .st-ref-btn:hover { background: var(--green-bg); border-color: var(--green); color: var(--green); }
         .st-ref-btn:focus-visible { outline: none; border-color: var(--green); box-shadow: 0 0 0 2px rgba(var(--green-rgb),0.18); }
         .st-ref-btn:active { background: var(--green-border); } .st-async-cancel { height: 16px; line-height: 1; border: 1px solid #dadce0; background: #fff; border-radius: 8px; padding: 0 7px; font-size: 10px; color: #3c4043; cursor: pointer; display: inline-flex; align-items: center; } .st-async-cancel:hover { background: var(--green-bg); border-color: var(--green); color: var(--green); } #stRowDensest .st-row, #stRowMostVisited .st-row, #stRowFarthest .st-row { align-items: center; }
@@ -669,6 +673,9 @@
         .st-state .st-pc { text-align: right; color: #5f6368; font-size: 11.5px; white-space: nowrap; }
         .st-state .st-n { text-align: right; font-weight: 700; color: #202124; white-space: nowrap; }
         .st-state.off { opacity: .45; }
+        .st-ref-box.st-ref-compact .st-ref-row input[type="text"] { width: 82px; }
+        .st-ref-box.st-ref-compact .st-ref-btn { min-width: 0; padding: 0 9px; }
+        .st-state.st-set { grid-template-columns: 16px 22px minmax(0, 1fr); }
         .st-state-foot { position: relative; display: flex; align-items: center; gap: 9px; margin: 14px -6px 0; padding: 6px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: background-color .12s ease; }
         .st-state-foot::before { content: ""; position: absolute; left: 6px; right: 6px; top: -7px; height: 1px; background: #cfd3d7; }
         .st-state-foot:hover { background: var(--green-bg); }
@@ -2399,8 +2406,8 @@
                         <label class="st-rb-f"><input id="stRefLat" type="text" inputmode="decimal" aria-label="Referenční šířka" onfocus="this.select()" onkeydown="if(event.key==='Enter')this.blur();" onchange="statsRefDirty=true;renderStats()"></label>
                         <label class="st-rb-f"><input id="stRefLon" type="text" inputmode="decimal" aria-label="Referenční délka" onfocus="this.select()" onkeydown="if(event.key==='Enter')this.blur();" onchange="statsRefDirty=true;renderStats()"></label>
                         <span class="st-ref-sp"></span>
-                        <button class="st-ref-btn" type="button" onclick="statsUseMapCenter()"><span id="stRefBtnMap">střed mapy</span></button>
-                        <button class="st-ref-btn" type="button" onclick="statsRefPickOnMap()"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z"/><path d="M12 8v5"/><path d="M9.5 10.5h5"/></svg> <span id="stRefBtnPick">Zvolit na mapě</span></button>
+                        <button class="st-ref-btn" type="button" id="stRefBtnMapBtn" onclick="statsUseMapCenter()" title="Vložit souřadnice aktuálního středu mapy" aria-label="Vložit souřadnice aktuálního středu mapy"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg> <span id="stRefBtnMap">střed mapy</span></button>
+                        <button class="st-ref-btn" type="button" id="stRefBtnPickBtn" onclick="statsRefPickOnMap()" title="Zavřít statistiku a kliknutím do mapy zvolit RB (Esc zruší)" aria-label="Zavřít statistiku a kliknutím do mapy zvolit RB (Esc zruší)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z"/><path d="M12 8v5"/><path d="M9.5 10.5h5"/></svg> <span id="stRefBtnPick">Zvolit na mapě</span></button>
                     </div>
                 </div>
             </div>
@@ -2921,6 +2928,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             stRefShowHint: "Referenční bod na mapě – Esc se vrátí do statistiky.",
             stRefShowMk: "Referenční bod (RB)",
             stRefBtnPick: "z mapy",
+            stRefTipMap: "Vložit souřadnice aktuálního středu mapy",
+            stRefTipPick: "Zavřít statistiku a kliknutím do mapy zvolit RB (Esc zruší)",
             statsSecExpand: "Zvětšit sekci", statsSecShrink: "Zmenšit sekci (Esc)", statsSecTabsAria: "Výběr sekce",
             statsSecFiles: "Soubory",
             statsSecTime: "Čas",
@@ -3291,6 +3300,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             stRefShowHint: "Reference point on the map – Esc returns to the statistics.",
             stRefShowMk: "Reference point (RP)",
             stRefBtnPick: "from map",
+            stRefTipMap: "Insert the coordinates of the current map center",
+            stRefTipPick: "Close the statistics and click the map to set the RP (Esc cancels)",
             statsSecExpand: "Enlarge section", statsSecShrink: "Shrink section (Esc)", statsSecTabsAria: "Section selector",
             statsSecFiles: "Files",
             statsSecTime: "Time",
@@ -6196,6 +6207,8 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             setTi("stRefTitleBtn", t.stRefShowTip);
             setT("stRefBtnMap", t.stRefBtnMap);
             setT("stRefBtnPick", t.stRefBtnPick);
+            setTi("stRefBtnMapBtn", t.stRefTipMap); setTi("stRefBtnPickBtn", t.stRefTipPick);
+            try { [["stRefBtnMapBtn", t.stRefTipMap], ["stRefBtnPickBtn", t.stRefTipPick]].forEach(function(a){ var e = document.getElementById(a[0]); if (e && a[1]) e.setAttribute("aria-label", a[1]); }); } catch(eAr) {}
             setT("stRefLatLbl", t.stRefLatLbl);
             setT("stRefLonLbl", t.stRefLonLbl);
             setTi("btnExportPng", t.tipExportPng);
@@ -6722,10 +6735,15 @@ function statsSetFilters(on) {
         function setStatsRefFromMap() {
             try { if (typeof map !== "undefined" && map && typeof map.getCenter === "function") { var c = map.getCenter(); statsRefSet(c.lat, c.lng); } } catch(e) {}
             try { syncStatsSettings(); } catch(e2) {}
+            try {
+                ["setStatsRefLat", "setStatsRefLon"].forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.add("st-ref-flash"); });
+                setTimeout(function() { ["setStatsRefLat", "setStatsRefLon"].forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.remove("st-ref-flash"); }); }, 900);
+            } catch(eF) {}
         }
         function setStatsStateSetting(st, on) {
             try { statsStateSel[st] = !!on; } catch(e) {}
             statsSelSave();
+            try { syncStatsSettings(); } catch(eSy) {}
             try { renderStats(); } catch(e2) {}
         }
         function setStatsFiltersSetting(on) {
@@ -6786,6 +6804,7 @@ function statsSetFilters(on) {
                 var g = document.getElementById("setStatsChkG"); if (g) g.checked = !!statsStateSel.G;
                 var d = document.getElementById("setStatsChkD"); if (d) d.checked = !!statsStateSel.D;
                 var s = document.getElementById("setStatsChkS"); if (s) s.checked = !!statsStateSel.S;
+                ["G", "D", "S"].forEach(function(_k) { var rw = document.getElementById("setStatsRow" + _k); if (rw) rw.classList.toggle("off", !statsStateSel[_k]); });
                 var f = document.getElementById("setStatsChkF"); if (f) f.checked = !!statsApplyFilters;
                 var cids = { time: "setChartTime", tod: "setChartTod", dist: "setChartDist", distCen: "setChartDistCen", cal: "setChartCal", geo: "setChartGeo" };
                 for (var ck in cids) {
@@ -10141,9 +10160,13 @@ function fmtStatsCoordShort(la, lo) {
                 }
             } catch(e) {}
             renderStats();
+            try {
+                ["stRefLat", "stRefLon"].forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.add("st-ref-flash"); });
+                setTimeout(function() { ["stRefLat", "stRefLon"].forEach(function(id) { var el = document.getElementById(id); if (el) el.classList.remove("st-ref-flash"); }); }, 900);
+            } catch(eF) {}
         }
         /* Dočasné zobrazení referenčního bodu na mapě: statistika se zavře, bod se označí a Esc vrátí zpět (stejná cesta jako zrušení výběru bodu). */
-        function statsShowRefOnMap() {
+        function statsShowRefOnMap(from) {
             var t = i18n[currentLang] || {};
             try {
                 if (typeof map === "undefined" || !map) return;
@@ -10151,8 +10174,8 @@ function fmtStatsCoordShort(la, lo) {
                 var la = Number(r && r[0]), lo = Number(r && r[1]);
                 if (!isFinite(la) || !isFinite(lo)) return;
                 try { pickModeClear(); } catch(ePre) {}
-                closeStatsModal();
-                statsPickState = { active: true, from: "stats", view: true };
+                if (from === "settings") { try { closeSettingsModal(); } catch(eCS) {} } else closeStatsModal();
+                statsPickState = { active: true, from: (from === "settings" ? "settings" : "stats"), view: true };
                 map.setView([la, lo], Math.max(map.getZoom() || 8, 11));
                 try {
                     statsClearMarker();
@@ -14353,17 +14376,20 @@ H += "</div></div>";
                         "</div></details></li>" +
                         "<li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 3v18h18'/><path d='M7 16v-5'/><path d='M12 16V8'/><path d='M17 16v-8'/></svg> " + (t.setStatsTitle || "Nastavení statistiky") + "</summary><div class=\"step-body\">" +
                         "<p style=\"margin:0 0 10px 0;font-size:12px;color:#5f6368;\">" + (t.setStatsDesc || "") + "</p>" +
-                        "<div class=\"slider-input-group\"><span>" + (t.setStatsRefShort || "RB") + "</span>" +
-                        "<input id=\"setStatsRefLat\" type=\"text\" inputmode=\"decimal\" style=\"width:78px;\" value=\"\" title=\"" + (t.stRefLatLbl || "") + "\" onfocus=\"this.select();\" onchange=\"setStatsRefSetting(this.value, document.getElementById('setStatsRefLon').value)\" />" +
-                        "<input id=\"setStatsRefLon\" type=\"text\" inputmode=\"decimal\" style=\"width:78px;\" value=\"\" title=\"" + (t.stRefLonLbl || "") + "\" onfocus=\"this.select();\" onchange=\"setStatsRefSetting(document.getElementById('setStatsRefLat').value, this.value)\" />" +
-                        "<button type=\"button\" class=\"source-pill-btn\" onclick=\"event.stopPropagation();setStatsRefFromMap();\" title=\"" + (t.stRefBtnMap || "") + "\">" + (t.stRefBtnMap || "Střed mapy") + "</button>" +
-                        "<button type=\"button\" class=\"source-pill-btn\" style=\"display:inline-flex;align-items:center;gap:4px;\" onclick=\"event.stopPropagation();setStatsRefPickOnMap();\" title=\"" + (t.tipMapCenterPick || "") + "\"><svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z\"/><path d=\"M12 8v5\"/><path d=\"M9.5 10.5h5\"/></svg>" + (t.stRefBtnPick || "") + "</button>" +
+                        "<div class=\"st-ref-box st-ref-compact\" style=\"margin:0 0 10px 0;\">" +
+                        "<button type=\"button\" class=\"st-lbl st-lbl-btn\" onclick=\"event.stopPropagation();statsShowRefOnMap('settings')\" title=\"" + (t.stRefShowTip || "") + "\"><svg viewBox=\"0 0 24 24\" width=\"13\" height=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z\"/><circle cx=\"12\" cy=\"10\" r=\"2.5\"/></svg><span>" + (t.stRefTitle || "") + "</span></button>" +
+                        "<div class=\"st-ref-row\">" +
+                        "<label class=\"st-rb-f\"><input id=\"setStatsRefLat\" type=\"text\" inputmode=\"decimal\" value=\"\" aria-label=\"" + (t.stRefLatLbl || "") + "\" title=\"" + (t.stRefLatLbl || "") + "\" onfocus=\"this.select();\" onkeydown=\"if(event.key==='Enter')this.blur();\" onchange=\"setStatsRefSetting(this.value, document.getElementById('setStatsRefLon').value)\" /></label>" +
+                        "<label class=\"st-rb-f\"><input id=\"setStatsRefLon\" type=\"text\" inputmode=\"decimal\" value=\"\" aria-label=\"" + (t.stRefLonLbl || "") + "\" title=\"" + (t.stRefLonLbl || "") + "\" onfocus=\"this.select();\" onkeydown=\"if(event.key==='Enter')this.blur();\" onchange=\"setStatsRefSetting(document.getElementById('setStatsRefLat').value, this.value)\" /></label>" +
+                        "<span class=\"st-ref-sp\"></span>" +
+                        "<button type=\"button\" class=\"st-ref-btn\" onclick=\"event.stopPropagation();setStatsRefFromMap();\" title=\"" + (t.stRefTipMap || "") + "\" aria-label=\"" + (t.stRefTipMap || "") + "\"><svg viewBox=\"0 0 24 24\" width=\"13\" height=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"7\"/><path d=\"M12 2v5M12 17v5M2 12h5M17 12h5\"/></svg> <span>" + (t.stRefBtnMap || "") + "</span></button>" +
+                        "<button type=\"button\" class=\"st-ref-btn\" onclick=\"event.stopPropagation();setStatsRefPickOnMap();\" title=\"" + (t.stRefTipPick || "") + "\" aria-label=\"" + (t.stRefTipPick || "") + "\"><svg viewBox=\"0 0 24 24\" width=\"13\" height=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z\"/><path d=\"M12 8v5\"/><path d=\"M9.5 10.5h5\"/></svg> <span>" + (t.stRefBtnPick || "") + "</span></button>" +
                         "</div>" +
-                        "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;\">" + (t.setStatsStates || "") + "</div>" +
-                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"setStatsChkG\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setStatsStateSetting('G', this.checked)\" /><span>" + (t.statsStateG || "G") + "</span></label>" +
-                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:4px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"setStatsChkD\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setStatsStateSetting('D', this.checked)\" /><span>" + (t.statsStateD || "D") + "</span></label>" +
-                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:4px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"setStatsChkS\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setStatsStateSetting('S', this.checked)\" /><span>" + (t.statsStateS || "S") + "</span></label>" +
-                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input id=\"setStatsChkF\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"setStatsFiltersSetting(this.checked)\" /><span>" + (t.statsApplyFilters || "") + "</span></label>" +
+                        "<div class=\"st-rb\" style=\"margin-top:12px;padding-top:12px;\">" +
+                        "<div class=\"st-lbl\">" + (t.statsStateChkTip || "Zahrnout do statistiky") + "</div>" +
+                        ["G", "D", "S"].map(function(_s) { var _l = String(t["statsState" + _s] || _s).replace(/^[GDS]\s*[\u2013\u2014-]\s*/, ""); return "<label class=\"st-state st-set " + _s + "\" id=\"setStatsRow" + _s + "\"><input type=\"checkbox\" class=\"st-chk\" id=\"setStatsChk" + _s + "\" onchange=\"setStatsStateSetting('" + _s + "', this.checked)\"><span class=\"st-badge\" aria-hidden=\"true\">" + _s + "</span><span class=\"st-nm\">" + _l + "</span></label>"; }).join("") +
+                        "<label class=\"st-state-foot\" for=\"setStatsChkF\"><input type=\"checkbox\" class=\"st-sw\" id=\"setStatsChkF\" onchange=\"setStatsFiltersSetting(this.checked)\"><span class=\"st-txt\">" + (t.statsApplyFilters || "") + "</span></label>" +
+                        "</div></div>" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;color:#3c4043;\"><span>" + (t.statsBusiestDay || "") + "</span>" +
                         "<select id=\"setStatsBusyDays\" onchange=\"setStatsBusyDays(this.value)\" title=\"" + (t.statsDaysTip || "") + "\" style=\"border:1.5px solid #dadce0;border-radius:8px;padding:3px 4px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;\"></select></label>" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;\"><span>" + (t.statsTopPlaces || "Top 10 míst") + " (" + (currentLang === "cs" ? "rozestup" : "spacing") + "):</span>" +
