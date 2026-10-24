@@ -2477,9 +2477,9 @@
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy">&times;</button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.61</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.62</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
-            <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';"><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
+            <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
         </div>
     </div>
@@ -2502,7 +2502,7 @@
                 <button class="modal-close-btn" onclick="closeSettingsModal()" id="btnSettingsClose" aria-label="Zavřít nastavení">&times;</button>
             </div>
             <div class="guide-header" style="margin-bottom:12px;">
-                <input class="guide-search" id="settingsSearch" type="text" placeholder="Hledat v nastavení…" aria-label="Hledat v nastavení…" title="Hledat v nastavení…" oninput="filterSettingsSteps(this.value);document.getElementById('settingsClear').style.display=this.value?'inline-flex':'none';">
+                <input class="guide-search" id="settingsSearch" type="text" placeholder="Hledat v nastavení…" aria-label="Hledat v nastavení…" title="Hledat v nastavení…" oninput="filterSettingsSteps(this.value);document.getElementById('settingsClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterSettingsSteps('');document.getElementById('settingsClear').style.display='none';}">
                 <button class="guide-clear" id="settingsClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('settingsSearch');el.value='';filterSettingsSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="settingsExpandBtn" onclick="settingsExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="settingsCollapseBtn" onclick="settingsExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button>
             </div>
             <ol class="info-steps" id="settingsStepsList"></ol>
@@ -3458,7 +3458,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsGeoEmpty: "No located points to show in the grid.", statsGeoCapLat: "N", statsGeoCapLonE: "E", statsGeoCapLonW: "W",
             statsCoverageArea: "Buffer area", statsCoverageAreaTip: "Buffer zone radius in km", statsCoverageRange: "range 0.5 \u2013 5000 km", statsCoveragePolygonTip: "Draw buffer area as polygon in measurement tool", statsCoverageNoPolygon: "Cannot draw buffer area polygon.",
             statsBusiestDay: "Most photos in", statsDaysTip: "How many days we look for the maximum",
-            statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsPlaceOne: "place", statsPlaceFew: "places", statsPlaceMany: "places", statsYearOne: "year", statsYearFew: "years", statsYearMany: "years", statsCalLegend: "Years with photos on a given day", statsCalMaxTip: "Highest number of years with photos on a single day", statsCalMinTip: "Lowest number of years with photos on a single day (including days with no photos)", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days",
+            statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsPlaceOne: "place", statsPlaceFew: "places", statsPlaceMany: "places", statsYearOne: "year", statsYearFew: "years", statsYearMany: "years", statsCalLegend: "Years with photos on a given day", statsCalMaxTip: "Highest number of years with photos on a single day", statsCalMinTip: "Lowest number of years with photos on a single day (including days with no photos)", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days", statsDayGenOne: "day", statsDayGenMany: "days",
             statsOldest: "Oldest file",
             statsNewest: "Newest file",
             statsLargest: "Largest file",
@@ -5917,6 +5917,17 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (n < 0) n = 0;
             if (n > 10000) n = 10000;
             return n;
+        }
+
+        // Celočíselná pole (průhlednost, rozmazání, velikost bodů…): akceptuje "." i ","; desetinná část se zaokrouhlí (50,7 → 51).
+        // Vrací text s celým číslem, nebo "" pro prázdný/neplatný zápis.
+        function intTextFromTyped(v) {
+            var s = String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/[^0-9.]/g, "");
+            var dot = s.indexOf(".");
+            if (dot >= 0) s = s.slice(0, dot + 1) + s.slice(dot + 1).replace(/\./g, "");
+            if (s === "" || s === ".") return "";
+            var n = Math.round(parseFloat(s));
+            return isNaN(n) ? "" : String(n);
         }
 
         // Zobrazení hodnot (v češtině s desetinnou čárkou)
@@ -10619,11 +10630,34 @@ function fmtStatsCoordShort(la, lo) {
         }
         function statsFolderSearchClear() {
             if (_statsFolderSearchTimer) { clearTimeout(_statsFolderSearchTimer); _statsFolderSearchTimer = null; }
-            statsFolderSearchInput("");
+            try {
+                var ovC = document.getElementById("stTableOverlay");
+                var inpC = ovC ? ovC.querySelector(".st-folder-search-inp")
+                               : document.querySelector("#statsBody .st-folder-search-inp");
+                if (inpC) {
+                    inpC.value = "";
+                    var clC = inpC.parentNode && inpC.parentNode.querySelector(".st-folder-search-clr");
+                    if (clC) clC.style.display = "none";
+                }
+            } catch(eC) {}
+            statsFolderSearchInput("", true);
         }
-        function statsFolderSearchInput(val) {
-            if (_statsFolderSearchTimer) clearTimeout(_statsFolderSearchTimer);
-            _statsFolderSearchTimer = setTimeout(function() {
+        // Escape in the search field: text present -> clear it (and keep the window open);
+        // empty field -> let Escape bubble so the overlay / statistics window closes
+        function statsFolderSearchKey(ev, el) {
+            if (ev.key === "Escape") {
+                if (el.value && !ev.isComposing) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    statsFolderSearchClear();
+                }
+                return;
+            }
+            ev.stopPropagation();
+        }
+        function statsFolderSearchInput(val, immediate) {
+            if (_statsFolderSearchTimer) { clearTimeout(_statsFolderSearchTimer); _statsFolderSearchTimer = null; }
+            var run = function() {
                 _statsFolderSearchTimer = null;
                 var ov = document.getElementById("stTableOverlay");
                 var inp = ov ? ov.querySelector(".st-folder-search-inp")
@@ -10651,7 +10685,8 @@ function fmtStatsCoordShort(la, lo) {
                         if (inp2) { inp2.focus(); try { inp2.setSelectionRange(cursorPos, cursorPos); } catch(eR) {} }
                     }
                 } catch(eFoc) {}
-            }, 150);
+            };
+            if (immediate) run(); else _statsFolderSearchTimer = setTimeout(run, 150);
         }
         function statsSortFolderTable(key) {
             try {
@@ -12722,8 +12757,9 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 var _sfBtnTitle = currentLang === "cs" ? "Vymazat hledání" : "Clear search";
                 H += "<div class=\"st-sec-box\" data-sttbl=\"folder\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;\">" +
                     "<span title=\"" + L_("statsSecFolderTable", "Tabulka 2 (složková)") + "\" style=\"white-space:nowrap;flex-shrink:0;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\"/></svg>" + L_("statsSecFolderTableShort", "Tabulka 2") + "</span>" +
-                    "<input type=\"text\" class=\"guide-search st-folder-search-inp\" value=\"" + escapeHtml(statsFolderSearch) + "\" placeholder=\"" + escapeHtml(_sfPlaceholder) + "\" oninput=\"event.stopPropagation();statsFolderSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"event.stopPropagation()\" style=\"flex:1;min-width:60px;max-width:200px;margin:0;\" />" +
-                    "<button type=\"button\" class=\"guide-clear st-folder-search-clr\" onclick=\"event.stopPropagation();statsFolderSearchClear()\" title=\"" + escapeHtml(_sfBtnTitle) + "\" aria-label=\"" + escapeHtml(_sfBtnTitle) + "\" style=\"display:" + (statsFolderSearch ? "inline-flex" : "none") + ";\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button>" +
+                    "<span style=\"display:inline-flex;align-items:center;gap:6px;flex:1 1 150px;min-width:0;max-width:230px;\">" +
+                    "<input type=\"text\" class=\"guide-search st-folder-search-inp\" value=\"" + escapeHtml(statsFolderSearch) + "\" placeholder=\"" + escapeHtml(_sfPlaceholder) + "\" oninput=\"event.stopPropagation();statsFolderSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"statsFolderSearchKey(event,this)\" style=\"flex:1 1 auto;min-width:60px;margin:0;\" />" +
+                    "<button type=\"button\" class=\"guide-clear st-folder-search-clr\" onclick=\"event.stopPropagation();statsFolderSearchClear()\" title=\"" + escapeHtml(_sfBtnTitle) + "\" aria-label=\"" + escapeHtml(_sfBtnTitle) + "\" style=\"display:" + (statsFolderSearch ? "inline-flex" : "none") + ";\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></span>" +
                     "<span style=\"display:inline-flex;gap:4px;flex-shrink:0;margin-left:auto;\">" +
                     "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(true);\" title=\"" + tExpAll + "\" aria-label=\"" + tExpAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button>" +
                     "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(false);\" title=\"" + tColAll + "\" aria-label=\"" + tColAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m18 15-6-6-6 6\"/></svg></button>" +
@@ -25769,7 +25805,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                             var numInput = document.createElement("input");
                             numInput.type = "text";
                             numInput.inputMode = "numeric";
-                            numInput.maxLength = 3;
+                            numInput.maxLength = 8;
                             numInput.value = initial;
 
                             var _numInputTimer = null;
@@ -25800,7 +25836,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 }
                             };
                             numInput.oninput = function() {
-                                var clean = this.value.replace(/[^0-9]/g, '');
+                                var clean = intTextFromTyped(this.value);
                                 if (clean !== "") applyNum(clean, false, true);
                             };
                             numInput.onkeydown = function(ev) {
@@ -26380,7 +26416,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 };
                                 var _ptSzTimer = null;
                                 numInput.oninput = function() {
-                                    var clean = this.value.replace(/[^0-9]/g, "");
+                                    var clean = intTextFromTyped(this.value);
                                     if (clean !== "") {
                                         var n = parseInt(clean, 10); if (n < 3) n = 3; if (n > 30) n = 30;
                                         slider.value = n; d.pointSize = n; lastEditedDataset = k; curPtSz = n; ptSzPill.innerHTML = PILL_DOT_SVG + n;
@@ -26427,7 +26463,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 var slider = document.createElement("input");
                                 slider.type = "range"; slider.min = "2"; slider.max = "30"; slider.step = "1"; slider.value = curBlur;
                                 var numInput = document.createElement("input");
-                                numInput.type = "text"; numInput.inputMode = "numeric"; numInput.maxLength = 2; numInput.value = curBlur;
+                                numInput.type = "text"; numInput.inputMode = "numeric"; numInput.maxLength = 8; numInput.value = curBlur;
                                 function applyTPBlur(v, syncNum) {
                                     var n = parseInt(v, 10); if (isNaN(n)) n = 10; if (n < 2) n = 2; if (n > 30) n = 30;
                                     d.heatBlur = n; lastEditedDataset = k; curBlur = n;
@@ -26442,7 +26478,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                 };
                                 var _tpBlurT = null;
                                 numInput.oninput = function() {
-                                    var clean = this.value.replace(/[^0-9]/g, "");
+                                    var clean = intTextFromTyped(this.value);
                                     if (clean !== "") {
                                     var n = parseInt(clean, 10); if (n < 2) n = 2; if (n > 30) n = 30;
                                     slider.value = n; d.heatBlur = n; lastEditedDataset = k; curBlur = n; blurPill.innerHTML = PILL_BLUR_SVG + n + "px";
@@ -26567,7 +26603,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                             var numInput = document.createElement("input");
                             numInput.type = "text";
                             numInput.inputMode = "numeric";
-                            numInput.maxLength = 2;
+                            numInput.maxLength = 8;
                             numInput.value = curBlur;
 
                             function applyBlur(v, syncNum) {
@@ -26601,7 +26637,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                             };
                             var _blurTimer = null;
                             numInput.oninput = function() {
-                                var clean = this.value.replace(/[^0-9]/g, "");
+                                var clean = intTextFromTyped(this.value);
                                 if (clean !== "") {
                                     var n = parseInt(clean, 10); if (n < blurMin) n = blurMin; if (n > blurMax) n = blurMax;
                                     slider.value = n; if (isAgeBlur) d.ageBlur = n; else d.heatBlur = n; lastEditedDataset = k; curBlur = n; blurPill.innerHTML = PILL_BLUR_SVG + n + "px";
@@ -26692,7 +26728,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                             numInput.oninput = function() {
                                 var raw = this.value.replace(/[^0-9.,]/g, "");
                                 if (raw !== "" && raw !== "." && raw !== ",") {
-                                    applyAgeSize(raw);
+                                    applyAgeSize(raw, false);
                                     clearTimeout(_ageSzTimer);
                                     _ageSzTimer = setTimeout(function() { scheduleStyleApply("agesize:" + k, function() { saveDatasetStyles(); updView(); }); }, 500);
                                 }
@@ -26779,7 +26815,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                             numInput.oninput = function() {
                                 var raw = this.value.replace(/[^0-9.,]/g, "");
                                 if (raw !== "" && raw !== "." && raw !== ",") {
-                                    applyHeatSize(raw);
+                                    applyHeatSize(raw, false);
                                     clearTimeout(_heatSzTimer);
                                     _heatSzTimer = setTimeout(function() { scheduleStyleApply("heatsize:" + k, function() { saveDatasetStyles(); updView(); }); }, 500);
                                 }
