@@ -815,6 +815,8 @@ var AppLog = (function () {
         .st-row-sub .st-pick.is-noloc { cursor: default; }
         .st-row-sub .st-pick.is-noloc:hover { text-decoration: none; }
         .st-row-sub .st-pick.is-coord { color: var(--green); }
+        .st-ctry { cursor: pointer; }
+        .st-ctry:hover { text-decoration: underline; }
 .st-row-sub .st-pick { cursor: pointer; }
                 .st-row-sub .st-pick:hover { text-decoration: underline; }
                 .st-row-sub .st-pick.is-loc { color: var(--green); }
@@ -2639,7 +2641,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.76</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.77</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -3274,7 +3276,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsFarthestCenter: "Nejvzdálenější od těžiště", statsNearestCenter: "Nejbližší od těžiště",
             statsLineHint: "Zobrazit měřicí čáru mezi oběma soubory",
             statsPointHint: "Zobrazit bod v měření",
-            statsCircleHint: "Vykreslit kružnici tohoto poloměru", statsCircleClamped: "Poloměr omezen na 20 000 km (polovina obvodu Země).",
+            statsCircleHint: "Vykreslit kružnici tohoto poloměru", statsCountryZoomTip: "Zobrazit stát na mapě", statsCircleClamped: "Poloměr omezen na 20 000 km (polovina obvodu Země).",
             statsFrom: "od ",
             statsCenterOf: "těžiště ",
             statsStateChkTip: "Zahrnout do statistiky",
@@ -3657,7 +3659,7 @@ statsFarthestPair: "Farthest pair",
             statsFarthestCenter: "Farthest from centroid", statsNearestCenter: "Nearest to centroid",
             statsLineHint: "Show the measurement line between the two files",
             statsPointHint: "Show the point in the measurement tool",
-            statsCircleHint: "Draw a circle with this radius", statsCircleClamped: "Radius limited to 20,000 km (half the Earth's circumference).",
+            statsCircleHint: "Draw a circle with this radius", statsCountryZoomTip: "Show country on the map", statsCircleClamped: "Radius limited to 20,000 km (half the Earth's circumference).",
             statsFrom: "from ",
             statsCenterOf: "centroid ",
             statsStateChkTip: "Include in the statistics",
@@ -12240,6 +12242,54 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 map.fitBounds([[lat0, lon0], [lat1, lon1]], { padding: [40, 40] });
             } catch(e) { AppLog.soft("statsGeoCellClick", e); }
         }
+        /* Klik na název státu v Navštívených státech: zoom (offline mapa pod oknem) na polygony státu z těch světadílů,
+           odkud máme fotky. Světadíl se určuje po vrcholech polygonu (stejná pravidla jako MF_CONT: Ural, zámořská území…). */
+        var statsCountryZoomList = [];
+        function statsCountryZoom(i) {
+            try {
+                var it = statsCountryZoomList[i];
+                if (!it || typeof map === "undefined" || !map || typeof MF_COUNTRY === "undefined" || typeof MF_CONT === "undefined") return;
+                var want = it.cont || {}, anyWant = false, k;
+                for (k in want) if (Object.prototype.hasOwnProperty.call(want, k) && want[k]) anyWant = true;
+                var boxes = [];
+                MF_COUNTRY.eachGroupPoly(it.key, function (rings, res) {
+                    var b = [Infinity, Infinity, -Infinity, -Infinity];
+                    for (var r = 0; r < rings.length; r++) {
+                        var a = rings[r];
+                        for (var j = 0; j < a.length; j += 2) {
+                            if (anyWant) {
+                                var ct = MF_CONT.fromResult(res, a[j + 1], a[j]);
+                                if (!ct || !want[ct.code]) continue;
+                            }
+                            if (a[j] < b[0]) b[0] = a[j]; if (a[j] > b[2]) b[2] = a[j];
+                            if (a[j + 1] < b[1]) b[1] = a[j + 1]; if (a[j + 1] > b[3]) b[3] = a[j + 1];
+                        }
+                    }
+                    if (b[0] <= b[2]) boxes.push(b);
+                });
+                if (!boxes.length) return;
+                /* délky polygonů jsou "rozbalené" (mohou být mimo ±180): střed každého boxu srovnat do [-180,180) a vybrat
+                   kratší z obou obálek (západní boxy posunuté o +360 = přes datovou hranici) */
+                var nb = [], q;
+                for (q = 0; q < boxes.length; q++) {
+                    var bq = boxes[q], cq = (bq[0] + bq[2]) / 2, sq = Math.floor((cq + 180) / 360) * 360;
+                    nb.push([bq[0] - sq, bq[1], bq[2] - sq, bq[3]]);
+                }
+                var pack = function (shiftWest) {
+                    var r = [Infinity, Infinity, -Infinity, -Infinity];
+                    for (var m = 0; m < nb.length; m++) {
+                        var x0 = nb[m][0], x1 = nb[m][2];
+                        if (shiftWest && (x0 + x1) / 2 < 0) { x0 += 360; x1 += 360; }
+                        if (x0 < r[0]) r[0] = x0; if (x1 > r[2]) r[2] = x1;
+                        if (nb[m][1] < r[1]) r[1] = nb[m][1]; if (nb[m][3] > r[3]) r[3] = nb[m][3];
+                    }
+                    return r;
+                };
+                var u1 = pack(false), u2 = pack(true), u = ((u2[2] - u2[0]) < (u1[2] - u1[0])) ? u2 : u1;
+                if ((u[0] + u[2]) / 2 >= 180) { u[0] -= 360; u[2] -= 360; }
+                map.fitBounds([[u[1], u[0]], [u[3], u[2]]], { padding: [40, 40], maxZoom: 11 });
+            } catch(e) { AppLog.soft("statsCountryZoom", e); }
+        }
         function statsChartGeoSvg(d) {
             try {
                 var locs = (d && d.locs) ? d.locs : null;
@@ -12742,7 +12792,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
             if (laIn && document.activeElement !== laIn) laIn.value = ref[0].toFixed(6);
             if (loIn && document.activeElement !== loIn) loIn.value = ref[1].toFixed(6);
 
-statsFocusList = [];
+statsFocusList = []; statsCountryZoomList = [];
             statsPairList = [];
             statsPointList = [];
             statsCircleList = [];
@@ -14857,7 +14907,8 @@ window.statsChartSave = statsChartSave;
                             };
                             for (var ci = 0; ci < cKeys.length; ci++) {
                                 var cD = cBy[cKeys[ci]];
-                                H += "<tr><td class=\"num\">" + (ci + 1) + "</td><td>" + escapeHtml(cD.name) + statsContDotsHtml(cD.cont, { key: cKeys[ci], name: cD.name }) + "</td>"
+                                var czIdx = statsCountryZoomList.push({ key: cKeys[ci], cont: cD.cont }) - 1;
+                                H += "<tr><td class=\"num\">" + (ci + 1) + "</td><td><span class=\"st-ctry\" onclick=\"statsCountryZoom(" + czIdx + ")\" title=\"" + escapeHtml(L_("statsCountryZoomTip", "Zobrazit stát na mapě")) + "\">" + escapeHtml(cD.name) + "</span>" + statsContDotsHtml(cD.cont, { key: cKeys[ci], name: cD.name }) + "</td>"
                                     + cDateCell(cD.old, cD.oldP) + cDateCell(cD.new, cD.newP)
                                     + "<td class=\"num\">" + statsTableLinkHtml("c", cKeys[ci], cD.name, nmb(cD.n), tShowC) + "</td></tr>";
                             }
@@ -33402,9 +33453,40 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
             }
             return sum * R2 / 2;
         }
-        /* Oficiální rozlohy malých států (do 500 km²) z internetových zdrojů (Wikipedia/WorldAtlas
-           aj.) – nepřesnost polygonů by jinak mohla prohodit podobně velké státy v pořadí. */
-        var OFFICIAL_AREA_KM2 = { VAT: 0.44, MCO: 2.02, NRU: 21, TUV: 26, SMR: 61, LIE: 160, MHL: 181, KNA: 261, MDV: 298, MLT: 316, GRD: 344, VCT: 389, BRB: 430, ATG: 442, SYC: 452, PLW: 459, AND: 468 };
+        /* Oficiální celkové rozlohy (km²) všech 196 států + Antarktidy – zdroj: Wikipedia, „List of countries and dependencies by area“
+           (celková plocha vč. vnitrozemských vod; údaje národních statistických úřadů / CIA World Factbook), stav 10/2026.
+           Plocha skupiny = stát + závislá území, která aplikace do státu sloučí (groupKey):
+           FRA vč. Nové Kaledonie, Polynésie, TAAF, Wallisu a Futuny, Saint-Pierre, Saint-Martinu, Saint-Barthélemy a Clippertonu (bez Adéliiny země);
+           GBR vč. korunních závislých území a zámořských území (bez Britského antarktického území); USA vč. Portorika, Guamu, Panenských o. aj.;
+           DNK = Království Dánsko (Grónsko, Faerské o.); NLD = Nizozemské království; NOR vč. Svalbardu, Jan Mayenu a Bouvetu; AUS a NZL vč. externích území (bez antarktických nároků);
+           ISR vč. Palestiny; MAR vč. Západní Sahary; SRB bez Kosova (CIA 77 474). Pro neuvedené (sporná území) platí rozloha z polygonů. */
+        var OFFICIAL_AREA_KM2 = {
+            RUS: 1.70982e+07, ATA: 1.42e+07, CAN: 9.98467e+06, CHN: 9.59696e+06, USA: 9.53574e+06, BRA: 8.51035e+06, AUS: 7.74182e+06, IND: 3.28726e+06,
+            ARG: 2.7804e+06, KAZ: 2.72491e+06, DZA: 2.38174e+06, COD: 2.34486e+06, DNK: 2.21057e+06, SAU: 2.14969e+06, MEX: 1.96438e+06, IDN: 1.90457e+06,
+            SDN: 1.878e+06, LBY: 1.75954e+06, IRN: 1.6482e+06, MNG: 1.56412e+06, PER: 1.28522e+06, TCD: 1.284e+06, NER: 1.267e+06, AGO: 1.2467e+06,
+            MLI: 1.24019e+06, ZAF: 1.21909e+06, COL: 1.13891e+06, ETH: 1.1043e+06, BOL: 1.09858e+06, MRT: 1.0307e+06, EGY: 1.00145e+06, TZA: 947303,
+            NGA: 923768, VEN: 912050, PAK: 882363, NAM: 824292, MOZ: 799380, TUR: 783562, CHL: 756102, ZMB: 752612,
+            MAR: 712550, MMR: 676578, FRA: 674755, AFG: 652864, SSD: 644329, SOM: 637657, CAF: 622984, UKR: 603550,
+            MDG: 587041, BWA: 582000, KEN: 580367, THA: 513120, ESP: 505370, TKM: 488100, CMR: 475650, PNG: 462840,
+            YEM: 455503, SWE: 450295, UZB: 447400, IRQ: 438317, PRY: 406752, ZWE: 390757, NOR: 386273, JPN: 377915,
+            DEU: 357581, COG: 342000, FIN: 338145, VNM: 331340, MYS: 330621, CIV: 322462, POL: 312685, OMN: 309500,
+            ITA: 302068, PHL: 300000, ECU: 283561, BFA: 274200, NZL: 269334, GAB: 267668, GBR: 263591, GIN: 245857,
+            UGA: 241550, GHA: 238537, ROU: 238398, LAO: 236800, GUY: 214969, BLR: 207600, KGZ: 199949, SEN: 196712,
+            SYR: 185180, KHM: 181035, URY: 176215, SUR: 163820, TUN: 163610, BGD: 148460, NPL: 147181, TJK: 144100,
+            GRC: 131957, NIC: 130373, PRK: 120538, MWI: 118484, ERI: 117600, BEN: 114763, HND: 112492, LBR: 111369,
+            BGR: 110879, CUB: 109884, GTM: 108889, ISL: 103000, KOR: 100432, HUN: 93025, PRT: 92090, JOR: 89318,
+            AZE: 86600, AUT: 83878, ARE: 83600, CZE: 78871, SRB: 77474, PAN: 75320, SLE: 72300, IRL: 70273,
+            GEO: 69700, LKA: 67240, LTU: 65286, LVA: 64594, TGO: 56785, HRV: 56594, BIH: 51209, CRI: 51180,
+            SVK: 49035, DOM: 48670, EST: 45339, NLD: 42201, CHE: 41291, BTN: 38394, GNB: 36125, TWN: 35980,
+            MDA: 33847, BEL: 30528, LSO: 30355, ARM: 29743, SLB: 28896, ALB: 28748, GNQ: 28051, ISR: 27957,
+            BDI: 27834, HTI: 27750, RWA: 26338, MKD: 25713, DJI: 23200, BLZ: 22965, SLV: 21041, SVN: 20273,
+            FJI: 18272, KWT: 17818, SWZ: 17363, TLS: 14874, MNE: 13888, BHS: 13880, VUT: 12189, QAT: 11586,
+            GMB: 11295, JAM: 10991, XKX: 10887, LBN: 10452, CYP: 9251, BRN: 5765, TTO: 5127, CPV: 4033,
+            WSM: 2842, LUX: 2586, MUS: 2096, COM: 1861, STP: 964, KIR: 811, BHR: 778, DMA: 750,
+            TON: 747, SGP: 745, FSM: 702, LCA: 616, AND: 468, PLW: 459, SYC: 457, ATG: 442,
+            BRB: 431, VCT: 389, GRD: 345, MLT: 315, MDV: 300, KNA: 261, MHL: 181, LIE: 160,
+            SMR: 61, TUV: 26, NRU: 21, MCO: 2, VAT: 0.44
+        };
         /* Rozlohy skupin (km²) – součet přes polygony dle groupKey; u malých států oficiální hodnoty. */
         var areasCache = null;
         function areas() {
@@ -33424,6 +33506,17 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
             }
             areasCache = A;
             return A;
+        }
+
+        /* Prstence všech polygonů skupiny (groupKey): cb(rings, res) – pro výpočet obálek (zoom na stát). */
+        function eachGroupPoly(key, cb) {
+            if (!init()) return;
+            for (var i = 0; i < polys.length; i++) {
+                var P = polys[i];
+                if (P.coarse) continue;
+                var res = result(P.name, "inside", 0);
+                if (groupKey(res, false) === key) cb(P.rings, res);
+            }
         }
 
         function lookup(lat, lon) {
@@ -33535,7 +33628,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
             return Object.keys(META.states).map(function (k) { return { iso3: k, name: META.states[k][0], nameEn: META.states[k][1] }; });
         }
 
-        return { lookup: lookup, nearest: nearest, groupKey: groupKey, states: states, areas: areas, COAST_KM: COAST_KM, _meta: META };
+        return { lookup: lookup, nearest: nearest, groupKey: groupKey, eachGroupPoly: eachGroupPoly, states: states, areas: areas, COAST_KM: COAST_KM, _meta: META };
     })();
     </script>
 
