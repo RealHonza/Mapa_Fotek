@@ -2581,7 +2581,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.68</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.69</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -2605,7 +2605,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeSettingsModal()" id="btnSettingsClose" aria-label="Zavřít nastavení"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><span class="ihm-g"><button type="button" id="btnHeadInfoS" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="closeSettingsModal();gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersionS" title="Verze aplikace"><span id="valVersionLblS">verze</span> 3.68</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdatedS" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthorS" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><span class="ihm-g"><button type="button" id="btnHeadInfoS" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="closeSettingsModal();gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersionS" title="Verze aplikace"><span id="valVersionLblS">verze</span> 3.69</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdatedS" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthorS" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header" style="margin-bottom:12px;">
                 <span class="guide-search-wrap"><input class="guide-search" id="settingsSearch" type="text" placeholder="Hledat v nastavení…" aria-label="Hledat v nastavení…" title="Hledat v nastavení…" oninput="filterSettingsSteps(this.value);document.getElementById('settingsClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'settingsStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterSettingsSteps('');document.getElementById('settingsClear').style.display='none';}"><span class="guide-count" id="settingsCount" aria-live="polite"></span></span>
@@ -6395,6 +6395,18 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         /* Tab ve vyhledávání Návodu/Nastavení skáče po zvýrazněných výsledcích (zelené mark.guide-hi).
            Znaky nejsou běžné zarážky Tabu (tabindex -1), navigace funguje jen z vyhledávacího pole:
            Tab = první / další výsledek, Shift+Tab = předchozí / zpět do pole, po posledním zpět do pole. */
+        /* Hledání bez diakritiky a velikosti písmen (Návod / Nastavení). Každý znak se převede právě na jeden znak,
+           takže pozice ve složeném řetězci odpovídají pozicím v původním textu (potřeba pro zvýraznění). */
+        function mfFoldSearch(s) {
+            s = String(s === null || s === undefined ? "" : s);
+            var out = "";
+            for (var i = 0; i < s.length; i++) {
+                var c = s.charAt(i), f = c;
+                try { f = c.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); } catch(e) { f = c.toLowerCase(); }
+                out += (f.length === 1) ? f : (c.toLowerCase().length === 1 ? c.toLowerCase() : c);
+            }
+            return out;
+        }
         function mfSearchMarks(list) {
             try {
                 var all = (list || document).querySelectorAll("mark.guide-hi");
@@ -6514,22 +6526,22 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             /* Mezery v dotazu se respektuji: "a " najde jen "a" s mezerou, " b" mezeru před "b".
                Trim se použije jen pro test prázdného dotazu, ne pro samotné hledání. */
             var query = (q || "");
-            var ql = (query.trim() ? query : "").toLowerCase();
+            var ql = mfFoldSearch(query.trim() ? query : "");
             steps.forEach(function(li) {
                 if (li.dataset.orig === undefined) li.dataset.orig = li.innerHTML;
                 else li.innerHTML = li.dataset.orig;
                 if (!ql) { li.style.display = ""; return; }
-                var text = li.textContent.toLowerCase();
+                var text = mfFoldSearch(li.textContent);
                 if (text.indexOf(ql) === -1) { li.style.display = "none"; return; }
                 li.style.display = "";
                 var walker = document.createTreeWalker(li, NodeFilter.SHOW_TEXT, null);
                 var nodes = [];
                 while (walker.nextNode()) nodes.push(walker.currentNode);
                 nodes.forEach(function(nd) {
-                    var pos = nd.nodeValue.toLowerCase().indexOf(ql);
+                    var pos = mfFoldSearch(nd.nodeValue).indexOf(ql);
                     if (pos === -1 || !nd.parentNode) return;
                     var frag = document.createDocumentFragment();
-                    var rest = nd.nodeValue, low = rest.toLowerCase(), at = 0, idx;
+                    var rest = nd.nodeValue, low = mfFoldSearch(rest), at = 0, idx;
                     while ((idx = low.indexOf(ql, at)) !== -1) {
                         frag.appendChild(document.createTextNode(rest.slice(at, idx)));
                         var mk = document.createElement("mark");
@@ -11036,8 +11048,56 @@ function fmtStatsCoordShort(la, lo) {
                 }
                 return;
             }
+            if (ev.key === "Tab" && !ev.isComposing && !ev.defaultPrevented && String(el.value || "").trim()) {
+                var _mk = mfSearchMarks(statsFolderSearchRoot());
+                if (_mk.length) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    mfSearchFocusMark(ev.shiftKey ? _mk[_mk.length - 1] : _mk[0]);
+                    return;
+                }
+            }
             ev.stopPropagation();
         }
+        /* Kořen Tabulky 2: rozbalené okno (pokud obsahuje hledací pole), jinak sekce ve statistice. */
+        function statsFolderSearchRoot() {
+            var ov = document.getElementById("stTableOverlay");
+            if (ov && ov.querySelector(".st-folder-search-inp")) return ov;
+            return document.querySelector('#statsBody [data-sttbl="folder"]');
+        }
+        /* Odznáček: při fokusu na shodě "2/5", jinak celkový počet ("5 složek"). */
+        function statsFolderBadgeRefresh(active) {
+            try {
+                var root = statsFolderSearchRoot(); if (!root) return;
+                var badge = root.querySelector(".guide-count"); if (!badge) return;
+                var marks = mfSearchMarks(root), idx = active ? marks.indexOf(active) : -1;
+                badge.textContent = (idx >= 0) ? ((idx + 1) + "/" + marks.length) : (badge.getAttribute("data-t") || badge.textContent);
+            } catch(e) { AppLog.soft("statsFolderBadgeRefresh", e); }
+        }
+        /* Tab / Shift+Tab mezi zvýrazněnými složkami (analogicky k Návodu a Nastavení); z poslední shody zpět do pole. */
+        document.addEventListener("keydown", function(ev) {
+            try {
+                var t = ev.target;
+                if (!t || t.tagName !== "MARK" || !t.classList.contains("guide-hi") || ev.key !== "Tab" || ev.isComposing) return;
+                var root = statsFolderSearchRoot();
+                if (!root || !root.contains(t) || !t.closest(".st-folder-table")) return;
+                var marks = mfSearchMarks(root), idx = marks.indexOf(t);
+                if (idx === -1) return;
+                ev.preventDefault();
+                ev.stopPropagation();
+                var inp = root.querySelector(".st-folder-search-inp");
+                if (ev.shiftKey) { if (idx === 0) { if (inp) inp.focus(); } else mfSearchFocusMark(marks[idx - 1]); }
+                else { if (idx === marks.length - 1) { if (inp) inp.focus(); } else mfSearchFocusMark(marks[idx + 1]); }
+            } catch(e) { AppLog.soft("statsFolderSearchTabNav", e); }
+        }, true);
+        document.addEventListener("focusin", function(ev) {
+            try {
+                var t = ev.target;
+                if (!t || !t.classList) return;
+                if (t.tagName === "MARK" && t.classList.contains("guide-hi") && t.closest && t.closest(".st-folder-table")) statsFolderBadgeRefresh(t);
+                else if (t.classList.contains("st-folder-search-inp")) statsFolderBadgeRefresh(null);
+            } catch(e) { AppLog.soft("statsFolderSearchFocusin", e); }
+        });
         function statsFolderSearchInput(val, immediate) {
             if (_statsFolderSearchTimer) { clearTimeout(_statsFolderSearchTimer); _statsFolderSearchTimer = null; }
             var run = function() {
@@ -11221,6 +11281,9 @@ function stBar(label, value, max, text, pctText, chkHtml) {
         function statsAsyncWorkerCode() {
             var need = ["calcDistKm", "calcDistKmLL", "statsCrossLL", "statsHull", "statsFarthestPair", "statsDensest", "statsDensestRanked", "statsMostVisited", "statsMostVisitedRanked", "statsTopPlaces", "statsTopGreedy", "statsClusterValid", "statsClusterMembers", "statsDayNoOf", "statsTimeKey", "statsDayNo"];
             var parts = [];
+            // Worker ma vlastni globalni kontext: AppLog (a pocitadlo _statsTopIters) tam neexistuji, ale serializovane funkce je v catch blocich volaji.
+            parts.push("var AppLog={soft:function(){},warn:function(){},error:function(){}};");
+            parts.push("var _statsTopIters=0;");
             for (var i = 0; i < need.length; i++) {
                 var fn = null;
                 try { fn = window[need[i]]; } catch(e) { fn = null; }
@@ -13064,13 +13127,14 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 var tColAll = L_("statsCollapseAll", "Sbalit vše");
                 var tShowF = L_("statsTableShowPhotos", "Zobrazit fotky v prohlížečce");
                 /* --- folder search filter --- */
-                var folderVisiblePaths = null, folderAncestorPaths = null, _sfQL = null;
+                var folderVisiblePaths = null, folderAncestorPaths = null, _sfQL = null, _sfSeen = null, _sfCount = 0;
                 if (statsFolderSearch && String(statsFolderSearch).trim()) {
                     _sfQL = normDiacFolderSearch(statsFolderSearch);
-                    folderVisiblePaths = {}; folderAncestorPaths = {};
+                    folderVisiblePaths = {}; folderAncestorPaths = {}; _sfSeen = {};
                     var _fSearchPath = function(nd) { return nd.isDirect ? nd.parentFull : nd.full; };
                     var _fCheckMatch = function(nd) {
                         var selfMatches = normDiacFolderSearch(_fSearchPath(nd) || "").indexOf(_sfQL) >= 0;
+                        if (selfMatches) _sfSeen[_fSearchPath(nd)] = true; /* řádek složky a její "přímo" řádek sdílejí cestu: počítá se jednou */
                         var kidMatches = false;
                         var sk = nd.kids || [];
                         for (var _ki = 0; _ki < sk.length; _ki++) { if (_fCheckMatch(sk[_ki])) kidMatches = true; }
@@ -13083,6 +13147,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     };
                     if (noFNode) _fCheckMatch(noFNode);
                     for (var _sfRi = 0; _sfRi < fRoots.length; _sfRi++) _fCheckMatch(fRoots[_sfRi]);
+                    _sfCount = Object.keys(_sfSeen).length;
                 }
                 var highlightFolderText = function(rawText, ql) {
                     if (!ql || !rawText) return escapeHtml(rawText || "");
@@ -13099,7 +13164,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                         if (idx < 0) return escapeHtml(rawText);
                         var rawStart = rawPositions[idx];
                         var rawEnd = (idx + ql.length - 1 < rawPositions.length) ? rawPositions[idx + ql.length - 1] + 1 : rawText.length;
-                        return escapeHtml(rawText.slice(0, rawStart)) + "<mark class=\"guide-hi\">" + escapeHtml(rawText.slice(rawStart, rawEnd)) + "</mark>" + escapeHtml(rawText.slice(rawEnd));
+                        return escapeHtml(rawText.slice(0, rawStart)) + "<mark class=\"guide-hi\" tabindex=\"-1\">" + escapeHtml(rawText.slice(rawStart, rawEnd)) + "</mark>" + escapeHtml(rawText.slice(rawEnd));
                     } catch(e) { return escapeHtml(rawText || ""); }
                 };
                 /* --- end folder search filter --- */
@@ -13142,10 +13207,16 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 };
                 var _sfPlaceholder = currentLang === "cs" ? "Hledat\u2026" : "Search\u2026";
                 var _sfBtnTitle = currentLang === "cs" ? "Vymazat hledání" : "Clear search";
+                var _sfBadge = "";
+                if (_sfQL !== null) {
+                    var _sfCs = (currentLang === "cs");
+                    var _sfWord = _sfCs ? (_sfCount === 1 ? "složka" : ((_sfCount >= 2 && _sfCount <= 4) ? "složky" : "složek")) : (_sfCount === 1 ? "folder" : "folders");
+                    _sfBadge = "<span class=\"guide-count" + (_sfCount === 0 ? " none" : "") + "\" data-t=\"" + _sfCount + " " + _sfWord + "\" style=\"display:inline-block;\">" + _sfCount + " " + _sfWord + "</span>";
+                }
                 H += "<div class=\"st-sec-box\" data-sttbl=\"folder\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;\">" +
                     "<span title=\"" + L_("statsSecFolderTable", "Tabulka 2 (složková)") + "\" style=\"white-space:nowrap;flex-shrink:0;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\"/></svg>" + L_("statsSecFolderTableShort", "Tabulka 2") + "</span>" +
                     "<span style=\"display:inline-flex;align-items:center;gap:6px;flex:1 1 150px;min-width:0;max-width:230px;\">" +
-                    "<input type=\"text\" class=\"guide-search st-folder-search-inp\" value=\"" + escapeHtml(statsFolderSearch) + "\" placeholder=\"" + escapeHtml(_sfPlaceholder) + "\" oninput=\"event.stopPropagation();statsFolderSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"statsFolderSearchKey(event,this)\" style=\"flex:1 1 auto;min-width:60px;margin:0;\" />" +
+                    "<span class=\"guide-search-wrap\" style=\"flex:1 1 auto;min-width:90px;\">" + "<input type=\"text\" class=\"guide-search st-folder-search-inp" + (_sfBadge ? " has-count" : "") + "\" value=\"" + escapeHtml(statsFolderSearch) + "\" placeholder=\"" + escapeHtml(_sfPlaceholder) + "\" oninput=\"event.stopPropagation();statsFolderSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"statsFolderSearchKey(event,this)\" style=\"flex:1 1 auto;min-width:60px;margin:0;" + (_sfBadge ? "padding-right:76px;" : "") + "\" />" + _sfBadge + "</span>" +
                     "<button type=\"button\" class=\"guide-clear st-folder-search-clr\" onclick=\"event.stopPropagation();statsFolderSearchClear()\" title=\"" + escapeHtml(_sfBtnTitle) + "\" aria-label=\"" + escapeHtml(_sfBtnTitle) + "\" style=\"display:" + (statsFolderSearch ? "inline-flex" : "none") + ";\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></span>" +
                     "<span style=\"display:inline-flex;gap:4px;flex-shrink:0;margin-left:auto;\">" +
                     "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(true);\" title=\"" + tExpAll + "\" aria-label=\"" + tExpAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button>" +
@@ -14449,7 +14520,7 @@ H += "</div></div>";
             /* Mezery v dotazu se respektuji: "a " najde jen "a" s mezerou, " b" mezeru před "b".
                Trim se použije jen pro test prázdného dotazu, ne pro samotné hledání. */
             var query = (q || "");
-            var ql = (query.trim() ? query : "").toLowerCase();
+            var ql = mfFoldSearch(query.trim() ? query : "");
 
             steps.forEach(function(li) {
                 if (li.dataset.orig === undefined) {
@@ -14461,7 +14532,7 @@ H += "</div></div>";
                     li.style.display = "";
                     return;
                 }
-                var text = li.textContent.toLowerCase();
+                var text = mfFoldSearch(li.textContent);
                 if (text.indexOf(ql) === -1) {
                     li.style.display = "none";
                     return;
@@ -14480,10 +14551,10 @@ H += "</div></div>";
                     }
                 }
                 nodes.forEach(function(nd) {
-                    var pos = nd.nodeValue.toLowerCase().indexOf(ql);
+                    var pos = mfFoldSearch(nd.nodeValue).indexOf(ql);
                     if (pos === -1 || !nd.parentNode) return;
                     var frag = document.createDocumentFragment();
-                    var rest = nd.nodeValue, low = rest.toLowerCase(), at = 0, idx;
+                    var rest = nd.nodeValue, low = mfFoldSearch(rest), at = 0, idx;
                     while ((idx = low.indexOf(ql, at)) !== -1) {
                         frag.appendChild(document.createTextNode(rest.slice(at, idx)));
                         var mk = document.createElement("mark");
