@@ -516,7 +516,7 @@
         .info-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e8eaed; }
         #statsModalBackdrop .stats-sticky-top { position: sticky; top: -22px; z-index: 5; margin: -22px -24px 12px; padding: 22px 24px 10px; background: #ffffff; border-bottom: 1px solid #e8eaed; }
         #infoModalBackdrop .info-modal-header { position: sticky; top: -22px; z-index: 5; margin: -22px -24px 8px; padding: 22px 24px 10px; background: #ffffff; --ihd-pt: 22px; }
-        #settingsModalBackdrop .info-modal-header { position: sticky; top: -22px; z-index: 5; margin: -22px -24px 14px; padding: 22px 24px 10px; background: #ffffff; }
+        #settingsModalBackdrop .info-modal-header { position: sticky; top: -22px; z-index: 5; margin: -22px -24px 8px; padding: 22px 24px 10px; background: #ffffff; }
         .info-modal-title { font-size: 18px; font-weight: 700; color: #202124; display: flex; align-items: center; gap: 12px; margin: 0; }
         /* Nadpis okna Informace: velka pismena ve zelene barve loga (fill #1e8544). */
         .info-modal-title .ttl-upper { text-transform: uppercase; color: var(--green-logo); letter-spacing: 0.5px; font-size: 20px; word-spacing: 4px; }
@@ -528,7 +528,10 @@
         #infoModalBackdrop .info-head-center { position: static; flex: 1 1 0; min-width: 0; align-self: flex-start; margin: 10.5px -14px 0 -48px; pointer-events: none; height: 72px; transform: none; display: flex; align-items: center; justify-content: center; white-space: nowrap; }
         #infoModalBackdrop .info-head-center .ttl-upper { display: flex; align-items: center; padding-top: 2px; }
         /* Druhý řádek (i • verze • datum • autor): mimo lepivou hlavičku, je první řádek rolovaného obsahu a při scrollování odjede. */
-        #infoModalBackdrop .info-meta-row { display: flex; justify-content: center; margin: -2px 0 12px; }
+        /* Řádek i • verze • datum • autor: VIDITELNÝ text je 10 px od spodní čáry záhlaví a 10 px od horního okraje hledacího pole (Informace i Nastavení).
+           Nahoře: okraj -2 px (sčítá se s 8 px pod záhlavím) + padding-top; dole: okraj + padding-top lišty s polem (6 px). Hodnoty ověřené měřením skutečných pixelů písmen. */
+        #infoModalBackdrop .info-meta-row, #settingsModalBackdrop .info-meta-row { display: flex; justify-content: center; margin: -2px 0 0.3px; padding-top: 3px; }
+        #infoModalBackdrop .info-meta-row + .guide-header { margin-top: 0; }
         #infoModalBackdrop .modal-close-btn { align-self: flex-start; flex-shrink: 0; }
         .info-head-meta { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px 8px; font-size: 11.5px; font-weight: 400; line-height: 1.3; color: #000; letter-spacing: 0; word-spacing: 0; text-transform: none; }
         .info-head-meta .ihm-g { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
@@ -539,7 +542,7 @@
         /* Tlačítko „i“ v řádku s verzí: vzhledově stejné jako ostatní položky (verze, datum, autor). */
         .info-head-meta .ihm-i { border: 0; background: none; padding: 0; margin: 0 1px 0 0; font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 400; font-size: 1.1em; line-height: inherit; color: inherit; letter-spacing: 0; cursor: pointer; }
         .info-head-meta .ihm-i:hover { color: var(--green); }
-        @media (max-width: 600px) { .info-head-meta { font-size: 10.5px; gap: 2px 5px; } .info-head-meta .ihm-g { gap: 5px; } }
+        @media (max-width: 600px) { .info-head-meta { font-size: 10.5px; gap: 2px 5px; } .info-head-meta .ihm-g { gap: 5px; } #infoModalBackdrop .info-meta-row, #settingsModalBackdrop .info-meta-row { padding-top: 4px; margin-bottom: -0.75px; } }
         .modal-close-btn { border: none; background: transparent; font-size: 22px; color: #5f6368; cursor: pointer; line-height: 1; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
         .modal-close-btn:hover { background: #f1f3f4; color: #202124; }
         .info-modal-logo-btn { cursor: zoom-in; transition: transform 0.15s ease, filter 0.15s ease; border-radius: 6px; }
@@ -834,7 +837,7 @@
             .info-modal { padding: 16px 14px; }
             #statsModalBackdrop .stats-sticky-top { top: -16px; margin: -16px -14px 10px; padding: 16px 14px 8px; }
             #infoModalBackdrop .info-modal-header { top: -16px; margin: -16px -14px 8px; padding: 16px 14px 10px; --ihd-pt: 16px; }
-            #settingsModalBackdrop .info-modal-header { top: -16px; margin: -16px -14px 14px; padding: 16px 14px 10px; }
+            #settingsModalBackdrop .info-modal-header { top: -16px; margin: -16px -14px 8px; padding: 16px 14px 10px; }
             .guide-header { flex-wrap: wrap; row-gap: 8px; }
             .guide-search { flex: 1 1 0; min-width: 0; max-width: none; margin-left: 0; }
             .info-modal .slider-input-group { flex-wrap: wrap; gap: 4px; }
@@ -1104,7 +1107,7 @@
             }
             #statsModalBackdrop .stats-sticky-top { top: -16px; margin: -16px -14px 10px; padding: 16px 14px 8px; }
             #infoModalBackdrop .info-modal-header { top: -16px; margin: -16px -14px 8px; padding: 16px 14px 10px; --ihd-pt: 16px; }
-            #settingsModalBackdrop .info-modal-header { top: -16px; margin: -16px -14px 14px; padding: 16px 14px 10px; }
+            #settingsModalBackdrop .info-modal-header { top: -16px; margin: -16px -14px 8px; padding: 16px 14px 10px; }
         }
 
         /* Střední mobily (541–540px): zmenšit filtry aby nepřetékaly */
@@ -2507,7 +2510,7 @@
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.66</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.67</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -2531,6 +2534,8 @@
                 </h2>
                 <button class="modal-close-btn" onclick="closeSettingsModal()" id="btnSettingsClose" aria-label="Zavřít nastavení"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
+            <div class="info-meta-row"><span class="info-head-meta"><span class="ihm-g"><button type="button" id="btnHeadInfoS" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="closeSettingsModal();gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersionS" title="Verze aplikace"><span id="valVersionLblS">verze</span> 3.67</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdatedS" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthorS" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+
             <div class="guide-header" style="margin-bottom:12px;">
                 <span class="guide-search-wrap"><input class="guide-search" id="settingsSearch" type="text" placeholder="Hledat v nastavení…" aria-label="Hledat v nastavení…" title="Hledat v nastavení…" oninput="filterSettingsSteps(this.value);document.getElementById('settingsClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'settingsStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterSettingsSteps('');document.getElementById('settingsClear').style.display='none';}"><span class="guide-count" id="settingsCount" aria-live="polite"></span></span>
                 <button class="guide-clear" id="settingsClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('settingsSearch');el.value='';filterSettingsSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="settingsExpandBtn" onclick="settingsExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="settingsCollapseBtn" onclick="settingsExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button>
@@ -6760,6 +6765,16 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             setTi("btnHeadInfo", t.tipHeadInfo);
             try{ var _hb=document.getElementById("btnHeadInfo"); if(_hb) _hb.setAttribute("aria-label", t.tipHeadInfo); }catch(e){}
             try{ var _lm=new Date(document.lastModified); if(!isNaN(_lm)){ var _cs=_lm.toLocaleDateString('cs-CZ'); var _en=_lm.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); if(_cs) i18n.cs.valUpdated=_cs; if(_en) i18n.en.valUpdated=_en; document.getElementById("valUpdated").textContent=currentLang==='cs'?_cs:_en; } else { document.getElementById("valUpdated").textContent=t.valUpdated; } }catch(e){ document.getElementById("valUpdated").textContent=t.valUpdated; }
+            /* Řádek i • verze • datum • autor v okně Nastavení: stejné hodnoty jako v Informacích */
+            try {
+                setTi("valVersionS", t.tipVersion); setH("valVersionLblS", t.verLabel);
+                setTi("valAuthorS", t.tipAuthor); setTi("valUpdatedS", t.tipUpdated); setTi("btnHeadInfoS", t.tipHeadInfo);
+                var _hbS = document.getElementById("btnHeadInfoS"); if (_hbS) _hbS.setAttribute("aria-label", t.tipHeadInfo);
+                var _viI = document.getElementById("valVersion"), _viS = document.getElementById("valVersionS");
+                if (_viI && _viS && _viI.lastChild && _viS.lastChild && _viI.lastChild.nodeType === 3 && _viS.lastChild.nodeType === 3) _viS.lastChild.nodeValue = _viI.lastChild.nodeValue;
+                var _vuI = document.getElementById("valUpdated"), _vuS = document.getElementById("valUpdatedS");
+                if (_vuI && _vuS) _vuS.textContent = _vuI.textContent;
+            } catch(eS) {}
             setH("txtGuideTitle", t.guideTitle);
             var guideSearchEl = document.getElementById("guideSearch");
             if (guideSearchEl && t.guideSearchPH) { guideSearchEl.placeholder = t.guideSearchPH; guideSearchEl.setAttribute("aria-label", t.guideSearchPH); guideSearchEl.title = t.guideSearchPH; }
