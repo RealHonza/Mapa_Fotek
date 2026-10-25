@@ -11299,6 +11299,145 @@ function fmtStatsCoordShort(la, lo) {
             } catch(e) { AppLog.soft("statsSortCountriesTable", e); }
             renderStats();
         }
+        /* --- Navštívené státy: hledání (analogicky k Tabulce 2) a export CSV --- */
+        var statsCountriesSearch = "";
+        var _statsCountriesSearchTimer = null;
+        /* Kořen hledání: zvětšená sekce (pokud obsahuje hledací pole), jinak sekce ve statistice. */
+        function statsCountriesSearchRoot() {
+            var ov = document.getElementById("stSectionOverlay");
+            if (ov && ov.querySelector(".st-ctry-search-inp")) return ov;
+            return document.querySelector('#statsBody [data-stsec="countries"]');
+        }
+        /* Zvýraznění shody (bez ohledu na diakritiku a velikost písmen); vrací { html, found }. */
+        function statsCtryHighlight(rawText, ql) {
+            rawText = String(rawText === null || rawText === undefined ? "" : rawText);
+            if (!ql || !rawText) return { html: escapeHtml(rawText), found: false };
+            try {
+                var normParts = [], rawPositions = [];
+                for (var i = 0; i < rawText.length; i++) {
+                    var nc = rawText[i].normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+                    for (var j = 0; j < nc.length; j++) rawPositions.push(i);
+                    normParts.push(nc);
+                }
+                var idx = normParts.join("").indexOf(ql);
+                if (idx < 0) return { html: escapeHtml(rawText), found: false };
+                var rs = rawPositions[idx];
+                var re = (idx + ql.length - 1 < rawPositions.length) ? rawPositions[idx + ql.length - 1] + 1 : rawText.length;
+                return { html: escapeHtml(rawText.slice(0, rs)) + "<mark class=\"guide-hi\" tabindex=\"-1\">" + escapeHtml(rawText.slice(rs, re)) + "</mark>" + escapeHtml(rawText.slice(re)), found: true };
+            } catch(e) { AppLog.soft("statsCtryHighlight", e); return { html: escapeHtml(rawText), found: false }; }
+        }
+        function statsCountriesSearchChange(el) {
+            try {
+                var cl = el.parentNode && el.parentNode.querySelector(".st-ctry-search-clr");
+                if (cl) cl.style.display = el.value ? "inline-flex" : "none";
+                statsCountriesSearchInput(el.value);
+            } catch(e) { AppLog.soft("statsCountriesSearchChange", e); }
+        }
+        function statsCountriesSearchClear() {
+            if (_statsCountriesSearchTimer) { clearTimeout(_statsCountriesSearchTimer); _statsCountriesSearchTimer = null; }
+            try {
+                var root = statsCountriesSearchRoot();
+                var inp = root ? root.querySelector(".st-ctry-search-inp") : null;
+                if (inp) {
+                    inp.value = "";
+                    var cl = inp.parentNode && inp.parentNode.querySelector(".st-ctry-search-clr");
+                    if (cl) cl.style.display = "none";
+                }
+            } catch(e) { AppLog.soft("statsCountriesSearchClear", e); }
+            statsCountriesSearchInput("", true);
+        }
+        function statsCountriesSearchKey(ev, el) {
+            if (ev.key === "Escape") {
+                if (el.value && !ev.isComposing) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    statsCountriesSearchClear();
+                }
+                return;
+            }
+            if (ev.key === "Tab" && !ev.isComposing && !ev.defaultPrevented && String(el.value || "").trim()) {
+                var mk = mfSearchMarks(statsCountriesSearchRoot());
+                if (mk.length) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    mfSearchFocusMark(ev.shiftKey ? mk[mk.length - 1] : mk[0]);
+                    return;
+                }
+            }
+            ev.stopPropagation();
+        }
+        /* Odznáček: při fokusu na shodě "2/3", jinak celkový počet ("3 státy"). */
+        function statsCountriesBadgeRefresh(active) {
+            try {
+                var root = statsCountriesSearchRoot(); if (!root) return;
+                var badge = root.querySelector(".guide-count"); if (!badge) return;
+                var marks = mfSearchMarks(root), idx = active ? marks.indexOf(active) : -1;
+                badge.textContent = (idx >= 0) ? ((idx + 1) + "/" + marks.length) : (badge.getAttribute("data-t") || badge.textContent);
+            } catch(e) { AppLog.soft("statsCountriesBadgeRefresh", e); }
+        }
+        /* Tab / Shift+Tab mezi zvýrazněnými státy; z poslední shody zpět do pole. */
+        document.addEventListener("keydown", function(ev) {
+            try {
+                var t = ev.target;
+                if (!t || t.tagName !== "MARK" || !t.classList.contains("guide-hi") || ev.key !== "Tab" || ev.isComposing) return;
+                var root = statsCountriesSearchRoot();
+                if (!root || !root.contains(t) || !t.closest(".st-ctry-table")) return;
+                var marks = mfSearchMarks(root), idx = marks.indexOf(t);
+                if (idx === -1) return;
+                ev.preventDefault();
+                ev.stopPropagation();
+                var inp = root.querySelector(".st-ctry-search-inp");
+                if (ev.shiftKey) { if (idx === 0) { if (inp) inp.focus(); } else mfSearchFocusMark(marks[idx - 1]); }
+                else { if (idx === marks.length - 1) { if (inp) inp.focus(); } else mfSearchFocusMark(marks[idx + 1]); }
+            } catch(e) { AppLog.soft("statsCountriesSearchTabNav", e); }
+        }, true);
+        document.addEventListener("focusin", function(ev) {
+            try {
+                var t = ev.target;
+                if (!t || !t.classList) return;
+                if (t.tagName === "MARK" && t.classList.contains("guide-hi") && t.closest && t.closest(".st-ctry-table")) statsCountriesBadgeRefresh(t);
+                else if (t.classList.contains("st-ctry-search-inp")) statsCountriesBadgeRefresh(null);
+            } catch(e) { AppLog.soft("statsCountriesFocusin", e); }
+        });
+        function statsCountriesSearchInput(val, immediate) {
+            if (_statsCountriesSearchTimer) { clearTimeout(_statsCountriesSearchTimer); _statsCountriesSearchTimer = null; }
+            var run = function() {
+                _statsCountriesSearchTimer = null;
+                var root0 = statsCountriesSearchRoot();
+                var inp = root0 ? root0.querySelector(".st-ctry-search-inp") : null;
+                var cursorPos = 0;
+                try { if (inp) cursorPos = inp.selectionStart || 0; } catch(e) { AppLog.soft("statsCountriesSearchInput>run", e); }
+                /* Mezery v dotazu se respektují (uloží se původní text), samotné mezery ale nefiltrují. */
+                statsCountriesSearch = (val || "");
+                renderStats();
+                try {
+                    var root1 = statsCountriesSearchRoot();
+                    var inp2 = root1 ? root1.querySelector(".st-ctry-search-inp") : null;
+                    if (inp2) { inp2.focus(); try { inp2.setSelectionRange(cursorPos, cursorPos); } catch(eR) { AppLog.soft("statsCountriesSearchInput>run", eR); } }
+                } catch(eFoc) { AppLog.soft("statsCountriesSearchInput>run", eFoc); }
+            };
+            if (immediate) run(); else _statsCountriesSearchTimer = setTimeout(run, 150);
+        }
+        // Export tabulky Navštívené státy do CSV (vždy všechny státy, bez ohledu na hledání – stejně jako Tabulka 2).
+        function exportStatsCountriesCsv() {
+            try {
+                var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {};
+                var d = (typeof window !== "undefined") ? window.statsCountriesData : null;
+                var cs = (typeof currentLang !== "undefined" && currentLang === "cs");
+                if (!d || !d.rows || !d.rows.length) { showToast(t.toastNoData || (cs ? "Žádná data k exportu" : "No data to export")); return; }
+                var head = [cs ? "Pořadí" : "No.", t.statsCountriesState || (cs ? "Stát" : "Country"), cs ? "Rozloha (km²)" : "Area (km²)", t.statsColFrom || (cs ? "Od" : "From"), t.statsColTo || (cs ? "Do" : "To"), t.statsCountriesCount || (cs ? "Fotek" : "Photos")];
+                var q = function(v) { v = String(v === null || v === undefined ? "" : v); return (v.indexOf(";") >= 0 || v.indexOf('"') >= 0 || v.indexOf("\n") >= 0 || v.indexOf("\r") >= 0) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+                var lines = [head.map(q).join(";\t")];
+                for (var i = 0; i < d.rows.length; i++) {
+                    var r = d.rows[i];
+                    lines.push([r.rank, q(r.name), (r.area ? String(r.area < 100 ? Math.round(r.area * 100) / 100 : Math.round(r.area)).replace(".", cs ? "," : ".") : ""), q(r.od), q(r.do), r.n].join(";\t"));
+                }
+                var totLbl = t.statsTotalLabel || (cs ? "CELKEM" : "TOTAL");
+                lines.push(["", q(totLbl + " (" + d.rows.length + ")"), "", "", "", d.totN].join(";\t"));
+                if (d.sea > 0) lines.push(["", q(t.statsCountriesNoState || (cs ? "Fotek bez přiřazeného státu (moře apod.)" : "Photos without a country (sea etc.)")), "", "", "", d.sea].join(";\t"));
+                downloadBlob(new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" }), stamp() + "_staty.csv");
+            } catch(e) { try { var _tE = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {}; showToast(_tE.toastExportErr || (currentLang === "cs" ? "Chyba při exportu" : "Export failed")); } catch(e2) { AppLog.soft("exportStatsCountriesCsv", e2); } AppLog.warn("exportStatsCountriesCsv", e); }
+        }
         var statsFolderSort = { key: "name", dir: 1 };
         var statsFolderExpanded = {};
         var statsFolderSearch = "";
@@ -11451,6 +11590,7 @@ function fmtStatsCoordShort(la, lo) {
         }
         function openStatsModal() {
             recordModalOpener();
+            try { statsCountriesSearch = ""; if (_statsCountriesSearchTimer) { clearTimeout(_statsCountriesSearchTimer); _statsCountriesSearchTimer = null; } } catch(eCS0) { AppLog.soft("openStatsModal", eCS0); }
             try { statsFolderSearch = ""; statsFolderSearchSaved = null; if (_statsFolderSearchTimer) { clearTimeout(_statsFolderSearchTimer); _statsFolderSearchTimer = null; } } catch(e) { AppLog.soft("openStatsModal", e); }
             try {
                 var m = document.querySelector("#statsModalBackdrop .info-modal");
@@ -12766,6 +12906,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
             var body = document.getElementById("statsBody");
             if (!body) return;
             try { window.statsTableData = null; } catch(eTD0b) { AppLog.soft("renderStats", eTD0b); }
+            try { window.statsCountriesData = null; } catch(eCD0) { AppLog.soft("renderStats", eCD0); }
             try { statsCloseDayGrid(false); } catch(eCG) { AppLog.soft("renderStats", eCG); }
             try { statsCloseTopSepMenu(false); } catch(eCTM) { AppLog.soft("renderStats", eCTM); }
             try { statsAsyncTerminateAll(); } catch(eA) { AppLog.soft("renderStats", eA); }
@@ -14839,6 +14980,7 @@ window.statsChartSave = statsChartSave;
                             }
                         } catch(eCC) { AppLog.soft("renderStats>cont", eCC); }
                         if (!cE.name) cE.name = (currentLang === "cs" ? (cRes && cRes.name) : (cRes && cRes.nameEn)) || cKey;
+                        if (!cE.nCs) { cE.nCs = (cRes && cRes.name) || ""; cE.nEn = (cRes && cRes.nameEn) || ""; }
                         if (cTk.length >= 4) {
                             if (!cE.old || cTk < cE.old) { cE.old = cTk; cE.oldP = locs[i].p; }
                             if (!cE.new || cTk > cE.new) { cE.new = cTk; cE.newP = locs[i].p; }
@@ -14867,7 +15009,38 @@ window.statsChartSave = statsChartSave;
                                 return r * sd;
                             });
                         }
-                                                H += "<div class=\"st-sec-box\" data-stsec=\"countries\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span title=\"" + L_("statsSecLocatedOnly", "Počítá se pouze z fotek s polohou.") + "\" style=\"white-space:nowrap;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"/></svg>" + L_("statsSecCountries", "Navštívené státy") + "</span>" + statsSecExpandBtnHtml('countries') + "</h3>";
+                                                /* hledání (Navštívené státy): shody se určí předem, ať je odznáček hned v záhlaví */
+                        var cQL = (statsCountriesSearch && String(statsCountriesSearch).trim()) ? normDiacFolderSearch(statsCountriesSearch) : null;
+                        var cShow = {}, cAltHtml = {}, cNameHtml = {}, cMarkCount = 0;
+                        if (cQL !== null) {
+                            for (var cmi = 0; cmi < cKeys.length; cmi++) {
+                                var cmE = cBy[cKeys[cmi]], cmCur = statsCtryHighlight(cmE.name, cQL);
+                                if (cmCur.found) { cShow[cKeys[cmi]] = true; cNameHtml[cKeys[cmi]] = cmCur.html; cMarkCount++; continue; }
+                                var cmAltName = (currentLang === "cs") ? cmE.nEn : cmE.nCs;
+                                var cmAlt = (cmAltName && cmAltName !== cmE.name) ? statsCtryHighlight(cmAltName, cQL) : null;
+                                if (cmAlt && cmAlt.found) { cShow[cKeys[cmi]] = true; cAltHtml[cKeys[cmi]] = cmAlt.html; cMarkCount++; }
+                            }
+                        }
+                        var cSearchHtml = "";
+                        if (cKeys.length) {
+                            var cPh = currentLang === "cs" ? "Hledat\u2026" : "Search\u2026";
+                            var cClrT = currentLang === "cs" ? "Vymazat hledání" : "Clear search";
+                            var cCsvT = currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)";
+                            var cBadge = "", cBadgeShow = false;
+                            if (cQL !== null) {
+                                cBadgeShow = (cMarkCount > 0 || cKeys.length > 0);
+                                var cWd = (currentLang === "cs") ? (cMarkCount === 1 ? "stát" : ((cMarkCount >= 2 && cMarkCount <= 4) ? "státy" : "států")) : (cMarkCount === 1 ? "country" : "countries");
+                                var cTx = escapeHtml(cMarkCount + " " + cWd);
+                                cBadge = "<span class=\"guide-count" + (cMarkCount === 0 ? " none" : "") + "\" data-t=\"" + cTx + "\" style=\"display:inline-block;\">" + cTx + "</span>";
+                            }
+                            cSearchHtml = "<span style=\"display:inline-flex;align-items:center;gap:6px;flex:1 1 150px;min-width:0;max-width:230px;\">"
+                                + "<span class=\"guide-search-wrap\" style=\"flex:1 1 auto;min-width:90px;\"><input type=\"text\" class=\"guide-search st-ctry-search-inp" + (cBadge ? " has-count" : "") + "\" value=\"" + escapeHtml(statsCountriesSearch) + "\" placeholder=\"" + escapeHtml(cPh) + "\" oninput=\"event.stopPropagation();statsCountriesSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"statsCountriesSearchKey(event,this)\" style=\"flex:1 1 auto;min-width:60px;margin:0;" + (cBadge ? "padding-right:76px;" : "") + "\" />" + cBadge + "</span>"
+                                + "<button type=\"button\" class=\"guide-clear st-ctry-search-clr\" onclick=\"event.stopPropagation();statsCountriesSearchClear()\" title=\"" + escapeHtml(cClrT) + "\" aria-label=\"" + escapeHtml(cClrT) + "\" style=\"display:" + (statsCountriesSearch ? "inline-flex" : "none") + ";\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></span>";
+                        }
+                        H += "<div class=\"st-sec-box\" data-stsec=\"countries\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;\"><span title=\"" + L_("statsSecLocatedOnly", "Počítá se pouze z fotek s polohou.") + "\" style=\"white-space:nowrap;flex-shrink:0;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"/></svg>" + L_("statsSecCountries", "Navštívené státy") + "</span>" + cSearchHtml
+                            + "<span style=\"display:inline-flex;gap:4px;flex-shrink:0;margin-left:auto;\">"
+                            + (cKeys.length ? "<button type=\"button\" class=\"st-chart-expand\" title=\"" + escapeHtml(cCsvT) + "\" aria-label=\"" + escapeHtml(cCsvT) + "\" onclick=\"event.stopPropagation();exportStatsCountriesCsv()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" : "")
+                            + statsSecExpandBtnHtml('countries') + "</span></h3>";
                         if (cKeys.length) {
                             var cTh = function(k, label, isNum, w) {
                                 var act = (statsCountriesSort.key === k);
@@ -14875,7 +15048,7 @@ window.statsChartSave = statsChartSave;
                                 var cls = (isNum ? "num " : "") + (act ? "active" : "");
                                 return "<th" + (w ? " style=\"width:" + w + "\"" : "") + (cls ? " class=\"" + cls.trim() + "\"" : "") + " onclick=\"statsSortCountriesTable('" + k + "')\" title=\"" + escapeHtml(label) + "\">" + label + "<span class=\"st-sort-ind\">" + ind + "</span></th>";
                             };
-                            H += "<div class=\"st-table-wrap\"><table class=\"st-table\"><thead><tr>";
+                            H += "<div class=\"st-table-wrap\"><table class=\"st-table st-ctry-table\"><thead><tr>";
                             H += "<th class=\"num\" style=\"cursor:default;width:6%;min-width:2.2em;\" title=\"" + escapeHtml(L_("statsCountriesOrdTip", "Pořadové číslo řádku")) + "\">#</th>";
                             /* hlavička 2. sloupce rozdělená napůl: „Stát“ = řazení dle abecedy, „Velikost“ = řazení dle rozlohy (data bez sloupce velikosti) */
                             var cHalf = function(k, label, tipKey, tipDef, withDiv) {
@@ -14905,13 +15078,19 @@ window.statsChartSave = statsChartSave;
                                 }
                                 return "<td class=\"num\"" + tip + ">" + txt + "</td>";
                             };
+                            var cCsvRows = [], cTotPh = 0;
                             for (var ci = 0; ci < cKeys.length; ci++) {
                                 var cD = cBy[cKeys[ci]];
+                                cTotPh += cD.n;
+                                try { cCsvRows.push({ rank: ci + 1, name: cD.name, area: cAreas[cKeys[ci]] || 0, od: cD.old ? statsCountryDate(cD.old) : "", do: cD["new"] ? statsCountryDate(cD["new"]) : "", n: cD.n }); } catch(eCR) { AppLog.soft("renderStats>countriesCsv", eCR); }
+                                if (cQL !== null && !cShow[cKeys[ci]]) continue;
                                 var czIdx = statsCountryZoomList.push({ key: cKeys[ci], cont: cD.cont }) - 1;
-                                H += "<tr><td class=\"num\">" + (ci + 1) + "</td><td><span class=\"st-ctry\" onclick=\"statsCountryZoom(" + czIdx + ")\" title=\"" + escapeHtml(L_("statsCountryZoomTip", "Zobrazit stát na mapě")) + "\">" + escapeHtml(cD.name) + "</span>" + statsContDotsHtml(cD.cont, { key: cKeys[ci], name: cD.name }) + "</td>"
+                                H += "<tr><td class=\"num\">" + (ci + 1) + "</td><td><span class=\"st-ctry\" onclick=\"statsCountryZoom(" + czIdx + ")\" title=\"" + escapeHtml(L_("statsCountryZoomTip", "Zobrazit stát na mapě")) + "\">" + (cNameHtml[cKeys[ci]] || escapeHtml(cD.name)) + "</span>" + (cAltHtml[cKeys[ci]] ? " <span class=\"st-ctry-alt\" style=\"color:#5f6368;font-size:11px;\">(" + cAltHtml[cKeys[ci]] + ")</span>" : "") + statsContDotsHtml(cD.cont, { key: cKeys[ci], name: cD.name }) + "</td>"
                                     + cDateCell(cD.old, cD.oldP) + cDateCell(cD.new, cD.newP)
                                     + "<td class=\"num\">" + statsTableLinkHtml("c", cKeys[ci], cD.name, nmb(cD.n), tShowC) + "</td></tr>";
                             }
+                            if (cQL !== null && cMarkCount === 0) H += "<tr><td colspan=\"5\" style=\"text-align:center;color:#80868b;white-space:normal;\">" + escapeHtml(currentLang === "cs" ? "Žádný stát neodpovídá hledání" : "No country matches the search") + "</td></tr>";
+                            try { window.statsCountriesData = { rows: cCsvRows, totN: cTotPh, sea: cSea }; } catch(eCD) { AppLog.soft("renderStats>countriesData", eCD); }
                             H += "</tbody><tfoot><tr><td colspan=\"5\" style=\"font-weight:700;white-space:normal;\"><span style=\"display:inline-block;margin-right:16px;\">" + L_("statsCountriesTotal", "Celkem navštívených států") + ": " + nmb(cKeys.length) + "</span>" + statsContFooterHtml(cBy) + "</td></tr></tfoot></table></div>";
                         } else {
                             H += "<div class=\"st-sub-h first\">" + L_("statsCountriesEmpty", "Žádné státy") + "</div>";
