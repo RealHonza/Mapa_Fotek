@@ -6307,8 +6307,10 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         function filterGuideSteps(q) {
             try { var _ae = document.getElementById("archiveRootInput"); if (_ae) pendingArchiveInput = _ae.value; } catch(e) {}
             var steps = document.querySelectorAll("#infoStepsList li");
-            var query = (q || "").trim();
-            var ql = query.toLowerCase();
+            /* Mezery v dotazu se respektuji: "a " najde jen "a" s mezerou, " b" mezeru před "b".
+               Trim se použije jen pro test prázdného dotazu, ne pro samotné hledání. */
+            var query = (q || "");
+            var ql = (query.trim() ? query : "").toLowerCase();
             steps.forEach(function(li) {
                 if (li.dataset.orig === undefined) li.dataset.orig = li.innerHTML;
                 else li.innerHTML = li.dataset.orig;
@@ -10832,15 +10834,19 @@ function fmtStatsCoordShort(la, lo) {
                              : document.querySelector("#statsBody .st-folder-search-inp");
                 var cursorPos = 0;
                 try { if (inp) cursorPos = inp.selectionStart || 0; } catch(e) {}
-                var q = (val || "").trim();
-                if (q && !statsFolderSearch) {
+                /* Mezery v dotazu se respektuji: uloží se původní text i s mezerami (překreslení
+                   vstupu je neztratí), ale samotné mezery nefiltrují – trim jen pro test prázdného dotazu. */
+                var qRaw = (val || "");
+                var qEff = qRaw.trim() ? qRaw : "";
+                var wasSearching = !!(statsFolderSearch && String(statsFolderSearch).trim());
+                if (qEff && !wasSearching) {
                     try { statsFolderSearchSaved = JSON.parse(JSON.stringify(statsFolderExpanded)); } catch(e) { statsFolderSearchSaved = {}; }
                 }
-                if (!q && statsFolderSearch) {
+                if (!qEff && wasSearching) {
                     try { statsFolderExpanded = statsFolderSearchSaved ? JSON.parse(JSON.stringify(statsFolderSearchSaved)) : {}; } catch(e) { statsFolderExpanded = {}; }
                     statsFolderSearchSaved = null;
                 }
-                statsFolderSearch = q;
+                statsFolderSearch = qRaw;
                 renderStats();
                 try {
                     var ov2 = document.getElementById("stTableOverlay");
@@ -12846,7 +12852,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 var tShowF = L_("statsTableShowPhotos", "Zobrazit fotky v prohlížečce");
                 /* --- folder search filter --- */
                 var folderVisiblePaths = null, folderAncestorPaths = null, _sfQL = null;
-                if (statsFolderSearch) {
+                if (statsFolderSearch && String(statsFolderSearch).trim()) {
                     _sfQL = normDiacFolderSearch(statsFolderSearch);
                     folderVisiblePaths = {}; folderAncestorPaths = {};
                     var _fSearchPath = function(nd) { return nd.isDirect ? nd.parentFull : nd.full; };
@@ -14238,8 +14244,10 @@ H += "</div></div>";
             var list = document.getElementById("settingsStepsList");
             if (!list) return;
             var steps = list.querySelectorAll(":scope > li");
-            var query = (q || "").trim();
-            var ql = query.toLowerCase();
+            /* Mezery v dotazu se respektuji: "a " najde jen "a" s mezerou, " b" mezeru před "b".
+               Trim se použije jen pro test prázdného dotazu, ne pro samotné hledání. */
+            var query = (q || "");
+            var ql = (query.trim() ? query : "").toLowerCase();
 
             steps.forEach(function(li) {
                 if (li.dataset.orig === undefined) {
@@ -16508,7 +16516,9 @@ H += "</div></div>";
             return arr;
         }
         function lbFolderSearchResults() {
-            var q = (typeof lbFolderSearch === "string" ? lbFolderSearch : "").trim().toLowerCase();
+            /* Mezery v dotazu se respektuji (trim jen pro test prázdného dotazu). */
+            var _lbfs = (typeof lbFolderSearch === "string" ? lbFolderSearch : "");
+            var q = _lbfs.trim() ? _lbfs.toLowerCase() : "";
             if (!q) return null;
             var all = lbCollectAllFolders();
             return all.filter(function(sf) {
@@ -28168,7 +28178,8 @@ function resetFolderPagination() { folderSearchPage = 0; folderFilePage = 0; }
             var res = document.createElement("div");
             res.id = "folderResults";
             dd.appendChild(res);
-            var q = folderSearch.trim().toLowerCase();
+            /* Mezery v dotazu se respektuji (trim jen pro test prázdného dotazu). */
+            var q = folderSearch.trim() ? folderSearch.toLowerCase() : "";
             var hasMultiF = folderPrefixes && folderPrefixes.length > 0;
             var curNav = (folderNav !== undefined && folderNav !== null) ? folderNav : null;
             var isRoot = (curNav === null || curNav === "");
