@@ -848,6 +848,15 @@
         button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .guide-hi { background: #39ff14; color: #202124; border-radius: 2px; padding: 0 1px; }
         .guide-hi:focus { outline: 2px solid #1a73e8; outline-offset: 2px; }
+        /* Počítadlo výsledků ve vyhledávacím poli + připnutý řádek hledání (Návod / Nastavení) */
+        .guide-search-wrap { position: relative; display: flex; flex: 1 1 auto; min-width: 0; }
+        .guide-search-wrap > .guide-search { width: 100%; box-sizing: border-box; }
+        .guide-search.has-count { padding-right: 96px; }
+        .guide-count { display: none; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); pointer-events: none; white-space: nowrap; font-size: 11px; line-height: 18px; padding: 0 8px; border-radius: 9px; color: #5f6368; background: #f1f3f4; font-variant-numeric: tabular-nums; }
+        .guide-count.none { color: #d93025; background: #fce8e6; }
+        .guide-header:has(> .guide-search-wrap) { position: sticky; top: var(--mf-pin-top, 0px); z-index: 6; background: #ffffff; margin-left: -24px !important; margin-right: -24px !important; margin-bottom: 0 !important; padding: 6px 24px 10px; }
+        mark.guide-hi { scroll-margin-top: 130px; scroll-margin-bottom: 24px; }
+        @media (max-width: 600px) { .guide-header:has(> .guide-search-wrap) { margin-left: -14px !important; margin-right: -14px !important; padding: 6px 14px 10px; } .guide-search-wrap { flex: 1 1 0; } }
         .guide-bat { background: #fff8e1; border: 1px solid var(--green); border-radius: 6px; padding: 1px 6px; font-weight: 700; white-space: nowrap; }
         .guide-fmt { color: var(--green); font-weight: 700; }
         .guide-fmt-video { color: #1a73e8; font-weight: 700; }
@@ -2498,9 +2507,9 @@
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.65</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.66</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
-            <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
+            <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
         </div>
     </div>
@@ -2523,7 +2532,7 @@
                 <button class="modal-close-btn" onclick="closeSettingsModal()" id="btnSettingsClose" aria-label="Zavřít nastavení"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
             <div class="guide-header" style="margin-bottom:12px;">
-                <input class="guide-search" id="settingsSearch" type="text" placeholder="Hledat v nastavení…" aria-label="Hledat v nastavení…" title="Hledat v nastavení…" oninput="filterSettingsSteps(this.value);document.getElementById('settingsClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'settingsStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterSettingsSteps('');document.getElementById('settingsClear').style.display='none';}">
+                <span class="guide-search-wrap"><input class="guide-search" id="settingsSearch" type="text" placeholder="Hledat v nastavení…" aria-label="Hledat v nastavení…" title="Hledat v nastavení…" oninput="filterSettingsSteps(this.value);document.getElementById('settingsClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'settingsStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterSettingsSteps('');document.getElementById('settingsClear').style.display='none';}"><span class="guide-count" id="settingsCount" aria-live="polite"></span></span>
                 <button class="guide-clear" id="settingsClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('settingsSearch');el.value='';filterSettingsSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="settingsExpandBtn" onclick="settingsExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="settingsCollapseBtn" onclick="settingsExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button>
             </div>
             <ol class="info-steps" id="settingsStepsList"></ol>
@@ -3301,6 +3310,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Cesta k archivu fotografií (kořenová složka) <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>",
                 setArchiveBody: "Relativní cesty z datových TXT (<code>RELATIVNI_CESTA</code>) se spojí se zadaným kořenem archivu a náhledy se pak načítají z plné cesty.<div class=\"step-sub\"><br>• Do pole vložte kořen archivu, např. <code>C:\\Fotky\\Archiv</code> nebo <code>/Users/jan/Photos</code> (rychle přes <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>)<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg> (nebo Enter) cestu uloží do prohlížeče a překreslí náhledy<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M18 6 6 18'/><path d='m6 6 12 12'/></svg> cestu smaže – platí opět čisté relativní cesty jako dosud<br>• Každý datový TXT si v seznamu zdrojů (<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> vpravo od ikonky foťáku) volí, zda brát plnou cestu s kořenem, nebo čistou relativní cestu<br>• Bez vyplnění se nic nemění.<br>Pozn.: prohlížeč může blokovat <code>file:///</code> při otevření přes <code>http://</code> – pak otevřete mapu ze stejného disku.</div>",
                 settingsSearchPlaceholder: "Hledat v nastavení…",
+                searchCountOne: "výsledek", searchCountFew: "výsledky", searchCountMany: "výsledků",
                 settingsClearTip: "Zrušit hledání",
                 tipMultiToggle: "Shift+klik: přidat/odebrat",
                 tipMultiSingle: "Shift+klik: samostatný výběr",
@@ -3678,6 +3688,7 @@ statsFarthestPair: "Farthest pair",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Photo archive path (root folder) <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>",
                 setArchiveBody: "Relative paths from data TXT files (<code>RELATIVNI_CESTA</code>) are joined with the archive root, previews then load from the full path.<div class=\"step-sub\"><br>• Enter the archive root, e.g. <code>C:\\Photos\\Archive</code> or <code>/Users/jan/Photos</code> (quickly via <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>)<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg> (or Enter) saves it in the browser and refreshes previews<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M18 6 6 18'/><path d='m6 6 12 12'/></svg> clears it – plain relative paths apply again, as before<br>• Each data TXT chooses in the sources list (<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> right of the photo icon) whether to use the full path with root or the plain relative path<br>• Empty = no change.<br>Note: browsers may block <code>file:///</code> when opened via <code>http://</code> – then open the map from the same drive.</div>",
                 settingsSearchPlaceholder: "Search in settings…",
+                searchCountOne: "result", searchCountFew: "results", searchCountMany: "results",
                 settingsClearTip: "Clear search",
                 tipMultiToggle: "Shift+click: toggle",
                 tipMultiSingle: "Shift+click: select single",
@@ -6363,6 +6374,64 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         }
         mfSetupSearchTabNav("infoStepsList", "guideSearch");
         mfSetupSearchTabNav("settingsStepsList", "settingsSearch");
+        /* Počítadlo výsledků ve vyhledávacím poli (Návod / Nastavení): po zadání dotazu "19 výsledků",
+           po skoku Tabem na výsledek "4/19", bez shod "0 výsledků", při prázdném dotazu se skryje.
+           Počítají se stejné viditelné značky mark.guide-hi, po kterých skáče Tab (mfSearchMarks). */
+        var MF_SEARCH_CNT = { infoStepsList: ["guideSearch", "guideCount"], settingsStepsList: ["settingsSearch", "settingsCount"] };
+        function mfSearchCountWord(n) {
+            var t = {}; try { t = i18n[currentLang] || {}; } catch(e) {}
+            var cs = (currentLang === "cs");
+            if (n === 1) return t.searchCountOne || (cs ? "výsledek" : "result");
+            if (cs && n >= 2 && n <= 4) return t.searchCountFew || "výsledky";
+            return t.searchCountMany || (cs ? "výsledků" : "results");
+        }
+        function mfSearchCountRefresh(listId, active) {
+            try {
+                var c = MF_SEARCH_CNT[listId]; if (!c) return;
+                var list = document.getElementById(listId), inp = document.getElementById(c[0]), badge = document.getElementById(c[1]);
+                if (!list || !inp || !badge) return;
+                if (!String(inp.value || "").trim()) { badge.textContent = ""; badge.style.display = "none"; badge.classList.remove("none"); inp.classList.remove("has-count"); return; }
+                var marks = mfSearchMarks(list), n = marks.length, idx = active ? marks.indexOf(active) : -1;
+                badge.textContent = (idx >= 0) ? ((idx + 1) + "/" + n) : (n + " " + mfSearchCountWord(n));
+                if (n === 0) badge.classList.add("none"); else badge.classList.remove("none");
+                badge.style.display = "inline-block"; inp.classList.add("has-count");
+            } catch(e) {}
+        }
+        function mfSetupSearchCount(listId) {
+            try {
+                var c = MF_SEARCH_CNT[listId], list = document.getElementById(listId), inp = document.getElementById(c[0]);
+                if (!list || !inp || list.__mfCnt) return;
+                list.__mfCnt = true;
+                inp.addEventListener("focus", function() { mfSearchCountRefresh(listId); });
+                list.addEventListener("focusin", function(ev) {
+                    var t = ev.target;
+                    if (t && t.tagName === "MARK" && t.classList.contains("guide-hi")) mfSearchCountRefresh(listId, t);
+                });
+            } catch(e) {}
+        }
+        mfSetupSearchCount("infoStepsList");
+        mfSetupSearchCount("settingsStepsList");
+        /* Řádek hledání se připíná pod (také připnuté) záhlaví okna: odsazení se měří z jeho výšky. */
+        function mfSearchPinUpdate() {
+            try {
+                ["infoModalBackdrop", "settingsModalBackdrop"].forEach(function(id) {
+                    var bd = document.getElementById(id); if (!bd) return;
+                    var hdr = bd.querySelector(".info-modal-header"), m = bd.querySelector(".info-modal");
+                    if (!hdr || !m || !hdr.offsetHeight) return;
+                    var top = parseFloat(getComputedStyle(hdr).top) || 0;
+                    m.style.setProperty("--mf-pin-top", Math.max(0, hdr.offsetHeight + top) + "px");
+                });
+            } catch(e) {}
+        }
+        try {
+            if (window.ResizeObserver) {
+                var _mfRo = new ResizeObserver(mfSearchPinUpdate);
+                ["infoModalBackdrop", "settingsModalBackdrop"].forEach(function(id) {
+                    var h = document.querySelector("#" + id + " .info-modal-header"); if (h) _mfRo.observe(h);
+                });
+            }
+            window.addEventListener("resize", mfSearchPinUpdate);
+        } catch(e) {}
         function filterGuideSteps(q) {
             try { var _ae = document.getElementById("archiveRootInput"); if (_ae) pendingArchiveInput = _ae.value; } catch(e) {}
             var steps = document.querySelectorAll("#infoStepsList li");
@@ -6427,6 +6496,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 guideUI.silent = false;
             } catch(e) { try { guideUI.silent = false; } catch(e2) {} }
             try { syncArchiveInput(); } catch(e) {}
+            mfSearchCountRefresh("infoStepsList");
         }
 
         function guideExpandAll(on) {
@@ -14372,6 +14442,7 @@ H += "</div></div>";
                 }
             }
             try { syncSettingsControls(); } catch(e) {}
+            mfSearchCountRefresh("settingsStepsList");
         }
 
         function resetAllSettings() {
