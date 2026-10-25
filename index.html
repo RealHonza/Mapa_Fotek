@@ -847,6 +847,7 @@
         .guide-search:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(var(--green-rgb),0.15); }
         button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         .guide-hi { background: #39ff14; color: #202124; border-radius: 2px; padding: 0 1px; }
+        .guide-hi:focus { outline: 2px solid #1a73e8; outline-offset: 2px; }
         .guide-bat { background: #fff8e1; border: 1px solid var(--green); border-radius: 6px; padding: 1px 6px; font-weight: 700; white-space: nowrap; }
         .guide-fmt { color: var(--green); font-weight: 700; }
         .guide-fmt-video { color: #1a73e8; font-weight: 700; }
@@ -2499,7 +2500,7 @@
             </div>
             <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub(2,3)">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.65</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
-            <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
+            <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
         </div>
     </div>
@@ -2522,7 +2523,7 @@
                 <button class="modal-close-btn" onclick="closeSettingsModal()" id="btnSettingsClose" aria-label="Zavřít nastavení"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
             <div class="guide-header" style="margin-bottom:12px;">
-                <input class="guide-search" id="settingsSearch" type="text" placeholder="Hledat v nastavení…" aria-label="Hledat v nastavení…" title="Hledat v nastavení…" oninput="filterSettingsSteps(this.value);document.getElementById('settingsClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterSettingsSteps('');document.getElementById('settingsClear').style.display='none';}">
+                <input class="guide-search" id="settingsSearch" type="text" placeholder="Hledat v nastavení…" aria-label="Hledat v nastavení…" title="Hledat v nastavení…" oninput="filterSettingsSteps(this.value);document.getElementById('settingsClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'settingsStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterSettingsSteps('');document.getElementById('settingsClear').style.display='none';}">
                 <button class="guide-clear" id="settingsClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('settingsSearch');el.value='';filterSettingsSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="settingsExpandBtn" onclick="settingsExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="settingsCollapseBtn" onclick="settingsExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button>
             </div>
             <ol class="info-steps" id="settingsStepsList"></ol>
@@ -6304,6 +6305,64 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 } catch(e) {}
             }, true);
         } catch(e) {}
+        /* Tab ve vyhledávání Návodu/Nastavení skáče po zvýrazněných výsledcích (zelené mark.guide-hi).
+           Znaky nejsou běžné zarážky Tabu (tabindex -1), navigace funguje jen z vyhledávacího pole:
+           Tab = první / další výsledek, Shift+Tab = předchozí / zpět do pole, po posledním zpět do pole. */
+        function mfSearchMarks(list) {
+            try {
+                var all = (list || document).querySelectorAll("mark.guide-hi");
+                var out = [];
+                for (var i = 0; i < all.length; i++) {
+                    if (all[i].offsetParent !== null || all[i].getClientRects().length) out.push(all[i]);
+                }
+                return out;
+            } catch(e) { return []; }
+        }
+        function mfSearchFocusMark(mk) {
+            try {
+                mk.focus();
+                try { mk.scrollIntoView({ block: "nearest" }); } catch(eS) {}
+                /* rodičovské sbalené sekce otevřít, aby byl výsledek vidět */
+                var p = mk.parentNode;
+                while (p) {
+                    if (p.tagName === "DETAILS") p.open = true;
+                    p = p.parentNode;
+                }
+            } catch(e) {}
+        }
+        function mfSearchInputTab(ev, listId, input) {
+            try {
+                if (!ev || ev.key !== "Tab" || ev.defaultPrevented || ev.isComposing) return false;
+                var marks = mfSearchMarks(document.getElementById(listId));
+                if (!marks.length) return false; /* bez výsledků zůstává běžné chování Tabu */
+                ev.preventDefault();
+                mfSearchFocusMark(ev.shiftKey ? marks[marks.length - 1] : marks[0]);
+                return true;
+            } catch(e) { return false; }
+        }
+        function mfSetupSearchTabNav(listId, inputId) {
+            try {
+                var list = document.getElementById(listId);
+                var input = document.getElementById(inputId);
+                if (!list || !input || list.__mfTabNav) return;
+                list.__mfTabNav = true;
+                list.addEventListener("keydown", function(ev) {
+                    try {
+                        var t = ev.target;
+                        if (!t || t.tagName !== "MARK" || !t.classList.contains("guide-hi")) return;
+                        if (ev.key !== "Tab" || ev.isComposing) return;
+                        var marks = mfSearchMarks(list);
+                        var idx = marks.indexOf(t);
+                        if (idx === -1) return;
+                        ev.preventDefault();
+                        if (ev.shiftKey) { if (idx === 0) input.focus(); else mfSearchFocusMark(marks[idx - 1]); }
+                        else { if (idx === marks.length - 1) input.focus(); else mfSearchFocusMark(marks[idx + 1]); }
+                    } catch(e) {}
+                });
+            } catch(e) {}
+        }
+        mfSetupSearchTabNav("infoStepsList", "guideSearch");
+        mfSetupSearchTabNav("settingsStepsList", "settingsSearch");
         function filterGuideSteps(q) {
             try { var _ae = document.getElementById("archiveRootInput"); if (_ae) pendingArchiveInput = _ae.value; } catch(e) {}
             var steps = document.querySelectorAll("#infoStepsList li");
@@ -6330,6 +6389,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         frag.appendChild(document.createTextNode(rest.slice(at, idx)));
                         var mk = document.createElement("mark");
                         mk.className = "guide-hi";
+                        mk.tabIndex = -1; /* fokusovatelné pro navigaci Tabem (mfSearchInputTab) */
                         mk.textContent = rest.substr(idx, ql.length);
                         frag.appendChild(mk);
                         at = idx + ql.length;
@@ -14286,6 +14346,7 @@ H += "</div></div>";
                         frag.appendChild(document.createTextNode(rest.slice(at, idx)));
                         var mk = document.createElement("mark");
                         mk.className = "guide-hi";
+                        mk.tabIndex = -1; /* fokusovatelné pro navigaci Tabem (mfSearchInputTab) */
                         mk.textContent = rest.substr(idx, ql.length);
                         frag.appendChild(mk);
                         at = idx + ql.length;
