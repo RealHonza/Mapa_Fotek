@@ -760,6 +760,19 @@ var AppLog = (function () {
         .st-state .st-n { text-align: right; font-weight: 700; color: #202124; white-space: nowrap; }
         .st-state.off { opacity: .45; }
         .st-ref-box.st-ref-compact .st-ref-row input[type="text"] { width: 82px; }
+        /* Mobil: souřadnice RB a tlačítka na jednom řádku (pole se zužují, tlačítka jsou menší) */
+        @media (max-width: 620px) {
+            #statsModalBackdrop .st-ref-box .st-ref-row { flex-wrap: nowrap; gap: 4px; }
+            #statsModalBackdrop .st-ref-box .st-ref-row .st-ref-sp { display: none; }
+            #statsModalBackdrop .st-ref-box .st-rb-f { flex: 1 1 0; min-width: 0; }
+            #statsModalBackdrop .st-ref-box .st-ref-row input[type="text"] { width: 100%; min-width: 0; font-size: 11.5px; padding: 3px 2px; letter-spacing: -.2px; }
+            #statsModalBackdrop .st-ref-box .st-ref-row .st-ref-btn { flex: 0 0 auto; min-width: 0; padding: 0 7px; gap: 3px; font-size: 10.5px; }
+            #statsModalBackdrop .st-ref-box .st-ref-row .st-ref-btn svg { width: 11px; height: 11px; }
+        }
+        @media (max-width: 420px) {
+            #statsModalBackdrop .st-ref-box .st-ref-row .st-ref-btn svg { display: none; }
+            #statsModalBackdrop .st-ref-box .st-ref-row input[type="text"] { font-size: 11px; padding: 3px 1px; letter-spacing: -.3px; }
+        }
         .st-ref-box.st-ref-compact .st-ref-btn { min-width: 0; padding: 0 9px; }
         .st-state.st-set { grid-template-columns: 16px 22px minmax(0, 1fr); }
         .st-state-foot { position: relative; display: flex; align-items: center; gap: 9px; margin: 14px -6px 0; padding: 6px; border-radius: 8px; cursor: pointer; font-size: 12px; transition: background-color .12s ease; }
@@ -846,6 +859,8 @@ var AppLog = (function () {
         .st-ov-tblcap { font-size: 12px; font-weight: 700; color: #3c4043; margin: -2px 0 8px 0; }
         .st-ov-nav-wrap { display: inline-flex; align-items: center; gap: 8px; margin: -3px 0 -3px -8px; flex-shrink: 0; white-space: nowrap; }
         .st-ov-nav-quick { display: inline-flex; align-items: center; gap: 2px; }
+        /* záhlaví s pevnými tlačítky vpravo nahoře (Tabulka 2, Navštívené státy): ikony sekcí se zalomí, nepřekryjí tlačítka */
+        h3[style*="position:relative"] > .st-ov-nav-wrap { flex-wrap: wrap; max-width: 100%; row-gap: 2px; }
         .st-ov-nav-q { width: 24px; height: 24px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 6px; background: transparent; color: #5f6368; cursor: pointer; }
         .st-ov-nav-q .st-nav-ico { width: 14px; height: 14px; margin: 0; }
         .st-ov-nav-q:hover, .st-ov-nav-q:focus-visible { border-color: var(--green); color: var(--green); background: var(--green-bg); outline: none; }
@@ -2641,7 +2656,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.77</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> 3.78</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -2688,7 +2703,7 @@ var AppLog = (function () {
             <div class="st-ref-box">
                 <div id="stRefExtra"></div>
                 <div class="st-rb">
-                    <button type="button" class="st-lbl st-lbl-btn" id="stRefTitleBtn" onclick="statsShowRefOnMap()" title="Zobrazit referenční bod na mapě (Esc = zpět do statistiky)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg><span id="stRefTitle">Referenční bod (RB) pro výpočet vzdáleností</span></button>
+                    <button type="button" class="st-lbl st-lbl-btn" id="stRefTitleBtn" onclick="statsShowRefOnMap()" title="Zobrazit referenční bod na mapě (Esc = zpět do statistiky)"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.4 7-11a7 7 0 1 0-14 0c0 4.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg><span id="stRefTitle">Referenční bod (RB) pro výpočty</span></button>
                     <div class="st-ref-row">
                         <label class="st-rb-f"><input id="stRefLat" type="text" inputmode="decimal" aria-label="Referenční šířka" onfocus="this.select()" onkeydown="if(event.key==='Enter')this.blur();" onchange="statsRefDirty=true;renderStats()"></label>
                         <label class="st-rb-f"><input id="stRefLon" type="text" inputmode="decimal" aria-label="Referenční délka" onfocus="this.select()" onkeydown="if(event.key==='Enter')this.blur();" onchange="statsRefDirty=true;renderStats()"></label>
@@ -3210,7 +3225,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             menuStatsTip: "Otevřít statistiku fotek (Shift+S)",
             statsTitle: "Statistika fotek (videí)",
             statsCloseTip: "Zavřít statistiku",
-            stRefTitle: "Referenční bod (RB) pro výpočet vzdáleností",
+            stRefTitle: "Referenční bod (RB) pro výpočty",
             stRefLatLbl: "Šířka",
             stRefLonLbl: "Délka",
             stRefBtnMap: "střed mapy",
@@ -3593,7 +3608,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             menuStatsTip: "Open photo (video) statistics (Shift+S)",
             statsTitle: "Photo (video) statistics",
             statsCloseTip: "Close statistics",
-            stRefTitle: "Reference point (RP) for distance calculations",
+            stRefTitle: "Reference point (RP) for calculations",
             stRefLatLbl: "Latitude",
             stRefLonLbl: "Longitude",
             stRefBtnMap: "map center",
@@ -13755,12 +13770,12 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     _sfBadge = "<span class=\"guide-count@@SFCLS@@\" data-t=\"@@SFTXT@@\" style=\"display:@@SFDISP@@;\">@@SFTXT@@</span>";
                 }
                 var _sfH0 = H.length;
-                H += "<div class=\"st-sec-box\" data-sttbl=\"folder\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;\">" +
+                H += "<div class=\"st-sec-box\" data-sttbl=\"folder\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;position:relative;min-height:26px;padding-right:122px;\">" +
                     "<span title=\"" + L_("statsSecFolderTable", "Tabulka 2 (složková)") + "\" style=\"white-space:nowrap;flex-shrink:0;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\"/></svg>" + L_("statsSecFolderTableShort", "Tabulka 2") + "</span>" +
-                    "<span style=\"display:inline-flex;align-items:center;gap:6px;flex:1 1 150px;min-width:0;max-width:230px;\">" +
+                    "<span style=\"display:inline-flex;align-items:center;gap:6px;flex:1 1 110px;min-width:110px;max-width:230px;\">" +
                     "<span class=\"guide-search-wrap\" style=\"flex:1 1 auto;min-width:90px;\">" + "<input type=\"text\" class=\"guide-search st-folder-search-inp" + (_sfBadge ? "@@SFHAS@@" : "") + "\" value=\"" + escapeHtml(statsFolderSearch) + "\" placeholder=\"" + escapeHtml(_sfPlaceholder) + "\" oninput=\"event.stopPropagation();statsFolderSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"statsFolderSearchKey(event,this)\" style=\"flex:1 1 auto;min-width:60px;margin:0;" + (_sfBadge ? "@@SFPAD@@" : "") + "\" />" + _sfBadge + "</span>" +
                     "<button type=\"button\" class=\"guide-clear st-folder-search-clr\" onclick=\"event.stopPropagation();statsFolderSearchClear()\" title=\"" + escapeHtml(_sfBtnTitle) + "\" aria-label=\"" + escapeHtml(_sfBtnTitle) + "\" style=\"display:" + (statsFolderSearch ? "inline-flex" : "none") + ";\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></span>" +
-                    "<span style=\"display:inline-flex;gap:4px;flex-shrink:0;margin-left:auto;\">" +
+                    "<span style=\"display:inline-flex;gap:4px;position:absolute;right:0;top:0;\">" +
                     "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(true);\" title=\"" + tExpAll + "\" aria-label=\"" + tExpAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button>" +
                     "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(false);\" title=\"" + tColAll + "\" aria-label=\"" + tColAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m18 15-6-6-6 6\"/></svg></button>" +
                     "<button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsFolderCsv()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" +
@@ -15033,12 +15048,12 @@ window.statsChartSave = statsChartSave;
                                 var cTx = escapeHtml(cMarkCount + " " + cWd);
                                 cBadge = "<span class=\"guide-count" + (cMarkCount === 0 ? " none" : "") + "\" data-t=\"" + cTx + "\" style=\"display:inline-block;\">" + cTx + "</span>";
                             }
-                            cSearchHtml = "<span style=\"display:inline-flex;align-items:center;gap:6px;flex:1 1 150px;min-width:0;max-width:230px;\">"
+                            cSearchHtml = "<span style=\"display:inline-flex;align-items:center;gap:6px;flex:1 1 110px;min-width:110px;max-width:230px;\">"
                                 + "<span class=\"guide-search-wrap\" style=\"flex:1 1 auto;min-width:90px;\"><input type=\"text\" class=\"guide-search st-ctry-search-inp" + (cBadge ? " has-count" : "") + "\" value=\"" + escapeHtml(statsCountriesSearch) + "\" placeholder=\"" + escapeHtml(cPh) + "\" oninput=\"event.stopPropagation();statsCountriesSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"statsCountriesSearchKey(event,this)\" style=\"flex:1 1 auto;min-width:60px;margin:0;" + (cBadge ? "padding-right:76px;" : "") + "\" />" + cBadge + "</span>"
                                 + "<button type=\"button\" class=\"guide-clear st-ctry-search-clr\" onclick=\"event.stopPropagation();statsCountriesSearchClear()\" title=\"" + escapeHtml(cClrT) + "\" aria-label=\"" + escapeHtml(cClrT) + "\" style=\"display:" + (statsCountriesSearch ? "inline-flex" : "none") + ";\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></span>";
                         }
-                        H += "<div class=\"st-sec-box\" data-stsec=\"countries\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;\"><span title=\"" + L_("statsSecLocatedOnly", "Počítá se pouze z fotek s polohou.") + "\" style=\"white-space:nowrap;flex-shrink:0;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"/></svg>" + L_("statsSecCountries", "Navštívené státy") + "</span>" + cSearchHtml
-                            + "<span style=\"display:inline-flex;gap:4px;flex-shrink:0;margin-left:auto;\">"
+                        H += "<div class=\"st-sec-box\" data-stsec=\"countries\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;position:relative;min-height:26px;padding-right:62px;\"><span title=\"" + L_("statsSecLocatedOnly", "Počítá se pouze z fotek s polohou.") + "\" style=\"white-space:nowrap;flex-shrink:0;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"/></svg>" + L_("statsSecCountries", "Navštívené státy") + "</span>" + cSearchHtml
+                            + "<span style=\"display:inline-flex;gap:4px;position:absolute;right:0;top:0;\">"
                             + (cKeys.length ? "<button type=\"button\" class=\"st-chart-expand\" title=\"" + escapeHtml(cCsvT) + "\" aria-label=\"" + escapeHtml(cCsvT) + "\" onclick=\"event.stopPropagation();exportStatsCountriesCsv()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" : "")
                             + statsSecExpandBtnHtml('countries') + "</span></h3>";
                         if (cKeys.length) {
