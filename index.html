@@ -667,8 +667,8 @@ var AppLog = (function () {
         .st-chart-tab:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
         .st-chart-tab.active { border-color: var(--green); background: var(--green); color: #ffffff; font-weight: 700; }
         .st-top-btns { display: inline-flex; flex-wrap: wrap; gap: 5px; white-space: normal; }
-        #stRowTopPlaces, #stRowTopDays { min-height: 39px; }
-        #stRowTopPlaces .st-row, #stRowTopDays .st-row { --st-val-w: 34px; align-items: center; min-height: 39px; }
+        #stRowTopPlaces, #stRowTopDays, #stRowTopElev { min-height: 39px; }
+        #stRowTopPlaces .st-row, #stRowTopDays .st-row, #stRowTopElev .st-row { --st-val-w: 34px; align-items: center; min-height: 39px; }
         .st-top-btns .st-chart-tab { width: 26px; height: 26px; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
         .st-top-btns .rank-1 { border: 1.5px solid #b8912f; }
         .st-top-btns .rank-2 { border: 1.5px solid #8a939b; }
@@ -2663,7 +2663,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">3.83</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci" onclick="gotoGuideSub('about-app')">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">3.84</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -3275,6 +3275,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsTopDays: "Top 10 častých míst", statsTopDaysSepTip: "Minimální rozestup středů kružnic Top 10 častých míst (násobek poloměru R)", statsTopDaysAllTip: "Zobrazit všechny kružnice Top 10 častých míst",
             statsTopPlaces: "Top 10 míst", statsTopSepTip: "Minimální rozestup středů kružnic Top 10 (násobek poloměru R)", statsTopSepOpt2: "2× R (dotyk / min. odstup)", statsTopSepOpt5: "5× R (mírný rozestup)", statsTopSepOpt10: "10× R (město a okolí)", statsTopSepOpt20: "20× R (sousední města)", statsTopSepOpt50: "50× R (okresní rozestup)", statsTopSepOpt100: "100× R (krajský rozestup)", statsTopSepOpt200: "200× R (celostátní / celá ČR)", statsTopSepOpt500: "500× R (mezinárodní / kontinentální)",
             statsTopAllTip: "Zobrazit všechny kružnice Top 10", statsTopIso: "izolace", statsTopIsoNone: "bez rozestupu", statsTopFoundOne: "nalezeno", statsTopFoundFew: "nalezeny", statsTopFoundMany: "nalezeno",
+            statsTopElev: "Top 10 výšek", statsTopElevRTip: "Poloměr okruhu Top 10 výšek v km (středy okruhů jsou od sebe nejméně 2× R)", statsTopElevAllTip: "Zobrazit všechny kružnice Top 10 výšek", statsTopElevWithEl: "s výškou",
             statsChartCapGeo: "Objevení území fotkami v čase", statsGeoLegendFirst: "Objeveno", statsGeoPlay: "Přehrát objevování území", statsGeoPause: "Pozastavit přehrávání", statsGeoPlayCancel: "Zrušit přehrávání (Esc)", statsGeoPlayNA: "Přehrávání je dostupné jen při obarvení podle nejstarších fotek (objevení).", statsGeoPlayDisc: "Objeveno", statsGeoLegendLast: "Poslední návštěva", statsGeoLegendSpan: "Časové rozpětí", statsGeoModeLabel: "Obarvit dle", statsGeoModeOpt1: "nejstarší fotky (objevení)", statsGeoModeOpt2: "nejnovější fotky (poslední)", statsGeoModeOpt3: "časového rozpětí", statsGeoModeSettingLabel: "Obarvení mřížky", statsGeoSpanWord: "rozpětí ", statsGeoLevel_y: "roku", statsGeoLevel_m: "měsíce", statsGeoLevel_d: "dne", statsGeoLevel_h: "hodiny",
             statsGeoPalLabel: "Paleta", statsGeoPalSettingLabel: "Paleta",
             statsGeoMarkRb: "Referenční bod (RB)", statsGeoMarkCen: "Těžiště fotek", statsGeoLand: "Pevnina a hranice", statsGeoLandTip: "Zobrazit podkres pevniny a hranice států v grafu (z offline mapy)", statsGeoRbOut: "RB mimo rozsah", statsGeoCenOut: "těžiště mimo rozsah", statsGeoWrapped: "rozsah přes 180°",
@@ -3659,6 +3660,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsTopDays: "Top 10 frequent places", statsTopDaysSepTip: "Minimum separation of Top 10 frequent places circle centers (multiplier of radius R)", statsTopDaysAllTip: "Show all Top 10 frequent places circles",
             statsTopPlaces: "Top 10 places", statsTopSepTip: "Minimum separation of Top 10 circle centers (multiplier of radius R)", statsTopSepOpt2: "2× R (touching / min. separation)", statsTopSepOpt5: "5× R (slight separation)", statsTopSepOpt10: "10× R (city & surroundings)", statsTopSepOpt20: "20× R (neighboring cities)", statsTopSepOpt50: "50× R (district separation)", statsTopSepOpt100: "100× R (regional separation)", statsTopSepOpt200: "200× R (countrywide separation)", statsTopSepOpt500: "500× R (international / continental)",
             statsTopAllTip: "Show all Top 10 circles", statsTopIso: "isolation", statsTopIsoNone: "no separation", statsTopFoundOne: "found", statsTopFoundFew: "found", statsTopFoundMany: "found",
+            statsTopElev: "Top 10 elevations", statsTopElevRTip: "Circle radius of Top 10 elevations in km (circle centers are at least 2× R apart)", statsTopElevAllTip: "Show all Top 10 elevation circles", statsTopElevWithEl: "with elevation",
             statsChartCapGeo: "Territory discovery by photos in time", statsGeoLegendFirst: "Discovery", statsGeoPlay: "Play territory discovery", statsGeoPause: "Pause playback", statsGeoPlayCancel: "Cancel playback (Esc)", statsGeoPlayNA: "Playback is only available when colouring by earliest photo (discovery).", statsGeoPlayDisc: "Discovered", statsGeoLegendLast: "Latest visit", statsGeoLegendSpan: "Time span", statsGeoModeLabel: "Colour by", statsGeoModeOpt1: "earliest photo (discovery)", statsGeoModeOpt2: "latest photo (recent)", statsGeoModeOpt3: "time span", statsGeoModeSettingLabel: "Grid colouring", statsGeoSpanWord: "span ", statsGeoLevel_y: "year", statsGeoLevel_m: "month", statsGeoLevel_d: "day", statsGeoLevel_h: "hour",
             statsGeoPalLabel: "Palette", statsGeoPalSettingLabel: "Palette",
             statsGeoMarkRb: "Reference point (RP)", statsGeoMarkCen: "Photo centroid", statsGeoLand: "Land & borders", statsGeoLandTip: "Show land and country borders (offline map background)", statsGeoRbOut: "RP outside range", statsGeoCenOut: "centroid outside range", statsGeoWrapped: "range crosses 180°",
@@ -7437,6 +7439,9 @@ var statsTopSepMult = 2;
 /* Top 10 castych mist: vlastni minimalni rozestup stredu (nasobek R), nezavisly na Top 10 mist */
 var statsTopDaysSepMult = 2;
 var STATS_TOP_SEP_OPTS = [2, 5, 10, 20, 50, 100, 200, 500];
+/* Top 10 vyssich mist (sekce Vyska): polomer okruhu R primo v km (rozestup stredu je pevne 2R) */
+var STATS_TOP_ELEV_R_OPTS = [1, 2, 5, 10, 20, 50, 100, 200];
+var statsTopElevR = 5;
 var statsGeoMarkRb = false;
 var statsGeoMarkCen = false;
 var statsGeoMode = 1;
@@ -7483,6 +7488,11 @@ function statsSelLoad() {
                     var _tds = parseInt(String(a[14]), 10);
                     if (STATS_TOP_SEP_OPTS.indexOf(_tds) !== -1) statsTopDaysSepMult = _tds;
                 }
+                /* 16. polozka = polomer okruhu Top 10 vysek v km */
+                if (a.length >= 16) {
+                    var _ter = parseFloat(String(a[15]).replace(",", "."));
+                    if (STATS_TOP_ELEV_R_OPTS.indexOf(_ter) !== -1) statsTopElevR = _ter;
+                }
             } catch(e) { AppLog.soft("statsSelLoad", e); }
         }
         function statsSelSave() {
@@ -7498,7 +7508,8 @@ function statsSelLoad() {
                     + "," + (statsGeoMarkRb ? "1" : "0") + "," + (statsGeoMarkCen ? "1" : "0") + "," + (statsGeoMode || 1)
                     + "," + (String(statsGeoPal || "duha").replace(/,/g, ""))
                     + "," + (statsGeoLand ? "1" : "0")
-                    + "," + (STATS_TOP_SEP_OPTS.indexOf(statsTopDaysSepMult) !== -1 ? statsTopDaysSepMult : 2)); } catch(eSS) { AppLog.soft("statsSelSave", eSS); }
+                    + "," + (STATS_TOP_SEP_OPTS.indexOf(statsTopDaysSepMult) !== -1 ? statsTopDaysSepMult : 2)
+                    + "," + (STATS_TOP_ELEV_R_OPTS.indexOf(statsTopElevR) !== -1 ? statsTopElevR : 5)); } catch(eSS) { AppLog.soft("statsSelSave", eSS); }
             } catch(e) { AppLog.soft("statsSelSave", e); }
         }
         statsSelLoad();
@@ -7562,7 +7573,7 @@ function statsSetFilters(on) {
         function resetStatsDefaults() {
             try {
                 var d = (typeof SETTINGS_PROFILE_DEFAULTS !== "undefined" && SETTINGS_PROFILE_DEFAULTS) ? SETTINGS_PROFILE_DEFAULTS : null;
-                var defSel = (d && d[STATS_SEL_KEY] !== undefined) ? String(d[STATS_SEL_KEY]) : "1,1,1,1,time,1,0,25,2,0,0,1,duha,1,2";
+                var defSel = (d && d[STATS_SEL_KEY] !== undefined) ? String(d[STATS_SEL_KEY]) : "1,1,1,1,time,1,0,25,2,0,0,1,duha,1,2,5";
                 var defRef = (d && d[STATS_REF_KEY] !== undefined) ? String(d[STATS_REF_KEY]) : "";
                 try { localStorage.setItem(STATS_SEL_KEY, defSel); } catch(eS1) { AppLog.soft("resetStatsDefaults", eS1); }
                 try { localStorage.setItem("mapa_fotek_stats_chart_pref", ""); } catch(eCP) { AppLog.soft("resetStatsDefaults", eCP); }
@@ -7570,6 +7581,7 @@ function statsSetFilters(on) {
                 statsCoverageR = 25;
                 statsTopSepMult = 2;
                 statsTopDaysSepMult = 2;
+                statsTopElevR = 5;
                 statsGeoMarkRb = false;
                 statsGeoMarkCen = false;
                 statsGeoLand = true;
@@ -7671,6 +7683,16 @@ function statsSetFilters(on) {
                     }
                     stdsep.innerHTML = sdh;
                     try { stdsep.value = String(statsTopDaysSepMult); } catch(eSD) { AppLog.soft("syncStatsSettings", eSD); }
+                }
+                var stelev = document.getElementById("setStatsTopElevR");
+                if (stelev) {
+                    var seh = "";
+                    for (var sei = 0; sei < STATS_TOP_ELEV_R_OPTS.length; sei++) {
+                        var sev = STATS_TOP_ELEV_R_OPTS[sei];
+                        seh += "<option value=\"" + sev + "\"" + (sev === statsTopElevR ? " selected" : "") + ">" + statsTopElevRWord(sev) + "</option>";
+                    }
+                    stelev.innerHTML = seh;
+                    try { stelev.value = String(statsTopElevR); } catch(eSE) { AppLog.soft("syncStatsSettings", eSE); }
                 }
                 var scr = document.getElementById("setStatsCoverageR");
                 if (scr && document.activeElement !== scr) scr.value = (typeof statsCoverageR === "number" && isFinite(statsCoverageR)) ? statsCoverageR : 25;
@@ -7933,7 +7955,29 @@ function statsSetFilters(on) {
             if (refocus) { try { m.btn.focus(); } catch(e8) { AppLog.soft("statsCloseTopSepMenu", e8); } }
         }
 
-        /* isDays = true -> menu pro Top 10 castych mist (vlastni rozestup statsTopDaysSepMult) */
+        function statsTopElevRWord(v) {
+            var t = String(v);
+            if (typeof currentLang !== "undefined" && currentLang === "cs") t = t.replace(".", ",");
+            return t + " km";
+        }
+        function setStatsTopElevR(n) {
+            var v = parseFloat(n);
+            try { statsTopElevR = (STATS_TOP_ELEV_R_OPTS.indexOf(v) !== -1) ? v : 5; } catch(e) { statsTopElevR = 5; }
+            statsSelSave();
+            try { syncStatsSettings(); } catch(e2) { AppLog.soft("setStatsTopElevR", e2); }
+            try { renderStats(); } catch(e1) { AppLog.soft("setStatsTopElevR", e1); }
+        }
+        /* Tlacitko R (km) u Top 10 vysek; menu otevira statsOpenTopSepMenu(btn, ev, "elev") */
+        function statsTopElevSelect() {
+            try {
+                var _t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {};
+                var tip = String(_t.statsTopElevRTip || "Polom\u011br okruhu Top 10 v\u00fd\u0161ek (km)").replace(/[<>&"]/g, "");
+                var cur = (STATS_TOP_ELEV_R_OPTS.indexOf(statsTopElevR) !== -1) ? statsTopElevR : 5;
+                return "<button type=\"button\" class=\"st-days-sel st-days-btn st-topelev-btn\" title=\"" + tip + "\" aria-label=\"" + tip + "\" aria-haspopup=\"true\" aria-expanded=\"false\" onclick=\"event.stopPropagation(); statsOpenTopSepMenu(this, event, 'elev')\">" + statsTopElevRWord(cur) + " \u25be</button>";
+            } catch(e) { return ""; }
+        }
+
+        /* isDays = true -> menu pro Top 10 castych mist (vlastni rozestup statsTopDaysSepMult); isDays === "elev" -> menu R (km) pro Top 10 vysek */
         function statsOpenTopSepMenu(btn, ev, isDays) {
             try {
                 if (_statsTopSepMenu) {
@@ -7941,20 +7985,22 @@ function statsSetFilters(on) {
                     statsCloseTopSepMenu(false);
                     if (same) return;
                 }
-                var curV = isDays ? statsTopDaysSepMult : statsTopSepMult;
-                var cur = (STATS_TOP_SEP_OPTS.indexOf(curV) !== -1) ? curV : 2;
-                var btnSel = isDays ? ".st-topdsep-btn" : ".st-topsep-btn";
+                var isElev = (isDays === "elev");
+                var OPTS = isElev ? STATS_TOP_ELEV_R_OPTS : STATS_TOP_SEP_OPTS;
+                var curV = isElev ? statsTopElevR : (isDays ? statsTopDaysSepMult : statsTopSepMult);
+                var cur = (OPTS.indexOf(curV) !== -1) ? curV : (isElev ? 5 : 2);
+                var btnSel = isElev ? ".st-topelev-btn" : (isDays ? ".st-topdsep-btn" : ".st-topsep-btn");
                 var el = document.createElement("div");
                 el.className = "st-topsep-menu";
                 el.setAttribute("role", "menu");
                 el.setAttribute("aria-label", btn.getAttribute("aria-label") || "");
                 var cells = [];
-                for (var i = 0; i < STATS_TOP_SEP_OPTS.length; i++) {
-                    var v = STATS_TOP_SEP_OPTS[i];
+                for (var i = 0; i < OPTS.length; i++) {
+                    var v = OPTS[i];
                     var b = document.createElement("button");
                     b.type = "button";
                     b.setAttribute("role", "menuitem");
-                    b.textContent = statsTopSepWord(v);
+                    b.textContent = isElev ? statsTopElevRWord(v) : statsTopSepWord(v);
                     b.setAttribute("data-v", String(v));
                     b.setAttribute("aria-pressed", v === cur ? "true" : "false");
                     if (v === cur) b.className = "is-cur";
@@ -7966,10 +8012,10 @@ function statsSetFilters(on) {
                     while (t && t !== el && !(t.getAttribute && t.getAttribute("data-v"))) t = t.parentNode;
                     if (!t || t === el) return;
                     e.stopPropagation();
-                    var n = parseInt(t.getAttribute("data-v"), 10);
+                    var n = isElev ? parseFloat(t.getAttribute("data-v")) : parseInt(t.getAttribute("data-v"), 10);
                     var viaKey = (e.detail === 0);
                     statsCloseTopSepMenu(false);
-                    if (isDays) setStatsTopDaysSep(n); else setStatsTopSep(n);
+                    if (isElev) setStatsTopElevR(n); else if (isDays) setStatsTopDaysSep(n); else setStatsTopSep(n);
                     if (viaKey) setTimeout(function() { var nb = document.querySelector("#stSectionOverlayBody " + btnSel) || document.querySelector("#statsBody " + btnSel); if (nb) { try { nb.focus(); } catch(eF) { AppLog.soft("anon>anon", eF); } } }, 0);
                 });
                 document.body.appendChild(el);
@@ -8013,7 +8059,7 @@ function statsSetFilters(on) {
                 document.addEventListener("keydown", m.onKey, true);
                 document.addEventListener("scroll", m.onScroll, true);
                 window.addEventListener("resize", m.onClose);
-                var curIdx = STATS_TOP_SEP_OPTS.indexOf(cur);
+                var curIdx = OPTS.indexOf(cur);
                 if (curIdx >= 0 && cells[curIdx]) { try { cells[curIdx].focus({ preventScroll: true }); } catch(eFo) { AppLog.soft("statsOpenTopSepMenu", eFo); } }
             } catch(eMenu) { try { statsCloseTopSepMenu(false); } catch(eM2) { AppLog.soft("statsOpenTopSepMenu", eM2); } }
         }
@@ -9703,6 +9749,66 @@ function statsSetFilters(on) {
                 return withIters(bestList);
             } catch(e) { return []; }
         }
+        // Top 10 nejvyse polozenych mist (sekce Vyska). Hladove: nejvyse polozena zbyvajici fotka (bez fotek ve vzdusnem
+        // prostoru, stejny filtr jako "Nejvyse polozena") = stred okruhu o polomeru R km; dalsi stred musi byt >= 2R od
+        // predchozich (kruznice se dotykaji, neprotinaji). Platne uz s 1 fotkou, bez eskalace R. Vraci [{c, r, h, n, p}];
+        // n = pocet fotek s vyskou v okruhu R, h = vyska stredove (nejvyssi) fotky, p = jeji zaznam; .sepKm = 2R.
+        function statsTopElev(locs, R) {
+            var out = [];
+            try {
+                R = Number(R);
+                if (!locs || !locs.length || !isFinite(R) || R <= 0) return out;
+                var i, o, p, v, la0, lo0, nC = 0;
+                var cLa = new Float64Array(locs.length), cLo = new Float64Array(locs.length), cH = new Float64Array(locs.length), cIx = new Int32Array(locs.length);
+                for (i = 0; i < locs.length; i++) {
+                    p = locs[i] && locs[i].p;
+                    o = locs[i] && locs[i].ll;
+                    if (!p || !o || p.length < 8 || p[7] === null || p[7] === "") continue;
+                    v = Number(p[7]); la0 = Number(o[0]); lo0 = Number(o[1]);
+                    if (!isFinite(v) || !isFinite(la0) || !isFinite(lo0)) continue;
+                    if (statsIsAir(p)) continue;
+                    cLa[nC] = la0; cLo[nC] = lo0; cH[nC] = v; cIx[nC] = i; nC++;
+                }
+                if (!nC) return out;
+                /* razeni pres Float64Array (nativni ciselne razeni): klic = kvantizovana hodnota * M + index.
+                   Vyska: 0,01 m, pri shode vyhrava nizsi poradi souboru; sirka: 1e-5 deg (pas ma rezervu, takze presnost nevadi). */
+                var M = 1; while (M < nC) M *= 2;
+                var kH = new Float64Array(nC), kL = new Float64Array(nC);
+                for (i = 0; i < nC; i++) {
+                    kH[i] = Math.round((cH[i] + 20000) * 100) * M + (M - 1 - i);
+                    kL[i] = Math.round((cLa[i] + 90) * 1e5) * M + i;
+                }
+                kH.sort(); kL.sort();
+                var byH = new Int32Array(nC), byLat = new Int32Array(nC), latArr = new Float64Array(nC);
+                for (i = 0; i < nC; i++) {
+                    byH[i] = M - 1 - (kH[nC - 1 - i] % M);          /* sestupne podle vysky */
+                    byLat[i] = kL[i] % M;
+                    latArr[i] = cLa[byLat[i]];
+                }
+                var sep = 2 * R, kLat = 111.1949266, d2r = Math.PI / 180, removed = new Uint8Array(nC);
+                var bandDeg = sep * 1.1 / kLat;
+                for (var hi0 = 0; hi0 < nC && out.length < 10; hi0++) {
+                    var ci = byH[hi0];
+                    if (removed[ci]) continue;
+                    var cla = cLa[ci], clo = cLo[ci], n = 0, cosC = Math.cos(Math.abs(cla) * d2r);
+                    var lo_ = 0, hi_ = nC, mid_, loLat = cla - bandDeg, hiLat = cla + bandDeg;
+                    while (lo_ < hi_) { mid_ = (lo_ + hi_) >> 1; if (latArr[mid_] < loLat) lo_ = mid_ + 1; else hi_ = mid_; }
+                    for (var jj = lo_; jj < nC && latArr[jj] <= hiLat; jj++) {
+                        var j = byLat[jj];
+                        var dLo = Math.abs(cLo[j] - clo); if (dLo > 180) dLo = 360 - dLo;
+                        var cosM = Math.min(cosC, Math.cos(Math.abs(cLa[j]) * d2r));
+                        if (dLo * kLat * cosM > sep * 1.1) continue;
+                        var dd = (j === ci) ? 0 : calcDistKm(cla, clo, cLa[j], cLo[j]);
+                        if (!isFinite(dd)) continue;
+                        if (dd <= R + 1e-9) n++;
+                        if (dd < sep - 1e-9) removed[j] = 1;
+                    }
+                    out.push({ c: [cla, clo], r: R, h: cH[ci], n: n, p: locs[cIx[ci]].p });
+                }
+                try { out.sepKm = sep; } catch(eS) { AppLog.soft("statsTopElev", eS); }
+            } catch(e) { AppLog.soft("statsTopElev", e); }
+            return out;
+        }
         // Plocha pokrytá obalovou zónou (buffer) — adaptivní geodetická mřížka s před-deduplikací a diskovým kernelem.
         // Pro 1 fotku analyticky přesná (π·R²). Pro statisíce fotek blesková (~0.1 s pro 500k bodů).
         function statsCoverageArea(locs, R_km) {
@@ -11296,7 +11402,7 @@ function fmtStatsCoordShort(la, lo) {
         // Klik na poradi Top 10: kresli kruznici jako u Nejhustsiho okruhu.
         function statsTopPlaceShow(i, days) {
             try {
-                var arr = (typeof window !== "undefined") ? (days ? window.statsTopDaysClusters : window.statsTopClusters) : null;
+                var arr = (typeof window !== "undefined") ? (days === "elev" ? window.statsTopElevClusters : (days ? window.statsTopDaysClusters : window.statsTopClusters)) : null;
                 var cl = arr && arr[Number(i)];
                 if (!cl || !cl.c) return;
                 var idx = statsCircleList.push([cl.c, cl.r || 1]) - 1;
@@ -11306,7 +11412,7 @@ function fmtStatsCoordShort(la, lo) {
         // Tlacitko Vse: vykresli vsechny kruznice Top 10 najednou + priblizi na ne.
         function statsTopPlacesShowAll(days) {
             try {
-                var arr = (typeof window !== "undefined") ? (days ? window.statsTopDaysClusters : window.statsTopClusters) : null;
+                var arr = (typeof window !== "undefined") ? (days === "elev" ? window.statsTopElevClusters : (days ? window.statsTopDaysClusters : window.statsTopClusters)) : null;
                 if (!arr || !arr.length) return;
                 try { closeStatsModal(); } catch(eC) { AppLog.soft("statsTopPlacesShowAll", eC); }
                 try {
@@ -13674,6 +13780,27 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     { label: L_("statsElevLowest", "Nejníže položená"), val: "" }
                 ]);
             }
+            /* Top 10 vysek: R primo v km (statsTopElevR), bez eskalace; rozestup stredu pevne 2R. Pocita se synchronne. */
+            var buildTopElevRow = function(arr) {
+                if (!arr || !arr.length) return "";
+                try { window.statsTopElevClusters = arr; } catch(e) { AppLog.soft("renderStats>buildTopElevRow", e); }
+                var btns = "", rWordE = (currentLang === "cs") ? "okruh" : "radius", withEl = L_("statsTopElevWithEl", "s v\u00fd\u0161kou");
+                for (var bj = 0; bj < arr.length; bj++) {
+                    var cj = arr[bj] || {}, cc = cj.c || [0, 0];
+                    var tip = "#" + (bj + 1) + " \u00b7 " + fmtElev(cj.h) + " \u00b7 " + statsFileName(cj.p) + " \u00b7 " + fmtStatsCoord(cc[0], cc[1]) + " \u00b7 " + rWordE + " " + statsTopElevRWord(cj.r) + " \u00b7 " + fmtStatsPhotos(cj.n || 0) + " " + withEl;
+                    btns += "<button type=\"button\" class=\"st-chart-tab" + (bj < 3 ? " rank-" + (bj + 1) : "") + "\" title=\"" + escapeHtml(tip) + "\" aria-label=\"" + escapeHtml(tip) + "\" onclick=\"event.stopPropagation();statsTopPlaceShow(" + bj + ",'elev');\">" + (bj + 1) + "</button>";
+                }
+                var topTitle = L_("statsTopElev", "Top 10 v\u00fd\u0161ek") + " (" + statsTopElevRWord(arr[0].r) + ")";
+                var allIco = "<svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"14\" r=\"5\"/><circle cx=\"16\" cy=\"14\" r=\"5\"/><circle cx=\"12\" cy=\"8.5\" r=\"5\"/></svg>";
+                var _sepE = (typeof arr.sepKm === "number" && isFinite(arr.sepKm)) ? arr.sepKm : 0;
+                var allTip = L_("statsTopElevAllTip", "Zobrazit v\u0161echny kru\u017enice Top 10 v\u00fd\u0161ek") + (_sepE > 0 ? " (" + L_("statsTopIso", "izolace") + " " + statsTopElevRWord(_sepE) + ")" : "")
+                    + " \u00b7 " + statsTopFoundWord(arr.length) + " " + fmtStatsPlaces(arr.length);
+                return stRow([{ label: topTitle + "<br>" + statsTopElevSelect(), labelTitle: topTitle, lblWrap: true, val: allIco, valClick: "statsTopPlacesShowAll('elev')", valTitle: allTip, subHtml: "<span class=\"st-row-sub st-top-btns\">" + btns + "</span>" }]);
+            };
+            var topEl = null;
+            try { topEl = statsTopElev(locs, statsTopElevR); } catch(eTE) { topEl = null; }
+            var _hTe = buildTopElevRow(topEl);
+            if (_hTe) { H += "<div id=\"stRowTopElev\">" + _hTe + "</div>"; }
             var elPct = nAll > 0 ? (elN / nAll * 100) : 0;
             var elPctTxt = (elN === 0) ? "0" : (elN === nAll) ? "100"
                 : (elPct < 0.1) ? ("&lt; " + fmtDec(0.1, 1)) : (elPct > 99.9) ? ("&gt; " + fmtDec(99.9, 1)) : fmtDec(elPct, 1);
@@ -15681,7 +15808,7 @@ H += "</div></div>";
         }
 
         var SETTINGS_PROFILE_KEYS = ["mapa_fotek_archive_root", "mapa_fotek_archive_on", "mapa_fotek_base_layer", "mapa_fotek_map_zoom", "mapa_fotek_map_lat", "mapa_fotek_map_lon", "mapa_fotek_measure_auto", "mapa_fotek_grid_state", "mapa_fotek_dyn_input", "mapa_fotek_show_coords", "mapa_fotek_def_txt_mode", "mapa_fotek_def_single_mode", "mapa_fotek_def_gis_mode", "mapa_fotek_def_txt_heat_pal", "mapa_fotek_def_txt_heat_pal_rot", "mapa_fotek_def_txt_heat_op", "mapa_fotek_def_txt_heat_blur", "mapa_fotek_def_txt_heat_size", "mapa_fotek_def_txt_dots_color", "mapa_fotek_def_txt_dots_color_rot", "mapa_fotek_def_txt_dots_op", "mapa_fotek_def_txt_dots_size", "mapa_fotek_def_txt_dots_icon", "mapa_fotek_def_txt_zone_color", "mapa_fotek_def_txt_zone_color_rot", "mapa_fotek_def_txt_zone_op", "mapa_fotek_def_txt_zone_km", "mapa_fotek_def_txt_age_pal", "mapa_fotek_def_txt_age_pal_rot", "mapa_fotek_def_txt_age_op", "mapa_fotek_def_txt_age_blur", "mapa_fotek_def_txt_age_size", "mapa_fotek_def_txt_cards_op", "mapa_fotek_def_txt_clusters_color", "mapa_fotek_def_txt_clusters_color_rot", "mapa_fotek_def_txt_clusters_op", "mapa_fotek_def_single_heat_pal", "mapa_fotek_def_single_heat_pal_rot", "mapa_fotek_def_single_heat_op", "mapa_fotek_def_single_heat_blur", "mapa_fotek_def_single_heat_size", "mapa_fotek_def_single_dots_color", "mapa_fotek_def_single_dots_color_rot", "mapa_fotek_def_single_dots_op", "mapa_fotek_def_single_dots_size", "mapa_fotek_def_single_dots_icon", "mapa_fotek_def_single_zone_color", "mapa_fotek_def_single_zone_color_rot", "mapa_fotek_def_single_zone_op", "mapa_fotek_def_single_zone_km", "mapa_fotek_def_single_age_pal", "mapa_fotek_def_single_age_pal_rot", "mapa_fotek_def_single_age_op", "mapa_fotek_def_single_age_blur", "mapa_fotek_def_single_age_size", "mapa_fotek_def_single_cards_op", "mapa_fotek_def_single_clusters_color", "mapa_fotek_def_single_clusters_color_rot", "mapa_fotek_def_single_clusters_op", "mapa_fotek_def_gis_point_color", "mapa_fotek_def_gis_point_color_rot", "mapa_fotek_def_gis_point_icon", "mapa_fotek_def_gis_point_size", "mapa_fotek_def_gis_point_op", "mapa_fotek_def_gis_pins_op", "mapa_fotek_def_gis_heat_pal", "mapa_fotek_def_gis_heat_pal_rot", "mapa_fotek_def_gis_heat_op", "mapa_fotek_def_gis_heat_blur", "mapa_fotek_def_gis_zone_color", "mapa_fotek_def_gis_zone_color_rot", "mapa_fotek_def_gis_zone_km", "mapa_fotek_def_gis_zone_op", "mapa_fotek_def_gis_line_color", "mapa_fotek_def_gis_line_color_rot", "mapa_fotek_def_gis_line_op", "mapa_fotek_def_gis_line_width", "mapa_fotek_def_gis_fill_color", "mapa_fotek_def_gis_fill_op", "mapa_fotek_area_line_color", "mapa_fotek_area_line_width", "mapa_fotek_area_line_dash", "mapa_fotek_area_line_op", "mapa_fotek_area_fill_color", "mapa_fotek_area_fill_op", "mapa_fotek_filters_persist", "mapa_fotek_filters_multimode", "mapa_fotek_settings_open", "mapa_fotek_lang", "mapa_fotek_hide_s", "mapa_fotek_open_mode", "mapa_fotek_lbwin_pref", "mapa_fotek_pointer_scale", "mapa_fotek_pointer_color", "mapa_fotek_pointer_shape", "mapa_fotek_pointer_ms", "mapa_fotek_transition", "mapa_fotek_trans_ms", "mapa_fotek_map_frame", "mapa_fotek_trail_opacity", "mapa_fotek_trail_width", "mapa_fotek_trail_color", "mapa_fotek_slide_trail", "mapa_fotek_trail_anim", "mapa_fotek_slide_ms", "mapa_fotek_slide_rev", "mapa_fotek_dataset_styles", "mapa_fotek_sources_order", "mapa_fotek_timeline_pref", "mapa_fotek_stats_chart_pref", "mapa_fotek_map_view_pref", "mapa_fotek_stats_ref", "mapa_fotek_stats_sel", "mapa_fotek_off_borders", "mapa_fotek_off_border_color", "mapa_fotek_off_land", "mapa_fotek_off_sea"];
-        var SETTINGS_PROFILE_DEFAULTS = {"mapa_fotek_archive_root": "", "mapa_fotek_archive_on": "1", "mapa_fotek_base_layer": "gRoad", "mapa_fotek_map_zoom": "6", "mapa_fotek_map_lat": "50.0", "mapa_fotek_map_lon": "15.0", "mapa_fotek_measure_auto": "0", "mapa_fotek_grid_state": "0", "mapa_fotek_dyn_input": "0", "mapa_fotek_show_coords": "0", "mapa_fotek_def_txt_mode": "heat", "mapa_fotek_def_single_mode": "dots", "mapa_fotek_def_gis_mode": "symbol", "mapa_fotek_def_txt_heat_pal": "google", "mapa_fotek_def_txt_heat_pal_rot": "1", "mapa_fotek_def_txt_heat_op": "70", "mapa_fotek_def_txt_heat_blur": "10", "mapa_fotek_def_txt_heat_size": "1.7", "mapa_fotek_def_txt_dots_color": "red", "mapa_fotek_def_txt_dots_color_rot": "1", "mapa_fotek_def_txt_dots_op": "50", "mapa_fotek_def_txt_dots_size": "3.5", "mapa_fotek_def_txt_dots_icon": "dot", "mapa_fotek_def_txt_zone_color": "blue", "mapa_fotek_def_txt_zone_color_rot": "1", "mapa_fotek_def_txt_zone_op": "50", "mapa_fotek_def_txt_zone_km": "10", "mapa_fotek_def_txt_age_pal": "duha", "mapa_fotek_def_txt_age_pal_rot": "1", "mapa_fotek_def_txt_age_op": "100", "mapa_fotek_def_txt_age_blur": "0", "mapa_fotek_def_txt_age_size": "0.2", "mapa_fotek_def_txt_cards_op": "100", "mapa_fotek_def_txt_clusters_color": "red", "mapa_fotek_def_txt_clusters_color_rot": "1", "mapa_fotek_def_txt_clusters_op": "50", "mapa_fotek_def_single_heat_pal": "google", "mapa_fotek_def_single_heat_pal_rot": "1", "mapa_fotek_def_single_heat_op": "70", "mapa_fotek_def_single_heat_blur": "10", "mapa_fotek_def_single_heat_size": "1.7", "mapa_fotek_def_single_dots_color": "red", "mapa_fotek_def_single_dots_color_rot": "1", "mapa_fotek_def_single_dots_op": "50", "mapa_fotek_def_single_dots_size": "3.5", "mapa_fotek_def_single_dots_icon": "dot", "mapa_fotek_def_single_zone_color": "blue", "mapa_fotek_def_single_zone_color_rot": "1", "mapa_fotek_def_single_zone_op": "50", "mapa_fotek_def_single_zone_km": "10", "mapa_fotek_def_single_age_pal": "duha", "mapa_fotek_def_single_age_pal_rot": "1", "mapa_fotek_def_single_age_op": "100", "mapa_fotek_def_single_age_blur": "0", "mapa_fotek_def_single_age_size": "0.2", "mapa_fotek_def_single_cards_op": "100", "mapa_fotek_def_single_clusters_color": "red", "mapa_fotek_def_single_clusters_color_rot": "1", "mapa_fotek_def_single_clusters_op": "50", "mapa_fotek_def_gis_point_color": "#ea4335", "mapa_fotek_def_gis_point_color_rot": "1", "mapa_fotek_def_gis_point_icon": "pin", "mapa_fotek_def_gis_point_size": "14", "mapa_fotek_def_gis_point_op": "100", "mapa_fotek_def_gis_pins_op": "100", "mapa_fotek_def_gis_heat_pal": "google", "mapa_fotek_def_gis_heat_pal_rot": "0", "mapa_fotek_def_gis_heat_op": "70", "mapa_fotek_def_gis_heat_blur": "10", "mapa_fotek_def_gis_zone_color": "blue", "mapa_fotek_def_gis_zone_color_rot": "0", "mapa_fotek_def_gis_zone_km": "10", "mapa_fotek_def_gis_zone_op": "100", "mapa_fotek_def_gis_line_color": "#ea4335", "mapa_fotek_def_gis_line_color_rot": "1", "mapa_fotek_def_gis_line_op": "85", "mapa_fotek_def_gis_line_width": "3", "mapa_fotek_def_gis_fill_color": "", "mapa_fotek_def_gis_fill_op": "50", "mapa_fotek_area_line_color": "#0AA94C", "mapa_fotek_area_line_width": "2", "mapa_fotek_area_line_dash": "6 4", "mapa_fotek_area_line_op": "100", "mapa_fotek_area_fill_color": "#0AA94C", "mapa_fotek_area_fill_op": "15", "mapa_fotek_filters_persist": "1", "mapa_fotek_filters_multimode": "0", "mapa_fotek_settings_open": "{}", "mapa_fotek_lang": "cs", "mapa_fotek_hide_s": "0", "mapa_fotek_open_mode": "viewer", "mapa_fotek_lbwin_pref": "", "mapa_fotek_pointer_scale": "1.25", "mapa_fotek_pointer_color": "green", "mapa_fotek_pointer_shape": "circle", "mapa_fotek_pointer_ms": "2750", "mapa_fotek_transition": "cut", "mapa_fotek_trans_ms": "1000", "mapa_fotek_map_frame": "off", "mapa_fotek_trail_opacity": "90", "mapa_fotek_trail_width": "3", "mapa_fotek_trail_color": "blue", "mapa_fotek_slide_trail": "0", "mapa_fotek_trail_anim": "0", "mapa_fotek_slide_ms": "3000", "mapa_fotek_slide_rev": "0", "mapa_fotek_dataset_styles": "{}", "mapa_fotek_sources_order": "[]", "mapa_fotek_timeline_pref": "", "mapa_fotek_stats_chart_pref": "", "mapa_fotek_map_view_pref": "", "mapa_fotek_stats_ref": "", "mapa_fotek_stats_sel": "1,1,1,1,time,1,0,25,2,0,0,1,duha,1,2", "mapa_fotek_off_borders": "1", "mapa_fotek_off_border_color": "#ffffff", "mapa_fotek_off_land": "#dadce0", "mapa_fotek_off_sea": "#ffffff"};
+        var SETTINGS_PROFILE_DEFAULTS = {"mapa_fotek_archive_root": "", "mapa_fotek_archive_on": "1", "mapa_fotek_base_layer": "gRoad", "mapa_fotek_map_zoom": "6", "mapa_fotek_map_lat": "50.0", "mapa_fotek_map_lon": "15.0", "mapa_fotek_measure_auto": "0", "mapa_fotek_grid_state": "0", "mapa_fotek_dyn_input": "0", "mapa_fotek_show_coords": "0", "mapa_fotek_def_txt_mode": "heat", "mapa_fotek_def_single_mode": "dots", "mapa_fotek_def_gis_mode": "symbol", "mapa_fotek_def_txt_heat_pal": "google", "mapa_fotek_def_txt_heat_pal_rot": "1", "mapa_fotek_def_txt_heat_op": "70", "mapa_fotek_def_txt_heat_blur": "10", "mapa_fotek_def_txt_heat_size": "1.7", "mapa_fotek_def_txt_dots_color": "red", "mapa_fotek_def_txt_dots_color_rot": "1", "mapa_fotek_def_txt_dots_op": "50", "mapa_fotek_def_txt_dots_size": "3.5", "mapa_fotek_def_txt_dots_icon": "dot", "mapa_fotek_def_txt_zone_color": "blue", "mapa_fotek_def_txt_zone_color_rot": "1", "mapa_fotek_def_txt_zone_op": "50", "mapa_fotek_def_txt_zone_km": "10", "mapa_fotek_def_txt_age_pal": "duha", "mapa_fotek_def_txt_age_pal_rot": "1", "mapa_fotek_def_txt_age_op": "100", "mapa_fotek_def_txt_age_blur": "0", "mapa_fotek_def_txt_age_size": "0.2", "mapa_fotek_def_txt_cards_op": "100", "mapa_fotek_def_txt_clusters_color": "red", "mapa_fotek_def_txt_clusters_color_rot": "1", "mapa_fotek_def_txt_clusters_op": "50", "mapa_fotek_def_single_heat_pal": "google", "mapa_fotek_def_single_heat_pal_rot": "1", "mapa_fotek_def_single_heat_op": "70", "mapa_fotek_def_single_heat_blur": "10", "mapa_fotek_def_single_heat_size": "1.7", "mapa_fotek_def_single_dots_color": "red", "mapa_fotek_def_single_dots_color_rot": "1", "mapa_fotek_def_single_dots_op": "50", "mapa_fotek_def_single_dots_size": "3.5", "mapa_fotek_def_single_dots_icon": "dot", "mapa_fotek_def_single_zone_color": "blue", "mapa_fotek_def_single_zone_color_rot": "1", "mapa_fotek_def_single_zone_op": "50", "mapa_fotek_def_single_zone_km": "10", "mapa_fotek_def_single_age_pal": "duha", "mapa_fotek_def_single_age_pal_rot": "1", "mapa_fotek_def_single_age_op": "100", "mapa_fotek_def_single_age_blur": "0", "mapa_fotek_def_single_age_size": "0.2", "mapa_fotek_def_single_cards_op": "100", "mapa_fotek_def_single_clusters_color": "red", "mapa_fotek_def_single_clusters_color_rot": "1", "mapa_fotek_def_single_clusters_op": "50", "mapa_fotek_def_gis_point_color": "#ea4335", "mapa_fotek_def_gis_point_color_rot": "1", "mapa_fotek_def_gis_point_icon": "pin", "mapa_fotek_def_gis_point_size": "14", "mapa_fotek_def_gis_point_op": "100", "mapa_fotek_def_gis_pins_op": "100", "mapa_fotek_def_gis_heat_pal": "google", "mapa_fotek_def_gis_heat_pal_rot": "0", "mapa_fotek_def_gis_heat_op": "70", "mapa_fotek_def_gis_heat_blur": "10", "mapa_fotek_def_gis_zone_color": "blue", "mapa_fotek_def_gis_zone_color_rot": "0", "mapa_fotek_def_gis_zone_km": "10", "mapa_fotek_def_gis_zone_op": "100", "mapa_fotek_def_gis_line_color": "#ea4335", "mapa_fotek_def_gis_line_color_rot": "1", "mapa_fotek_def_gis_line_op": "85", "mapa_fotek_def_gis_line_width": "3", "mapa_fotek_def_gis_fill_color": "", "mapa_fotek_def_gis_fill_op": "50", "mapa_fotek_area_line_color": "#0AA94C", "mapa_fotek_area_line_width": "2", "mapa_fotek_area_line_dash": "6 4", "mapa_fotek_area_line_op": "100", "mapa_fotek_area_fill_color": "#0AA94C", "mapa_fotek_area_fill_op": "15", "mapa_fotek_filters_persist": "1", "mapa_fotek_filters_multimode": "0", "mapa_fotek_settings_open": "{}", "mapa_fotek_lang": "cs", "mapa_fotek_hide_s": "0", "mapa_fotek_open_mode": "viewer", "mapa_fotek_lbwin_pref": "", "mapa_fotek_pointer_scale": "1.25", "mapa_fotek_pointer_color": "green", "mapa_fotek_pointer_shape": "circle", "mapa_fotek_pointer_ms": "2750", "mapa_fotek_transition": "cut", "mapa_fotek_trans_ms": "1000", "mapa_fotek_map_frame": "off", "mapa_fotek_trail_opacity": "90", "mapa_fotek_trail_width": "3", "mapa_fotek_trail_color": "blue", "mapa_fotek_slide_trail": "0", "mapa_fotek_trail_anim": "0", "mapa_fotek_slide_ms": "3000", "mapa_fotek_slide_rev": "0", "mapa_fotek_dataset_styles": "{}", "mapa_fotek_sources_order": "[]", "mapa_fotek_timeline_pref": "", "mapa_fotek_stats_chart_pref": "", "mapa_fotek_map_view_pref": "", "mapa_fotek_stats_ref": "", "mapa_fotek_stats_sel": "1,1,1,1,time,1,0,25,2,0,0,1,duha,1,2,5", "mapa_fotek_off_borders": "1", "mapa_fotek_off_border_color": "#ffffff", "mapa_fotek_off_land": "#dadce0", "mapa_fotek_off_sea": "#ffffff"};
         // Hlášení výsledku načtení / obnovení profilu: výsledek se uloží před restartem a toast se ukáže až po novém načtení stránky
         // (aktuálním jazykem), protože restart by jinak toast hned smazal.
         function mfProfileToastText(r) {
@@ -16248,6 +16375,8 @@ H += "</div></div>";
                         "<select id=\"setStatsTopSep\" onchange=\"setStatsTopSep(this.value)\" title=\"" + (t.statsTopSepTip || "") + "\" style=\"border:1.5px solid #dadce0;border-radius:8px;padding:3px 4px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;\"></select></label>" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;\"><span>" + (t.statsTopDays || "Top 10 častých míst") + " (" + (currentLang === "cs" ? "rozestup" : "spacing") + "):</span>" +
                         "<select id=\"setStatsTopDaysSep\" onchange=\"setStatsTopDaysSep(this.value)\" title=\"" + (t.statsTopDaysSepTip || "") + "\" style=\"border:1.5px solid #dadce0;border-radius:8px;padding:3px 4px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;\"></select></label>" +
+                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;\"><span>" + (t.statsTopElev || "Top 10 výšek") + " (" + (currentLang === "cs" ? "poloměr" : "radius") + "):</span>" +
+                        "<select id=\"setStatsTopElevR\" onchange=\"setStatsTopElevR(this.value)\" title=\"" + (t.statsTopElevRTip || "") + "\" style=\"border:1.5px solid #dadce0;border-radius:8px;padding:3px 4px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;\"></select></label>" +
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.statsCoverageArea || "Obalová plocha") + " (" + (currentLang === "cs" ? "poloměr" : "radius") + "):</span>" +
                         "<input id=\"setStatsCoverageR\" type=\"text\" inputmode=\"decimal\" min=\"0.5\" max=\"5000\" step=\"any\" onfocus=\"this.select();\" onchange=\"setStatsCoverageR(this.value, true)\" onkeydown=\"if(event.key==='Enter')this.blur();\" title=\"" + (t.statsCoverageAreaTip || "") + "\" style=\"width:60px;border:1.5px solid #dadce0;border-radius:8px;padding:3px 6px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;text-align:right;\" /><span>km</span>" +
                         "<span style=\"color:#5f6368;font-size:10px;\">(" + (t.statsCoverageRange || (currentLang === "cs" ? "rozsah 0,5 \u2013 5000 km" : "range 0.5 \u2013 5000 km")) + ")</span></label>" +
