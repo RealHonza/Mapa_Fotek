@@ -3570,7 +3570,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsChartCapGeo: "Objevení území fotkami v čase", statsGeoLegendFirst: "Objeveno", statsGeoPlay: "Přehrát objevování území", statsGeoPause: "Pozastavit přehrávání", statsGeoPlayCancel: "Zrušit přehrávání (Esc)", statsGeoPlayNA: "Přehrávání je dostupné jen při obarvení podle nejstarších fotek (objevení).", statsGeoPlayDisc: "Objeveno", statsGeoLegendLast: "Poslední návštěva", statsGeoLegendSpan: "Časové rozpětí", statsGeoModeLabel: "Obarvit dle", statsGeoModeOpt1: "nejstarší fotky (objevení)", statsGeoModeOpt2: "nejnovější fotky (poslední)", statsGeoModeOpt3: "časového rozpětí", statsGeoModeSettingLabel: "Obarvení mřížky", statsGeoSpanWord: "rozpětí ", statsGeoLevel_y: "roku", statsGeoLevel_m: "měsíce", statsGeoLevel_d: "dne", statsGeoLevel_h: "hodiny",
             statsGeoPalLabel: "Paleta", statsGeoPalSettingLabel: "Paleta",
             statsGeoMarkRb: "Referenční bod (RB)", statsGeoMarkCen: "Těžiště fotek", statsGeoLand: "Pevnina a hranice", statsGeoLandTip: "Zobrazit podkres pevniny a hranice států v grafu (z offline mapy)", statsGeoRbOut: "RB mimo rozsah", statsGeoCenOut: "těžiště mimo rozsah", statsGeoWrapped: "rozsah přes 180°",
-            statsGeoEmpty: "Pro zobrazení mřížky nejsou žádné body s polohou.", statsGeoCapLat: "N", statsGeoCapLonE: "E", statsGeoCapLonW: "W",
+            statsGeoEmpty: "Pro zobrazení mřížky nejsou žádné body s polohou.", statsGeoCapLat: "N", statsGeoCapLatS: "S", statsGeoCapLonE: "E", statsGeoCapLonW: "W",
             statsCoverageArea: "Obalová plocha", statsCoverageAreaTip: "Poloměr obalové zóny v km", statsCoverageRange: "rozsah 0,5 \u2013 5000 km", statsCoveragePolygonTip: "Vykreslit obalovou plochu jako polygon do měření", statsCoverageNoPolygon: "Nelze vykreslit polygon obalové plochy.",
             statsBusiestDay: "Nejvíce fotek za", statsDaysTip: "Kolik dní zrovna hledáme maximum",
             statsPhotoOne: "fotka", statsPhotoFew: "fotky", statsPhotoMany: "fotek", statsPlaceOne: "místo", statsPlaceFew: "místa", statsPlaceMany: "míst", statsYearOne: "rok", statsYearFew: "roky", statsYearMany: "let", statsCalLegend: "Roky focení v daný den", statsCalMaxTip: "Nejvyšší počet let s focením v jeden den", statsCalMinTip: "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní", statsDayGenOne: "dne", statsDayGenMany: "dnů",
@@ -3958,7 +3958,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsChartCapGeo: "Territory discovery by photos in time", statsGeoLegendFirst: "Discovery", statsGeoPlay: "Play territory discovery", statsGeoPause: "Pause playback", statsGeoPlayCancel: "Cancel playback (Esc)", statsGeoPlayNA: "Playback is only available when colouring by earliest photo (discovery).", statsGeoPlayDisc: "Discovered", statsGeoLegendLast: "Latest visit", statsGeoLegendSpan: "Time span", statsGeoModeLabel: "Colour by", statsGeoModeOpt1: "earliest photo (discovery)", statsGeoModeOpt2: "latest photo (recent)", statsGeoModeOpt3: "time span", statsGeoModeSettingLabel: "Grid colouring", statsGeoSpanWord: "span ", statsGeoLevel_y: "year", statsGeoLevel_m: "month", statsGeoLevel_d: "day", statsGeoLevel_h: "hour",
             statsGeoPalLabel: "Palette", statsGeoPalSettingLabel: "Palette",
             statsGeoMarkRb: "Reference point (RP)", statsGeoMarkCen: "Photo centroid", statsGeoLand: "Land & borders", statsGeoLandTip: "Show land and country borders (offline map background)", statsGeoRbOut: "RP outside range", statsGeoCenOut: "centroid outside range", statsGeoWrapped: "range crosses 180°",
-            statsGeoEmpty: "No located points to show in the grid.", statsGeoCapLat: "N", statsGeoCapLonE: "E", statsGeoCapLonW: "W",
+            statsGeoEmpty: "No located points to show in the grid.", statsGeoCapLat: "N", statsGeoCapLatS: "S", statsGeoCapLonE: "E", statsGeoCapLonW: "W",
             statsCoverageArea: "Buffer area", statsCoverageAreaTip: "Buffer zone radius in km", statsCoverageRange: "range 0.5 \u2013 5000 km", statsCoveragePolygonTip: "Draw buffer area as polygon in measurement tool", statsCoverageNoPolygon: "Cannot draw buffer area polygon.",
             statsBusiestDay: "Most photos in", statsDaysTip: "How many days we look for the maximum",
             statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsPlaceOne: "place", statsPlaceFew: "places", statsPlaceMany: "places", statsYearOne: "year", statsYearFew: "years", statsYearMany: "years", statsCalLegend: "Years with photos on a given day", statsCalMaxTip: "Highest number of years with photos on a single day", statsCalMinTip: "Lowest number of years with photos on a single day (including days with no photos)", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days", statsDayGenOne: "day", statsDayGenMany: "days",
@@ -11646,6 +11646,11 @@ function statsSetFilters(on) {
                 try { return escapeHtml(nm); } catch(e) { return nm.replace(/[<>&]/g, ""); }
             } catch(e2) { return ""; }
         }
+        // Plain-text jmeno souboru (bez escapovani) – pro tooltipy (stRow subTip);
+        // statsFileName vraci escapovany HTML text, ze ktereho se tooltip neda cist (dvojite escapovani).
+        function statsFileNamePlain(p) {
+            try { return String((p && p[3]) || ""); } catch(e) { return ""; }
+        }
         // Centralni prevod desetinneho znaku pro ZOBRAZOVANE hodnoty (delky, uhly, plochy).
 // cs = carka, en = tecka. POZOR: pouzivat POUZE pro text, ktery se nic dalsiho neparsuje -
 // pro cisla v GeoJSON, CSS nebo vstupni pole chybi sloupce!
@@ -12387,23 +12392,38 @@ function fmtStatsCoordShort(la, lo) {
                 if (c.focus) { statsFocusList.push(c.focus); idx = statsFocusList.length - 1; }
                 var val = (c.val === undefined || c.val === null || c.val === "") ? "&ndash;" : c.val;
                 var tip = "";
-                try { tip = String(c.val || "").replace(/[<>&"]/g, ""); } catch(eT) { AppLog.soft("stRow", eT); }
+                /* Tooltip hodnoty: val se do bunky vklada jako HTML fragment, takze tooltip
+                   odpovida textovemu obsahu toho sameho fragmentu (template.content.textContent) -
+                   entity se dekoduji, HTML znacky se odstrani. Text je pak plain a escapuje se
+                   az pri zapisu do atributu title (escapeHtml). */
+                try {
+                    var _tpl = document.createElement("template");
+                    _tpl.innerHTML = String(c.val || "");
+                    tip = String((_tpl.content && _tpl.content.textContent) || "");
+                } catch(eT) { AppLog.soft("stRow", eT); }
                 var subCls = "st-row-sub";
                 if (c.subState) subCls += " " + stNameCls(c.subState);
                 var hasSubHtml = (c.subHtml !== undefined && c.subHtml !== null && c.subHtml !== "");
-                var subTitle = c.subTitle ? String(c.subTitle).replace(/[<>&"]/g, "") : ((c.subIsFile && c.sub) ? String(c.sub) : "");
+                /* Tooltip podřádku: subTip = plain text (např. název souboru), do atributu title se escapuje.
+                   Starší pole subTitle/subIsFile předávají už escapovaný text – ze zbytku se speciální
+                   znaky jen odstraní (dřív z toho vznikalo „Tom amp; Jerry#039;s.jpg“). */
+                var subTitle = "";
+                if (c.subTip !== undefined && c.subTip !== null && c.subTip !== "") subTitle = String(c.subTip);
+                else if (c.subTitle) subTitle = String(c.subTitle).replace(/[<>&"]/g, "");
+                else if (c.subIsFile && c.sub) subTitle = String(c.sub).replace(/[<>&"]/g, "");
                 var middle = hasSubHtml ? String(c.subHtml)
-                    : "<span class=\"" + subCls + "\"" + (subTitle ? " title=\"" + subTitle + "\"" : "") + ">" + (c.sub || "") + "</span>";
+                    : "<span class=\"" + subCls + "\"" + (subTitle ? " title=\"" + escapeHtml(subTitle) + "\"" : "") + ">" + (c.sub || "") + "</span>";
                 var lblTxt = "";
                 try { lblTxt = String(c.labelTitle || c.label || "").replace(/[<>&"]/g, ""); } catch(eL) { AppLog.soft("stRow", eL); }
                 var lblCls = "st-row-lbl" + (c.lblWrap ? " is-wrap" : "");
                 var lbl = "<span class=\"" + lblCls + "\"" + (lblTxt ? " title=\"" + lblTxt + "\"" : "") + ">" + (c.label || "") + "</span>";
-                var valEl = "<span class=\"st-row-val\"" + (tip ? " title=\"" + tip + "\"" : "") + ">" + val + "</span>";
+                var valEl = "<span class=\"st-row-val\"" + (tip ? " title=\"" + escapeHtml(tip) + "\"" : "") + ">" + val + "</span>";
                 var valClick = c.valClick ? String(c.valClick) : "";
-                var vTip = (c.valTitle ? String(c.valTitle).replace(/[<>&"]/g, "") : tip);
+                /* valTitle = plain text; escapuje se až při zápisu do atributu */
+                var vTip = (c.valTitle ? String(c.valTitle) : tip);
                 if (valClick) valEl = "<button type=\"button\" class=\"st-row-valwrap" + (/^statsTopPlacesShowAll/.test(valClick) ? " is-top" : "") + "\" onclick=\"" + valClick + "\""
-                    + (vTip ? " title=\"" + vTip + "\"" : "") + "><span class=\"st-row-val\">" + val + "</span></button>";
-                else if (c.valTitle) valEl = "<span class=\"st-row-val\" title=\"" + vTip + "\">" + val + "</span>";
+                    + (vTip ? " title=\"" + escapeHtml(vTip) + "\"" : "") + "><span class=\"st-row-val\">" + val + "</span></button>";
+                else if (c.valTitle) valEl = "<span class=\"st-row-val\" title=\"" + escapeHtml(vTip) + "\">" + val + "</span>";
                 // Radek je button jen kdyz nema vlastni interaktivni bunky (jinak by byly vnorene)
                 var rowAct = hasSubHtml ? "" : ((idx >= 0) ? ("statsFocusIdx(" + idx + ")") : (c.click ? String(c.click) : ""));
                 if (rowAct) h += "<button type=\"button\" class=\"st-row is-click" + (c.subState ? " st-" + String(c.subState).toUpperCase() : "") + "\" onclick=\"" + rowAct + "\">" + lbl + middle + valEl + "</button>";
@@ -13523,8 +13543,12 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                     var rw = Math.round(cw * 10) / 10, rh = Math.round(ch * 10) / 10;
                     cellsClipRects += "<rect x=\"" + rx + "\" y=\"" + ry + "\" width=\"" + rw + "\" height=\"" + rh + "\"/>";
                     var ctrLat = (c.lat0 + c.lat1) / 2, ctrLon = (c.lon0 + c.lon1) / 2;
-                    var tipA = statsGeoFmtDeg(ctrLat, 0.001) + "\u00b0 " + L_("statsGeoCapLat", "N")
-                        + ", " + statsGeoFmtDeg(ctrLon, 0.001) + "\u00b0 " + (ctrLon >= 0 ? L_("statsGeoCapLonE", "E") : L_("statsGeoCapLonW", "W"));
+                    /* Polokoule se v tooltipu udává písmenem (33.8° S), ne znaménkem; záporná šířka
+                       dřív ukazovala „-33.8° N“. Délky se normalizují do ±180° jen pro zobrazení –
+                       mřížka kolem 180. počítá se rozvinutými délkami, tooltip má být fyzický. */
+                    var ctrLonW = ((ctrLon + 540) % 360 + 360) % 360 - 180;
+                    var tipA = statsGeoFmtDeg(Math.abs(ctrLat), 0.001) + "\u00b0 " + ((ctrLat >= 0) ? L_("statsGeoCapLat", "N") : L_("statsGeoCapLatS", "S"))
+                        + ", " + statsGeoFmtDeg(Math.abs(ctrLonW), 0.001) + "\u00b0 " + ((ctrLonW >= 0) ? L_("statsGeoCapLonE", "E") : L_("statsGeoCapLonW", "W"));
                     var dateStr = "";
                     if (c.firstDateKey && c.firstDateKey.length >= 8) {
                         var d1 = fmtGeoD(c.firstDateKey);
@@ -14754,8 +14778,8 @@ statsFocusList = []; statsCountryZoomList = [];
                     if (sMax < 0 || z > sMax) { sMax = z; sMaxP = rows[i]; }
                     if (sMin < 0 || z < sMin) { sMin = z; sMinP = rows[i]; }
                 }
-                H += stRow([{ label: L_("statsLargest", "Největší soubor"), val: fmtStatsBytes(sMax), sub: statsFileName(sMaxP), subIsFile: true, subState: sMaxP ? stOf(sMaxP) : "", focus: sMaxP ? statsLL(sMaxP) : null, valTitle: statsBytesTitle(sMax) }]);
-                H += stRow([{ label: L_("statsSmallest", "Nejmenší soubor"), val: fmtStatsBytes(sMin), sub: statsFileName(sMinP), subIsFile: true, subState: sMinP ? stOf(sMinP) : "", focus: sMinP ? statsLL(sMinP) : null, valTitle: statsBytesTitle(sMin) }]);
+                H += stRow([{ label: L_("statsLargest", "Největší soubor"), val: fmtStatsBytes(sMax), sub: statsFileName(sMaxP), subTip: statsFileNamePlain(sMaxP), subIsFile: true, subState: sMaxP ? stOf(sMaxP) : "", focus: sMaxP ? statsLL(sMaxP) : null, valTitle: statsBytesTitle(sMax) }]);
+                H += stRow([{ label: L_("statsSmallest", "Nejmenší soubor"), val: fmtStatsBytes(sMin), sub: statsFileName(sMinP), subTip: statsFileNamePlain(sMinP), subIsFile: true, subState: sMinP ? stOf(sMinP) : "", focus: sMinP ? statsLL(sMinP) : null, valTitle: statsBytesTitle(sMin) }]);
             }
             H += "</div></div>";
             /* --- Čas --- */
@@ -14774,10 +14798,10 @@ statsFocusList = []; statsCountryZoomList = [];
                 var _dOld = (typeof fmtDate === "function") ? fmtDate(tOld[2]) : String(tOld[2]);
                 var _dNew = (typeof fmtDate === "function") ? fmtDate(tNew[2]) : String(tNew[2]);
                 H += stRow([{ label: L_("statsOldest", "Nejstarší soubor"), val: _dOld,
-                    sub: statsFileName(tOld), subIsFile: true, subState: stOf(tOld), focus: statsLL(tOld),
+                    sub: statsFileName(tOld), subTip: statsFileNamePlain(tOld), subIsFile: true, subState: stOf(tOld), focus: statsLL(tOld),
                     valTitle: statsDayTipTitle(tOld[2], _dOld) }]);
                 H += stRow([{ label: L_("statsNewest", "Nejnovější soubor"), val: _dNew,
-                    sub: statsFileName(tNew), subIsFile: true, subState: stOf(tNew), focus: statsLL(tNew),
+                    sub: statsFileName(tNew), subTip: statsFileNamePlain(tNew), subIsFile: true, subState: stOf(tNew), focus: statsLL(tNew),
                     valTitle: statsDayTipTitle(tNew[2], _dNew) }]);
                 var spanTxt = statsSpanText(statsTimeToDate(tOld[2]), statsTimeToDate(tNew[2]));
                 var spanFull = statsSpanFullText(statsTimeToDate(tOld[2]), statsTimeToDate(tNew[2]));
@@ -14990,10 +15014,10 @@ statsFocusList = []; statsCountryZoomList = [];
 H += "<div class=\"st-sec-box\" data-stsec=\"extremes\"><h3 class=\"info-section-title\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span title=\"" + L_("statsSecLocatedOnly", "Počítá se pouze z fotek s polohou.") + "\" style=\"white-space:nowrap;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"12 1.5 15 9 22.5 12 15 15 12 22.5 9 15 1.5 12 9 9\"/><circle cx=\"12\" cy=\"12\" r=\"1\" fill=\"currentColor\" stroke=\"none\"/></svg>" + L_("statsSecExtremes", "Krajní body") + "</span>" + statsSecExpandBtnHtml('extremes') + "</h3>";
             H += "<div class=\"st-rows\">";
             H += stRow([
-                { label: L_("statsNorth", "Nejsevernější"), val: fmtStatsCoord(nL.ll[0], nL.ll[1]), sub: statsFileName(nL.p), subIsFile: true, subState: stOf(nL.p), focus: nL.ll, valTitle: extRefTip(nL.ll) },
-                { label: L_("statsSouth", "Nejjižnější"), val: fmtStatsCoord(sL.ll[0], sL.ll[1]), sub: statsFileName(sL.p), subIsFile: true, subState: stOf(sL.p), focus: sL.ll, valTitle: extRefTip(sL.ll) },
-                { label: L_("statsEast", "Nejvýchodnější"), val: fmtStatsCoord(eL.ll[0], eL.ll[1]), sub: statsFileName(eL.p), subIsFile: true, subState: stOf(eL.p), focus: eL.ll, valTitle: extRefTip(eL.ll) },
-                { label: L_("statsWest", "Nejzápadnější"), val: fmtStatsCoord(wL.ll[0], wL.ll[1]), sub: statsFileName(wL.p), subIsFile: true, subState: stOf(wL.p), focus: wL.ll, valTitle: extRefTip(wL.ll) }
+                { label: L_("statsNorth", "Nejsevernější"), val: fmtStatsCoord(nL.ll[0], nL.ll[1]), sub: statsFileName(nL.p), subTip: statsFileNamePlain(nL.p), subIsFile: true, subState: stOf(nL.p), focus: nL.ll, valTitle: extRefTip(nL.ll) },
+                { label: L_("statsSouth", "Nejjižnější"), val: fmtStatsCoord(sL.ll[0], sL.ll[1]), sub: statsFileName(sL.p), subTip: statsFileNamePlain(sL.p), subIsFile: true, subState: stOf(sL.p), focus: sL.ll, valTitle: extRefTip(sL.ll) },
+                { label: L_("statsEast", "Nejvýchodnější"), val: fmtStatsCoord(eL.ll[0], eL.ll[1]), sub: statsFileName(eL.p), subTip: statsFileNamePlain(eL.p), subIsFile: true, subState: stOf(eL.p), focus: eL.ll, valTitle: extRefTip(eL.ll) },
+                { label: L_("statsWest", "Nejzápadnější"), val: fmtStatsCoord(wL.ll[0], wL.ll[1]), sub: statsFileName(wL.p), subTip: statsFileNamePlain(wL.p), subIsFile: true, subState: stOf(wL.p), focus: wL.ll, valTitle: extRefTip(wL.ll) }
             ]);
             H += "</div></div>";
 
@@ -15273,7 +15297,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             }
             var elAirNote = "";
             if (elAirTop) {
-                elAirNote = L_("statsElevAirHigher", "Vyšší fotka ve vzdušném prostoru (nezapočtena)") + ": " + statsFileName(elAirTop.l.p) + " \u2013 " + mfElevLbl(elAirTop.v);
+                elAirNote = L_("statsElevAirHigher", "Vyšší fotka ve vzdušném prostoru (nezapočtena)") + ": " + statsFileNamePlain(elAirTop.l.p) + " \u2013 " + mfElevLbl(elAirTop.v);
                 if (elAirN > 1) elAirNote += " (" + L_("statsElevAirCount", "takových fotek celkem") + " " + nmb(elAirN) + ")";
             }
             var elJoin = function(a, b) { return (a && b) ? (a + "\n" + b) : (a || b || ""); };
@@ -15282,9 +15306,9 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             if (elLo) {
                 H += stRow([
                     elHi ? { label: L_("statsElevHighest", "Nejvýše položená"), val: mfElevLbl(elHi.v), sub: statsFileName(elHi.l.p), subIsFile: true, subState: stOf(elHi.l.p), focus: elHi.l.ll,
-                             valTitle: elJoin(elJoin(extRefTip(elHi.l.ll), (typeof mfElevTip === "function") ? mfElevTip() : ""), elAirNote), subTitle: elJoin(statsFileName(elHi.l.p), elAirNote) }
+                             valTitle: elJoin(elJoin(extRefTip(elHi.l.ll), (typeof mfElevTip === "function") ? mfElevTip() : ""), elAirNote), subTip: elJoin(statsFileNamePlain(elHi.l.p), elAirNote) }
                          : { label: L_("statsElevHighest", "Nejvýše položená"), val: "", valTitle: elAirNote },
-                    { label: L_("statsElevLowest", "Nejníže položená"), val: mfElevLbl(elLo.v), sub: statsFileName(elLo.l.p), subIsFile: true, subState: stOf(elLo.l.p), focus: elLo.l.ll, valTitle: elJoin(extRefTip(elLo.l.ll), (typeof mfElevTip === "function") ? mfElevTip() : "") }
+                    { label: L_("statsElevLowest", "Nejníže položená"), val: mfElevLbl(elLo.v), sub: statsFileName(elLo.l.p), subTip: statsFileNamePlain(elLo.l.p), subIsFile: true, subState: stOf(elLo.l.p), focus: elLo.l.ll, valTitle: elJoin(extRefTip(elLo.l.ll), (typeof mfElevTip === "function") ? mfElevTip() : "") }
                 ]);
             } else {
                 H += stRow([
@@ -15299,7 +15323,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 var btns = "", rWordE = (currentLang === "cs") ? "okruh" : "radius", withEl = L_("statsTopElevWithEl", "s v\u00fd\u0161kou");
                 for (var bj = 0; bj < arr.length; bj++) {
                     var cj = arr[bj] || {}, cc = cj.c || [0, 0];
-                    var tip = "#" + (bj + 1) + " \u00b7 " + mfElevLbl(cj.h) + " \u00b7 " + statsFileName(cj.p) + " \u00b7 " + fmtStatsCoord(cc[0], cc[1]) + " \u00b7 " + rWordE + " " + statsTopElevRWord(cj.r) + " \u00b7 " + fmtStatsPhotos(cj.n || 0) + " " + withEl;
+                    var tip = "#" + (bj + 1) + " \u00b7 " + mfElevLbl(cj.h) + " \u00b7 " + statsFileNamePlain(cj.p) + " \u00b7 " + fmtStatsCoord(cc[0], cc[1]) + " \u00b7 " + rWordE + " " + statsTopElevRWord(cj.r) + " \u00b7 " + fmtStatsPhotos(cj.n || 0) + " " + withEl;
                     btns += "<button type=\"button\" class=\"st-chart-tab" + (bj < 3 ? " rank-" + (bj + 1) : "") + "\" title=\"" + escapeHtml(tip) + "\" aria-label=\"" + escapeHtml(tip) + "\" onclick=\"event.stopPropagation();statsTopPlaceShow(" + bj + ",'elev');\">" + (bj + 1) + "</button>";
                 }
                 var topTitle = L_("statsTopElev", "Top 10 v\u00fd\u0161ek") + " (" + statsTopElevRWord(arr[0].r) + ")";
@@ -15522,7 +15546,16 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     var arr = kids.slice();
                     arr.sort(function(a, b) {
                         var va = _fKey(a, fSort.key), vb = _fKey(b, fSort.key);
-                        var r = (va < vb) ? -1 : ((va > vb) ? 1 : 0);
+                        var r;
+                        if (fSort.key === "name") {
+                            /* česká kolace (Š umí za S… ne až za Z) + numeric: přirozené číslování
+                               (Akce 9 < Akce 10); stejný postup jako u tabulky států */
+                            try {
+                                r = String(va).localeCompare(String(vb), (currentLang === "cs" ? "cs" : "en"), { numeric: true, sensitivity: "variant" });
+                            } catch(eLC) { r = (va < vb) ? -1 : ((va > vb) ? 1 : 0); }
+                        } else {
+                            r = (va < vb) ? -1 : ((va > vb) ? 1 : 0);
+                        }
                         return r * (fSort.dir || 1);
                     });
                     return arr;
@@ -15972,7 +16005,11 @@ window.statsChartSave = statsChartSave;
                 // kruhovy prumer: prumer vektoru jednotkovych vektoru misto primouctu
                 var rk = 2 * Math.PI / 86400, sx = 0, sy = 0, i2;
                 for (i2 = 0; i2 < a.length; i2++) { sx += Math.cos(a[i2] * rk); sy += Math.sin(a[i2] * rk); }
-                var meanSec = ((Math.atan2(sy, sx) / rk) % 86400 + 86400) % 86400;
+                // Delka vysledneho vektoru ~ 0 = jednotkove vektory se skoro uplne vyloucily
+                // (napr. fotky v 06:00 a 18:00) – smysluplny prumer neexistuje, vracime null.
+                // Median zustava k dispozici (u presne vyloucenych casu muze byt vice rovnocennych
+                // moznosti, ale nezobrazi se nic zavadejiciho).
+                var meanSec = (Math.hypot(sx, sy) < a.length * 1e-9) ? null : ((Math.atan2(sy, sx) / rk) % 86400 + 86400) % 86400;
                 a.sort(function(x, y) { return x - y; });
                 var med = statsCircularMedian(a, 86400);
                 return { meanSec: meanSec, medSec: med, n: a.length };
@@ -16048,12 +16085,15 @@ window.statsChartSave = statsChartSave;
                         var _tmm2 = statsTodSecMeanMed(times);
                         if (_tmm2) {
                             var _tW = (currentLang === "cs") ? { avg: "Průměr", med: "Medián" } : { avg: "Average", med: "Median" };
-                            var _tMeanLab = _tW.avg + ": " + statsSecToHMS(_tmm2.meanSec, true);
+                            // Průměr může být nedefinovaný (vyloučené vektory času, např. 06:00 + 18:00)
+                            // – pak se kreslí jen medián, značka o půlnoci by byla zavádějící.
+                            todMarks = [];
+                            if (_tmm2.meanSec !== null && _tmm2.meanSec !== undefined) {
+                                var _tMeanLab = _tW.avg + ": " + statsSecToHMS(_tmm2.meanSec, true);
+                                todMarks.push({ x: _tmm2.meanSec / 3600, lab: _tMeanLab, tip: _tMeanLab, col: "#d93025" });
+                            }
                             var _tMedLab = _tW.med + ": " + statsSecToHMS(_tmm2.medSec, true);
-                            todMarks = [
-                                { x: _tmm2.meanSec / 3600, lab: _tMeanLab, tip: _tMeanLab, col: "#d93025" },
-                                { x: _tmm2.medSec / 3600, lab: _tMedLab, tip: _tMedLab, col: "#1a73e8" }
-                            ];
+                            todMarks.push({ x: _tmm2.medSec / 3600, lab: _tMedLab, tip: _tMedLab, col: "#1a73e8" });
                         }
                     } catch(eM) { todMarks = null; }
                 }
