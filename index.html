@@ -2780,7 +2780,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">3.91</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">3.92</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">24. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -3589,7 +3589,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 lblSlideSec: "Interval slideshow",
                 tipSlideDefault: "Vrátit výchozí slideshow",
                 lblSlideRev: "Pozpátku",
-                lblTransition: "Přechod", trCut: "Tvrdý střih", trFade: "Prolnutí", trSlide: "Posun", trZoom: "Přiblížení", lblTransDur: "Délka", lblMapFrame: "Záběr mapy", mfRoute: "Celá trasa", mfFollow: "Sledovat", mfOff: "Vypnuto", lblPhotoVis: "Viditelnost fotek", visAll: "G+D+S", visGD: "G+D", visG: "G", visNone: "Bez preference", visNoneTip: "Bez apriorní volby, platí poslední filtrace", visAllTip: "Zobrazit všechny fotky včetně bez polohy", visGDTip: "Jenom fotky s polohou (G+D)", visGTip: "Jenom unikátní fotky s polohou (G)", lblOpenMode: "Otevření fotky", openViewer: "Prohlížečka", openSplit: "Split",                 btnViewerDefault: "Obnovit obecné nastavení", tipViewerDefault: "Vrátí viditelnost fotek, časovou osu, otevírání a režim jen fotek v okně mapy na „Bez preference“", toastViewerReset: "Výchozí hodnoty prohlížečky obnoveny.", btnViewerAllReset: "Obnovit celé nastavení prohlížečky fotografií", toastViewerAllReset: "Celá prohlížečka obnovena do výchozích hodnot.", lblTimeline: "Časová osa", tlShow: "Zobrazena", tlHide: "Skryta", tlShowTip: "Zobrazit časovou osu v prohlížečce", tlHideTip: "Skrýt časovou osu", lblWinFollow: "Jen fotky v okně mapy (split)", winSetOn: "Zapnuto", winSetOff: "Vypnuto", winSetOnTip: "Prohlížečka ve splitu listuje jen fotkami v okně mapy (zkratka O)", winSetOffTip: "Prohlížečka listuje všemi vyfiltrovanými fotkami", winNone: "Bez preference", winNoneTip: "Při spuštění se použije poslední nastavený stav", tlNone: "Bez preference", tlNoneTip: "Při otevření prohlížečky se použije poslední stav časové osy", openNone: "Bez preference", openNoneTip: "Fotky se otevřou naposledy použitým režimem", noPrefTip: "Při spuštění aplikace se použije poslední použitý stav", mapViewFixed: "Pevný", mapViewNone: "Bez preference", mapViewFixedTip: "Mapa se vždy otevře na uloženém přiblížení a středu", mapViewNoneTip: "Mapa se otevře na posledním pohledu", measAutoOn: "Zapnuto", measAutoOff: "Vypnuto", measAutoNoneTip: "Panel měření zůstane tak, jak byl naposledy zavřen", tipBasePref: "Bez apriorní volby, po startu se použije naposledy zobrazený podklad", chartPrefNone: "Bez preference", chartPrefNoneTip: "Statistiky se otevřou s naposledy zobrazeným grafem", lblMapViewPref: "Pohled mapy", setOffTitle: "Offline mapa", setOffTip: "Platí jen pro podklad Offline. Google, Mapy.com a Esri se nemění.", setOffNote: "Platí jen pro podklad Offline (vektor, hranice států).", setOffNoteOther: "(Teď je zvolen jiný podklad.)", lblOffBorders: "Hranice států", offBordersHide: "Skrýt", lblOffLand: "Barva pevniny", lblOffSea: "Barva moří", btnOffDefault: "Výchozí", tipOffDefault: "Obnovit hranice a barvy offline mapy",
+                lblTransition: "Přechod", trCut: "Tvrdý střih", trFade: "Prolnutí", trSlide: "Posun", trZoom: "Přiblížení", lblTransDur: "Délka", lblMapFrame: "Záběr mapy", mfRoute: "Celá trasa", mfFollow: "Sledovat", mfOff: "Vypnuto", lblPhotoVis: "Viditelnost fotek", visAll: "G+D+S", visGD: "G+D", visG: "G", visNone: "Bez preference", visNoneTip: "Bez apriorní volby, platí poslední filtrace", visAllTip: "Zobrazit všechny fotky včetně bez polohy", visGDTip: "Jenom fotky s polohou (G+D)", visGTip: "Jenom unikátní fotky s polohou (G)", lblOpenMode: "Otevření fotky", openViewer: "Prohlížečka", openSplit: "Split",                 btnViewerDefault: "Obnovit obecné nastavení", tipViewerDefault: "Vrátí viditelnost fotek, časovou osu, otevírání a režim jen fotek v okně mapy na „Bez preference“", toastViewerReset: "Výchozí hodnoty prohlížečky obnoveny.", btnViewerAllReset: "Obnovit celé nastavení prohlížečky fotografií", toastViewerAllReset: "Celá prohlížečka obnovena do výchozích hodnot.", lblTimeline: "Časová osa", tlShow: "Zobrazena", tlHide: "Skryta", tlShowTip: "Zobrazit časovou osu v prohlížečce", tlHideTip: "Skrýt časovou osu", lblWinFollow: "Jen fotky v okně mapy (split)", winSetOn: "Zapnuto", winSetOff: "Vypnuto", winSetOnTip: "Prohlížečka ve splitu listuje jen fotkami v okně mapy (zkratka O)", winSetOffTip: "Prohlížečka listuje všemi vyfiltrovanými fotkami", winNone: "Bez preference", winNoneTip: "Při spuštění se použije poslední nastavený stav", tlNone: "Bez preference", tlNoneTip: "Při otevření prohlížečky se použije poslední stav časové osy", openNone: "Bez preference", openNoneTip: "Fotky se otevřou naposledy použitým režimem", noPrefTip: "Při spuštění aplikace se použije poslední použitý stav", mapViewFixed: "Pevný", mapViewNone: "Bez preference", mapViewFixedTip: "Mapa se vždy otevře na uloženém přiblížení a středu", mapViewNoneTip: "Mapa se otevře na posledním pohledu", measAutoOn: "Zapnuto", measAutoOff: "Vypnuto", measAutoNoneTip: "Panel měření zůstane tak, jak byl naposledy zavřen", tipBasePref: "Bez apriorní volby, po startu se použije naposledy zobrazený podklad", chartPrefNone: "Bez preference", chartPrefNoneTip: "Statistiky se otevřou s naposledy zobrazeným grafem", lblMapViewPref: "Pohled mapy", setOffTitle: "Offline mapa", setOffTip: "Platí jen pro podklad Offline. Google, Mapy.com a Esri se nemění.", setOffNote: "Platí jen pro podklad Offline (vektor, hranice států).", setOffNoteOther: "(Teď je zvolen jiný podklad.)", lblOffBorders: "Hranice států", offBordersHide: "Skrýt", lblOffLand: "Barva pevniny", lblOffSea: "Barva moří", btnOffDefault: "Obnovit nastavení offline mapy", tipOffDefault: "Obnovit hranice a barvy offline mapy",
                 lblSlideTrail: "Stopa trasy",
             lblTrailAnim: "Animovat kreslení stopy",
                 lblTrailColor: "Barva stopy",
@@ -3764,6 +3764,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 profileLoadedSkipped: "Profil načten (ignorováno {n} neznámých klíčů), aplikace se restartuje.",
                 profileLoadedCount: "Profil načten: nastaveno {x} z {y} položek{d}.",
                 profileRefreshedCount: "Profil obnoven: nastaveno {x} z {y} položek{d}.",
+                profileOrigin: "profil z verze {v}, uložen {d}",
                 profileCntMissing: "chybělo v profilu: {n}",
                 profileCntUnknown: "ignorováno neznámých: {n}",
                 profileCntFailed: "nezapsáno: {n}",
@@ -3976,7 +3977,7 @@ statsFarthestPair: "Farthest pair",
                 lblSlideSec: "Slideshow interval",
                 tipSlideDefault: "Reset slideshow defaults",
                 lblSlideRev: "Reverse",
-                lblTransition: "Transition", trCut: "Hard cut", trFade: "Fade", trSlide: "Slide", trZoom: "Zoom", lblTransDur: "Length", lblMapFrame: "Map framing", mfRoute: "Whole route", mfFollow: "Follow", mfOff: "Off", lblPhotoVis: "Photo visibility", visAll: "G+D+S", visGD: "G+D", visG: "G", visNone: "No preference", visNoneTip: "No default choice, last filtering applies", visAllTip: "Show all photos including ones without location", visGDTip: "Located photos only (G+D)", visGTip: "Unique located photos only (G)", lblOpenMode: "Open photo in", openViewer: "Viewer", openSplit: "Split",                 btnViewerDefault: "Reset general settings", tipViewerDefault: "Reset photo visibility, timeline, opening and the only-photos-in-map-window mode to \"No preference\"", toastViewerReset: "Viewer defaults restored.", btnViewerAllReset: "Reset whole photo viewer settings", toastViewerAllReset: "Whole viewer restored to defaults.", lblTimeline: "Timeline", tlShow: "Shown", tlHide: "Hidden", tlShowTip: "Show timeline in viewer", tlHideTip: "Hide timeline", lblWinFollow: "Only photos in the map window (split)", winSetOn: "On", winSetOff: "Off", winSetOnTip: "In split view the viewer browses only photos in the map window (shortcut O)", winSetOffTip: "The viewer browses all filtered photos", winNone: "No preference", winNoneTip: "The last used state applies on startup", tlNone: "No preference", tlNoneTip: "The last timeline state applies when the viewer opens", openNone: "No preference", openNoneTip: "Photos open in the mode last used", noPrefTip: "On startup, the last used state applies", mapViewFixed: "Fixed", mapViewNone: "No preference", mapViewFixedTip: "The map always opens at the saved zoom and center", mapViewNoneTip: "The map opens at the last view", measAutoOn: "On", measAutoOff: "Off", measAutoNoneTip: "The measure panel stays as it was last closed", tipBasePref: "No default choice, the last displayed layer applies on startup", chartPrefNone: "No preference", chartPrefNoneTip: "Statistics opens with the last shown chart", lblMapViewPref: "Map view", setOffTitle: "Offline map", setOffTip: "Applies only to the Offline base map. Google, Mapy.com and Esri are not affected.", setOffNote: "Applies only to the Offline base map (vector, country borders).", setOffNoteOther: "(A different base map is selected now.)", lblOffBorders: "Country borders", offBordersHide: "Hide", lblOffLand: "Land color", lblOffSea: "Sea color", btnOffDefault: "Default", tipOffDefault: "Reset offline map borders and colors",
+                lblTransition: "Transition", trCut: "Hard cut", trFade: "Fade", trSlide: "Slide", trZoom: "Zoom", lblTransDur: "Length", lblMapFrame: "Map framing", mfRoute: "Whole route", mfFollow: "Follow", mfOff: "Off", lblPhotoVis: "Photo visibility", visAll: "G+D+S", visGD: "G+D", visG: "G", visNone: "No preference", visNoneTip: "No default choice, last filtering applies", visAllTip: "Show all photos including ones without location", visGDTip: "Located photos only (G+D)", visGTip: "Unique located photos only (G)", lblOpenMode: "Open photo in", openViewer: "Viewer", openSplit: "Split",                 btnViewerDefault: "Reset general settings", tipViewerDefault: "Reset photo visibility, timeline, opening and the only-photos-in-map-window mode to \"No preference\"", toastViewerReset: "Viewer defaults restored.", btnViewerAllReset: "Reset whole photo viewer settings", toastViewerAllReset: "Whole viewer restored to defaults.", lblTimeline: "Timeline", tlShow: "Shown", tlHide: "Hidden", tlShowTip: "Show timeline in viewer", tlHideTip: "Hide timeline", lblWinFollow: "Only photos in the map window (split)", winSetOn: "On", winSetOff: "Off", winSetOnTip: "In split view the viewer browses only photos in the map window (shortcut O)", winSetOffTip: "The viewer browses all filtered photos", winNone: "No preference", winNoneTip: "The last used state applies on startup", tlNone: "No preference", tlNoneTip: "The last timeline state applies when the viewer opens", openNone: "No preference", openNoneTip: "Photos open in the mode last used", noPrefTip: "On startup, the last used state applies", mapViewFixed: "Fixed", mapViewNone: "No preference", mapViewFixedTip: "The map always opens at the saved zoom and center", mapViewNoneTip: "The map opens at the last view", measAutoOn: "On", measAutoOff: "Off", measAutoNoneTip: "The measure panel stays as it was last closed", tipBasePref: "No default choice, the last displayed layer applies on startup", chartPrefNone: "No preference", chartPrefNoneTip: "Statistics opens with the last shown chart", lblMapViewPref: "Map view", setOffTitle: "Offline map", setOffTip: "Applies only to the Offline base map. Google, Mapy.com and Esri are not affected.", setOffNote: "Applies only to the Offline base map (vector, country borders).", setOffNoteOther: "(A different base map is selected now.)", lblOffBorders: "Country borders", offBordersHide: "Hide", lblOffLand: "Land color", lblOffSea: "Sea color", btnOffDefault: "Reset offline map settings", tipOffDefault: "Reset offline map borders and colors",
                 lblSlideTrail: "Route trail",
             lblTrailAnim: "Animate trail drawing",
                 lblTrailColor: "Trail color",
@@ -4152,6 +4153,7 @@ statsFarthestPair: "Farthest pair",
                 profileLoadedSkipped: "Profile loaded ({n} unknown keys ignored), restarting app.",
                 profileLoadedCount: "Profile loaded: {x} of {y} items set{d}.",
                 profileRefreshedCount: "Profile refreshed: {x} of {y} items set{d}.",
+                profileOrigin: "profile from version {v}, saved {d}",
                 profileCntMissing: "missing from profile: {n}",
                 profileCntUnknown: "unknown ignored: {n}",
                 profileCntFailed: "not written: {n}",
@@ -6556,22 +6558,64 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (mn === Infinity) return null;
             return { min: mn, max: mx };
         }
-        function ageRangeVisible() {
-            var mn = Infinity, mx = -Infinity;
-            Object.keys(datasets).forEach(function(k){
+        /* Rozsah času pro lištu stylu „Stáří“: jen fotky DANÉHO zdroje a se stejným výběrem jako vrstva L.AgeCanvasLayer
+           (stav G + aktivní filtry) – lišta tak přesně odpovídá barvám tohoto zdroje na mapě. */
+        function ageRangeOfDataset(k) {
+            try {
                 var d = datasets[k];
-                if (!d.active) return;
-                var ditems = (typeof photoItemsOf === "function") ? photoItemsOf(k) : [];
-                for (var i = 0; i < ditems.length; i++) {
-                    var p = ditems[i];
-                    if (!photoPassesFilters(p)) continue;
-                    if (stOf(p) !== "G") continue;
-                    var v = parseTimeValue(p[2]);
-                    if (!isNaN(v)) { if (v < mn) mn = v; if (v > mx) mx = v; }
-                }
-            });
-            if (mn === Infinity) return null;
-            return { min: mn, max: mx };
+                if (!d || d.type !== "photos") return null;
+                var pts = (d.items || []).filter(function(p) { return stOf(p) === "G" && photoPassesFilters(p); });
+                return ageTimeRange(pts);
+            } catch(e) { AppLog.soft("ageRangeOfDataset", e); return null; }
+        }
+        /* Tooltip lišty „Stáří“: datum a čas v místě kurzoru. Sdílí prvek a vzhled s tooltipem grafů Statistiky (#stChartTip). */
+        function mfAgeBarTipEl() {
+            try {
+                var el = document.getElementById("stChartTip");
+                if (el) return el;
+                if (!document.body) return null;
+                el = document.createElement("div");
+                el.id = "stChartTip";
+                el.className = "st-chart-tip";
+                el.style.display = "none";
+                document.body.appendChild(el);
+                return el;
+            } catch(e) { return null; }
+        }
+        function mfAgeBarTipText(v, span) {
+            var p = ageSecsToParts(v);
+            var pad2 = function(n) { return String(n).padStart(2, "0"); };
+            var tm = pad2(p.h) + ":" + pad2(p.m) + (span <= 7200 ? ":" + pad2(p.s) : "");
+            return currentLang === "cs"
+                ? (p.D + ". " + p.M + ". " + p.Y + " " + tm)
+                : (p.Y + "-" + pad2(p.M) + "-" + pad2(p.D) + " " + tm);
+        }
+        function mfAgeBarTipMove(ev, bar, rng, palKey) {
+            try {
+                var tip = mfAgeBarTipEl();
+                if (!tip || !bar || !rng) return;
+                var rc = bar.getBoundingClientRect();
+                if (!(rc.width > 0)) return;
+                var f = Math.max(0, Math.min(1, (ev.clientX - rc.left) / rc.width));
+                var span = Math.max(0, rng.max - rng.min);
+                var v = rng.min + f * span;
+                var c = ageColor(f, palKey);
+                tip.innerHTML = "<span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px;border:1px solid rgba(255,255,255,.6);background:rgb(" + c[0] + "," + c[1] + "," + c[2] + ")\"></span><span>" + escapeHtml(mfAgeBarTipText(v, span)) + "</span>";
+                tip.style.display = "block";
+                var w = tip.offsetWidth || 120, h = tip.offsetHeight || 24;
+                var vw = window.innerWidth || 1000, vh = window.innerHeight || 800;
+                /* vodorovně vystředit nad místem kurzoru, svisle nad lištou (prst ani kurzor ho nezakryje) */
+                var x = Math.round(ev.clientX - w / 2), y = Math.round(rc.top - h - 8);
+                if (x + w > vw - 6) x = vw - w - 6;
+                if (x < 6) x = 6;
+                if (y < 6) y = Math.round(rc.bottom + 8);
+                if (y + h > vh - 6) y = vh - h - 6;
+                tip.style.left = x + "px";
+                tip.style.top = y + "px";
+            } catch(e) { AppLog.soft("mfAgeBarTipMove", e); }
+        }
+        function mfAgeBarTipHide() {
+            try { var tip = document.getElementById("stChartTip"); if (tip) tip.style.display = "none"; } catch(e) { AppLog.soft("mfAgeBarTipHide", e); }
         }
         L.AgeCanvasLayer = L.Layer.extend({
             initialize: function(opts) {
@@ -16946,7 +16990,24 @@ H += "</div></div>";
             var tpl = (r.t === "refresh")
                 ? (t.profileRefreshedCount || "Profil obnoven: nastaveno {x} z {y} položek{d}.")
                 : (t.profileLoadedCount || "Profil načten: nastaveno {x} z {y} položek{d}.");
-            return tpl.replace("{x}", String(r.x)).replace("{y}", String(r.y)).replace("{d}", d);
+            return tpl.replace("{x}", String(r.x)).replace("{y}", String(r.y)).replace("{d}", d) + mfProfileOriginText();
+        }
+        /* Bod 3 (recenze): text „profil z verze X, uložen DD. MM. RRRR“ – verze a datum uložení se nesou v mapa_fotek_profile_meta */
+        function mfProfileOriginText() {
+            try {
+                var t = i18n[currentLang] || {};
+                var meta = null;
+                try { meta = JSON.parse(localStorage.getItem("mapa_fotek_profile_meta") || "null"); } catch(eP) { meta = null; }
+                if (!meta || typeof meta !== "object" || !(meta.appVer || meta.saved)) return "";
+                var vT = meta.appVer ? String(meta.appVer) : "";
+                var dT = "";
+                if (meta.saved) {
+                    var pd = new Date(meta.saved);
+                    if (!isNaN(pd)) dT = currentLang === "cs" ? pd.toLocaleDateString("cs-CZ") : pd.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
+                }
+                var oT = t.profileOrigin || "profil z verze {v}, uložen {d}";
+                return " – " + oT.split("{v}").join(vT || "?").split("{d}").join(dT || "?");
+            } catch(e) { AppLog.soft("mfProfileOriginText", e); return ""; }
         }
         function mfProfileQueueToast(r) {
             try { sessionStorage.setItem("mf_profile_toast", JSON.stringify(r)); return true; } catch(e) { return false; }
@@ -16960,6 +17021,20 @@ H += "</div></div>";
                 if (!r || typeof r.x !== "number" || typeof r.y !== "number") return;
                 showToast(mfProfileToastText(r), r.fail > 0 ? "warn" : "success");
             } catch(e) { AppLog.soft("mfProfileShowPendingToast", e); }
+        }
+        /* Bod 1 (recenze): doplní položky, které v profilu chybí, výchozími hodnotami – stejně u načtení ze souboru, „Obnovení profilu“ i opětovného zapnutí profilu.
+           mapa_fotek_base_layer a mapa_fotek_hide_s se vynechávají – zachovány původní výjimky načtení ze souboru. */
+        function mfFillProfileDefaults(data) {
+            try {
+                for (var di = 0; di < SETTINGS_PROFILE_KEYS.length; di++) {
+                    var dk = SETTINGS_PROFILE_KEYS[di];
+                    if (dk === "mapa_fotek_base_layer" || dk === "mapa_fotek_hide_s") continue;
+                    if (data && typeof data === "object" && data.hasOwnProperty(dk)) continue;
+                    if (SETTINGS_PROFILE_DEFAULTS && SETTINGS_PROFILE_DEFAULTS[dk] !== undefined) {
+                        try { localStorage.setItem(dk, SETTINGS_PROFILE_DEFAULTS[dk]); } catch(eD) { AppLog.warn("mfFillProfileDefaults", eD); }
+                    }
+                }
+            } catch(eM) { AppLog.warn("mfFillProfileDefaults", eM); }
         }
         function collectSettingsProfile() {
             var o = {};
@@ -16979,7 +17054,10 @@ H += "</div></div>";
             try {
                 try { if (typeof flushSaveDatasetStyles === "function") flushSaveDatasetStyles(); } catch(eF) { AppLog.warn("saveSettingsProfile", eF); }
                 var t = i18n[currentLang] || {};
-                var fc = { type: "FeatureCollection", features: [{ type: "Feature", geometry: null, properties: { name: "Profil nastavení", app: "Mapa_Fotek", kind: "settings", version: 1, settings: collectSettingsProfile() } }] };
+                /* Bod 3 (recenze): do profilu se zapisuje verze aplikace a datum uložení; verze se čte z řádku Informací (valVersionNum – jediný zdroj pravdy) */
+                var _pv = "";
+                try { _pv = (((document.getElementById("valVersionNum") || {}).textContent) || "").trim(); } catch(eV) { AppLog.soft("saveSettingsProfile>ver", eV); }
+                var fc = { type: "FeatureCollection", features: [{ type: "Feature", geometry: null, properties: { name: "Profil nastavení", app: "Mapa_Fotek", kind: "settings", version: 1, appVer: _pv, saved: new Date().toISOString(), settings: collectSettingsProfile() } }] };
                 var blob = new Blob([JSON.stringify(fc, null, 2)], { type: "application/geo+json" });
                 var now = new Date();
                 var ts = now.getFullYear() + ("0" + (now.getMonth() + 1)).slice(-2) + ("0" + now.getDate()).slice(-2) + "_" + ("0" + now.getHours()).slice(-2) + ("0" + now.getMinutes()).slice(-2) + ("0" + now.getSeconds()).slice(-2);
@@ -17014,20 +17092,20 @@ H += "</div></div>";
                             try { localStorage.setItem(k, String(st[k])); n++; clean[k] = String(st[k]); } catch(e) { AppLog.warn("loadSettingsProfileFile>onload", e); }
                         }
                         try { if (skipped.length) console.info("[profile] ignored keys:", skipped.join(", ")); } catch(eC) { AppLog.warn("loadSettingsProfileFile>onload", eC); }
-                        try {
-                            for (var di = 0; di < SETTINGS_PROFILE_KEYS.length; di++) {
-                                var dk = SETTINGS_PROFILE_KEYS[di];
-                                if (dk === "mapa_fotek_base_layer" || dk === "mapa_fotek_hide_s") continue;
-                                if (!st.hasOwnProperty(dk) && SETTINGS_PROFILE_DEFAULTS && SETTINGS_PROFILE_DEFAULTS[dk] !== undefined) {
-                                    try { localStorage.setItem(dk, SETTINGS_PROFILE_DEFAULTS[dk]); } catch(eD) { AppLog.warn("loadSettingsProfileFile>onload", eD); }
-                                }
-                            }
-                        } catch(eM) { AppLog.warn("loadSettingsProfileFile>onload", eM); }
+                        mfFillProfileDefaults(st); /* Bod 1: stejné doplnění výchozích hodnot jako u obnovení/zapnutí profilu */
                         if (!n) { bad(); return; }
                         try {
                             localStorage.setItem("mapa_fotek_profile_name", f.name || "");
                             localStorage.setItem("mapa_fotek_profile_data", JSON.stringify(clean));
                             localStorage.setItem("mapa_fotek_profile_on", "1");
+                            /* Bod 3 (recenze): uložit verzi aplikace a datum uložení profilu */
+                            try {
+                                var _pMeta = {};
+                                if (props.appVer !== undefined && props.appVer !== null && String(props.appVer) !== "") _pMeta.appVer = String(props.appVer);
+                                if (props.saved && !isNaN(new Date(props.saved))) _pMeta.saved = String(props.saved);
+                                if (_pMeta.appVer || _pMeta.saved) localStorage.setItem("mapa_fotek_profile_meta", JSON.stringify(_pMeta));
+                                else localStorage.removeItem("mapa_fotek_profile_meta");
+                            } catch(eMt) { AppLog.warn("loadSettingsProfileFile>onload", eMt); }
                         } catch(eS) { AppLog.warn("loadSettingsProfileFile>onload", eS); }
                         var _plRes = { t: "load", x: n, y: SETTINGS_PROFILE_KEYS.length, miss: SETTINGS_PROFILE_KEYS.length - present, unk: skipped.length, fail: present - n };
                         if (!mfProfileQueueToast(_plRes)) showToast(mfProfileToastText(_plRes), _plRes.fail > 0 ? "warn" : "success");
@@ -17089,6 +17167,7 @@ H += "</div></div>";
                             if (SETTINGS_PROFILE_KEYS.indexOf(k) === -1) continue;
                             try { localStorage.setItem(k, String(data[k])); } catch(e7) { AppLog.soft("toggleProfileActive", e7); }
                         }
+                        mfFillProfileDefaults(data); /* Bod 1: chybějící položky se doplní výchozími hodnotami jako u načtení ze souboru */
                         try { localStorage.setItem("mapa_fotek_profile_on", "1"); } catch(ePOn) { AppLog.soft("toggleProfileActive", ePOn); }
                     } catch(e8) { AppLog.soft("toggleProfileActive", e8); }
                     setTimeout(function() { try { location.reload(); } catch(e9) { AppLog.soft("toggleProfileActive>anon", e9); } }, 300);
@@ -17109,6 +17188,7 @@ H += "</div></div>";
                         _rfPresent++;
                         try { localStorage.setItem(k, String(data[k])); _rfOk++; } catch(e2) { AppLog.soft("refreshProfileFile", e2); }
                     }
+                    mfFillProfileDefaults(data); /* Bod 1: chybějící položky se doplní výchozími hodnotami jako u načtení ze souboru */
                     try { localStorage.setItem("mapa_fotek_profile_on", "1"); } catch(ePOn2) { AppLog.soft("refreshProfileFile", ePOn2); }
                 } catch(e3) { AppLog.soft("refreshProfileFile", e3); }
                 var _rfRes = { t: "refresh", x: _rfOk, y: SETTINGS_PROFILE_KEYS.length, miss: SETTINGS_PROFILE_KEYS.length - _rfPresent, unk: 0, fail: _rfPresent - _rfOk };
@@ -17129,6 +17209,12 @@ H += "</div></div>";
                 try {
                     localStorage.setItem("mapa_fotek_profile_data", JSON.stringify(snap));
                     localStorage.setItem("mapa_fotek_profile_on", "1");
+                    /* Bod 3 (recenze): při zápisu změn do aktivního profilu se obnoví verze aplikace a datum uložení */
+                    try {
+                        var _uv = "";
+                        try { _uv = (((document.getElementById("valVersionNum") || {}).textContent) || "").trim(); } catch(eUv) { AppLog.soft("updateProfileSnapshot>ver", eUv); }
+                        localStorage.setItem("mapa_fotek_profile_meta", JSON.stringify({ appVer: _uv, saved: new Date().toISOString() }));
+                    } catch(eM2) { AppLog.warn("updateProfileSnapshot", eM2); }
                 } catch(eS) { AppLog.soft("updateProfileSnapshot", eS); }
                 try { if (typeof syncProfileRow === "function") syncProfileRow(); } catch(eR) { AppLog.soft("updateProfileSnapshot", eR); }
                 showToast(t.profileUpdated || "Změny zapsány do aktivního profilu.");
@@ -17138,6 +17224,7 @@ H += "</div></div>";
             try {
                 try { localStorage.removeItem("mapa_fotek_profile_name"); } catch(e) { AppLog.soft("clearProfile", e); }
                 try { localStorage.removeItem("mapa_fotek_profile_data"); } catch(e2) { AppLog.soft("clearProfile", e2); }
+                try { localStorage.removeItem("mapa_fotek_profile_meta"); } catch(e2m) { AppLog.soft("clearProfile", e2m); }
                 try { localStorage.removeItem("mapa_fotek_profile_on"); } catch(e3) { AppLog.soft("clearProfile", e3); }
                 try {
                     for (var i = 0; i < SETTINGS_PROFILE_KEYS.length; i++) {
@@ -17529,7 +17616,7 @@ H += "</div></div>";
                         "</div></details></li>" +
                         "<li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.7 6.3a4.5 4.5 0 0 0-6.4 6.4l-6 6 3.2 3.2 6-6a4.5 4.5 0 0 0 6.4-6.4l-3.5 3.5-3.2-3.2 3.5-3.5z'/></svg> " + (t.setCorrTitle || "Korekce a v\u00fdpo\u010dty") + "</summary><div class=\"step-body\">" +
                         "<p style=\"margin:0 0 10px 0;font-size:12px;color:#5f6368;\">" + (t.setCorrDesc || "") + "</p>" +
-                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:0;font-size:11px;color:#3c4043;cursor:pointer;\"><input type=\"checkbox\" id=\"setGeoidCorr\"' " + ((typeof mfGeoidOn === "function" && mfGeoidOn()) ? " checked" : "") + ((typeof MF_EGM_FAIL !== "undefined" && MF_EGM_FAIL) ? " disabled" : "") + " onchange=\"setGeoidCorr(this.checked)\" title=\"" + ((typeof MF_EGM_FAIL !== "undefined" && MF_EGM_FAIL) ? (t.setGeoidErr || "") : (t.setGeoidTip || "")) + "\"><span>" + (t.setGeoidLbl || "Korigovat v\u00fd\u0161ky na geoid (EGM2008)") + "</span></label>" +
+                        "<label style=\"display:flex;align-items:center;gap:6px;margin-top:0;font-size:11px;color:#3c4043;cursor:pointer;\"><input type=\"checkbox\" id=\"setGeoidCorr\" style=\"width:15px;height:15px;accent-color:var(--green);\" " + ((typeof mfGeoidOn === "function" && mfGeoidOn()) ? " checked" : "") + ((typeof MF_EGM_FAIL !== "undefined" && MF_EGM_FAIL) ? " disabled" : "") + " onchange=\"setGeoidCorr(this.checked)\" title=\"" + ((typeof MF_EGM_FAIL !== "undefined" && MF_EGM_FAIL) ? (t.setGeoidErr || "") : (t.setGeoidTip || "")) + "\"><span>" + (t.setGeoidLbl || "Korigovat v\u00fd\u0161ky na geoid (EGM2008)") + "</span></label>" +
                         "</div></details></li>";
 
                     try { syncSlideSettings(); } catch(e) { AppLog.soft("renderSettings", e); }
@@ -29012,6 +29099,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                 activePopover.parentNode.removeChild(activePopover);
             }
             activePopover = null;
+            try { mfAgeBarTipHide(); } catch(eT) { AppLog.soft("closeAllPopovers", eT); } /* tooltip lišty „Stáří“ nesmí zůstat viset po zavření okna */
             document.querySelectorAll(".color-bubble-btn, .source-pill-btn, .icon-style-btn").forEach(function(b) {
                 b.classList.remove("active");
             });
@@ -29752,7 +29840,7 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                             });
                             pop.appendChild(grid);
                             if (dsMode() === "age") {
-                                var arng = ageRangeVisible();
+                                var arng = ageRangeOfDataset(k);
                                 if (arng) {
                                     var fmtAgeRange = function(minV, maxV) {
                                         var parseTS = function(v) { return ageSecsToParts(v); };
@@ -29768,9 +29856,22 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                                     var curPalObj = agePalettes[d.agePalette || "duha"] || agePalettes.duha;
                                     var scale = document.createElement("div");
                                     scale.style.margin = "6px 0 2px";
-                                    scale.innerHTML = '<div style="height:8px;border-radius:4px;background:' + curPalObj.grad + ';"></div>' +
+                                    /* vyšší neviditelná zóna kolem 8px lišty – snáz se na ni trefí myš i prst */
+                                    scale.innerHTML = '<div class="mf-age-bar-hit" style="padding:5px 0;margin:-5px 0;cursor:crosshair;touch-action:none;"><div class="mf-age-bar" style="height:8px;border-radius:4px;background:' + curPalObj.grad + ';"></div></div>' +
                                         '<div style="display:flex;justify-content:space-between;font-size:10px;color:#5f6368;margin-top:2px;"><span>' + fmtAgeRange(arng.min, arng.max) + '</span></div>';
                                     pop.appendChild(scale);
+                                    (function() {
+                                        var hit = scale.querySelector(".mf-age-bar-hit"), bar = scale.querySelector(".mf-age-bar");
+                                        if (!hit || !bar) return;
+                                        var palKey = agePalettes[d.agePalette] ? d.agePalette : "duha";
+                                        var mv = function(ev) { mfAgeBarTipMove(ev, bar, arng, palKey); };
+                                        hit.addEventListener("pointerenter", mv);
+                                        hit.addEventListener("pointermove", mv);
+                                        hit.addEventListener("pointerdown", function(ev) { try { hit.setPointerCapture(ev.pointerId); } catch(eC) { AppLog.soft("ageBar>capture", eC); } mv(ev); });
+                                        hit.addEventListener("pointerup", function(ev) { if (ev.pointerType !== "mouse") mfAgeBarTipHide(); });
+                                        hit.addEventListener("pointerleave", function(ev) { if (ev.pointerType === "mouse") mfAgeBarTipHide(); });
+                                        hit.addEventListener("pointercancel", mfAgeBarTipHide);
+                                    })();
                                 }
                             }
                         });
