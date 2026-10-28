@@ -52,6 +52,15 @@ JUNK_DIR_NAMES = {
 # ==============================================================================
 # TŘÍDA PRO ZÁZNAM MÉDIA
 # ==============================================================================
+def round_net(val, digits):
+    """
+    Kvantování s dělením po zaokrouhlení na celá čísla, odpovídá .NET Math.Round(double, int).
+    """
+    if val is None:
+        return None
+    factor = 10.0 ** digits
+    return round(val * factor) / factor
+
 class PhotoRecordItem:
     ALT_MIN = -500.0
     ALT_MAX = 15000.0
@@ -85,7 +94,7 @@ class PhotoRecordItem:
             return None
         if val < PhotoRecordItem.ALT_MIN or val > PhotoRecordItem.ALT_MAX:
             return None
-        return round(val, 1)
+        return round_net(val, 1)
 
 
 # ==============================================================================
@@ -160,6 +169,101 @@ def parse_filename_date(filename):
 def parse_filename_datetime(filename):
     return parse_filename_date(filename)
 
+def is_valid_year(year):
+    return 1900 <= year <= 2100
+
+ISO_DATE_REGEX = re.compile(
+    r'^(\d{4})[-:](\d{2})[-:](\d{2})[T ](\d{2}):(\d{2})(?::(\d{2})(?:[.,]\d+)?)?\s*(Z|[+-]\d{2}(?::?\d{2})?)?$',
+    re.IGNORECASE
+)
+
+def parse_iso_wall_clock(s):
+    if not s or not isinstance(s, str):
+        return None
+    s = s.strip()
+    m = ISO_DATE_REGEX.match(s)
+    if not m:
+        return None
+    try:
+        y = int(m.group(1))
+        mo = int(m.group(2))
+        d = int(m.group(3))
+        h = int(m.group(4))
+        mi = int(m.group(5))
+        sec = int(float(m.group(6))) if m.group(6) else 0
+        if not is_valid_year(y):
+            return None
+        dt = datetime.datetime(y, mo, d, h, mi, sec)
+        tz = m.group(7)
+        if tz and tz.upper() == 'Z':
+            dt = dt.replace(tzinfo=timezone.utc).astimezone().replace(tzinfo=None)
+            if not is_valid_year(dt.year):
+                return None
+        return dt.strftime("%Y%m%d_%H%M%S")
+    except Exception:
+        return None
+
+KNOWN_DATE_FORMATS = (
+    "%Y:%m:%d %H:%M:%S",
+    "%Y-%m-%d %H:%M:%S",
+    "%Y/%m/%d %H:%M:%S",
+    "%Y%m%d_%H%M%S",
+    "%Y-%m-%dT%H:%M:%S",
+    "%Y:%m:%d%T%H:%M:%S",
+    "%Y-%m-%d",
+    "%Y:%m:%d",
+    "%Y%m%d",
+    "%d.%m.%Y %H:%M:%S",
+    "%d.%m.%Y %H:%M:%S",
+    "%d.%m.%Y",
+    "%m/%d/%Y %H:%M:%S",
+    "%m/%d/%Y",
+)
+
+def parse_date_string(s):
+    if not s or not isinstance(s, str):
+        return None
+    s = s.strip().strip('\0').strip()
+    if len(s) < 10 or s.startswith("0000"):
+        return None
+    iso = parse_iso_wall_clock(s)
+    if iso:
+        return iso
+    for fmt in KNOWN_DATE_FORMATS:
+        try:
+            dt = datetime.datetime.strptime(s, fmt)
+            if is_valid_year(dt.year):
+                return dt.strftime("%Y%m%d_%H%M%S")
+        except Exception:
+            pass
+    if len(s) > 19:
+        s19 = s[:19]
+        for fmt in KNOWN_DATE_FORMATS:
+            try:
+                dt = datetime.datetime.strptime(s19, fmt)
+                if is_valid_year(dt.year):
+                    return dt.strftime("%Y%m%d_%H%M%S")
+            except Exception:
+                pass
+    return None
+
+def parse_datetime_to_full_str(date_taken, file_name, file_date):
+    if date_taken:
+        p_dt = parse_date_string(date_taken)
+        if p_dt:
+            return p_dt
+    from_name = parse_filename_datetime(file_name)
+    if from_name and not from_name.startswith("0000"):
+        return from_name
+    if isinstance(file_date, datetime.datetime):
+        return file_date.strftime("%Y%m%d_%H%M%S")
+    elif isinstance(file_date, (int, float)) and file_date > 0:
+        try:
+            return datetime.datetime.fromtimestamp(file_date).strftime("%Y%m%d_%H%M%S")
+        except Exception:
+            pass
+    return "00000000_000000"
+
 def get_file_mtime_str(filepath):
     try:
         mtime = os.path.getmtime(filepath)
@@ -199,11 +303,15 @@ def decode_alt_ref(ref_val):
     if ref_val is None:
         return 0
     if isinstance(ref_val, (bytes, bytearray)):
-        return ref_val[0] if len(ref_val) > 0 else 0
-    if isinstance(ref_val, str):
-        return 1 if ref_val.strip() == "1" else 0
+        if len(ref_val) == 0:
+            return 0
+        b0 = ref_val[0]
+        return 1 if b0 in (1, ord('1')) else 0
+    s = str(ref_val).strip()
+    if s == "1":
+        return 1
     try:
-        return int(ref_val)
+        return 1 if int(ref_val) == 1 else 0
     except Exception:
         return 0
 
@@ -307,14 +415,18 @@ def parse_tiff_exif_bytes(tiff_bytes):
         return entries
 
     def get_value(ftype, count, val_or_off):
-        if ftype == 2:  # ASCII
+        if ftype == 1:  # BYTE
+            raw_bytes = struct.pack(endian + "I", val_or_off)
+            return raw_bytes[0]
+        elif ftype == 2:  # ASCII
             if count <= 4:
                 s = struct.pack(endian + "I", val_or_off)[:count]
             else:
                 s = tiff_bytes[val_or_off:val_or_off+count]
             return s.decode("utf-8", errors="ignore").rstrip("\x00").strip()
         elif ftype == 3:  # SHORT
-            return val_or_off & 0xffff
+            raw_bytes = struct.pack(endian + "I", val_or_off)
+            return struct.unpack(endian + "H", raw_bytes[:2])[0]
         elif ftype == 4:  # LONG
             return val_or_off
         elif ftype == 5:  # RATIONAL (two LONGs)
@@ -324,22 +436,18 @@ def parse_tiff_exif_bytes(tiff_bytes):
         return None
 
     ifd0 = read_ifd(ifd0_offset)
-    if 0x0132 in ifd0:
-        val = get_value(*ifd0[0x0132])
-        if isinstance(val, str) and len(val) >= 19:
-            date_str = val.replace(":", "").replace(" ", "_")[:15]
 
-    # Exif SubIFD
+    # Exif SubIFD (cteme pouze DateTimeOriginal a DateTimeDigitized, nikoli tag 306/DateTime)
     if 0x8769 in ifd0:
         exif_off = ifd0[0x8769][2]
         exif_ifd = read_ifd(exif_off)
         for dtag in (0x9003, 0x9004):  # DateTimeOriginal, DateTimeDigitized
             if dtag in exif_ifd:
                 val = get_value(*exif_ifd[dtag])
-                if isinstance(val, str) and len(val) >= 19:
-                    m = re.match(r'(\d{4})[:\-](\d{2})[:\-](\d{2})[ T](\d{2})[:\-](\d{2})[:\-](\d{2})', val)
-                    if m:
-                        date_str = "".join(m.groups()[:3]) + "_" + "".join(m.groups()[3:])
+                if isinstance(val, str) and len(val) >= 10 and not val.startswith("0000"):
+                    p_dt = parse_date_string(val)
+                    if p_dt:
+                        date_str = p_dt
                         break
 
     # GPS SubIFD
@@ -369,8 +477,8 @@ def parse_tiff_exif_bytes(tiff_bytes):
                     dec_lon = -dec_lon
 
                 if abs(dec_lat) <= 90.0 and abs(dec_lon) <= 180.0 and not (abs(dec_lat) < 0.0001 and abs(dec_lon) < 0.0001):
-                    lat = round(dec_lat, 6)
-                    lon = round(dec_lon, 6)
+                    lat = round_net(dec_lat, 6)
+                    lon = round_net(dec_lon, 6)
 
         # Nadmořská výška (GPSAltitude = tag 6, GPSAltitudeRef = tag 5)
         if 6 in gps_ifd:
@@ -385,11 +493,33 @@ def parse_tiff_exif_bytes(tiff_bytes):
                 if 5 in gps_ifd:
                     ref_val = get_value(*gps_ifd[5])
                     alt_ref = decode_alt_ref(ref_val)
-                if alt_ref == 1:
-                    raw_alt = -abs(raw_alt)
-                alt = PhotoRecordItem.valid_altitude(raw_alt)
+                signed_alt = -abs(raw_alt) if alt_ref == 1 else raw_alt
+                alt = PhotoRecordItem.valid_altitude(signed_alt)
 
     return date_str, lat, lon, alt
+
+
+def parse_heic_exif(filepath):
+    """
+    Rychlý nativní parser EXIF pro HEIC/HEIF bez nutnosti instalace knihoven.
+    Prohledá prvních 4 MB souboru na TIFF hlavičku (II*\\0 nebo MM\\0*).
+    """
+    try:
+        with open(filepath, "rb") as f:
+            chunk = f.read(4 * 1024 * 1024)
+            for sig in (b"II\x2a\x00", b"MM\x00\x2a"):
+                idx = 0
+                while True:
+                    idx = chunk.find(sig, idx)
+                    if idx < 0:
+                        break
+                    res = parse_tiff_exif_bytes(chunk[idx:])
+                    if res and (res[0] or res[1] is not None):
+                        return res
+                    idx += 4
+    except Exception:
+        pass
+    return None, None, None, None
 
 
 def parse_png_metadata_pure(filepath):
@@ -454,13 +584,11 @@ def read_photo_metadata(filepath):
                     raw_date = None
                     if exif_sub:
                         raw_date = exif_sub.get(36867) or exif_sub.get(36868)  # DateTimeOriginal, DateTimeDigitized
-                    if not raw_date:
-                        raw_date = exif.get(306)  # DateTime
 
                     if raw_date and isinstance(raw_date, str):
-                        m = re.match(r'(\d{4})[:\-](\d{2})[:\-](\d{2})[ T](\d{2})[:\-](\d{2})[:\-](\d{2})', raw_date)
-                        if m:
-                            date_str = "".join(m.groups()[:3]) + "_" + "".join(m.groups()[3:])
+                        p_dt = parse_date_string(raw_date)
+                        if p_dt:
+                            date_str = p_dt
                             date_quality = 2
 
                     # GPS z GPS IFD
@@ -492,8 +620,8 @@ def read_photo_metadata(filepath):
                                 if str(lat_ref).strip().upper() == "S": d_lat = -d_lat
                                 if str(lon_ref).strip().upper() == "W": d_lon = -d_lon
                                 if abs(d_lat) <= 90.0 and abs(d_lon) <= 180.0 and not (abs(d_lat) < 0.0001 and abs(d_lon) < 0.0001):
-                                    lat = round(d_lat, 6)
-                                    lon = round(d_lon, 6)
+                                    lat = round_net(d_lat, 6)
+                                    lon = round_net(d_lon, 6)
 
                         # Nadmořská výška (tag 6, ref 5)
                         alt_val = gps_info.get(6)
@@ -502,9 +630,8 @@ def read_photo_metadata(filepath):
                                 raw_alt = decode_alt_val(alt_val)
                                 if raw_alt is not None:
                                     alt_ref = decode_alt_ref(gps_info.get(5, 0))
-                                    if alt_ref == 1:
-                                        raw_alt = -abs(raw_alt)
-                                    alt = PhotoRecordItem.valid_altitude(raw_alt)
+                                    signed_alt = -abs(raw_alt) if alt_ref == 1 else raw_alt
+                                    alt = PhotoRecordItem.valid_altitude(signed_alt)
                             except Exception:
                                 pass
 
@@ -523,7 +650,7 @@ def read_photo_metadata(filepath):
         except Exception:
             pass
 
-    # 2. Fallback pro JPEG/TIFF/DNG/PNG v čistém Pythonu bez Pillow
+    # 2. Fallback pro JPEG/TIFF/DNG/PNG/HEIC v čistém Pythonu bez Pillow
     if lat is None or date_str is None:
         if ext in {".jpg", ".jpeg", ".tif", ".tiff", ".dng"}:
             p_date, p_lat, p_lon, p_alt = parse_jpeg_exif_pure(filepath)
@@ -545,16 +672,25 @@ def read_photo_metadata(filepath):
                 lon = p_lon
             if p_alt is not None and alt is None:
                 alt = p_alt
+        elif ext in {".heic", ".heif", ".avif"}:
+            h_date, h_lat, h_lon, h_alt = parse_heic_exif(filepath)
+            if h_date and not date_str:
+                date_str = h_date
+                date_quality = 2
+            if h_lat is not None and lat is None:
+                lat = h_lat
+                lon = h_lon
+            if h_alt is not None and alt is None:
+                alt = h_alt
 
     # 3. Fallback data: název souboru -> čas změny souboru
     if not date_str:
-        fn_date = parse_filename_datetime(os.path.basename(filepath))
-        if fn_date:
-            date_str = fn_date
-            date_quality = 0
-        else:
-            date_str = get_file_mtime_str(filepath)
-            date_quality = 0
+        try:
+            mtime = os.path.getmtime(filepath)
+        except Exception:
+            mtime = 0
+        date_str = parse_datetime_to_full_str(None, os.path.basename(filepath), mtime)
+        date_quality = 0
 
     has_gps = (lat is not None and lon is not None)
     return date_str, (lat or 0.0), (lon or 0.0), alt, has_gps, date_quality
@@ -563,10 +699,12 @@ def read_photo_metadata(filepath):
 # ==============================================================================
 # VIDEO PARSER (MP4, MOV, M4V, 3GP - QuickTime ISO 6709 a mvhd)
 # ==============================================================================
+ISO6709_REGEX = re.compile(r'([+-]\d{1,3}(?:\.\d+)?)([+-]\d{1,3}(?:\.\d+)?)([+-]\d{1,5}(?:\.\d+)?)?')
+
 def parse_iso6709(s):
     if not s or not isinstance(s, str):
         return None, None, None
-    m = re.match(r'([+-]\d+(?:\.\d+)?)([+-]\d+(?:\.\d+)?)(?:([+-]\d+(?:\.\d+)?))?/', s)
+    m = ISO6709_REGEX.search(s)
     if not m:
         return None, None, None
     try:
@@ -577,7 +715,7 @@ def parse_iso6709(s):
         alt = None
         if m.group(3):
             alt = PhotoRecordItem.valid_altitude(float(m.group(3)))
-        return round(lat, 6), round(lon, 6), alt
+        return round_net(lat, 6), round_net(lon, 6), alt
     except Exception:
         return None, None, None
 
@@ -663,9 +801,9 @@ def read_video_metadata(filepath):
                 # Apple creationdate
                 apple_date = find_apple_key("com.apple.quicktime.creationdate")
                 if apple_date:
-                    m = re.match(r'(\d{4})[:\-](\d{2})[:\-](\d{2})[ T](\d{2})[:\-](\d{2})[:\-](\d{2})', apple_date)
-                    if m:
-                        date_str = "".join(m.groups()[:3]) + "_" + "".join(m.groups()[3:])
+                    p_dt = parse_date_string(apple_date)
+                    if p_dt:
+                        date_str = p_dt
                         date_quality = 2
 
                 # Apple location ISO 6709
@@ -675,7 +813,23 @@ def read_video_metadata(filepath):
                     if la is not None:
                         lat, lon, alt = la, lo, al
 
-                # 2. Hledání loci boxu (3GPP location)
+                # 2. Hledání QuickTime ©xyz atomu (Android, DJI, kamery)
+                if lat is None:
+                    xyz_idx = 0
+                    while True:
+                        xyz_idx = moov_bytes.find(b"\xa9xyz", xyz_idx)
+                        if xyz_idx < 0:
+                            break
+                        take = min(160, len(moov_bytes) - (xyz_idx + 4))
+                        if take > 0:
+                            chunk = moov_bytes[xyz_idx + 4 : xyz_idx + 4 + take].decode("ascii", errors="ignore")
+                            la, lo, al = parse_iso6709(chunk)
+                            if la is not None:
+                                lat, lon, alt = la, lo, al
+                                break
+                        xyz_idx += 4
+
+                # 3. Hledání loci boxu (3GPP location)
                 if lat is None:
                     loci_idx = moov_bytes.find(b"loci")
                     if loci_idx >= 4:
@@ -689,13 +843,13 @@ def read_video_metadata(filepath):
                                 if box_sz >= 26:
                                     fixed_alt = PhotoRecordItem.valid_altitude(struct.unpack(">i", moov_bytes[box_start+22:box_start+26])[0] / 65536.0)
                                 if abs(fixed_lat) <= 90.0 and abs(fixed_lon) <= 180.0 and not (abs(fixed_lat) < 0.0001 and abs(fixed_lon) < 0.0001):
-                                    lat = round(fixed_lat, 6)
-                                    lon = round(fixed_lon, 6)
+                                    lat = round_net(fixed_lat, 6)
+                                    lon = round_net(fixed_lon, 6)
                                     alt = fixed_alt
                             except Exception:
                                 pass
 
-                # 3. mvhd atom datum (sekundy od 1904-01-01 UTC)
+                # 4. mvhd atom datum (sekundy od 1904-01-01 UTC)
                 if not date_str:
                     mvhd_idx = moov_bytes.find(b"mvhd")
                     if mvhd_idx >= 4:
@@ -709,22 +863,34 @@ def read_video_metadata(filepath):
                         # QuickTime epoch: 1904-01-01
                         if creation_time > 2082844800:  # po roce 1970
                             epoch_1970 = creation_time - 2082844800
-                            dt = datetime.datetime.fromtimestamp(epoch_1970)
-                            if 1990 <= dt.year <= 2099:
-                                date_str = dt.strftime("%Y%m%d_%H%M%S")
-                                date_quality = 1
+                            raw_dt = datetime.datetime(1904, 1, 1) + datetime.timedelta(seconds=creation_time)
+                            fn_dt_str = parse_filename_datetime(os.path.basename(filepath))
+                            fn_dt = None
+                            if fn_dt_str and not fn_dt_str.startswith("0000"):
+                                try:
+                                    fn_dt = datetime.datetime.strptime(fn_dt_str, "%Y%m%d_%H%M%S")
+                                except Exception:
+                                    pass
+                            if fn_dt and abs((fn_dt - raw_dt).total_seconds()) <= 300:
+                                # Kamera zapsala mistni cas
+                                date_str = raw_dt.strftime("%Y%m%d_%H%M%S")
+                                date_quality = 2
+                            else:
+                                dt = datetime.datetime.fromtimestamp(epoch_1970)
+                                if is_valid_year(dt.year):
+                                    date_str = dt.strftime("%Y%m%d_%H%M%S")
+                                    date_quality = 1
     except Exception:
         pass
 
     # Fallback
     if not date_str:
-        fn_date = parse_filename_datetime(os.path.basename(filepath))
-        if fn_date:
-            date_str = fn_date
-            date_quality = 0
-        else:
-            date_str = get_file_mtime_str(filepath)
-            date_quality = 0
+        try:
+            mtime = os.path.getmtime(filepath)
+        except Exception:
+            mtime = 0
+        date_str = parse_datetime_to_full_str(None, os.path.basename(filepath), mtime)
+        date_quality = 0
 
     has_gps = (lat is not None and lon is not None)
     return date_str, (lat or 0.0), (lon or 0.0), alt, has_gps, date_quality
@@ -780,8 +946,8 @@ def parse_google_json(json_path):
         return {
             "title": title,
             "has_gps": has_gps,
-            "latitude": round(lat, 6),
-            "longitude": round(lon, 6),
+            "latitude": round_net(lat, 6),
+            "longitude": round_net(lon, 6),
             "altitude": alt,
             "date_taken_str": date_str,
             "date_quality": date_quality
@@ -821,12 +987,23 @@ def parse_xmp_text(content):
     lon = None
     alt = None
 
-    # Datum
-    m_date = re.search(r'(?:DateCreated|DateTimeOriginal)\s*(?:>|=["\'])\s*([0-9]{4}[-_:.][0-9]{2}[-_:.][0-9]{2}[ T][0-9]{2}:[0-9]{2}:[0-9]{2})', content, re.IGNORECASE)
-    if m_date:
-        d = re.sub(r'[^0-9]', '', m_date.group(1))
-        if len(d) >= 14:
-            date_str = d[:8] + "_" + d[8:14]
+    # Datum (poradi: DateTimeOriginal, DateCreated, CreateDate; hodnota s casem ma prednost pred samotnym datem)
+    xmp_date_val = None
+    for dKey in ('DateTimeOriginal', 'DateCreated', 'CreateDate'):
+        for md in re.finditer(r'(?<![A-Za-z])' + dKey + r'\s*(?:>|=\s*["\'])\s*([^<"\']+)', content, re.IGNORECASE):
+            v = md.group(1).strip()
+            if len(v) < 4: continue
+            if xmp_date_val is None: xmp_date_val = v
+            if ":" in v and re.search(r'\d[T ]\d', v):
+                xmp_date_val = v
+                break
+        if xmp_date_val and ":" in xmp_date_val and re.search(r'\d[T ]\d', xmp_date_val):
+            break
+
+    if xmp_date_val and ":" in xmp_date_val and re.search(r'\d[T ]\d', xmp_date_val):
+        p_dt = parse_date_string(xmp_date_val)
+        if p_dt:
+            date_str = p_dt
 
     # Souřadnice
     def parse_coord(tag):
@@ -839,8 +1016,8 @@ def parse_xmp_text(content):
     lo = parse_coord("GPSLongitude")
     if la is not None and lo is not None:
         if abs(la) <= 90.0 and abs(lo) <= 180.0 and not (abs(la) < 0.0001 and abs(lo) < 0.0001):
-            lat = round(la, 6)
-            lon = round(lo, 6)
+            lat = round_net(la, 6)
+            lon = round_net(lo, 6)
 
     # Nadmořská výška
     m_alt = re.search(r'GPSAltitude(?!Ref)\s*(?:>|=["\'])\s*([^<"\']+)', content, re.IGNORECASE)
@@ -942,8 +1119,8 @@ def parse_srt_file(srt_path):
 
             return {
                 "has_gps": True,
-                "latitude": round(b_lat, 6),
-                "longitude": round(b_lon, 6),
+                "latitude": round_net(b_lat, 6),
+                "longitude": round_net(b_lon, 6),
                 "altitude": alt,
                 "date_taken_str": date_str,
                 "date_quality": 2 if date_str else 0
@@ -1048,6 +1225,11 @@ def scan_archive(target_dir):
 
     # 3. Párování a aplikace sidecar souborů
     # XMP
+    RAW_FIRST_EXTS = (
+        ".dng", ".cr2", ".cr3", ".nef", ".arw", ".raf", ".orf", ".rw2", ".pef", ".srw",
+        ".jpg", ".jpeg", ".heic", ".heif", ".avif", ".tif", ".tiff", ".png", ".webp", ".bmp", ".gif",
+        ".mp4", ".mov", ".m4v", ".avi", ".mkv", ".wmv", ".3gp", ".mts", ".m2ts", ".mpg", ".mpeg"
+    )
     for xf in xmp_files:
         xdata = parse_xmp_file(xf)
         if not xdata: continue
@@ -1055,16 +1237,21 @@ def scan_archive(target_dir):
         xbase = os.path.splitext(os.path.basename(xf))[0].lower()
         key = (xdir, xbase)
         if key in media_by_base:
-            for r in media_by_base[key]:
-                if not r["has_gps"] and xdata["has_gps"]:
-                    r["has_gps"] = True
-                    r["latitude"] = xdata["latitude"]
-                    r["longitude"] = xdata["longitude"]
-                if r["altitude"] is None and xdata["altitude"] is not None:
-                    r["altitude"] = xdata["altitude"]
-                if xdata["date_taken_str"] and xdata["date_quality"] > r["date_quality"]:
-                    r["date_taken_str"] = xdata["date_taken_str"]
-                    r["date_quality"] = xdata["date_quality"]
+            cands = media_by_base[key]
+            def ext_rank(item):
+                e = os.path.splitext(item["file_name"])[1].lower()
+                try: return RAW_FIRST_EXTS.index(e)
+                except ValueError: return 999
+            target_r = sorted(cands, key=ext_rank)[0]
+            if not target_r["has_gps"] and xdata["has_gps"]:
+                target_r["has_gps"] = True
+                target_r["latitude"] = xdata["latitude"]
+                target_r["longitude"] = xdata["longitude"]
+            if target_r["altitude"] is None and xdata["altitude"] is not None:
+                target_r["altitude"] = xdata["altitude"]
+            if xdata["date_taken_str"] and xdata["date_quality"] > target_r["date_quality"]:
+                target_r["date_taken_str"] = xdata["date_taken_str"]
+                target_r["date_quality"] = xdata["date_quality"]
 
     # SRT (DJI drony)
     for sf in srt_files:
@@ -1105,12 +1292,16 @@ def scan_archive(target_dir):
             if cpath in media_by_rel:
                 matched.append(media_by_rel[cpath])
 
-        # Pokud nenašel přesně, zkusit Live Photo video nebo -edited
-        if not matched and cand_names:
+        # Také zahrnout Live Photo videa a upravené kopie v téže složce
+        if cand_names:
             base_cand = os.path.splitext(cand_names[0])[0].lower()
-            key = (jdir, base_cand)
-            if key in media_by_base:
-                matched.extend(media_by_base[key])
+            clean_base = re.sub(r'-(?:edited|upraveno|upravené|bearbeitet|modifié|editado|modificato|bewerkt|edytowane|redigerad|muokattu)$', '', base_cand, flags=re.IGNORECASE)
+            for k_base in (base_cand, clean_base):
+                key = (jdir, k_base)
+                if key in media_by_base:
+                    for sibling in media_by_base[key]:
+                        if sibling not in matched:
+                            matched.append(sibling)
 
         for r in matched:
             if not r["has_gps"] and jdata["has_gps"]:
@@ -1146,9 +1337,9 @@ def scan_archive(target_dir):
             item.altitude = None
             no_gps_items.append(item)
 
-    # 5. Řazení před deduplikací (chronologicky, název, relativní cesta)
+    # 5. Řazení před deduplikací (chronologicky, název, relativní cesta - odpovídá StringComparison.OrdinalIgnoreCase v .NET)
     def sort_key(it):
-        return (it.date_taken_str, it.file_name.lower(), it.relative_path.lower())
+        return (it.date_taken_str, it.file_name.upper(), it.relative_path.upper())
 
     gps_items.sort(key=sort_key)
     gps_before_dedup = len(gps_items)
@@ -1227,7 +1418,7 @@ def generate_folder_statistics(root_dir):
 
     for root, dirs, files in os.walk(clean_root):
         dirs[:] = [d for d in dirs if not is_junk_dir_name(d.lower())]
-        dirs.sort(key=lambda s: s.lower())
+        dirs.sort(key=lambda s: s.upper())
 
         valid_files = []
         dir_bytes = 0
@@ -1248,7 +1439,7 @@ def generate_folder_statistics(root_dir):
         if not valid_files:
             continue
 
-        valid_files.sort(key=lambda x: (x[0], x[1].lower()))
+        valid_files.sort(key=lambda x: (x[0], x[1].upper()))
         oldest_str = valid_files[0][0]
         newest_str = valid_files[-1][0]
 
@@ -1388,7 +1579,7 @@ def select_subfolder_interactive(root_dir, is_en=False):
             for entry in os.scandir(current):
                 if entry.is_dir() and not is_junk_dir_name(entry.name.lower()):
                     subdirs.append(entry.name)
-            subdirs.sort(key=lambda s: s.lower())
+            subdirs.sort(key=lambda s: s.upper())
         except Exception:
             pass
 
