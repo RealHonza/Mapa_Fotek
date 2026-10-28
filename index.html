@@ -1003,7 +1003,7 @@ var AppLog = (function () {
         .st-folder-table tbody tr.st-lvl-even td { background: #f4f8fc; }
         .st-folder-table tbody tr.st-lvl-even:nth-child(even) td { background: #e8f1fa; }
         .st-folder-table tbody tr:hover td { background: var(--green-bg) !important; }
-        .st-table tfoot td { font-weight: 700; background: var(--green-bg); color: var(--green); border-top: 2px solid var(--green); }
+        .st-table tfoot td { font-weight: 700; background: var(--green-bg); color: #3c4043; border-top: 2px solid var(--green); }
         .st-table tfoot tr:hover td { background: var(--green-border); }
         .st-table tfoot td.st-file .st-link { color: var(--green); font-weight: 700; }
         .st-table tfoot td.st-file .st-link.st-d { color: #1a73e8; }
@@ -2809,7 +2809,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">3.94</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">28. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">3.95</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">28. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -3595,7 +3595,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsFrom: "od ",
             statsCenterOf: "těžiště ",
             statsStateChkTip: "Zahrnout do statistiky",
-            statsNoStateSel: "Zaškrtněte alespoň jeden stav, aby se zobrazila statistika.", statsNoDataFiltered: "Pro zvolené filtry a stavy nejsou žádná data.", statsApplyFilters: "Aplikace filtrů na statistiky",
+            statsNoStateSel: "Zaškrtněte alespoň jeden stav, aby se zobrazila statistika.", statsNoDataFiltered: "Pro zvolené filtry a stavy nejsou žádná data.", statsNoDated: "Žádná fotka s datem – roční přehled není k dispozici.", statsApplyFilters: "Aplikace filtrů na statistiky",
             statsColYear: "Rok",
             statsColOldest: "Nejstarší soubor",
             statsColNewest: "Nejnovější soubor",
@@ -3983,7 +3983,7 @@ statsFarthestPair: "Farthest pair",
             statsFrom: "from ",
             statsCenterOf: "centroid ",
             statsStateChkTip: "Include in the statistics",
-            statsNoStateSel: "Check at least one state to show the statistics.", statsNoDataFiltered: "No data match the selected filters and states.", statsApplyFilters: "Apply filters to statistics",
+            statsNoStateSel: "Check at least one state to show the statistics.", statsNoDataFiltered: "No data match the selected filters and states.", statsNoDated: "No photo has a date – the yearly overview is not available.", statsApplyFilters: "Apply filters to statistics",
             statsColYear: "Year",
             statsColOldest: "Oldest file",
             statsColNewest: "Newest file",
@@ -7649,6 +7649,14 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
 
         function handleModalTabTrap(e) {
             try {
+                /* zvětšený overlay (tabulka/sekce/graf) leží v <body> nad modalem – pokud je otevřený,
+                   je kontejnerem pro Tab on (fokus nesmi skocit do modalu schovaneho pod overlayem) */
+                var overlays = ["stTableOverlay", "stSectionOverlay", "stChartOverlay"];
+                var activeOverlay = null;
+                for (var oi = 0; oi < overlays.length; oi++) {
+                    var ovEl = document.getElementById(overlays[oi]);
+                    if (ovEl) { activeOverlay = ovEl; break; }
+                }
                 var backdrops = ["infoModalBackdrop", "settingsModalBackdrop", "statsModalBackdrop"];
                 var activeModal = null;
                 for (var i = 0; i < backdrops.length; i++) {
@@ -7658,8 +7666,9 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                         break;
                     }
                 }
-                if (!activeModal) return;
-                var focusables = activeModal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), summary');
+                if (!activeOverlay && !activeModal) return;
+                var trapRoot = activeOverlay || activeModal;
+                var focusables = trapRoot.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), summary');
                 var visibleFocusables = [];
                 for (var j = 0; j < focusables.length; j++) {
                     var el = focusables[j];
@@ -7671,12 +7680,12 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 var firstEl = visibleFocusables[0];
                 var lastEl = visibleFocusables[visibleFocusables.length - 1];
                 if (e.shiftKey) {
-                    if (document.activeElement === firstEl || !activeModal.contains(document.activeElement)) {
+                    if (document.activeElement === firstEl || !trapRoot.contains(document.activeElement)) {
                         e.preventDefault();
                         lastEl.focus();
                     }
                 } else {
-                    if (document.activeElement === lastEl || !activeModal.contains(document.activeElement)) {
+                    if (document.activeElement === lastEl || !trapRoot.contains(document.activeElement)) {
                         e.preventDefault();
                         firstEl.focus();
                     }
@@ -9288,7 +9297,7 @@ function statsSetFilters(on) {
             } catch(e) { return ""; }
         }
         // Ciselne oznaceni dne z "YYYYMMDD" - pres UTC, aby nehralo DST ani presun mesici
-        function statsDayNo(d8) {
+        function statsDayNoRaw(d8) {
             try {
                 var s = String(d8 || "");
                 var y = parseInt(s.substring(0, 4), 10);
@@ -9296,8 +9305,28 @@ function statsSetFilters(on) {
                 var d = parseInt(s.substring(6, 8), 10);
                 if (!isFinite(y) || !isFinite(m) || !isFinite(d)) return null;
                 if (m < 1 || m > 12 || d < 1 || d > 31) return null;
-                return Math.floor(Date.UTC(y, m - 1, d) / 86400000);
+                var no = Math.floor(Date.UTC(y, m - 1, d) / 86400000);
+                /* zpětná validace: neexistující data (29.2. v nepřestupném roce, 31.11. apod.)
+                   JS tichě posune na následující den – taková data z řad dnů vyloučit,
+                   aby nerozbíjela procenta v „Dny s focením“ (29.2.2023 kdysi dávalo 150 %) */
+                var chk = new Date(no * 86400000);
+                if (chk.getUTCFullYear() !== y || chk.getUTCMonth() !== m - 1 || chk.getUTCDate() !== d) return null;
+                return no;
             } catch(e) { return null; }
+        }
+        /* Paměť převodu „YYYYMMDD“ -> číslo dne (nález E): v renderStats se volá pro každou fotku
+           několikrát (Dny s focením, Nejvíce fotek za X dní, Nejdelší fotosérie, Tabulka 1).
+           V workeru _statsDayNoCache neexistuje – tam se počítá přímo. */
+        var _statsDayNoCache = (typeof Map === "function") ? new Map() : null;
+        function statsDayNo(d8) {
+            var c = (typeof _statsDayNoCache !== "undefined") ? _statsDayNoCache : null;
+            if (!c || typeof d8 !== "string") return statsDayNoRaw(d8);
+            var h = c.get(d8);
+            if (h !== undefined) return h;
+            h = statsDayNoRaw(d8);
+            if (c.size > 200000) c.clear();
+            c.set(d8, h);
+            return h;
         }
         // Tvar podle počtu (jako pravidla češtiny v CLDR): přesně 1 -> "den"; přesně 2-4 -> "dny"; jinak "dní"
         // (tedy 5 dní, 21 dní, 101 dní, 1 541 dní; "21 den" ani "1 541 den" se nepíše).
@@ -9385,7 +9414,19 @@ function statsSetFilters(on) {
                     fr: g[keys[bestS]].fr, lr: g[keys[bestE]].lr };
             } catch(e) { return null; }
         }
-        function statsTimeKey(p) { return String((p && p[2]) || "").replace(/[^0-9]/g, ""); }
+        /* Paměť klíčů času (nález E): renderStats volá statsTimeKey statisícekrát (komparátory řazení,
+           roční a složková tabulka). Klíčem je přímo textový čas, takže úprava fotky výsledek nezkreslí.
+           Funkce se serializuje i do workeru – tam _statsTkCache neexistuje a počítá se bez paměti. */
+        var _statsTkCache = (typeof Map === "function") ? new Map() : null;
+        function statsTimeKey(p) {
+            var raw = (p && p[2]) || "";
+            if (typeof raw !== "string") raw = String(raw);
+            var c = (typeof _statsTkCache !== "undefined") ? _statsTkCache : null;
+            if (c) { var h = c.get(raw); if (h !== undefined) return h; }
+            var k = raw.replace(/[^0-9]/g, "");
+            if (c) { if (c.size > 1000000) c.clear(); c.set(raw, k); }
+            return k;
+        }
         // ciselne oznaceni dne -> datum jako text (dlouhy tvar, pro tooltipy)
         function fmtStatsDayNo(no) {
             try {
@@ -11199,7 +11240,8 @@ function statsSetFilters(on) {
         }
         function statsMedian(arr) {
             if (!arr.length) return NaN;
-            var a = arr.slice().sort(function(x, y) { return x - y; });
+            /* Float64Array.sort řadí numericky nativně – výrazně rychlejší než komparátor (nález E) */
+            var a = (typeof Float64Array === "function" && Float64Array.from) ? Float64Array.from(arr).sort() : arr.slice().sort(function(x, y) { return x - y; });
             var m = Math.floor(a.length / 2);
             return (a.length % 2) ? a[m] : (a[m - 1] + a[m]) / 2;
         }
@@ -11649,17 +11691,40 @@ function fmtStatsCoordShort(la, lo) {
         function statsSpanParts(dOld, dNew) { return statsSpanFmt(dOld, dNew, false); }
         function statsSpanFull(dOld, dNew) { return statsSpanFmt(dOld, dNew, true); }
         function statsSpanPartsOf(dOld, dNew) {
+            /* Kalendářní přístup s kotvou: celé měsíce se počítají od data dOld (den v měsíci
+               oříznutý na délku cílového měsíce – 31.1. + 1 měsíc = 29.2. v přestupném roce),
+               zbytek dnů a čas se dopočte z rozdílu vůči kotvě. Starý kód si den „půjčil“ jen
+               jednou, takže 31.1. → 1.3. vrátilo „1 měsíc“ a den se ztratil. */
             var y = dNew.getFullYear() - dOld.getFullYear();
             var mo = dNew.getMonth() - dOld.getMonth();
-            var d = dNew.getDate() - dOld.getDate();
-            var hh = dNew.getHours() - dOld.getHours();
-            var mi = dNew.getMinutes() - dOld.getMinutes();
-            var ss = dNew.getSeconds() - dOld.getSeconds();
-            if (ss < 0) { ss += 60; mi -= 1; }
-            if (mi < 0) { mi += 60; hh -= 1; }
-            if (hh < 0) { hh += 24; d -= 1; }
-            if (d < 0) { d += new Date(dNew.getFullYear(), dNew.getMonth(), 0).getDate(); mo -= 1; }
             if (mo < 0) { mo += 12; y -= 1; }
+            var _dim = function(yy, mm) { return new Date(yy, mm + 1, 0).getDate(); };
+            var _mkAnchorUtc = function() {
+                var aY = dOld.getFullYear() + y, aM = dOld.getMonth() + mo;
+                while (aM >= 12) { aM -= 12; aY += 1; }
+                while (aM < 0) { aM += 12; aY -= 1; }
+                var aD = Math.min(dOld.getDate(), _dim(aY, aM));
+                return Date.UTC(aY, aM, aD, dOld.getHours(), dOld.getMinutes(), dOld.getSeconds());
+            };
+            /* Kotva i cíl se porovnávají a odečítají v UTC reprezentaci kalendářních složek.
+               Lokální Date by u kotvy připadající na neexistující hodinu (02:xx v den přechodu
+               na letní čas) posunul čas na 03:xx a zbytek by vyšel o hodinu kratší. Stejně tak
+               rozdíl lokálních timestampů by přes přechod času vrátil 23/25 hodin místo dne. */
+            var tgtUtc = Date.UTC(dNew.getFullYear(), dNew.getMonth(), dNew.getDate(), dNew.getHours(), dNew.getMinutes(), dNew.getSeconds());
+            var anchorUtc = _mkAnchorUtc();
+            /* dNew před kotvou (dřívější den, nebo stejný den s nižším časem) – odečíst měsíc;
+               kvůli oříznutí na konec měsíce stačí nejvýš dva kroky, smyčka je jen pojistka */
+            for (var _g = 0; _g < 3 && tgtUtc < anchorUtc; _g++) {
+                if (mo > 0) { mo -= 1; } else { mo = 11; y -= 1; }
+                anchorUtc = _mkAnchorUtc();
+            }
+            var remUtc = tgtUtc - anchorUtc;
+            if (remUtc < 0) remUtc = 0; /* obranná pojistka (nemělo by nastat) */
+            var d = Math.floor(remUtc / 86400000);
+            var remDay = remUtc - d * 86400000;
+            var hh = Math.floor(remDay / 3600000);
+            var mi = Math.floor((remDay - hh * 3600000) / 60000);
+            var ss = Math.floor((remDay - hh * 3600000 - mi * 60000) / 1000);
             return { y: y, mo: mo, d: d, hh: hh, mi: mi, ss: ss };
         }
         function statsSpanFmt(dOld, dNew, full) {
@@ -11697,12 +11762,18 @@ function fmtStatsCoordShort(la, lo) {
                     var mi = (str.length >= 12) ? +str.substring(10, 12) : 0;
                     var se = (str.length >= 14) ? +str.substring(12, 14) : 0;
                     var d = new Date(Y, M, D, h, mi, se);
-                    return isNaN(d.getTime()) ? null : d;
+                    if (isNaN(d.getTime())) return null;
+                    /* zpětná validace: nulové EXIF datum „0000:00:00“ i neexistující kalendářní data
+                       (29.2. v nepřestupném roce) JS tichě posune na jiný den – takové datum odmítnout */
+                    if (Y < 100 || d.getFullYear() !== Y || d.getMonth() !== M || d.getDate() !== D) return null;
+                    return d;
                 }
                 var m = String(s || "").match(/(\d{4})[-_]?(\d{2})[-_]?(\d{2})(?:[ T_]?(\d{2})[-_:]?(\d{2})[-_:]?(\d{2}))?/);
                 if (!m) return null;
                 var d2 = new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0));
-                return isNaN(d2.getTime()) ? null : d2;
+                if (isNaN(d2.getTime())) return null;
+                if (+m[1] < 100 || d2.getFullYear() !== +m[1] || d2.getMonth() !== +m[2] - 1 || d2.getDate() !== +m[3]) return null;
+                return d2;
             } catch(e) { return null; }
         }
         function statsClearMarker(mk) {
@@ -11974,7 +12045,7 @@ function fmtStatsCoordShort(la, lo) {
                 if (statsYearSort.key === key) statsYearSort.dir = -statsYearSort.dir;
                 else { statsYearSort.key = key; statsYearSort.dir = -1; }
             } catch(e) { AppLog.soft("statsSortYearTable", e); }
-            renderStats();
+            statsTableRerender("year");
         }
         /* Řazení tabulky Navštívené státy: name (abecedně), old (nejstarší fotka), count (počet).
            První kliknutí: počet sestupně, ostatní vzestupně; další kliknutí přepíná směr. */
@@ -11984,7 +12055,7 @@ function fmtStatsCoordShort(la, lo) {
                 if (statsCountriesSort.key === key) statsCountriesSort.dir = -statsCountriesSort.dir;
                 else { statsCountriesSort.key = key; statsCountriesSort.dir = (key === "count" || key === "area") ? -1 : 1; }
             } catch(e) { AppLog.soft("statsSortCountriesTable", e); }
-            renderStats();
+            statsTableRerender("countries");
         }
         /* --- Navštívené státy: hledání (analogicky k Tabulce 2) a export CSV --- */
         var statsCountriesSearch = "";
@@ -12096,7 +12167,7 @@ function fmtStatsCoordShort(la, lo) {
                 try { if (inp) cursorPos = inp.selectionStart || 0; } catch(e) { AppLog.soft("statsCountriesSearchInput>run", e); }
                 /* Mezery v dotazu se respektují (uloží se původní text), samotné mezery ale nefiltrují. */
                 statsCountriesSearch = (val || "");
-                renderStats();
+                statsTableRerender("countries");
                 try {
                     var root1 = statsCountriesSearchRoot();
                     var inp2 = root1 ? root1.querySelector(".st-ctry-search-inp") : null;
@@ -12238,7 +12309,7 @@ function fmtStatsCoordShort(la, lo) {
                     statsFolderSearchSaved = null;
                 }
                 statsFolderSearch = qRaw;
-                renderStats();
+                statsTableRerender("folder");
                 try {
                     var ov2 = document.getElementById("stTableOverlay");
                     if (ov2) {
@@ -12258,14 +12329,14 @@ function fmtStatsCoordShort(la, lo) {
                 if (statsFolderSort.key === key) statsFolderSort.dir = -statsFolderSort.dir;
                 else { statsFolderSort.key = key; statsFolderSort.dir = 1; }
             } catch(e) { AppLog.soft("statsSortFolderTable", e); }
-            renderStats();
+            statsTableRerender("folder");
         }
         function statsToggleFolderPath(path) {
             try {
                 if (statsFolderExpanded[path]) delete statsFolderExpanded[path];
                 else statsFolderExpanded[path] = true;
             } catch(e) { AppLog.soft("statsToggleFolderPath", e); }
-            renderStats();
+            statsTableRerender("folder");
         }
         function statsFolderExpandAll(on) {
             try {
@@ -12274,10 +12345,13 @@ function fmtStatsCoordShort(la, lo) {
                     if (d && d.paths) { for (var i = 0; i < d.paths.length; i++) statsFolderExpanded[d.paths[i]] = true; }
                 } else { statsFolderExpanded = {}; }
             } catch(e) { AppLog.soft("statsFolderExpandAll", e); }
-            renderStats();
+            statsTableRerender("folder");
         }
         function openStatsModal() {
             recordModalOpener();
+            /* opetovne otevreni statistiky rusi pripadny rozjaty rezim vyberu RB z mapy,
+               aby handler kliku nezustal navzdy viset (jinak by kazdy klik do mapy prepisoval RB) */
+            try { statsPickStop(); } catch(ePS0) { AppLog.soft("openStatsModal", ePS0); }
             try { statsCountriesSearch = ""; if (_statsCountriesSearchTimer) { clearTimeout(_statsCountriesSearchTimer); _statsCountriesSearchTimer = null; } } catch(eCS0) { AppLog.soft("openStatsModal", eCS0); }
             try { statsFolderSearch = ""; statsFolderSearchSaved = null; if (_statsFolderSearchTimer) { clearTimeout(_statsFolderSearchTimer); _statsFolderSearchTimer = null; } } catch(e) { AppLog.soft("openStatsModal", e); }
             try {
@@ -12287,6 +12361,8 @@ function fmtStatsCoordShort(la, lo) {
             statsClearMarker();
             document.getElementById("statsModalBackdrop").classList.add("open");
             try { statsChartApplyDefault(); } catch(eCA) { AppLog.soft("openStatsModal", eCA); }
+            /* nové otevření = nová šance: dřívější „Zrušeno“ se zapomene (hotové výsledky v cache zůstávají) */
+            try { statsAsyncCancelledKey = {}; } catch(eCK) { AppLog.soft("openStatsModal", eCK); }
             renderStats();
             /* bez autofocusu (stejně jako info a nastavení): fokus se přesune až po Tab (řeší handleModalTabTrap) */
         }
@@ -12295,7 +12371,8 @@ function fmtStatsCoordShort(la, lo) {
             try { if (document.getElementById("stTableOverlay")) collapseStatsTable(true); } catch(eCT) { AppLog.soft("closeStatsModal", eCT); }
             try { if (document.getElementById("stSectionOverlay")) collapseStatsSection(true); } catch(eCS) { AppLog.soft("closeStatsModal", eCS); }
             try { if (document.getElementById("stChartOverlay")) window.collapseStatsChart(); } catch(eCC) { AppLog.soft("closeStatsModal", eCC); }
-            statsPickState = null;
+            /* korektni zruseni rezimu vyberu RB z mapy: odvesi handler kliku (statsPickState = null samotne nestaci) */
+            try { statsPickStop(); } catch(ePS) { AppLog.soft("closeStatsModal", ePS); }
             try { document.body.style.cursor = ""; } catch(eC) { AppLog.soft("closeStatsModal", eC); }
             document.getElementById("statsModalBackdrop").classList.remove("open");
             try { statsAsyncTerminateAll(); } catch(eA3) { AppLog.soft("closeStatsModal", eA3); }
@@ -12398,7 +12475,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
         // workeru, aby UI nezamrzlo. Vysledky se vraceji pres postMessage; synchronni
         // fallback plati, kdyz Worker neni k dispozici.
         function statsAsyncWorkerCode() {
-            var need = ["calcDistKm", "calcDistKmLL", "statsCrossLL", "statsHull", "statsFarthestPair", "statsDensest", "statsDensestRanked", "statsMostVisited", "statsMostVisitedRanked", "statsTopPlaces", "statsTopGreedy", "statsClusterValid", "statsClusterMembers", "statsDayNoOf", "statsTimeKey", "statsDayNo"];
+            var need = ["calcDistKm", "calcDistKmLL", "statsCrossLL", "statsHull", "statsFarthestPair", "statsDensest", "statsDensestRanked", "statsMostVisited", "statsMostVisitedRanked", "statsTopPlaces", "statsTopGreedy", "statsClusterValid", "statsClusterMembers", "statsDayNoOf", "statsTimeKey", "statsDayNo", "statsDayNoRaw"];
             var parts = [];
             // Worker ma vlastni globalni kontext: AppLog (a pocitadlo _statsTopIters) tam neexistuji, ale serializovane funkce je v catch blocich volaji.
             parts.push("var AppLog={soft:function(){},warn:function(){},error:function(){}};");
@@ -12409,7 +12486,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 if (typeof fn !== "function") throw new Error("statsAsync: missing " + need[i]);
                 parts.push("var " + need[i] + "=" + fn.toString() + ";");
             }
-            parts.push("onmessage=function(e){var m=e.data||{};var P=function(f){try{postMessage({token:m.token,kind:m.kind,progress:f});}catch(e2){}};try{var r=null;if(m.kind===\"densest\"){r=statsDensestRanked(m.locs,function(f){P(f);});}else if(m.kind===\"mostvisited\"){r=statsMostVisitedRanked(m.locs,function(f){P(f);});}else if(m.kind===\"farthest\"){r=statsFarthestPair(m.pts,function(f){P(0.05+f*0.9);});}else if(m.kind===\"topplaces\"){r=statsTopPlaces(m.locs,function(f){P(f);},m.sepMult);}else if(m.kind===\"topdays\"){r=statsTopPlaces(m.locs,function(f){P(f);},m.sepMult,\"days\");}else{throw new Error(\"job\");}postMessage({token:m.token,kind:m.kind,done:true,result:r});}catch(err){postMessage({token:m.token,kind:m.kind,error:String((err&&err.message)||err)});}};");
+            parts.push("var __mark=function(v,d){if(!v||typeof v!==\"object\"||d>12)return v;if(Array.isArray(v)){if(typeof v.__i===\"number\")return{__row:v.__i};var a=new Array(v.length);for(var i=0;i<v.length;i++)a[i]=__mark(v[i],d+1);for(var ak in v){if(Object.prototype.hasOwnProperty.call(v,ak)&&!(String(ak>>>0)===ak&&(ak>>>0)<v.length))a[ak]=__mark(v[ak],d+1);}return a;}var o={};for(var k in v){if(Object.prototype.hasOwnProperty.call(v,k))o[k]=__mark(v[k],d+1);}return o;};onmessage=function(e){var m=e.data||{};var P=function(f){try{postMessage({token:m.token,kind:m.kind,progress:f});}catch(e2){}};try{var r=null;var __q;if(m.locs){for(__q=0;__q<m.locs.length;__q++){if(m.locs[__q]&&m.locs[__q].p)m.locs[__q].p.__i=__q;}}else if(m.pts){for(__q=0;__q<m.pts.length;__q++){if(m.pts[__q])m.pts[__q].__i=__q;}}if(m.kind===\"densest\"){r=statsDensestRanked(m.locs,function(f){P(f);});}else if(m.kind===\"mostvisited\"){r=statsMostVisitedRanked(m.locs,function(f){P(f);});}else if(m.kind===\"farthest\"){r=statsFarthestPair(m.pts,function(f){P(0.05+f*0.9);});}else if(m.kind===\"topplaces\"){r=statsTopPlaces(m.locs,function(f){P(f);},m.sepMult);}else if(m.kind===\"topdays\"){r=statsTopPlaces(m.locs,function(f){P(f);},m.sepMult,\"days\");}else{throw new Error(\"job\");}postMessage({token:m.token,kind:m.kind,done:true,result:__mark(r,0)});}catch(err){postMessage({token:m.token,kind:m.kind,error:String((err&&err.message)||err)});}};");
             return parts.join("\n");
         }
         function statsAsyncTerminate(kind) {
@@ -12453,6 +12530,8 @@ function stBar(label, value, max, text, pctText, chkHtml) {
             try {
                 var j = statsAsyncJobs[kind];
                 delete statsAsyncJobs[kind];
+                /* zrušení platí pro tytéž vstupy – řazení/hledání výpočet znovu nespustí */
+                if (j && j.key) statsAsyncCancelledKey[kind] = j.key;
                 if (j) {
                     try { if (j.url) URL.revokeObjectURL(j.url); } catch(eU) { AppLog.soft("statsAsyncCancel", eU); }
                     try { if (j.worker) j.worker.terminate(); } catch(eW) { AppLog.soft("statsAsyncCancel", eW); }
@@ -12462,6 +12541,8 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 if (el && j) {
                     el.innerHTML = stRow([{label: j.label, val: j.cancelled}]);
                 }
+                /* zvětšená sekce je kopie – bez obnovy by v ní zůstalo „Počítám… 37 %“ (stejně jako swapAsyncRow) */
+                try { if (j && document.getElementById("stSectionOverlay")) statsSectionOverlayRender(); } catch(eSO) { AppLog.soft("statsAsyncCancel", eSO); }
             } catch(e) { AppLog.soft("statsAsyncCancel", e); }
         }
         function statsAsyncStart(kind, payload, label, cancelled) {
@@ -12470,25 +12551,91 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 var code = statsAsyncWorkerCode();
                 var url = URL.createObjectURL(new Blob([code], {type: "text/javascript;charset=utf-8"}));
                 var w = new Worker(url);
-                statsAsyncJobs[kind] = { worker: w, url: url, token: statsAsyncGen, done: false, payload: payload, finish: null, label: label, cancelled: cancelled };
+                var tok = statsAsyncGen;
+                statsAsyncJobs[kind] = { worker: w, url: url, token: tok, done: false, payload: payload, finish: null, label: label, cancelled: cancelled };
+                /* úloha patří tomuto workeru jen dokud ji nenahradila jiná (nový render, zrušení, převzetí) */
+                var _own = function() {
+                    var jj = statsAsyncJobs[kind];
+                    return (jj && !jj.done && jj.worker === w) ? jj : null;
+                };
+                var _release = function(jj) {
+                    jj.done = true;
+                    try { if (jj.url) URL.revokeObjectURL(jj.url); } catch(eU) { AppLog.soft("statsAsyncStart>release", eU); }
+                    try { if (jj.worker) jj.worker.terminate(); } catch(eW) { AppLog.soft("statsAsyncStart>release", eW); }
+                };
                 w.onmessage = function(e) {
                     var m = e.data;
-                    var j = statsAsyncJobs[kind];
-                    if (!j || j.done || !m || m.token !== j.token) return;
+                    var j = _own();
+                    if (!j || !m || m.token !== j.token) return;
                     if (m.progress !== undefined && m.progress !== null && !m.done) { statsAsyncProgress(kind, m.progress); return; }
-                    j.done = true;
-                    try { if (j.url) URL.revokeObjectURL(j.url); } catch(eU) { AppLog.soft("statsAsyncStart>onmessage", eU); }
-                    try { if (j.worker) j.worker.terminate(); } catch(eW) { AppLog.soft("statsAsyncStart>onmessage", eW); }
-                    if (m.error !== undefined && m.error !== null) { statsAsyncSyncFallback(kind); return; }
+                    _release(j);
+                    if (m.error !== undefined && m.error !== null) { AppLog.soft("statsAsyncStart>worker", m.error); statsAsyncFailFallback(kind, j); return; }
+                    var res = statsAsyncUnmark(m.result, j.payload);
                     var fin = j.finish;
                     delete statsAsyncJobs[kind];
-                    if (typeof fin === "function") { try { fin(m.result); } catch(eF) { AppLog.soft("statsAsyncStart>onmessage", eF); } }
+                    if (j.key) statsHeavyPut(kind, j.key, res);
+                    if (typeof fin === "function") { try { fin(res); } catch(eF) { AppLog.soft("statsAsyncStart>onmessage", eF); } }
                 };
-                w.onerror = function() { statsAsyncSyncFallback(kind); };
-                payload.token = statsAsyncGen;
-                w.postMessage(payload);
+                w.onerror = function(ev) {
+                    try { if (ev && ev.preventDefault) ev.preventDefault(); } catch(eP) { AppLog.soft("statsAsyncStart>onerror", eP); }
+                    var j = _own();
+                    if (!j) return; /* chyba starého / už nahrazeného workeru – nic nedělat */
+                    _release(j);
+                    AppLog.soft("statsAsyncStart>onerror", (ev && ev.message) || "worker error");
+                    statsAsyncFailFallback(kind, j);
+                };
+                /* kind musí jít do workeru – bez něj worker každou úlohu odmítl („job“) a vše se
+                   tiše počítalo synchronně v hlavním vlákně. Posílá se mělká kopie, payload zůstává čistý. */
+                var msg = {};
+                for (var pk in payload) { if (Object.prototype.hasOwnProperty.call(payload, pk)) msg[pk] = payload[pk]; }
+                msg.kind = kind;
+                msg.token = tok;
+                w.postMessage(msg);
                 return true;
             } catch(e) { return false; }
+        }
+        /* Worker vrací strukturované KOPIE řádků – vazba na originál (popup, sada dat, prohlížečka)
+           by se ztratila. Worker řádky označí {__row: index} a tady se nahradí originály z payloadu. */
+        function statsAsyncUnmark(res, payload) {
+            try {
+                var src = payload && payload.locs, isLocs = true;
+                if (!src) { src = payload && payload.pts; isLocs = false; }
+                if (!src) return res;
+                var orig = function(i) { var x = src[i]; return isLocs ? (x && x.p) : x; };
+                var walk = function(v, d) {
+                    if (!v || typeof v !== "object" || d > 12) return v;
+                    if (!Array.isArray(v) && typeof v.__row === "number") { var o = orig(v.__row); return o || v; }
+                    if (Array.isArray(v)) { for (var i = 0; i < v.length; i++) v[i] = walk(v[i], d + 1); for (var ak in v) { if (Object.prototype.hasOwnProperty.call(v, ak) && !(String(ak >>> 0) === ak && (ak >>> 0) < v.length)) v[ak] = walk(v[ak], d + 1); } } /* i pojmenované vlastnosti pole (sepKm, greedyIters) */
+                    else { for (var k in v) { if (Object.prototype.hasOwnProperty.call(v, k)) v[k] = walk(v[k], d + 1); } }
+                    return v;
+                };
+                return walk(res, 0);
+            } catch(e) { AppLog.soft("statsAsyncUnmark", e); return res; }
+        }
+        /* Selhání workeru: synchronní náhradní výpočet jen do STATS_ASYNC_SYNC_MAX bodů a odloženě
+           (UI se nejdřív překreslí); nad limitem by hlavní vlákno zamrzlo – zobrazí se „Výpočet se nezdařil“. */
+        var STATS_ASYNC_SYNC_MAX = 20000;
+        function statsAsyncFailFallback(kind, j) {
+            try {
+                var pl = j && j.payload;
+                var n = pl ? ((pl.locs && pl.locs.length) || (pl.pts && pl.pts.length) || 0) : 0;
+                if (n > STATS_ASYNC_SYNC_MAX) {
+                    if (statsAsyncJobs[kind] === j) delete statsAsyncJobs[kind];
+                    var t = i18n[currentLang] || {};
+                    var msg = t.statsAsyncFailed || (currentLang === "cs" ? "Výpočet se nezdařil" : "Calculation failed");
+                    var id = statsAsyncRowId(kind);
+                    swapAsyncRow(id, stRow([{ label: j.label, val: msg }]));
+                    return;
+                }
+                setTimeout(function() {
+                    /* mezitím mohl proběhnout nový render nebo zavření modalu – pak výsledek nepatří sem */
+                    if (statsAsyncJobs[kind] !== j) return;
+                    statsAsyncSyncFallback(kind);
+                }, 0);
+            } catch(e) { AppLog.soft("statsAsyncFailFallback", e); }
+        }
+        function statsAsyncRowId(kind) {
+            return (kind === "densest") ? "stRowDensest" : ((kind === "mostvisited") ? "stRowMostVisited" : ((kind === "topplaces") ? "stRowTopPlaces" : ((kind === "topdays") ? "stRowTopDays" : "stRowFarthest")));
         }
         function statsAsyncSyncFallback(kind) {
             var j = statsAsyncJobs[kind];
@@ -12501,8 +12648,94 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 else if (kind === "topplaces") res = statsTopPlaces(j.payload.locs, null, j.payload.sepMult);
                 else if (kind === "topdays") res = statsTopPlaces(j.payload.locs, null, j.payload.sepMult, "days");
                 else if (kind === "farthest") res = statsFarthestPair(j.payload.pts);
+                if (j.key) statsHeavyPut(kind, j.key, res);
             } catch(e) { res = null; }
             try { j.finish(res); } catch(eF) { AppLog.soft("statsAsyncSyncFallback", eF); }
+        }
+        /* --- Cache těžkých výpočtů + převzetí běžících úloh (nález E) ---
+           Řazení, hledání a rozbalování tabulek volá renderStats(), ale vstupy těžkých výpočtů
+           (Nejčastější místo, Top 10 častých míst, Nejvzdálenější dvojice, Nejhustší okruh, Top 10 míst)
+           se tím nemění. Snapshot vstupů (identita řádku + poloha + čas + název, ve stejném pořadí)
+           dává id; klíč = id + parametr výpočtu. Při shodě klíče se použije hotový výsledek,
+           případně se převezme běžící worker (jen se mu přepojí finish na nový render).
+           Úlohy, které si render nepřevzal, se na konci renderu ukončí (statsAsyncSweep). */
+        var statsHeavySnap = null;
+        var statsHeavySnapSeq = 0;
+        var statsHeavyCache = {};
+        var statsAsyncCancelledKey = {};
+        var statsRenderSeq = 0;
+        function statsHeavySnapId(locs) {
+            try {
+                var n = locs ? locs.length : 0, s = statsHeavySnap, i, L, p;
+                if (s && s.n === n) {
+                    var same = true;
+                    for (i = 0; i < n; i++) {
+                        L = locs[i]; p = L.p;
+                        if (s.ps[i] !== p || s.la[i] !== L.ll[0] || s.lo[i] !== L.ll[1] || s.tk[i] !== p[2] || s.fn[i] !== p[3]) { same = false; break; }
+                    }
+                    if (same) return s.id;
+                }
+                var ns = { id: ++statsHeavySnapSeq, n: n, ps: new Array(n), la: new Array(n), lo: new Array(n), tk: new Array(n), fn: new Array(n) };
+                for (i = 0; i < n; i++) {
+                    L = locs[i]; p = L.p;
+                    ns.ps[i] = p; ns.la[i] = L.ll[0]; ns.lo[i] = L.ll[1]; ns.tk[i] = p[2]; ns.fn[i] = p[3];
+                }
+                /* nová data: staré výsledky ani zrušení už neplatí */
+                statsHeavySnap = ns; statsHeavyCache = {}; statsAsyncCancelledKey = {};
+                return ns.id;
+            } catch(e) {
+                AppLog.soft("statsHeavySnapId", e);
+                statsHeavySnap = null; statsHeavyCache = {};
+                return "x" + (++statsHeavySnapSeq);
+            }
+        }
+        /* na úlohu se drží několik posledních výsledků (různé rozestupy Top 10) – návrat
+           k dřívější volbě rozestupu pak nic nepřepočítává */
+        var STATS_HEAVY_CACHE_MAX = 8;
+        function statsHeavyGet(kind, key) {
+            try {
+                var arr = statsHeavyCache[kind];
+                if (!arr || !key) return null;
+                for (var i = 0; i < arr.length; i++) { if (arr[i].key === key) return arr[i]; }
+            } catch(e) { AppLog.soft("statsHeavyGet", e); }
+            return null;
+        }
+        function statsHeavyPut(kind, key, res) {
+            try {
+                if (!key) return;
+                var arr = statsHeavyCache[kind] || [], out = [{ key: key, res: res }];
+                for (var i = 0; i < arr.length && out.length < STATS_HEAVY_CACHE_MAX; i++) { if (arr[i].key !== key) out.push(arr[i]); }
+                statsHeavyCache[kind] = out;
+            } catch(e) { AppLog.soft("statsHeavyPut", e); }
+        }
+        /* Vrátí "run" (běží – vypsat placeholder a nastavit finish), "cancelled" (uživatel výpočet
+           pro tytéž vstupy zrušil) nebo false (worker nejde spustit – počítat synchronně). */
+        function statsAsyncBegin(kind, key, payload, label, cancelled) {
+            try {
+                if (key && statsAsyncCancelledKey[kind] === key) return "cancelled";
+                var j = statsAsyncJobs[kind];
+                if (j && !j.done && key && j.key === key) {
+                    j.seq = statsRenderSeq; j.label = label; j.cancelled = cancelled; j.finish = null;
+                    return "run";
+                }
+                if (j) statsAsyncTerminate(kind);
+                if (statsAsyncStart(kind, payload, label, cancelled)) {
+                    var j2 = statsAsyncJobs[kind];
+                    if (j2) { j2.key = key; j2.seq = statsRenderSeq; }
+                    return "run";
+                }
+            } catch(e) { AppLog.soft("statsAsyncBegin", e); }
+            return false;
+        }
+        function statsAsyncSweep() {
+            try {
+                for (var k in statsAsyncJobs) {
+                    if (statsAsyncJobs.hasOwnProperty(k) && (!statsAsyncJobs[k] || statsAsyncJobs[k].seq !== statsRenderSeq)) statsAsyncTerminate(k);
+                }
+            } catch(e) { AppLog.soft("statsAsyncSweep", e); }
+        }
+        function statsAsyncCancelledRow(id, label, cancelled) {
+            return "<div id=\"" + id + "\">" + stRow([{label: label, val: cancelled}]) + "</div>";
         }
         
         function fmtStatsPhotos(n) {
@@ -13618,7 +13851,8 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 }
                 r.n = vals.length;
                 if (vals.length) {
-                    vals.sort(function(a, b) { return a - b; });
+                    if (typeof Float64Array === "function" && Float64Array.from) vals = Float64Array.from(vals).sort();
+                    else vals.sort(function(a, b) { return a - b; });
                     var N = vals.length, sum = 0;
                     r.min = vals[0]; r.max = vals[N - 1];
                     r.med = (N % 2) ? vals[(N - 1) / 2] : (vals[N / 2 - 1] + vals[N / 2]) / 2;
@@ -14340,14 +14574,52 @@ function stBar(label, value, max, text, pctText, chkHtml) {
             return h;
         }
 
+        /* --- Překreslení jedné tabulky (nález E) ---
+           renderStatsCore si pro Tabulku 1 („year“), Tabulku 2 („folder“) a Navštívené státy („countries“)
+           uloží funkci, která z již spočtených dat sestaví HTML celého boxu. Řazení, hledání a rozbalení
+           pak vymění jen tento box (a obnoví jeho zvětšenou kopii) – bez přepočtu statistiky.
+           Když box nebo funkce chybí (nic nevykresleno, jiný stav), spadne se na celé renderStats(). */
+        var statsTblRender = {};
+        function statsTableRerender(key) {
+            try {
+                var fn = statsTblRender[key];
+                var attr = (key === "countries") ? "data-stsec" : "data-sttbl";
+                var box = document.querySelector("#statsBody [" + attr + "=\"" + key + "\"]");
+                if (typeof fn !== "function" || !box) { renderStats(); return; }
+                var tmp = document.createElement("div");
+                tmp.innerHTML = fn();
+                var nb = tmp.firstElementChild;
+                if (!nb || tmp.children.length !== 1 || nb.getAttribute(attr) !== key) { renderStats(); return; }
+                box.parentNode.replaceChild(nb, box);
+                try {
+                    if (key !== "countries" && document.getElementById("stTableOverlay") && statsTableOvKey === key) statsTableOverlayRender();
+                } catch(eTO) { AppLog.soft("statsTableRerender", eTO); }
+                try {
+                    if (key === "countries" && document.getElementById("stSectionOverlay") && statsSecOvKey === "countries") statsSectionOverlayRender();
+                } catch(eSO) { AppLog.soft("statsTableRerender", eSO); }
+            } catch(e) {
+                AppLog.soft("statsTableRerender", e);
+                try { renderStats(); } catch(e2) { AppLog.soft("statsTableRerender", e2); }
+            }
+        }
+        /* Obal renderu: každé vykreslení má pořadové číslo; běžící těžké úlohy, které si render
+           nepřevzal (jiné vstupy, prázdný výsledek, early return, výjimka), se na konci ukončí. */
         function renderStats() {
+            statsRenderSeq++;
+            try { return renderStatsCore.apply(this, arguments); }
+            finally { statsAsyncSweep(); }
+        }
+        function renderStatsCore() {
             var body = document.getElementById("statsBody");
             if (!body) return;
+            /* uzávěry tabulek z předchozího renderu už neplatí (jiná data / prázdný výsledek) */
+            statsTblRender = {};
             try { window.statsTableData = null; } catch(eTD0b) { AppLog.soft("renderStats", eTD0b); }
             try { window.statsCountriesData = null; } catch(eCD0) { AppLog.soft("renderStats", eCD0); }
             try { statsCloseDayGrid(false); } catch(eCG) { AppLog.soft("renderStats", eCG); }
             try { statsCloseTopSepMenu(false); } catch(eCTM) { AppLog.soft("renderStats", eCTM); }
-            try { statsAsyncTerminateAll(); } catch(eA) { AppLog.soft("renderStats", eA); }
+            /* běžící těžké úlohy se zde NEukončují – převezme je statsAsyncBegin při shodě vstupů,
+               ostatní ukončí statsAsyncSweep v obalu renderStats (nález E) */
             statsAsyncGen++;
             var t = i18n[currentLang] || {};
             var loc = currentLang === "cs" ? "cs-CZ" : "en-US";
@@ -14420,6 +14692,21 @@ statsFocusList = []; statsCountryZoomList = [];
                     ? L_("statsNoDataFiltered", "Pro zvolené filtry a stavy nejsou žádná data.")
                     : L_("statsNoStateSel", "Zaškrtněte alespoň jeden stav, aby se zobrazila statistika.")) + "</div>";
                 if (_bx) body.innerHTML = _msg; else H += _msg;
+                /* Prázdný výsledek: nic z minulého výpočtu nesmí zůstat dostupné – export (CSV složek,
+                   grafy, filtr výšek) i otevřená zvětšená okna musí odpovídat tomu, co je vidět. */
+                try { window.statsFolderData = null; } catch(eE1) { AppLog.soft("renderStats>empty", eE1); }
+                try { window.statsChartData = null; } catch(eE2) { AppLog.soft("renderStats>empty", eE2); }
+                try { window.statsTableRows = []; } catch(eE3) { AppLog.soft("renderStats>empty", eE3); }
+                try {
+                    var _ae = document.activeElement, _ovFocus = false;
+                    var _ovIds = ["stTableOverlay", "stSectionOverlay", "stChartOverlay"];
+                    for (var _oi = 0; _oi < _ovIds.length; _oi++) { var _ovE = document.getElementById(_ovIds[_oi]); if (_ovE && _ae && _ovE.contains(_ae)) _ovFocus = true; }
+                    if (document.getElementById("stTableOverlay") || statsTableOvKey) collapseStatsTable(true);
+                    if (document.getElementById("stSectionOverlay") || statsSecOvKey) collapseStatsSection(true);
+                    if (document.getElementById("stChartOverlay")) collapseStatsChart();
+                    /* fokus byl v zavřeném okně – vrátit ho do modalu na přepínač stavů */
+                    if (_ovFocus) { var _fc = document.querySelector("#stRefExtra input.st-sw") || document.querySelector("#stRefExtra input") || document.getElementById("btnStatsClose"); if (_fc) _fc.focus(); }
+                } catch(eE4) { AppLog.soft("renderStats>empty", eE4); }
                 return;
             }
 
@@ -14435,7 +14722,10 @@ statsFocusList = []; statsCountryZoomList = [];
                 ll = statsLL(p);
                 if (ll && st !== "S") locs.push({ ll: ll, p: p });
                 var tk = statsTimeKey(p);
-                if (tk.length >= 4) { times.push(p); var y = tk.substring(0, 4);
+                /* neexistující kalendářní datum (29.2. v nepřestupném roce, „0000:00:00“ z EXIF)
+                   nebrat do ročního přehledu ani do řady časů – jinak by vznikl rok 0000 apod. */
+                var _tkValid = (tk.length >= 8) ? (statsDayNo(tk.substring(0, 8)) !== null) : (tk.length >= 4);
+                if (_tkValid) { times.push(p); var y = tk.substring(0, 4);
                     if (!byYear[y]) byYear[y] = { n: 0, bytes: 0, old: null, new: null };
                     byYear[y].n++;
                     byYear[y].bytes += sz;
@@ -14472,7 +14762,14 @@ statsFocusList = []; statsCountryZoomList = [];
             H += "<div class=\"st-sec-box\" data-stsec=\"time\"><h3 class=\"info-section-title\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span style=\"white-space:nowrap;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"16\" y1=\"2\" x2=\"16\" y2=\"6\"/><line x1=\"8\" y1=\"2\" x2=\"8\" y2=\"6\"/><line x1=\"3\" y1=\"10\" x2=\"21\" y2=\"10\"/></svg>" + L_("statsSecTime", "Čas") + "</span>" + statsSecExpandBtnHtml('time') + "</h3>";
             H += "<div class=\"st-rows\">";
             if (times.length) {
-                times.sort(function(a, b) { return statsTimeKey(a).localeCompare(statsTimeKey(b)); });
+                /* klíče jen z číslic -> prosté porovnání dává stejné pořadí jako localeCompare;
+                   klíče se předpočítají (dřív 2× regex na každé porovnání) */
+                (function() {
+                    var _dec = new Array(times.length), _q;
+                    for (_q = 0; _q < times.length; _q++) _dec[_q] = { k: statsTimeKey(times[_q]), p: times[_q], i: _q };
+                    _dec.sort(function(a, b) { return (a.k < b.k) ? -1 : ((a.k > b.k) ? 1 : (a.i - b.i)); });
+                    for (_q = 0; _q < _dec.length; _q++) times[_q] = _dec[_q].p;
+                })();
                 var tOld = times[0], tNew = times[times.length - 1];
                 var _dOld = (typeof fmtDate === "function") ? fmtDate(tOld[2]) : String(tOld[2]);
                 var _dNew = (typeof fmtDate === "function") ? fmtDate(tNew[2]) : String(tNew[2]);
@@ -14556,6 +14853,8 @@ statsFocusList = []; statsCountryZoomList = [];
             /* --- Nejčastější místo: kružnice R (žebříček 1-2-5-10-20-50 km jako Nejhustší okruh, první platný = aspoň 2 různé dny),
                    vpravo počet RŮZNÝCH DNŮ (ne fotek), uprostřed souřadnice středu, klik na hodnotu kreslí kružnici.
                    Bere stejné locs jako Nejhustší okruh (už po filtrech čas/složky/oblast). --- */
+            /* id snapshotu vstupů těžkých výpočtů (cache + převzetí běžících workerů) */
+            var _hvSid = statsHeavySnapId(locs);
             if (locs.length) {
                 var mostV = null;
                 var _mvAsync = (locs.length >= STATS_ASYNC_MIN_LOCS);
@@ -14573,18 +14872,25 @@ statsFocusList = []; statsCountryZoomList = [];
                         valClick: "statsFocusCircle(" + (statsCircleList.push([mvV.ll, mvR]) - 1) + ")",
                         valTitle: mvDays + " \u00b7 " + mvRTxt }]);
                 };
-                if (!_mvAsync) { mostV = statsMostVisitedRanked(locs); }
+                var _mvKey = _hvSid + "", _mvC = statsHeavyGet("mostvisited", _mvKey);
+                if (_mvC) { mostV = _mvC.res; }
+                else if (!_mvAsync) { mostV = statsMostVisitedRanked(locs); statsHeavyPut("mostvisited", _mvKey, mostV); }
                 var _hMv = buildMvRow(mostV);
-                if (_hMv) { H += _hMv; }
-                else if (_mvAsync) {
-                    H += "<div id=\"stRowMostVisited\">" + stRow([{ label: L_("statsMostVisited", "Nej\u010dast\u011bj\u0161\u00ed m\u00edsto"), val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027mostvisited\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
+                /* výsledek z cache u velké knihovny obalit stejně jako po doběhnutí workera (shodný DOM) */
+                if (_hMv) { H += _mvAsync ? ("<div id=\"stRowMostVisited\">" + _hMv + "</div>") : _hMv; }
+                else if (_mvAsync && !_mvC) {
                     var _mvLbl = L_("statsMostVisited", "Nej\u010dast\u011bj\u0161\u00ed m\u00edsto");
                     var _mvCan = L_("statsCancelled", "Zru\u0161eno");
-                    if (statsAsyncStart("mostvisited", {locs: locs}, _mvLbl, _mvCan)) {
+                    var _mvSt = statsAsyncBegin("mostvisited", _mvKey, {locs: locs}, _mvLbl, _mvCan);
+                    if (_mvSt === "cancelled") { H += statsAsyncCancelledRow("stRowMostVisited", _mvLbl, _mvCan); }
+                    else if (_mvSt === "run") {
+                        /* placeholder „Počítám…“ vypsat až teď – jinak by po selhání startu workera
+                           zůstal v HTML navždy (řádek by se doplnil až za něj) */
+                        H += "<div id=\"stRowMostVisited\">" + stRow([{ label: L_("statsMostVisited", "Nej\u010dast\u011bj\u0161\u00ed m\u00edsto"), val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027mostvisited\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
                         statsAsyncJobs["mostvisited"].finish = function(mv2) { swapAsyncRow("stRowMostVisited", buildMvRow(mv2)); };
                     } else {
                         var mostS = null;
-                        try { mostS = statsMostVisitedRanked(locs); } catch(eMS) { mostS = null; }
+                        try { mostS = statsMostVisitedRanked(locs); statsHeavyPut("mostvisited", _mvKey, mostS); } catch(eMS) { mostS = null; }
                         var _hMvS = buildMvRow(mostS);
                         if (_hMvS) { H += _hMvS; }
                     }
@@ -14635,18 +14941,23 @@ statsFocusList = []; statsCountryZoomList = [];
                     }
                     return stRow([{ label: topLbl, labelTitle: topTitle, lblWrap: true, val: allIco, valClick: "statsTopPlacesShowAll(true)", valTitle: allTip, subHtml: "<span class=\"st-row-sub st-top-btns\">" + btns + "</span>" }]);
                 };
-                if (!_tdAsync) { try { topDy = statsTopPlaces(locs, null, statsTopDaysSepMult, "days"); } catch(eTD) { topDy = null; } }
+                var _tdKey = _hvSid + "|" + statsTopDaysSepMult, _tdC = statsHeavyGet("topdays", _tdKey);
+                if (_tdC) { topDy = _tdC.res; }
+                else if (!_tdAsync) { try { topDy = statsTopPlaces(locs, null, statsTopDaysSepMult, "days"); statsHeavyPut("topdays", _tdKey, topDy); } catch(eTD) { topDy = null; } }
                 var _hTd = buildTopDaysRow(topDy);
                 if (_hTd) { H += "<div id=\"stRowTopDays\">" + _hTd + "</div>"; }
-                else if (_tdAsync) {
-                    H += "<div id=\"stRowTopDays\">" + stRow([{ label: L_("statsTopDays", "Top 10 \u010dast\u00fdch m\u00edst") + "<br>" + statsTopSepSelect(true), labelTitle: L_("statsTopDays", "Top 10 \u010dast\u00fdch m\u00edst"), lblWrap: true, val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027topdays\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
+                else if (_tdAsync && !_tdC) {
                     var _tdLbl = L_("statsTopDays", "Top 10 \u010dast\u00fdch m\u00edst");
                     var _tdCan = L_("statsCancelled", "Zru\u0161eno");
-                    if (statsAsyncStart("topdays", {locs: locs, sepMult: statsTopDaysSepMult}, _tdLbl, _tdCan)) {
+                    var _tdSt = statsAsyncBegin("topdays", _tdKey, {locs: locs, sepMult: statsTopDaysSepMult}, _tdLbl, _tdCan);
+                    if (_tdSt === "cancelled") { H += statsAsyncCancelledRow("stRowTopDays", _tdLbl, _tdCan); }
+                    else if (_tdSt === "run") {
+                        /* placeholder „Počítám…“ vypsat až po úspěšném startu workera (viz mostvisited) */
+                        H += "<div id=\"stRowTopDays\">" + stRow([{ label: L_("statsTopDays", "Top 10 \u010dast\u00fdch m\u00edst") + "<br>" + statsTopSepSelect(true), labelTitle: L_("statsTopDays", "Top 10 \u010dast\u00fdch m\u00edst"), lblWrap: true, val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027topdays\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
                         statsAsyncJobs["topdays"].finish = function(td2) { swapAsyncRow("stRowTopDays", buildTopDaysRow(td2)); };
                     } else {
                         var topDS = null;
-                        try { topDS = statsTopPlaces(locs, null, statsTopDaysSepMult, "days"); } catch(eTDS) { topDS = null; }
+                        try { topDS = statsTopPlaces(locs, null, statsTopDaysSepMult, "days"); statsHeavyPut("topdays", _tdKey, topDS); } catch(eTDS) { topDS = null; }
                         var _hTdS = buildTopDaysRow(topDS);
                         if (_hTdS) { H += "<div id=\"stRowTopDays\">" + _hTdS + "</div>"; }
                     }
@@ -14722,7 +15033,9 @@ var dRef = [], dCen = [], farRef = null, farRefP = null, farCen = null, farCenP 
                     subHtml: pairSub, valClick: "statsFocusPair(" + prIdx + ")",
                     valTitle: L_("statsLineHint", "Zobrazit m\u011b\u0159ic\u00ed \u010d\u00e1ru mezi ob\u011bma soubory") }]);
             };
-            if (!_fpAsync) { fp = statsFarthestPair(hullPts); }
+            var _fpKey = _hvSid + "", _fpC = statsHeavyGet("farthest", _fpKey);
+            if (_fpC) { fp = _fpC.res; }
+            else if (!_fpAsync) { fp = statsFarthestPair(hullPts); statsHeavyPut("farthest", _fpKey, fp); }
 
 H += "<div class=\"st-sec-box\" data-stsec=\"distances\"><h3 class=\"info-section-title\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span title=\"" + L_("statsSecLocatedOnly", "Počítá se pouze z fotek s polohou.") + "\" style=\"white-space:nowrap;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"4\" cy=\"19\" r=\"2\"/><circle cx=\"20\" cy=\"5\" r=\"2\"/><line x1=\"5.5\" y1=\"17.5\" x2=\"18.5\" y2=\"6.5\"/><line x1=\"9\" y1=\"11\" x2=\"11\" y2=\"13\"/><line x1=\"13\" y1=\"7\" x2=\"15\" y2=\"9\"/></svg>" + L_("statsSecDistances", "Vzdálenosti") + "</span>" + statsSecExpandBtnHtml('distances') + "</h3>";
             H += "<div class=\"st-rows\">";
@@ -14785,16 +15098,19 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             }
             H += "<div class=\"st-sep\"></div>";
             var _hFp = buildFpRow(fp);
-            if (_hFp) { H += _hFp; }
-            else if (_fpAsync) {
-                H += "<div id=\"stRowFarthest\">" + stRow([{ label: L_("statsFarthestPair", "Nejvzd\u00e1len\u011bj\u0161\u00ed dvojice"), val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027farthest\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
+            if (_hFp) { H += _fpAsync ? ("<div id=\"stRowFarthest\">" + _hFp + "</div>") : _hFp; }
+            else if (_fpAsync && !_fpC) {
                 var _fwLbl = L_("statsFarthestPair", "Nejvzd\u00e1len\u011bj\u0161\u00ed dvojice");
                 var _fwCan = L_("statsCancelled", "Zru\u0161eno");
-                if (statsAsyncStart("farthest", {pts: hullPts}, _fwLbl, _fwCan)) {
+                var _fwSt = statsAsyncBegin("farthest", _fpKey, {pts: hullPts}, _fwLbl, _fwCan);
+                if (_fwSt === "cancelled") { H += statsAsyncCancelledRow("stRowFarthest", _fwLbl, _fwCan); }
+                else if (_fwSt === "run") {
+                    /* placeholder „Počítám…“ vypsat až po úspěšném startu workera (viz mostvisited) */
+                    H += "<div id=\"stRowFarthest\">" + stRow([{ label: L_("statsFarthestPair", "Nejvzd\u00e1len\u011bj\u0161\u00ed dvojice"), val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027farthest\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
                     statsAsyncJobs["farthest"].finish = function(fp2) { swapAsyncRow("stRowFarthest", buildFpRow(fp2)); };
                 } else {
                     var fpS = null;
-                    try { fpS = statsFarthestPair(hullPts); } catch(eFS) { fpS = null; }
+                    try { fpS = statsFarthestPair(hullPts); statsHeavyPut("farthest", _fpKey, fpS); } catch(eFS) { fpS = null; }
                     var _hFpS = buildFpRow(fpS);
                     if (_hFpS) { H += _hFpS; }
                 }
@@ -14817,18 +15133,23 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     valClick: "statsFocusCircle(" + (statsCircleList.push([densV.ll, dnR]) - 1) + ")",
                     valTitle: fmtStatsPhotos(densV.n) + " \u00b7 " + dnRTxt }]);
             };
-            if (!_densAsync) { dens = statsDensestRanked(locs); }
+            var _dnKey = _hvSid + "", _dnC = statsHeavyGet("densest", _dnKey);
+            if (_dnC) { dens = _dnC.res; }
+            else if (!_densAsync) { dens = statsDensestRanked(locs); statsHeavyPut("densest", _dnKey, dens); }
             var _hDens = buildDensRow(dens);
-            if (_hDens) { H += _hDens; }
-            else if (_densAsync) {
-                H += "<div id=\"stRowDensest\">" + stRow([{ label: L_("statsDensest", "Nejhust\u0161\u00ed okruh"), val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027densest\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
+            if (_hDens) { H += _densAsync ? ("<div id=\"stRowDensest\">" + _hDens + "</div>") : _hDens; }
+            else if (_densAsync && !_dnC) {
                 var _dnLbl = L_("statsDensest", "Nejhust\u0161\u00ed okruh");
                 var _dnCan = L_("statsCancelled", "Zru\u0161eno");
-                if (statsAsyncStart("densest", {locs: locs}, _dnLbl, _dnCan)) {
+                var _dnSt = statsAsyncBegin("densest", _dnKey, {locs: locs}, _dnLbl, _dnCan);
+                if (_dnSt === "cancelled") { H += statsAsyncCancelledRow("stRowDensest", _dnLbl, _dnCan); }
+                else if (_dnSt === "run") {
+                    /* placeholder „Počítám…“ vypsat až po úspěšném startu workera (viz mostvisited) */
+                    H += "<div id=\"stRowDensest\">" + stRow([{ label: L_("statsDensest", "Nejhust\u0161\u00ed okruh"), val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027densest\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
                     statsAsyncJobs["densest"].finish = function(dens2) { swapAsyncRow("stRowDensest", buildDensRow(dens2)); };
                 } else {
                     var densS = null;
-                    try { densS = statsDensestRanked(locs); } catch(eDS) { densS = null; }
+                    try { densS = statsDensestRanked(locs); statsHeavyPut("densest", _dnKey, densS); } catch(eDS) { densS = null; }
                     var _hDensS = buildDensRow(densS);
                     if (_hDensS) { H += _hDensS; }
                 }
@@ -14873,18 +15194,23 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 }
                 return stRow([{ label: topLbl, labelTitle: topTitle, lblWrap: true, val: allIco, valClick: "statsTopPlacesShowAll()", valTitle: allTip, subHtml: "<span class=\"st-row-sub st-top-btns\">" + btns + "</span>" }]);
             };
-            if (!_topAsync) { try { topPl = statsTopPlaces(locs, null, statsTopSepMult); } catch(eTP) { topPl = null; } }
+            var _tpKey = _hvSid + "|" + statsTopSepMult, _tpC = statsHeavyGet("topplaces", _tpKey);
+            if (_tpC) { topPl = _tpC.res; }
+            else if (!_topAsync) { try { topPl = statsTopPlaces(locs, null, statsTopSepMult); statsHeavyPut("topplaces", _tpKey, topPl); } catch(eTP) { topPl = null; } }
             var _hTop = buildTopRow(topPl);
             if (_hTop) { H += "<div id=\"stRowTopPlaces\">" + _hTop + "</div>"; }
-            else if (_topAsync) {
-                H += "<div id=\"stRowTopPlaces\">" + stRow([{ label: L_("statsTopPlaces", "Top 10 m\u00edst") + "<br>" + statsTopSepSelect(), labelTitle: L_("statsTopPlaces", "Top 10 m\u00edst"), lblWrap: true, val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027topplaces\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
+            else if (_topAsync && !_tpC) {
                 var _tpLbl = L_("statsTopPlaces", "Top 10 m\u00edst");
                 var _tpCan = L_("statsCancelled", "Zru\u0161eno");
-                if (statsAsyncStart("topplaces", {locs: locs, sepMult: statsTopSepMult}, _tpLbl, _tpCan)) {
+                var _tpSt = statsAsyncBegin("topplaces", _tpKey, {locs: locs, sepMult: statsTopSepMult}, _tpLbl, _tpCan);
+                if (_tpSt === "cancelled") { H += statsAsyncCancelledRow("stRowTopPlaces", _tpLbl, _tpCan); }
+                else if (_tpSt === "run") {
+                    /* placeholder „Počítám…“ vypsat až po úspěšném startu workera (viz mostvisited) */
+                    H += "<div id=\"stRowTopPlaces\">" + stRow([{ label: L_("statsTopPlaces", "Top 10 m\u00edst") + "<br>" + statsTopSepSelect(), labelTitle: L_("statsTopPlaces", "Top 10 m\u00edst"), lblWrap: true, val: "&ndash;", subHtml: "<span class=\"st-row-sub\"><span class=\"st-async-sub\" data-computing=\"" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "\">" + L_("statsComputing", "Po\u010d\u00edt\u00e1m\u2026") + "</span> <button type=\"button\" class=\"st-async-cancel\" onclick=\"event.stopPropagation();statsAsyncCancel(\u0027topplaces\u0027)\">" + L_("statsCancel", "Zru\u0161it") + "</button></span>" }]) + "</div>";
                     statsAsyncJobs["topplaces"].finish = function(tp2) { swapAsyncRow("stRowTopPlaces", buildTopRow(tp2)); };
                 } else {
                     var topS = null;
-                    try { topS = statsTopPlaces(locs, null, statsTopSepMult); } catch(eTS) { topS = null; }
+                    try { topS = statsTopPlaces(locs, null, statsTopSepMult); statsHeavyPut("topplaces", _tpKey, topS); } catch(eTS) { topS = null; }
                     var _hTopS = buildTopRow(topS);
                     if (_hTopS) { H += "<div id=\"stRowTopPlaces\">" + _hTopS + "</div>"; }
                 }
@@ -14931,7 +15257,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             /* medián a průměr výšek (značky na posuvníku filtru) – z fotek se známou výškou (stejná sada jako min/max) */
             var elMed = null, elAvg = null;
             if (elVals.length) {
-                var _evS = elVals.slice().sort(function(a, b) { return a - b; });
+                var _evS = (typeof Float64Array === "function" && Float64Array.from) ? Float64Array.from(elVals).sort() : elVals.slice().sort(function(a, b) { return a - b; });
                 var _evN = _evS.length;
                 elMed = (_evN % 2) ? _evS[(_evN - 1) / 2] : (_evS[_evN / 2 - 1] + _evS[_evN / 2]) / 2;
                 var _evSum = 0;
@@ -15010,6 +15336,11 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             }
 
             /* --- Grafy a tabulky --- */
+            /* Tabulka „year“ jako samostatná funkce (nález E): řazení / hledání / rozbalení ji překreslí
+               přes statsTableRerender("year") bez celého renderStats. Čte jen data spočtená výše, která
+               se po tomto místě nemění (ověřeno rozborem proměnných). */
+            var _stYearTblHtml = function() {
+            var H = "";
             H += "<div class=\"st-sec-box\" data-sttbl=\"year\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span title=\"" + L_("statsSecTable", "Tabulka 1 (časová)") + "\" style=\"white-space:nowrap;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/><line x1=\"3\" y1=\"15\" x2=\"21\" y2=\"15\"/><line x1=\"9\" y1=\"3\" x2=\"9\" y2=\"21\"/></svg>" + L_("statsSecTableShort", "Tabulka 1") + "</span><span style=\"display:inline-flex;gap:5px;\"><button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsTableCSV()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" + statsTableExpandBtnHtml("year") + "</span></h3>";
 
                 var yKeys = Object.keys(byYear);
@@ -15049,7 +15380,9 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 };
                 H += "<div class=\"st-table-wrap\">";
                 H += "<table class=\"st-table\"><thead><tr>";
-                H += thSort("year", L_("statsColYear", "Rok"), false, "10%");
+                /* prvni sloupec pevnou sirkou v px: % nezarucilo misto pro bold "CELKEM" v zapati
+                   (table-layout: fixed + overflow: hidden ho orizlo); 84 px = text ~47 px + padding 16 px + okraje + rezerva */
+                H += thSort("year", L_("statsColYear", "Rok"), false, "84px");
                 H += thSort("oldest", L_("statsColOldest", "Nejstarší soubor"), false, "28%");
                 H += thSort("newest", L_("statsColNewest", "Nejnovější soubor"), false, "28%");
                 H += thSort("count", L_("statsColFiles", "Soubory"), true, "18%", L_("statsColCount", "Počet souborů"));
@@ -15088,7 +15421,18 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     try { _tND = totNew ? _dOnly(totNew[2]) : ""; } catch(eTND) { AppLog.soft("renderStats", eTND); }
                     window.statsTableData = { rows: _tRows, totN: totN, totB: totB, totOldFile: (totOld ? String(totOld[3] || "") : ""), totOldDate: _tOD, totNewFile: (totNew ? String(totNew[3] || "") : ""), totNewDate: _tND };
                 } catch(eTD) { try { window.statsTableData = null; } catch(eTD2) { AppLog.soft("renderStats", eTD2); } }
+            } else {
+                /* zadna fotka nema platne datum: box Tabulky 1 se musi uzavrit, aby se do nej
+                   nezanoorili dalsi sekce (Tabulka 2, Grafy, Státy, Zdroje) */
+                H += "<div class=\"st-empty\">" + L_("statsNoDated", "Žádná fotka s datem – roční přehled není k dispozici.") + "</div></div>";
+                /* smazat pripadna stara data exportu z predchoziho renderu (jinak by CSV export
+                   po prechodu na dataset bez data vyexportoval zastaraly roční přehled) */
+                try { window.statsTableData = null; } catch(eTD2b) { AppLog.soft("renderStats", eTD2b); }
             }
+            return H;
+            };
+            statsTblRender["year"] = _stYearTblHtml;
+            H += _stYearTblHtml();
             /* --- Tabulka (složková): strom složek Složka | Od | Do | Počet | Velikost --- */
             var byFolder = {}, noFNode = null, fRoots = [];
             var _fEnsure = function(full) {
@@ -15159,6 +15503,11 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                 }
             }
             var fHasAny = (fRoots.length > 0) || !!noFNode;
+            /* Tabulka „folder“ jako samostatná funkce (nález E): řazení / hledání / rozbalení ji překreslí
+               přes statsTableRerender("folder") bez celého renderStats. Čte jen data spočtená výše, která
+               se po tomto místě nemění (ověřeno rozborem proměnných). */
+            var _stFolderTblHtml = function() {
+            var H = "";
             if (fHasAny) {
                 var fBU = L_("statsUnitBytes", "b");
                 var fSort = (typeof statsFolderSort !== "undefined" && statsFolderSort) ? statsFolderSort : { key: "name", dir: 1 };
@@ -15365,6 +15714,10 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     window.statsFolderData = { rows: csvRows, paths: csvPaths, totN: fTotN, totB: fTotB, totOldDate: _fTotOD, totNewDate: _fTotND };
                 } catch(eFD) { try { window.statsFolderData = null; } catch(eFD2) { AppLog.soft("renderStats", eFD2); } }
             }
+            return H;
+            };
+            statsTblRender["folder"] = _stFolderTblHtml;
+            H += _stFolderTblHtml();
             // --- Spocet souboru se spodnim cislem: "1 fotka" / "2 fotky" / "5 fotek" ---
         // --- Tooltip grafu: obdobi sloupce + presny pocet fotek ---
         function stChartTipEl() {
@@ -16522,6 +16875,11 @@ window.statsChartSave = statsChartSave;
                             if (!cE.new || cTk > cE.new) { cE.new = cTk; cE.newP = locs[i].p; }
                         }
                     }
+                    /* Tabulka „countries“ jako samostatná funkce (nález E): řazení / hledání / rozbalení ji překreslí
+                       přes statsTableRerender("countries") bez celého renderStats. Čte jen data spočtená výše, která
+                       se po tomto místě nemění (ověřeno rozborem proměnných). */
+                    var _stCtryTblHtml = function() {
+                    var H = "";
                     var cKeys = Object.keys(cBy);
                     if (cKeys.length || cSea > 0 || cAir > 0) {
                         if (cKeys.length) {
@@ -16637,6 +16995,10 @@ window.statsChartSave = statsChartSave;
                         if (cAir > 0) H += "<div class=\"st-sub-h\" style=\"margin-top:" + (cSea > 0 ? "2" : "8") + "px;\" title=\"" + L_("statsCountriesAirTip", "Fotky s výškou nad povolenou mezí pro dané místo (typicky z letadla): mimo hory nad 3 100 m, v horách podle nejvyšší okolní hory až 9 100 m. Do žádného státu ani světadílu se nepočítají.") + "\">" + tAir + ": " + statsTableLinkHtml("air", "", tAir, nmb(cAir), tShowC) + "</div>";
                         H += "</div>";
                     }
+                    return H;
+                    };
+                    statsTblRender["countries"] = _stCtryTblHtml;
+                    H += _stCtryTblHtml();
                 }
             } catch(eCS) { AppLog.soft("renderStats>countries", eCS); }
             /* --- Zdroje --- */
@@ -34639,7 +35001,11 @@ dotColor: initialDot,
                                 if (strOff + ci >= end) break;
                                 s += String.fromCharCode(dv.getUint8(strOff + ci));
                             }
-                            if (/^\d{4}:\d{2}:\d{2} \d{2}:\d{2}:\d{2}$/.test(s)) result.dateTime = s;
+                            if (/^\d{4}:\d{2}:\d{2} \d{2}:\d{2}:\d{2}$/.test(s)) {
+                                // nulové EXIF datum („0000:00:00 …“, fotoaparát bez hodin) nebrat jako platné
+                                var _pY = +s.substring(0, 4), _pM = +s.substring(5, 7), _pD = +s.substring(8, 10);
+                                if (_pY >= 100 && _pM >= 1 && _pM <= 12 && _pD >= 1 && _pD <= 31) result.dateTime = s;
+                            }
                         }
                     }
                     return abs + 2 + count * 12;
