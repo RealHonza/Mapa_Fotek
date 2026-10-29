@@ -8826,7 +8826,7 @@ function statsSetFilters(on) {
                 // Otevreny muze byt vzdy jen jeden overlay
                 if (document.getElementById("stSectionOverlay")) collapseStatsSection(true);
                 try { if (document.getElementById("stTableOverlay")) collapseStatsTable(true); } catch(eT) { AppLog.soft("expandStatsSection", eT); }
-                try { if (document.getElementById("stChartOverlay")) window.collapseStatsChart(); } catch(eC) { AppLog.soft("expandStatsSection", eC); }
+                try { if (document.getElementById("stChartOverlay")) window.collapseStatsChart(true); } catch(eC) { AppLog.soft("expandStatsSection", eC); }
                 statsSecOvKey = key;
                 var ov = document.createElement("div");
                 ov.id = "stSectionOverlay";
@@ -9030,7 +9030,7 @@ function statsSetFilters(on) {
                 }
                 try { if (document.getElementById("stSectionOverlay")) collapseStatsSection(true); } catch(e1) { AppLog.soft("statsOvNavGo", e1); }
                 try { if (document.getElementById("stTableOverlay")) collapseStatsTable(true); } catch(e2) { AppLog.soft("statsOvNavGo", e2); }
-                try { if (document.getElementById("stChartOverlay")) window.collapseStatsChart(); } catch(e3) { AppLog.soft("statsOvNavGo", e3); }
+                try { if (document.getElementById("stChartOverlay")) window.collapseStatsChart(true); } catch(e3) { AppLog.soft("statsOvNavGo", e3); }
                 if (type === "sec") expandStatsSection(key);
                 else if (type === "tbl") expandStatsTable(key);
                 else { statsSetChartMode(key); window.expandStatsChart(); }
@@ -9233,8 +9233,24 @@ function statsSetFilters(on) {
                 if (nb) nb.focus();
             } catch(e2) { AppLog.soft("statsChartTabKey", e2); }
         }
+        /* Tooltip grafu se skrývá i jinak než na mouseleave: klik/dotyk, Escape
+           a každé překreslení (původní prvek může zmizet a mouseleave už nepřijde;
+           na dotykovém displeji by jinak visel natrvalo). */
+        function stChartTipReset() {
+            try { var d = document.getElementById("stChartTip"); if (d) d.style.display = "none"; } catch(e) { }
+        }
+        (function() {
+            try {
+                document.addEventListener("pointerdown", function() { stChartTipReset(); }, true);
+                document.addEventListener("click", function() { stChartTipReset(); }, true);
+                document.addEventListener("keydown", function(e) {
+                    try { if (e && e.key === "Escape") stChartTipReset(); } catch(e2) { }
+                }, true);
+            } catch(eL) { AppLog.soft("stChartTipReset>listeners", eL); }
+        })();
         function statsSetChartMode(m) {
             try {
+                stChartTipReset();
                 if (m !== "tod" && m !== "dist" && m !== "distCen" && m !== "cal" && m !== "geo") m = "time";
                 try { statsGeoPlayStop(true); } catch(eGPS) { AppLog.soft("statsSetChartMode", eGPS); }
                 statsChartMode = m;
@@ -11359,6 +11375,7 @@ function statsSetFilters(on) {
         }
         /* Zmena prepinace neprekresluje cely modal - jen graf, aby to nebylo zbytecne drahe. */
         function statsGeoRedraw() {
+            try { stChartTipReset(); } catch(eTR1) { }
             try { _statsGeoCache = { key: "", val: null }; } catch(e0) { AppLog.soft("statsGeoRedraw", e0); }
             statsSelSave();
             try { if (typeof syncStatsSettings === "function") syncStatsSettings(); } catch(eS) { AppLog.soft("statsGeoRedraw", eS); }
@@ -11403,6 +11420,7 @@ function statsSetFilters(on) {
             } catch(e) { return ""; }
         }
         function statsSetChartAvgMed(on) {
+            try { stChartTipReset(); } catch(eTR2) { }
             try { statsChartAvgMed = !!on; } catch(e) { AppLog.soft("statsSetChartAvgMed", e); }
             statsSelSave();
             try { if (typeof syncStatsSettings === "function") syncStatsSettings(); } catch(eS) { AppLog.soft("statsSetChartAvgMed", eS); }
@@ -12117,6 +12135,7 @@ function fmtStatsCoordShort(la, lo) {
         /* --- Navštívené státy: hledání (analogicky k Tabulce 2) a export CSV --- */
         var statsCountriesSearch = "";
         var _statsCountriesSearchTimer = null;
+        var _statsCountriesSearchComposing = false;
         /* Kořen hledání: zvětšená sekce (pokud obsahuje hledací pole), jinak sekce ve statistice. */
         function statsCountriesSearchRoot() {
             var ov = document.getElementById("stSectionOverlay");
@@ -12218,21 +12237,66 @@ function fmtStatsCoordShort(la, lo) {
             if (_statsCountriesSearchTimer) { clearTimeout(_statsCountriesSearchTimer); _statsCountriesSearchTimer = null; }
             var run = function() {
                 _statsCountriesSearchTimer = null;
+                /* během skládání znaku (IME, mrtvé klávesy) se nepřekresluje – rozpracovaný znak
+                   by se zahodil; hledání se dožene po compositionend */
+                if (_statsCountriesSearchComposing) return;
                 var root0 = statsCountriesSearchRoot();
                 var inp = root0 ? root0.querySelector(".st-ctry-search-inp") : null;
-                var cursorPos = 0;
-                try { if (inp) cursorPos = inp.selectionStart || 0; } catch(e) { AppLog.soft("statsCountriesSearchInput>run", e); }
-                /* Mezery v dotazu se respektují (uloží se původní text), samotné mezery ale nefiltrují. */
+                /* fokus a výběr se vrátí, jen když měl vstup fokus těsně před překreslením
+                   (za debounce mohl uživatel odejít jinam – fokus se nekrade) */
+                var hadFocus = false, selS = 0, selE = 0;
+                try {
+                    if (inp && document.activeElement === inp) {
+                        hadFocus = true;
+                        selS = inp.selectionStart || 0;
+                        selE = (inp.selectionEnd === null || inp.selectionEnd === undefined) ? selS : inp.selectionEnd;
+                        if (selE < selS) selE = selS;
+                    }
+                } catch(e) { AppLog.soft("statsCountriesSearchInput>run", e); }
+                /* Mezery v dotazu se respektují (uloží se původní text), pro filtrování se oříznou. */
                 statsCountriesSearch = (val || "");
                 statsTableRerender("countries");
-                try {
-                    var root1 = statsCountriesSearchRoot();
-                    var inp2 = root1 ? root1.querySelector(".st-ctry-search-inp") : null;
-                    if (inp2) { inp2.focus(); try { inp2.setSelectionRange(cursorPos, cursorPos); } catch(eR) { AppLog.soft("statsCountriesSearchInput>run", eR); } }
-                } catch(eFoc) { AppLog.soft("statsCountriesSearchInput>run", eFoc); }
+                if (hadFocus) {
+                    try {
+                        var root1 = statsCountriesSearchRoot();
+                        var inp2 = root1 ? root1.querySelector(".st-ctry-search-inp") : null;
+                        if (inp2) { inp2.focus(); try { inp2.setSelectionRange(selS, selE); } catch(eR) { AppLog.soft("statsCountriesSearchInput>run", eR); } }
+                    } catch(eFoc) { AppLog.soft("statsCountriesSearchInput>run", eFoc); }
+                }
             };
             if (immediate) run(); else _statsCountriesSearchTimer = setTimeout(run, 150);
         }
+        /* Kompozice znaku (IME / mrtvé klávesy): začátek skládání zruší naplánovaný debounce,
+           konec hledání dožene okamžitě s konečnou hodnotou. */
+        function statsCountriesSearchCompStart() {
+            try {
+                _statsCountriesSearchComposing = true;
+                if (_statsCountriesSearchTimer) { clearTimeout(_statsCountriesSearchTimer); _statsCountriesSearchTimer = null; }
+            } catch(e) { AppLog.soft("statsCountriesSearchCompStart", e); }
+        }
+        function statsCountriesSearchCompEnd(el) {
+            try {
+                _statsCountriesSearchComposing = false;
+                // hledani jen naplanujeme (debounce): vstup se nemit behem samotne
+                // udalosti a pripadny finalni input po compositionend ho jeste dozna
+                statsCountriesSearchInput(el && el.value, false);
+            } catch(e) { AppLog.soft("statsCountriesSearchCompEnd", e); }
+        }
+        // Delegovana obsluha kompozice na dokumentu - prezi prekresleni sekce,
+        // neni treba bindovat nove handlery po kazdem renderu.
+        (function () {
+            var compHandler = function (e) {
+                try {
+                    var t = e.target;
+                    var inp = (t && t.classList && t.classList.contains && t.classList.contains("st-ctry-search-inp")) ? t : (t && t.closest ? t.closest(".st-ctry-search-inp") : null);
+                    if (!inp) return;
+                    if (e.type === "compositionstart") statsCountriesSearchCompStart();
+                    else if (e.type === "compositionend") statsCountriesSearchCompEnd(inp);
+                } catch (err) { AppLog.soft("statsCountriesSearchCompose", err); }
+            };
+            document.addEventListener("compositionstart", compHandler, false);
+            document.addEventListener("compositionend", compHandler, false);
+        })();
         // Export tabulky Navštívené státy do CSV (vždy všechny státy, bez ohledu na hledání – stejně jako Tabulka 2).
         function exportStatsCountriesCsv() {
             try {
@@ -12424,10 +12488,11 @@ function fmtStatsCoordShort(la, lo) {
             /* bez autofocusu (stejně jako info a nastavení): fokus se přesune až po Tab (řeší handleModalTabTrap) */
         }
         function closeStatsModal() {
+            stChartTipReset();
             try { statsGeoPlayStop(true); } catch(eGPM) { AppLog.soft("closeStatsModal", eGPM); }
             try { if (document.getElementById("stTableOverlay")) collapseStatsTable(true); } catch(eCT) { AppLog.soft("closeStatsModal", eCT); }
             try { if (document.getElementById("stSectionOverlay")) collapseStatsSection(true); } catch(eCS) { AppLog.soft("closeStatsModal", eCS); }
-            try { if (document.getElementById("stChartOverlay")) window.collapseStatsChart(); } catch(eCC) { AppLog.soft("closeStatsModal", eCC); }
+            try { if (document.getElementById("stChartOverlay")) window.collapseStatsChart(true); } catch(eCC) { AppLog.soft("closeStatsModal", eCC); }
             /* korektni zruseni rezimu vyberu RB z mapy: odvesi handler kliku (statsPickState = null samotne nestaci) */
             try { statsPickStop(); } catch(ePS) { AppLog.soft("closeStatsModal", ePS); }
             try { document.body.style.cursor = ""; } catch(eC) { AppLog.soft("closeStatsModal", eC); }
@@ -14670,6 +14735,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
            Když box nebo funkce chybí (nic nevykresleno, jiný stav), spadne se na celé renderStats(). */
         var statsTblRender = {};
         function statsTableRerender(key) {
+            try { stChartTipReset(); } catch(eTR3) { }
             try {
                 var fn = statsTblRender[key];
                 var attr = (key === "countries") ? "data-stsec" : "data-sttbl";
@@ -14701,6 +14767,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
         function renderStatsCore() {
             var body = document.getElementById("statsBody");
             if (!body) return;
+            try { stChartTipReset(); } catch(eTR4) { }
             /* uzávěry tabulek z předchozího renderu už neplatí (jiná data / prázdný výsledek) */
             statsTblRender = {};
             try { window.statsTableData = null; } catch(eTD0b) { AppLog.soft("renderStats", eTD0b); }
@@ -14792,7 +14859,7 @@ statsFocusList = []; statsCountryZoomList = [];
                     for (var _oi = 0; _oi < _ovIds.length; _oi++) { var _ovE = document.getElementById(_ovIds[_oi]); if (_ovE && _ae && _ovE.contains(_ae)) _ovFocus = true; }
                     if (document.getElementById("stTableOverlay") || statsTableOvKey) collapseStatsTable(true);
                     if (document.getElementById("stSectionOverlay") || statsSecOvKey) collapseStatsSection(true);
-                    if (document.getElementById("stChartOverlay")) collapseStatsChart();
+                    if (document.getElementById("stChartOverlay")) collapseStatsChart(true);
                     /* fokus byl v zavřeném okně – vrátit ho do modalu na přepínač stavů */
                     if (_ovFocus) { var _fc = document.querySelector("#stRefExtra input.st-sw") || document.querySelector("#stRefExtra input") || document.getElementById("btnStatsClose"); if (_fc) _fc.focus(); }
                 } catch(eE4) { AppLog.soft("renderStats>empty", eE4); }
@@ -16312,6 +16379,7 @@ window.statsChartSave = statsChartSave;
         function statsChartOverlayRender() {
             var ovB = document.getElementById("stChartOverlayBody");
             if (!ovB) return;
+            stChartTipReset();
             var fn = (typeof window !== "undefined") ? window.statsChartNow : null;
             if (!fn) { ovB.innerHTML = ""; return; }
             var box = ovB.parentNode;
@@ -16355,6 +16423,15 @@ window.statsChartSave = statsChartSave;
                 var src = document.getElementById("stChartBox");
                 var ov = document.createElement("div");
                 ov.id = "stChartOverlay";
+                ov.setAttribute("role", "dialog");
+                ov.setAttribute("aria-modal", "true");
+                try { ov.setAttribute("aria-label", (typeof L_ === "function") ? L_("statsSecGraphs", "Grafy") : "Grafy"); } catch(eAL) { }
+                /* zdrojový prvek pro návrat fokusu po zavření (přežije další překreslení statistiky) */
+                try {
+                    window._stChartFocusRet = null;
+                    var _ae = document.activeElement;
+                    if (_ae && _ae.closest && _ae.closest("#statsBody")) window._stChartFocusRet = _ae;
+                } catch(eFR) { AppLog.soft("renderStats>expandStatsChart", eFR); }
                 ov.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:10050;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;";
                 var box = document.createElement("div");
                 box.style.cssText = "background:#ffffff;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.3);width:min(1100px,96vw);max-height:94vh;overflow:auto;padding:14px 18px 18px;position:relative;box-sizing:border-box;";
@@ -16409,16 +16486,31 @@ window.statsChartSave = statsChartSave;
                 try { statsChartOverlayRender(); } catch(eOvR) { clones.innerHTML = src ? src.innerHTML : ""; }
                 try { statsGeoPlayRefreshBtns(); } catch(eGPR3) { AppLog.soft("renderStats>expandStatsChart", eGPR3); }
                 try { statsCalLegendFitLater(); } catch(eFit2) { AppLog.soft("renderStats>expandStatsChart", eFit2); }
+                /* počáteční fokus na tlačítko Zmenšit (jako u zvětšené sekce/tabulky) */
+                try { shut.focus(); } catch(eFoc2) { AppLog.soft("renderStats>expandStatsChart", eFoc2); }
                 document.addEventListener("keydown", statsChartEsc);
             } catch(e) { AppLog.soft("renderStats>expandStatsChart", e); }
         }
         function statsChartEsc(e) {
             try { if (e && e.key === "Escape" && document.getElementById("stChartOverlay")) collapseStatsChart(); } catch(e2) { AppLog.soft("renderStats>statsChartEsc", e2); }
         }
-        function collapseStatsChart() {
+        function collapseStatsChart(noFocus) {
+            stChartTipReset();
             try { statsGeoPlayStop(true); } catch(eGPC) { AppLog.soft("renderStats>collapseStatsChart", eGPC); }
             try { var ov = document.getElementById("stChartOverlay"); if (ov && ov.parentNode) ov.parentNode.removeChild(ov); } catch(e) { AppLog.soft("renderStats>collapseStatsChart", e); }
             try { document.removeEventListener("keydown", statsChartEsc); } catch(e2) { AppLog.soft("renderStats>collapseStatsChart", e2); }
+            /* návrat fokusu na zdrojové tlačítko (pokud mezitím nezaniklo), jinak na tlačítko
+               Zvětšit graf v sekci grafů; programová zavření (noFocus) fokus nevracejí */
+            if (!noFocus) {
+                try {
+                    var ret = window._stChartFocusRet;
+                    window._stChartFocusRet = null;
+                    if (!(ret && ret.isConnected)) ret = document.querySelector("#statsBody [data-stchart-btn]");
+                    if (ret) ret.focus();
+                } catch(e3) { AppLog.soft("renderStats>collapseStatsChart", e3); }
+            } else {
+                try { window._stChartFocusRet = null; } catch(e4) { }
+            }
         }
         // --- Ulozeni aktualne zobrazeneho grafu do PNG ---
         function statsChartSaveBtnHtml() {
@@ -16956,7 +17048,7 @@ window.statsChartSave = statsChartSave;
             } catch(e) { return ""; }
         }
         /* --- Grafy: graf pocetu souboru v case --- */
-            H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 3v18h18\"/><path d=\"M7 16v-5\"/><path d=\"M12 16V8\"/><path d=\"M17 16v-8\"/></svg>" + L_("statsSecGraphs", "Grafy") + "</span><span style=\"display:inline-flex;gap:5px;\">" + "<button type=\"button\" class=\"st-chart-expand st-geo-play-btn\" id=\"stGeoPlayBtn\" style=\"" + (statsChartMode === "geo" ? "" : "display:none;") + "\" onclick=\"event.stopPropagation();statsGeoPlayToggle();\"></button>" + statsChartSaveBtnHtml() + "<button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Zvětšit graf" : "Enlarge chart") + "\" aria-label=\"" + (currentLang === "cs" ? "Zvětšit graf" : "Enlarge chart") + "\" onclick=\"expandStatsChart()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 3h6v6\"/><path d=\"M9 21H3v-6\"/><path d=\"M21 3l-7 7\"/><path d=\"M3 21l7-7\"/></svg></button></span></h3>";
+            H += "<div class=\"st-sec-box\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 3v18h18\"/><path d=\"M7 16v-5\"/><path d=\"M12 16V8\"/><path d=\"M17 16v-8\"/></svg>" + L_("statsSecGraphs", "Grafy") + "</span><span style=\"display:inline-flex;gap:5px;\">" + "<button type=\"button\" class=\"st-chart-expand st-geo-play-btn\" id=\"stGeoPlayBtn\" style=\"" + (statsChartMode === "geo" ? "" : "display:none;") + "\" onclick=\"event.stopPropagation();statsGeoPlayToggle();\"></button>" + statsChartSaveBtnHtml() + "<button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Zvětšit graf" : "Enlarge chart") + "\" aria-label=\"" + (currentLang === "cs" ? "Zvětšit graf" : "Enlarge chart") + "\" data-stchart-btn=\"1\" onclick=\"expandStatsChart()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 3h6v6\"/><path d=\"M9 21H3v-6\"/><path d=\"M21 3l-7 7\"/><path d=\"M3 21l7-7\"/></svg></button></span></h3>";
             // data pro prepinac grafu. Prekresleni jineho grafu nesmi data prepocitat,
             // u 250 tis. fotek to trva desetky sekund.
             try { window.statsChartData = { times: times, locs: locs, cen: cen }; } catch(eCD) { AppLog.soft("renderStats", eCD); }
@@ -17021,7 +17113,7 @@ window.statsChartSave = statsChartSave;
                             });
                         }
                                                 /* hledání (Navštívené státy): shody se určí předem, ať je odznáček hned v záhlaví */
-                        var cQL = (statsCountriesSearch && String(statsCountriesSearch).trim()) ? normDiacFolderSearch(statsCountriesSearch) : null;
+                        var cQL = (statsCountriesSearch && String(statsCountriesSearch).trim()) ? normDiacFolderSearch(String(statsCountriesSearch).trim()) : null;
                         var cShow = {}, cAltHtml = {}, cNameHtml = {}, cMarkCount = 0;
                         if (cQL !== null) {
                             for (var cmi = 0; cmi < cKeys.length; cmi++) {
@@ -17045,7 +17137,7 @@ window.statsChartSave = statsChartSave;
                                 cBadge = "<span class=\"guide-count" + (cMarkCount === 0 ? " none" : "") + "\" data-t=\"" + cTx + "\" style=\"display:inline-block;\">" + cTx + "</span>";
                             }
                             cSearchHtml = "<span style=\"display:inline-flex;align-items:center;gap:6px;flex:1 1 110px;min-width:110px;max-width:230px;\">"
-                                + "<span class=\"guide-search-wrap\" style=\"flex:1 1 auto;min-width:90px;\"><input type=\"text\" class=\"guide-search st-ctry-search-inp" + (cBadge ? " has-count" : "") + "\" value=\"" + escapeHtml(statsCountriesSearch) + "\" placeholder=\"" + escapeHtml(cPh) + "\" oninput=\"event.stopPropagation();statsCountriesSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"statsCountriesSearchKey(event,this)\" style=\"flex:1 1 auto;min-width:60px;margin:0;" + (cBadge ? "padding-right:76px;" : "") + "\" />" + cBadge + "</span>"
+                                + "<span class=\"guide-search-wrap\" style=\"flex:1 1 auto;min-width:90px;\"><input type=\"text\" class=\"guide-search st-ctry-search-inp" + (cBadge ? " has-count" : "") + "\" value=\"" + escapeHtml(statsCountriesSearch) + "\" placeholder=\"" + escapeHtml(cPh) + "\" oninput=\"event.stopPropagation();if(event.isComposing)return;statsCountriesSearchChange(this)\" onfocus=\"event.stopPropagation()\" onkeydown=\"statsCountriesSearchKey(event,this)\" style=\"flex:1 1 auto;min-width:60px;margin:0;" + (cBadge ? "padding-right:76px;" : "") + "\" />" + cBadge + "</span>"
                                 + "<button type=\"button\" class=\"guide-clear st-ctry-search-clr\" onclick=\"event.stopPropagation();statsCountriesSearchClear()\" title=\"" + escapeHtml(cClrT) + "\" aria-label=\"" + escapeHtml(cClrT) + "\" style=\"display:" + (statsCountriesSearch ? "inline-flex" : "none") + ";\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></span>";
                         }
                         H += "<div class=\"st-sec-box\" data-stsec=\"countries\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;position:relative;min-height:26px;padding-right:62px;\"><span title=\"" + L_("statsSecLocatedOnly", "Počítá se pouze z fotek s polohou.") + "\" style=\"white-space:nowrap;flex-shrink:0;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"/></svg>" + L_("statsSecCountries", "Navštívené státy") + "</span>" + cSearchHtml
