@@ -2809,7 +2809,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">3.95</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">28. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO: Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace se přepisuje SAMO z času souboru (setLanguage → document.lastModified) při každém startu – ručně ho nepřepisovat. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">3.96</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" title="Datum poslední aktualizace">28. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -3557,7 +3557,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsAvgSize: "Průměrná velikost souboru",
             statsMedianTitle: "Medián velikosti souboru",
             statsTotalSize: "Celkový objem dat",
-            statsFiles: "souborů",
+            statsFiles: "souborů", statsFilesOne: "soubor", statsFilesFew: "soubory", statsFilesMany: "souborů", statsSearchPh: "Hledat…", statsSaveCsv: "Uložit tabulku (CSV)", statsRadiusWord: "okruh", statsAvgWord: "průměr", statsMedWord: "medián", statsAsyncFailed: "Výpočet se nezdařil", statsCalBandTip0: "Počet dnů v roce (z 366) bez jediné fotky: ", statsCalBandTipN: "Počet dnů v roce (z 366) s fotkami z tohoto počtu let (", statsCalAvgTip: "Průměrný počet let s focením na jeden den v roce", statsCalMedTip: "Medián počtu let s focením na jeden den v roce",
             statsTimeSpan: "Časový rozptyl",
             statsPhotoDays: "Dny s focením", statsPhotoDaysTip: "Dny s focením – počet různých kalendářních dnů, kdy vznikla aspoň jedna fotka; procenta = podíl z dnů mezi první a poslední fotkou (včetně)", statsPhotoDaysOf: "z", statsPhotoDaysPerDay: "fotek na den focení",
             statsTopFirstDay: "první den", statsTopLastDay: "poslední den", statsTopSpan: "rozpětí",
@@ -3565,14 +3565,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsMostVisited: "Nejčastější místo",
             statsTopDays: "Top 10 častých míst", statsTopDaysSepTip: "Minimální rozestup středů kružnic Top 10 častých míst (násobek poloměru R)", statsTopDaysAllTip: "Zobrazit všechny kružnice Top 10 častých míst",
             statsTopPlaces: "Top 10 míst", statsTopSepTip: "Minimální rozestup středů kružnic Top 10 (násobek poloměru R)", statsTopSepOpt2: "2× R (dotyk / min. odstup)", statsTopSepOpt5: "5× R (mírný rozestup)", statsTopSepOpt10: "10× R (město a okolí)", statsTopSepOpt20: "20× R (sousední města)", statsTopSepOpt50: "50× R (okresní rozestup)", statsTopSepOpt100: "100× R (krajský rozestup)", statsTopSepOpt200: "200× R (celostátní / celá ČR)", statsTopSepOpt500: "500× R (mezinárodní / kontinentální)",
-            statsTopAllTip: "Zobrazit všechny kružnice Top 10", statsTopIso: "izolace", statsTopIsoNone: "bez rozestupu", statsTopFoundOne: "nalezeno", statsTopFoundFew: "nalezeny", statsTopFoundMany: "nalezeno",
+            statsTopAllTip: "Zobrazit všechny kružnice Top 10", statsTopIso: "izolace", statsTopIsoNone: "bez rozestupu", statsTopFoundOne: "nalezeno", statsTopFoundFew: "nalezena", statsTopFoundMany: "nalezeno",
             statsTopElev: "Top 10 výšek", statsTopElevRTip: "Poloměr okruhu Top 10 výšek v km (středy okruhů jsou od sebe nejméně 2× R)", statsTopElevAllTip: "Zobrazit všechny kružnice Top 10 výšek", statsTopElevWithEl: "s výškou",
             statsChartCapGeo: "Objevení území fotkami v čase", statsGeoLegendFirst: "Objeveno", statsGeoPlay: "Přehrát objevování území", statsGeoPause: "Pozastavit přehrávání", statsGeoPlayCancel: "Zrušit přehrávání (Esc)", statsGeoPlayNA: "Přehrávání je dostupné jen při obarvení podle nejstarších fotek (objevení).", statsGeoPlayDisc: "Objeveno", statsGeoLegendLast: "Poslední návštěva", statsGeoLegendSpan: "Časové rozpětí", statsGeoModeLabel: "Obarvit dle", statsGeoModeOpt1: "nejstarší fotky (objevení)", statsGeoModeOpt2: "nejnovější fotky (poslední)", statsGeoModeOpt3: "časového rozpětí", statsGeoModeSettingLabel: "Obarvení mřížky", statsGeoSpanWord: "rozpětí ", statsGeoLevel_y: "roku", statsGeoLevel_m: "měsíce", statsGeoLevel_d: "dne", statsGeoLevel_h: "hodiny",
             statsGeoPalLabel: "Paleta", statsGeoPalSettingLabel: "Paleta",
             statsGeoMarkRb: "Referenční bod (RB)", statsGeoMarkCen: "Těžiště fotek", statsGeoLand: "Pevnina a hranice", statsGeoLandTip: "Zobrazit podkres pevniny a hranice států v grafu (z offline mapy)", statsGeoRbOut: "RB mimo rozsah", statsGeoCenOut: "těžiště mimo rozsah", statsGeoWrapped: "rozsah přes 180°",
             statsGeoEmpty: "Pro zobrazení mřížky nejsou žádné body s polohou.", statsGeoCapLat: "N", statsGeoCapLatS: "S", statsGeoCapLonE: "E", statsGeoCapLonW: "W",
             statsCoverageArea: "Obalová plocha", statsCoverageAreaTip: "Poloměr obalové zóny v km", statsCoverageRange: "rozsah 0,5 \u2013 5000 km", statsCoveragePolygonTip: "Vykreslit obalovou plochu jako polygon do měření", statsCoverageNoPolygon: "Nelze vykreslit polygon obalové plochy.",
-            statsBusiestDay: "Nejvíce fotek za", statsDaysTip: "Kolik dní zrovna hledáme maximum",
+            statsBusiestDay: "Nejvíce fotek za", statsDaysTip: "Kolik dní zrovna hledáme maximum", statsBusyLastPhoto: "poslední fotka okna",
             statsPhotoOne: "fotka", statsPhotoFew: "fotky", statsPhotoMany: "fotek", statsPlaceOne: "místo", statsPlaceFew: "místa", statsPlaceMany: "míst", statsYearOne: "rok", statsYearFew: "roky", statsYearMany: "let", statsCalLegend: "Roky focení v daný den", statsCalMaxTip: "Nejvyšší počet let s focením v jeden den", statsCalMinTip: "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)", statsLongestSeries: "Nejdelší fotosérie", statsDayOne: "den", statsDayFew: "dny", statsDayMany: "dní", statsDayGenOne: "dne", statsDayGenMany: "dnů",
             statsOldest: "Nejstarší soubor",
             statsNewest: "Nejnovější soubor",
@@ -3945,7 +3945,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsAvgSize: "Average file size",
             statsMedianTitle: "Median file size",
             statsTotalSize: "Total data size",
-            statsFiles: "files",
+            statsFiles: "files", statsFilesOne: "file", statsFilesFew: "files", statsFilesMany: "files", statsSearchPh: "Search…", statsSaveCsv: "Save table (CSV)", statsRadiusWord: "radius", statsAvgWord: "average", statsMedWord: "median", statsAsyncFailed: "Calculation failed", statsCalBandTip0: "Days of the year (of 366) with no photo: ", statsCalBandTipN: "Days of the year (of 366) with photos from this many years (", statsCalAvgTip: "Average number of years with photos per day of year", statsCalMedTip: "Median number of years with photos per day of year",
             statsTimeSpan: "Time span",
             statsPhotoDays: "Days with photos", statsPhotoDaysTip: "Days with photos – number of distinct calendar days on which at least one photo was taken; percentage = share of the days between the first and the last photo (inclusive)", statsPhotoDaysOf: "of", statsPhotoDaysPerDay: "photos per photo day",
             statsTopFirstDay: "first day", statsTopLastDay: "last day", statsTopSpan: "span",
@@ -3960,7 +3960,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             statsGeoMarkRb: "Reference point (RP)", statsGeoMarkCen: "Photo centroid", statsGeoLand: "Land & borders", statsGeoLandTip: "Show land and country borders (offline map background)", statsGeoRbOut: "RP outside range", statsGeoCenOut: "centroid outside range", statsGeoWrapped: "range crosses 180°",
             statsGeoEmpty: "No located points to show in the grid.", statsGeoCapLat: "N", statsGeoCapLatS: "S", statsGeoCapLonE: "E", statsGeoCapLonW: "W",
             statsCoverageArea: "Buffer area", statsCoverageAreaTip: "Buffer zone radius in km", statsCoverageRange: "range 0.5 \u2013 5000 km", statsCoveragePolygonTip: "Draw buffer area as polygon in measurement tool", statsCoverageNoPolygon: "Cannot draw buffer area polygon.",
-            statsBusiestDay: "Most photos in", statsDaysTip: "How many days we look for the maximum",
+            statsBusiestDay: "Most photos in", statsDaysTip: "How many days we look for the maximum", statsBusyLastPhoto: "last photo of the window",
             statsPhotoOne: "photo", statsPhotoFew: "photos", statsPhotoMany: "photos", statsPlaceOne: "place", statsPlaceFew: "places", statsPlaceMany: "places", statsYearOne: "year", statsYearFew: "years", statsYearMany: "years", statsCalLegend: "Years with photos on a given day", statsCalMaxTip: "Highest number of years with photos on a single day", statsCalMinTip: "Lowest number of years with photos on a single day (including days with no photos)", statsLongestSeries: "Longest photo series", statsDayOne: "day", statsDayFew: "days", statsDayMany: "days", statsDayGenOne: "day", statsDayGenMany: "days",
             statsOldest: "Oldest file",
             statsNewest: "Newest file",
@@ -8105,8 +8105,13 @@ function statsSetFilters(on) {
                 var s = localStorage.getItem(STATS_REF_KEY);
                 if (s) {
                     var a = JSON.parse(s);
-                    if (a && a.length >= 2 && isFinite(Number(a[0])) && isFinite(Number(a[1]))) {
-                        return [Number(a[0]), Number(a[1])];
+                    /* typeof number odmítne null/"" z JSON.stringify(NaN),
+                       které by se při isFinite(Number(...)) tiše změnilo na [0, 0] */
+                    if (a && a.length >= 2
+                        && typeof a[0] === "number" && typeof a[1] === "number"
+                        && isFinite(a[0]) && isFinite(a[1])
+                        && Math.abs(a[0]) <= 90 && Math.abs(a[1]) <= 180) {
+                        return [a[0], a[1]];
                     }
                 }
             } catch(e) { AppLog.soft("statsRefGet", e); }
@@ -8115,15 +8120,27 @@ function statsSetFilters(on) {
             return [la, lo];
         }
         function statsRefSet(la, lo) {
-            try { localStorage.setItem(STATS_REF_KEY, JSON.stringify([Number(la), Number(lo)])); } catch(e) { AppLog.soft("statsRefSet", e); }
+            /* Neplatné souřadnice se neukládají – zůstává předchozí platný referenční bod,
+               místo aby vznikl [0, 0] (Guinejský záliv). Number(null)/Number("") dává 0,
+               proto se vyžaduje přímo typ number; skutečná platná nula se ukládá. */
+            if (typeof la !== "number" || typeof lo !== "number") return;
+            if (!(isFinite(la) && isFinite(lo) && Math.abs(la) <= 90 && Math.abs(lo) <= 180)) return;
+            try { localStorage.setItem(STATS_REF_KEY, JSON.stringify([la, lo])); } catch(e) { AppLog.soft("statsRefSet", e); }
             try {
                 var a = document.getElementById("stRefLat"), b = document.getElementById("stRefLon");
-                if (a && document.activeElement !== a) a.value = Number(la).toFixed(6);
-                if (b && document.activeElement !== b) b.value = Number(lo).toFixed(6);
+                if (a && document.activeElement !== a) a.value = la.toFixed(6);
+                if (b && document.activeElement !== b) b.value = lo.toFixed(6);
             } catch(e2) { AppLog.soft("statsRefSet", e2); }
         }
         function statsNum(v) {
-            var n = parseFloat(String(v === undefined || v === null ? "" : v).replace(",", ".").replace(/[^0-9.+\-eE]/g, ""));
+            /* Přísné čtení čísla: prázdný nebo neplatný vstup vrací NaN.
+               Dříve se cizí znaky (např. polokoule „S“ v „33.9 S“) i mezery uvnitř
+               tiše zahazovaly a vznikalo zdánlivě platné číslo („3 3.9“ -> 33.9). */
+            var s = String(v === undefined || v === null ? "" : v).trim();
+            s = s.replace(",", ".");
+            if (s === "") return NaN;
+            if (!/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(s)) return NaN;
+            var n = parseFloat(s);
             return isFinite(n) ? n : NaN;
         }
         // Pasma denni doby. Noc se opakuje na zacatku i na konci dne - je dvakrat,
@@ -9271,15 +9288,23 @@ function statsSetFilters(on) {
             return out;
         }
         function fmtStatsBytes(b) {
+            /* chybějící hodnota (null/undefined/"") není nula – Number(null) by jinak udělalo „0 B“ */
+            if (b === null || b === undefined || b === "") return "–";
             var n = Number(b);
-            if (!isFinite(n) || n <= 0) return "0 B";
+            if (!isFinite(n)) return "–";
+            if (n <= 0) return "0 B";
             var u = ["B", "KB", "MB", "GB", "TB"];
             var i = Math.floor(Math.log(n) / Math.log(1024));
             if (i < 0) i = 0;
             if (i > 4) i = 4;
             var v = n / Math.pow(1024, i);
             var d = (i === 0) ? 0 : (v < 10 ? 2 : (v < 100 ? 1 : 0));
-            return v.toFixed(d) + " " + u[i];
+            /* hranice po zaokrouhlení: těsně pod přechodem jednotky by se zobrazilo „1024 KB“ / „1024 MB“ – přejít na vyšší jednotku */
+            if (i < 4 && v >= 1024 - Math.pow(10, -d) / 2) {
+                i++; v = n / Math.pow(1024, i);
+                d = (v < 10 ? 2 : (v < 100 ? 1 : 0));
+            }
+            return fmtDec(v, d) + " " + u[i];
         }
         function statsBytesTitle(b) {
             try {
@@ -11173,9 +11198,10 @@ function statsSetFilters(on) {
                     var d = k.substring(0, 8);
                     var no = statsDayNo(d);
                     if (no === null) continue;
-                    if (!g[d]) g[d] = { no: no, n: 0, p: times[i], k: k };
+                    if (!g[d]) g[d] = { no: no, n: 0, p: times[i], q: times[i], k: k, kq: k };
                     g[d].n++;
                     if (k < g[d].k) { g[d].k = k; g[d].p = times[i]; }
+                    if (k > g[d].kq) { g[d].kq = k; g[d].q = times[i]; }
                 }
                 var ds = [];
                 for (key in g) {
@@ -11197,8 +11223,13 @@ function statsSetFilters(on) {
                 if (bestI < 0) return null;
                 var firstYmd = ds[bestI].ymd;
                 var lastYmd = fmtStatsDayNoYmd(ds[bestI].no + (N - 1));
-                var gl = g[lastYmd];
-                return { day: firstYmd, first: firstYmd, last: lastYmd, n: bestN, days: N, p: g[firstYmd].p, pl: gl ? gl.p : null };
+                /* pl = nejnovější fotka posledního DNE OKNA, který fotky má.
+                   Dřív: nejstarší fotka posledního dne, nebo null, když poslední den okna
+                   žádnou fotku neměl (konec rozpětí pak nebyl klikatelný). */
+                var jEnd = bestI;
+                while (jEnd < ds.length && ds[jEnd].no <= ds[bestI].no + (N - 1)) jEnd++;
+                var lastShotYmd = ds[jEnd - 1].ymd;
+                return { day: firstYmd, first: firstYmd, last: lastYmd, n: bestN, days: N, p: g[firstYmd].p, pl: g[lastShotYmd].q };
             } catch(e) { return null; }
         }
         // ciselne oznaceni dne -> "YYYYMMDD" (pro okno, jehož konec muže být den bez fotek)
@@ -11239,9 +11270,21 @@ function statsSetFilters(on) {
             return null;
         }
         function statsMedian(arr) {
-            if (!arr.length) return NaN;
+            if (!arr || !arr.length) return NaN;
+            /* Neplatné a chybějící hodnoty (null/undefined/""/mezera/boolean/NaN/Infinity)
+               se vyřadí už před řazením. Number(null) i Number("") dávají 0, které by jinak
+               posouvaly pozici mediánu, jako by to byla skutečná data. */
+            var clean = [], i;
+            for (i = 0; i < arr.length; i++) {
+                var v = arr[i];
+                if (v === null || v === undefined || typeof v === "boolean") continue;
+                if (typeof v === "string" && v.trim() === "") continue;
+                var n = Number(v);
+                if (isFinite(n)) clean.push(n);
+            }
+            if (!clean.length) return NaN;
             /* Float64Array.sort řadí numericky nativně – výrazně rychlejší než komparátor (nález E) */
-            var a = (typeof Float64Array === "function" && Float64Array.from) ? Float64Array.from(arr).sort() : arr.slice().sort(function(x, y) { return x - y; });
+            var a = (typeof Float64Array === "function" && Float64Array.from) ? Float64Array.from(clean).sort() : clean.slice().sort(function(x, y) { return x - y; });
             var m = Math.floor(a.length / 2);
             return (a.length % 2) ? a[m] : (a[m - 1] + a[m]) / 2;
         }
@@ -11281,11 +11324,12 @@ function statsSetFilters(on) {
         function statsChartAvgMedRow() {
             try {
                 var lbl = "Průměr a medián";
-                var wAvg = (currentLang === "cs") ? "průměr" : "average";
-                var wMed = (currentLang === "cs") ? "medián" : "median";
+                var wAvg = "průměr", wMed = "medián";
                 try {
                     var t = (typeof i18n !== "undefined") ? i18n[currentLang] : null;
                     if (t && t.statsChartAvgMed) lbl = t.statsChartAvgMed;
+                    if (t && t.statsAvgWord) wAvg = t.statsAvgWord;
+                    if (t && t.statsMedWord) wMed = t.statsMedWord;
                 } catch(eT) { AppLog.soft("statsChartAvgMedRow", eT); }
                 return "<label title=\"" + lbl + "\" style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\"><input type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\"" + (statsChartAvgMed ? " checked" : "") + " onchange=\"event.stopPropagation();statsSetChartAvgMed(this.checked)\" /><span><span style=\"display:inline-block;width:14px;height:0;border-top:2px dashed #d93025;vertical-align:middle;\"></span> <span style=\"color:#3c4043;font-weight:700;\">\u00d8</span> (" + wAvg + ")&nbsp;&nbsp;<span style=\"display:inline-block;width:14px;height:0;border-top:2px dashed #1a73e8;vertical-align:middle;\"></span> <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" style=\"vertical-align:middle;\"><line x1=\"1\" y1=\"7\" x2=\"13\" y2=\"7\" stroke=\"currentColor\" stroke-width=\"1.6\"/><line x1=\"7\" y1=\"3.5\" x2=\"7\" y2=\"10.5\" stroke=\"currentColor\" stroke-width=\"1.6\"/></svg> (" + wMed + ")</span></label>";
             } catch(e) { return ""; }
@@ -11664,10 +11708,18 @@ function fmtDec(v, d) {
             } catch(e) { return String(v); }
         }
         function fmtStatsKm(km) {
-            if (!isFinite(km)) return "–";
-            if (km < 1) return (km * 1000).toFixed(0) + " m";
+            /* normalizace na číslo: řetězcový vstup by jinak prošel isFinite, ale toLocaleString by nelokalizoval */
+            if (km === null || km === undefined || km === "") return "–";
+            km = Number(km);
+            if (!isFinite(km) || km < 0) return "–";
+            var _loc = (currentLang === "cs") ? "cs-CZ" : "en-US";
+            /* hranice po zaokrouhlení: 0,9995 km a víc by se zobrazilo jako „1000 m“ – zobrazit km */
+            if (km < 0.9995) return Math.round(km * 1000).toLocaleString(_loc) + " m";
             if (km < 100) return fmtDec(km, 2) + " km";
-            return fmtDec(km, 1) + " km";
+            if (km < 1000) return fmtDec(km, 1) + " km";
+            /* velká čísla s oddělovačem tisíců (1 234,5 km) */
+            try { return km.toLocaleString(_loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " km"; }
+            catch(eL) { return fmtDec(km, 1) + " km"; }
         }
         function fmtStatsArea(km2) {
             if (!isFinite(km2) || km2 <= 0) return "0 km²";
@@ -12448,9 +12500,12 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 var nn = Math.abs(Math.floor(Number(n) || 0));
                 var one = (t && t[kind + "One"]) || "", few = (t && t[kind + "Few"]) || "", many = (t && t[kind + "Many"]) || "";
                 if (typeof currentLang !== "undefined" && currentLang === "en") return (nn === 1 ? one : many) || String(n);
-                var d10 = nn % 10, d100 = nn % 100;
-                if (d10 === 1 && d100 !== 11) return one;
-                if (d10 >= 2 && d10 <= 4 && (d100 < 12 || d100 > 14)) return few;
+                /* Jednotná konvence aplikace: české plurály podle Intl.PluralRules("cs") – 1 = one,
+                   2–4 = few, ostatní (0, 5–20, 21+) = many. U složených číslovek 21–24 ÚJČ připouští
+                   i shodu podle poslední číslice, tato aplikace používá běžnější genitiv plurálu
+                   („21 fotek“, „21 dní“), stejně jako statsDayWord a yw. */
+                if (nn === 1) return one;
+                if (nn >= 2 && nn <= 4) return few;
                 return many;
             } catch(e) { return ""; }
         }
@@ -12788,6 +12843,16 @@ function stBar(label, value, max, text, pctText, chkHtml) {
         }
         try { window.fmtStatsPlaces = fmtStatsPlaces; } catch(e) { AppLog.soft("(top)", e); }
 
+        // Plural nazvu "soubor": 1 -> soubor, 2-4 -> soubory, ostatni -> souborů.
+        // Stejné pravidlo jako stSegWord/statsDayWord (Intl.PluralRules("cs")); klíče statsFilesOne/Few/Many.
+        function statsFilesWord(n) {
+            var v = Math.abs(Math.round(Number(n) || 0));
+            var t = (typeof i18n !== "undefined" && i18n && i18n[currentLang]) ? i18n[currentLang] : null;
+            if (typeof currentLang !== "undefined" && currentLang === "en") return (v === 1) ? ((t && t.statsFilesOne) || "file") : ((t && t.statsFilesMany) || "files");
+            if (v === 1) return (t && t.statsFilesOne) || "soubor";
+            if (v >= 2 && v <= 4) return (t && t.statsFilesFew) || "soubory";
+            return (t && t.statsFilesMany) || "souborů";
+        }
         // Slovakne "nalezeno/nalezeny" podle poctu: 1 -> nalezeno, 2-4 -> nalezeny, 5+ -> nalezeno.
         function statsTopFoundWord(n) {
             try {
@@ -14765,10 +14830,10 @@ statsFocusList = []; statsCountryZoomList = [];
             H += "<div class=\"st-rows\">";
             if (sized) {
                 H += stRow([{ label: L_("statsTotalSize", "Celkový objem dat"), val: fmtStatsBytes(totalBytes),
-                    sub: nmb(sized) + " " + L_("statsFiles", "souborů"), valTitle: statsBytesTitle(totalBytes) }]);
+                    sub: nmb(sized) + " " + statsFilesWord(sized), valTitle: statsBytesTitle(totalBytes) }]);
             }
-            H += stRow([{ label: L_("statsAvgSize", "Průměrná velikost souboru"), val: fmtStatsBytes(sized ? totalBytes / sized : 0),
-                sub: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), valTitle: statsBytesTitle(sized ? totalBytes / sized : 0) }]);
+            H += stRow([{ label: L_("statsAvgSize", "Průměrná velikost souboru"), val: fmtStatsBytes(sized ? totalBytes / sized : NaN),
+                sub: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), valTitle: statsBytesTitle(sized ? totalBytes / sized : NaN) }]);
             H += stRow([{ label: L_("statsMedianTitle", "Medián velikosti souboru"), val: fmtStatsBytes(statsMedian(sizeArr)),
                 sub: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), valTitle: statsBytesTitle(statsMedian(sizeArr)) }]);
             if (sizeArr.length) {
@@ -14805,7 +14870,9 @@ statsFocusList = []; statsCountryZoomList = [];
                     valTitle: statsDayTipTitle(tNew[2], _dNew) }]);
                 var spanTxt = statsSpanText(statsTimeToDate(tOld[2]), statsTimeToDate(tNew[2]));
                 var spanFull = statsSpanFullText(statsTimeToDate(tOld[2]), statsTimeToDate(tNew[2]));
-                if (spanTxt) {
+                /* Časový rozptyl jen při 2+ fotkách: u jediné fotky je rozptyl 00:00:00 a „fotka ⇄ fotka“ nesmyslné.
+                   Dvě různé fotky se stejným časem jsou stále dvě fotky – řádek zůstává. */
+                if (spanTxt && times.length > 1) {
                     var spOld = statsFileName(tOld), spNew = statsFileName(tNew);
                     var spCls = function(p) { return stNameCls(stOf(p)); };
                     var spIdxO = statsFocusList.push(tOld) - 1;
@@ -14824,7 +14891,8 @@ statsFocusList = []; statsCountryZoomList = [];
             var pd = statsPhotoDays(times);
             if (pd) {
                 var pdPct = pd.span > 0 ? (pd.n / pd.span * 100) : 0;
-                var pdPctTxt = (pdPct > 0 && pdPct < 0.1) ? ("&lt; " + fmtDec(0.1, 1)) : fmtDec(pdPct, pdPct >= 10 ? 0 : 1);
+                var pdPctTxt = (pd.n === 0) ? "0" : (pd.n === pd.span) ? "100"
+                    : (pdPct < 0.1) ? ("< " + fmtDec(0.1, 1)) : (pdPct > 99.9) ? ("> " + fmtDec(99.9, 1)) : fmtDec(pdPct, 1).replace(/[.,]0$/, "");
                 var pdSub = pdPctTxt + " % " + L_("statsPhotoDaysOf", "z") + " " + nmb(pd.span) + " " + statsDayWordGen(pd.span);
                 var pdAvg = pd.n ? (pd.photos / pd.n) : 0;
                 var pdTip = fmtStatsPhotos(pd.photos) + " \u00b7 \u00d8 " + fmtDec(pdAvg, pdAvg >= 10 ? 0 : 1) + " " + L_("statsPhotoDaysPerDay", "fotek na den focení");
@@ -14838,6 +14906,14 @@ statsFocusList = []; statsCountryZoomList = [];
             if (busy) {
                 var bFirst = fmtStatsDay(busy.first), bLast = fmtStatsDay(busy.last);
                 var bRange = (bFirst !== "" && bLast !== "" && bFirst !== bLast) ? (bFirst + " \u21c4 " + bLast) : bFirst;
+                // tooltip konce rozpětí: pl může být z dřívějšího dne, než je kalendářní konec okna
+                var bPlTip = statsDayTipTitle(busy.last, bLast);
+                if (busy.pl) {
+                    var bPlK = statsTimeKey(busy.pl), bPlYmd = (bPlK.length >= 8) ? bPlK.substring(0, 8) : "";
+                    if (bPlYmd && bPlYmd !== busy.last) {
+                        bPlTip = statsDayTipTitle(bPlYmd, fmtStatsDay(bPlYmd)) + " \u2013 " + L_("statsBusyLastPhoto", "poslední fotka okna");
+                    }
+                }
                 // jedno vygenerovani st-pick, at zustalo jedine vygenerovane v teto sekci
                 var bSub = "";
                 if (bFirst !== "") {
@@ -14845,7 +14921,7 @@ statsFocusList = []; statsCountryZoomList = [];
                         + (statsFocusList.push(busy.p) - 1) + ")\" title=\"" + statsDayTipTitle(busy.first, bFirst) + "\">" + bFirst + "</span>"
                         + ((bLast !== "" && bLast !== bFirst) ? "<span class=\"st-picksep\"> \u21c4 </span>"
                         + (busy.pl ? "<span class=\"st-pick " + stNameCls(stOf(busy.pl)) + "\" onclick=\"statsFocusIdx("
-                        + (statsFocusList.push(busy.pl) - 1) + ")\" title=\"" + statsDayTipTitle(busy.last, bLast) + "\">" + bLast + "</span>"
+                        + (statsFocusList.push(busy.pl) - 1) + ")\" title=\"" + bPlTip + "\">" + bLast + "</span>"
                         : "<span class=\"st-picksep\" style=\"cursor:default;\" title=\"" + statsDayTipTitle(busy.last, bLast) + "\">" + bLast + "</span>") : "")
                         + "</span>";
                 }
@@ -14934,7 +15010,7 @@ statsFocusList = []; statsCountryZoomList = [];
                         if (!rOne) { var rr0 = Number(cl.r); if (isFinite(rr0) && rr0 > 0) rOne = rr0; }
                     }
                     var rTxt = rOne ? (rOne + " km") : "";
-                    var rWord = (currentLang === "cs") ? "okruh" : "radius";
+                    var rWord = L_("statsRadiusWord", "okruh");
                     for (var bj = 0; bj < arr.length; bj++) {
                         var cj = arr[bj] || {};
                         var cc = cj.c || [0, 0];
@@ -15033,8 +15109,9 @@ var dRef = [], dCen = [], farRef = null, farRefP = null, farCen = null, farCenP 
                     if (nearRefP === null || dr < nearRef) { nearRef = dr; nearRefP = locs[i]; }
                 }
                 var dc = calcDistKmLL(locs[i].ll, cen);
-                dCen.push(dc);
+                /* do dCen jen platné vzdálenosti (stejně jako dRef výše) */
                 if (isFinite(dc)) {
+                    dCen.push(dc);
                     if (!farCenP || dc > farCen) { farCen = dc; farCenP = locs[i]; }
                     if (nearCenP === null || dc < nearCen) { nearCen = dc; nearCenP = locs[i]; }
                 }
@@ -15190,7 +15267,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     if (!rOne) { var rr0 = Number(cl.r); if (isFinite(rr0) && rr0 > 0) rOne = rr0; }
                 }
                 var rTxt = rOne ? (rOne + " km") : "";
-                var rWord = (currentLang === "cs") ? "okruh" : "radius";
+                var rWord = L_("statsRadiusWord", "okruh");
                 for (var bj = 0; bj < arr.length; bj++) {
                     var cj = arr[bj] || {};
                     var cc = cj.c || [0, 0];
@@ -15320,7 +15397,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
             var buildTopElevRow = function(arr) {
                 if (!arr || !arr.length) return "";
                 try { window.statsTopElevClusters = arr; } catch(e) { AppLog.soft("renderStats>buildTopElevRow", e); }
-                var btns = "", rWordE = (currentLang === "cs") ? "okruh" : "radius", withEl = L_("statsTopElevWithEl", "s v\u00fd\u0161kou");
+                var btns = "", rWordE = L_("statsRadiusWord", "okruh"), withEl = L_("statsTopElevWithEl", "s v\u00fd\u0161kou");
                 for (var bj = 0; bj < arr.length; bj++) {
                     var cj = arr[bj] || {}, cc = cj.c || [0, 0];
                     var tip = "#" + (bj + 1) + " \u00b7 " + mfElevLbl(cj.h) + " \u00b7 " + statsFileNamePlain(cj.p) + " \u00b7 " + fmtStatsCoord(cc[0], cc[1]) + " \u00b7 " + rWordE + " " + statsTopElevRWord(cj.r) + " \u00b7 " + fmtStatsPhotos(cj.n || 0) + " " + withEl;
@@ -15365,7 +15442,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                se po tomto místě nemění (ověřeno rozborem proměnných). */
             var _stYearTblHtml = function() {
             var H = "";
-            H += "<div class=\"st-sec-box\" data-sttbl=\"year\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span title=\"" + L_("statsSecTable", "Tabulka 1 (časová)") + "\" style=\"white-space:nowrap;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/><line x1=\"3\" y1=\"15\" x2=\"21\" y2=\"15\"/><line x1=\"9\" y1=\"3\" x2=\"9\" y2=\"21\"/></svg>" + L_("statsSecTableShort", "Tabulka 1") + "</span><span style=\"display:inline-flex;gap:5px;\"><button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsTableCSV()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" + statsTableExpandBtnHtml("year") + "</span></h3>";
+            H += "<div class=\"st-sec-box\" data-sttbl=\"year\"><h3 class=\"info-section-title st-sec-break\" style=\"display:flex;align-items:center;justify-content:space-between;\"><span title=\"" + L_("statsSecTable", "Tabulka 1 (časová)") + "\" style=\"white-space:nowrap;\"><svg class=\"st-ico\" viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/><line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/><line x1=\"3\" y1=\"15\" x2=\"21\" y2=\"15\"/><line x1=\"9\" y1=\"3\" x2=\"9\" y2=\"21\"/></svg>" + L_("statsSecTableShort", "Tabulka 1") + "</span><span style=\"display:inline-flex;gap:5px;\"><button type=\"button\" class=\"st-chart-expand\" title=\"" + L_("statsSaveCsv", "Uložit tabulku (CSV)") + "\" aria-label=\"" + L_("statsSaveCsv", "Uložit tabulku (CSV)") + "\" onclick=\"exportStatsTableCSV()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" + statsTableExpandBtnHtml("year") + "</span></h3>";
 
                 var yKeys = Object.keys(byYear);
             if (yKeys.length) {
@@ -15569,7 +15646,8 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                         var dd = parseInt(d, 10), mm = parseInt(m, 10);
                         if (!isFinite(dd) || !isFinite(mm) || mm < 1 || mm > 12 || dd < 1 || dd > 31) return "&ndash;";
                         if (currentLang !== "cs") return y + "-" + m + "-" + d;
-                        return d + "." + m + "." + y;
+                        /* sjednoceno s fmtDate: „12. 03. 2019“ (tečka + mezera) místo „12.03.2019“ */
+                        return d + ". " + m + ". " + y;
                     } catch(e2) { return "&ndash;"; }
                 };
                 var _fDateCell = function(p) {
@@ -15665,7 +15743,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     var tAttr = tip || label;
                     return "<th style=\"width:" + w + "\" class=\"" + (isNum ? "num " : "") + (act ? "active" : "") + "\" onclick=\"statsSortFolderTable('" + k + "')\" title=\"" + tAttr + "\">" + label + "<span class=\"st-sort-ind\">" + ind + "</span></th>";
                 };
-                var _sfPlaceholder = currentLang === "cs" ? "Hledat\u2026" : "Search\u2026";
+                var _sfPlaceholder = L_("statsSearchPh", "Hledat\u2026");
                 var _sfBtnTitle = currentLang === "cs" ? "Vymazat hledání" : "Clear search";
                 var _sfBadge = "";
                 if (_sfQL !== null) {
@@ -15681,7 +15759,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     "<span style=\"display:inline-flex;gap:4px;position:absolute;right:0;top:0;\">" +
                     "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(true);\" title=\"" + tExpAll + "\" aria-label=\"" + tExpAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button>" +
                     "<button type=\"button\" class=\"st-chart-expand\" onclick=\"event.stopPropagation();statsFolderExpandAll(false);\" title=\"" + tColAll + "\" aria-label=\"" + tColAll + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m18 15-6-6-6 6\"/></svg></button>" +
-                    "<button type=\"button\" class=\"st-chart-expand\" title=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" aria-label=\"" + (currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)") + "\" onclick=\"exportStatsFolderCsv()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" +
+                    "<button type=\"button\" class=\"st-chart-expand\" title=\"" + L_("statsSaveCsv", "Uložit tabulku (CSV)") + "\" aria-label=\"" + L_("statsSaveCsv", "Uložit tabulku (CSV)") + "\" onclick=\"exportStatsFolderCsv()\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>" +
                     statsTableExpandBtnHtml("folder") +
                     "</span></h3>";
                 H += "<div class=\"st-table-wrap\">";
@@ -16750,9 +16828,9 @@ window.statsChartSave = statsChartSave;
                 var yw = function(v) {
                     v = Math.round(Number(v) || 0);
                     if (currentLang !== "cs") return (v === 1) ? statsL_("statsYearOne", "year") : statsL_("statsYearMany", "years");
-                    var d10 = v % 10, d100 = v % 100;
-                    if (d10 === 1 && d100 !== 11) return statsL_("statsYearOne", "rok");
-                    if (d10 >= 2 && d10 <= 4 && !(d100 >= 12 && d100 <= 14)) return statsL_("statsYearFew", "roky");
+                    /* stejné pravidlo jako stSegWord/statsDayWord (Intl.PluralRules("cs")): 1 = rok, 2–4 = roky, ostatní = let */
+                    if (v === 1) return statsL_("statsYearOne", "rok");
+                    if (v >= 2 && v <= 4) return statsL_("statsYearFew", "roky");
                     return statsL_("statsYearMany", "let");
                 };
                 // Layout ve stejnem duchu jako statsChartSvg (viewBox 600 + prepocet pisma).
@@ -16860,13 +16938,12 @@ window.statsChartSave = statsChartSave;
                 for (var bi = 0; bi < bands.length; bi++) {
                     var sw = "<i style=\"display:inline-block;width:11px;height:11px;border-radius:3px;background:" + pal[bi] + ";border:1px solid rgba(0,0,0,0.12);\"></i>";
                     if (bi === 0) sw = "<svg width=\"11\" height=\"11\" viewBox=\"0 0 11 11\" style=\"display:inline-block;vertical-align:-1px;\"><rect x=\"0.5\" y=\"0.5\" width=\"10\" height=\"10\" rx=\"3\" fill=\"" + pal[0] + "\"/><path d=\"M3.5 3.5L7.5 7.5M7.5 3.5L3.5 7.5\" stroke=\"#d93025\" stroke-width=\"1.2\" stroke-linecap=\"round\" fill=\"none\"/></svg>";
-                    var bandTip = (currentLang === "cs")
-                        ? ((bi === 0) ? "Počet dnů v roce (z 366) bez jediné fotky: " : "Počet dnů v roce (z 366) s fotkami z tohoto počtu let (" + bands[bi] + "): ") + bandCnt[bi]
-                        : ((bi === 0) ? "Days of the year (of 366) with no photo: " : "Days of the year (of 366) with photos from this many years (" + bands[bi] + "): ") + bandCnt[bi];
+                    var bandTip = ((bi === 0) ? statsL_("statsCalBandTip0", "Počet dnů v roce (z 366) bez jediné fotky: ")
+                        : statsL_("statsCalBandTipN", "Počet dnů v roce (z 366) s fotkami z tohoto počtu let (") + bands[bi] + "): ") + bandCnt[bi];
                     lg += "<span title=\"" + escapeHtml(bandTip) + "\" style=\"display:inline-flex;align-items:center;gap:3px;\">" + sw + "<span style=\"color:#000000;\">" + bands[bi] + "</span>" + "<span class=\"st-cal-n\" style=\"color:#80868b;\">(" + bandCnt[bi] + ")</span></span>";
                 }
-                var avgTip = (currentLang === "cs") ? "Průměrný počet let s focením na jeden den v roce" : "Average number of years with photos per day of year";
-                var medTip = (currentLang === "cs") ? "Medián počtu let s focením na jeden den v roce" : "Median number of years with photos per day of year";
+                var avgTip = statsL_("statsCalAvgTip", "Průměrný počet let s focením na jeden den v roce");
+                var medTip = statsL_("statsCalMedTip", "Medián počtu let s focením na jeden den v roce");
                 var medIco = "<svg width=\"11\" height=\"11\" viewBox=\"0 0 14 14\" style=\"vertical-align:-1px;\" aria-hidden=\"true\"><line x1=\"1\" y1=\"7\" x2=\"13\" y2=\"7\" stroke=\"currentColor\" stroke-width=\"1.8\"/><line x1=\"7\" y1=\"3.5\" x2=\"7\" y2=\"10.5\" stroke=\"currentColor\" stroke-width=\"1.8\"/></svg>";
                 lg += "<span style=\"margin-left:6px;\">(<span title=\"" + escapeHtml(statsL_("statsCalMaxTip", "Nejvyšší počet let s focením v jeden den")) + "\">Max: " + maxN + "</span>, <span title=\"" + escapeHtml(statsL_("statsCalMinTip", "Nejnižší počet let s focením v jeden den (včetně dnů bez fotky)")) + "\">Min: " + minN + "</span>, <span style=\"color:#d93025;\" title=\"" + escapeHtml(avgTip) + "\">Ø: " + fmt2(calAvg) + "</span>, <span style=\"color:#1a73e8;\" title=\"" + escapeHtml(medTip) + "\">" + medIco + ": " + fmt2(calMed) + "</span>)</span>";
                 lg += "</div>";
@@ -16957,9 +17034,9 @@ window.statsChartSave = statsChartSave;
                         }
                         var cSearchHtml = "";
                         if (cKeys.length) {
-                            var cPh = currentLang === "cs" ? "Hledat\u2026" : "Search\u2026";
+                            var cPh = L_("statsSearchPh", "Hledat\u2026");
                             var cClrT = currentLang === "cs" ? "Vymazat hledání" : "Clear search";
-                            var cCsvT = currentLang === "cs" ? "Uložit tabulku (CSV)" : "Save table (CSV)";
+                            var cCsvT = L_("statsSaveCsv", "Uložit tabulku (CSV)");
                             var cBadge = "", cBadgeShow = false;
                             if (cQL !== null) {
                                 cBadgeShow = (cMarkCount > 0 || cKeys.length > 0);
@@ -18062,7 +18139,7 @@ H += "</div></div>";
                         "<label style=\"display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;\"><span>" + escapeHtml(t.statsGeoPalSettingLabel || (currentLang === "cs" ? "Paleta" : "Palette")) + ":</span>" +
                         "<select id=\"setStatsGeoPal\" onchange=\"event.stopPropagation();statsSetGeoPal(this.value)\" style=\"border:1.5px solid #dadce0;border-radius:8px;padding:3px 4px;font-size:11px;color:#3c4043;background:#ffffff;outline:none;\"></select></label>" +
                         "</div>" +
-                        "<label id=\"setStatsAvgMedRow\" style=\"display:" + ((statsChartMode === "time" || statsChartMode === "tod" || statsChartMode === "dist" || statsChartMode === "distCen") ? "flex" : "none") + ";align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\" title=\"" + (t.statsChartAvgMed || "") + "\"><input id=\"setStatsChartAvgMed\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"event.stopPropagation();statsSetChartAvgMed(this.checked)\" /><span><span style=\"display:inline-block;width:14px;height:0;border-top:2px dashed #d93025;vertical-align:middle;\"></span> <span style=\"color:#3c4043;font-weight:700;\">\u00d8</span> (" + (currentLang === "cs" ? "průměr" : "average") + ")&nbsp;&nbsp;<span style=\"display:inline-block;width:14px;height:0;border-top:2px dashed #1a73e8;vertical-align:middle;\"></span> <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" style=\"vertical-align:middle;\"><line x1=\"1\" y1=\"7\" x2=\"13\" y2=\"7\" stroke=\"currentColor\" stroke-width=\"1.6\"/><line x1=\"7\" y1=\"3.5\" x2=\"7\" y2=\"10.5\" stroke=\"currentColor\" stroke-width=\"1.6\"/></svg> (" + (currentLang === "cs" ? "medián" : "median") + ")</span></label>" +
+                        "<label id=\"setStatsAvgMedRow\" style=\"display:" + ((statsChartMode === "time" || statsChartMode === "tod" || statsChartMode === "dist" || statsChartMode === "distCen") ? "flex" : "none") + ";align-items:center;gap:6px;margin-top:6px;font-size:11px;color:#3c4043;cursor:pointer;\" title=\"" + (t.statsChartAvgMed || "") + "\"><input id=\"setStatsChartAvgMed\" type=\"checkbox\" style=\"width:15px;height:15px;accent-color:var(--green);\" onchange=\"event.stopPropagation();statsSetChartAvgMed(this.checked)\" /><span><span style=\"display:inline-block;width:14px;height:0;border-top:2px dashed #d93025;vertical-align:middle;\"></span> <span style=\"color:#3c4043;font-weight:700;\">\u00d8</span> (" + (t.statsAvgWord || "průměr") + ")&nbsp;&nbsp;<span style=\"display:inline-block;width:14px;height:0;border-top:2px dashed #1a73e8;vertical-align:middle;\"></span> <svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" style=\"vertical-align:middle;\"><line x1=\"1\" y1=\"7\" x2=\"13\" y2=\"7\" stroke=\"currentColor\" stroke-width=\"1.6\"/><line x1=\"7\" y1=\"3.5\" x2=\"7\" y2=\"10.5\" stroke=\"currentColor\" stroke-width=\"1.6\"/></svg> (" + (t.statsMedWord || "medián") + ")</span></label>" +
                         "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;display:flex;justify-content:flex-end;\">" +
                         "<button type=\"button\" class=\"source-pill-btn\" style=\"font-size:11px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;background:#f8f9fa;border:1px solid #dadce0;border-radius:14px;color:#3c4043;\" title=\"" + (t.tipStatsDefault || "") + "\" onclick=\"event.stopPropagation();resetStatsDefaults();\">" + PILL_RESET_SVG + " " + (t.btnStatsDefault || "Obnovit nastavení statistiky") + "</button>" +
                         "</div>" +
