@@ -2864,7 +2864,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.00</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-10-30" title="Datum poslední aktualizace">30. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.01</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-10-30" title="Datum poslední aktualizace">30. 10. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -3111,6 +3111,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             } catch (eEM) { mfEgmLog(eEM); }
             /* prohlizecka fotek se obnovi jen tehdy, kdyz uz je otevrena - sama se otevirat nesmi */
             try { var lbEl = document.getElementById("lightbox"); if (lbEl && lbEl.classList.contains("active") && typeof lbRefreshPhotos === "function") lbRefreshPhotos(); } catch (e2) { mfEgmLog(e2); }
+            /* okno a náhled mapy geoidu (po dekódování mřížky a po změně přepínače korekce) */
+            try { if (typeof MF_GEOIDMAP !== "undefined" && MF_GEOIDMAP) MF_GEOIDMAP.refresh(); } catch (eG) { mfEgmLog(eG); }
         }
         /* Efektivni (korigovana) nadmorska vyska fotky z vnitrniho pole [lat, lon, dt, nazev, velikost, cesta, STAV, vyska] */
         function mfEffElev(p) {
@@ -3837,7 +3839,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 setSourcesTitle: "Nastavení zdrojů", srcTxt: "Datový soubor fotografií (.TXT)", srcSingle: "Samostatná fotografie (.JPG, .JPEG, .PNG)", srcGis: "GIS soubory (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", lblDefMode: "Výchozí režim",
                 srcPal: "Paleta", srcSize: "Velikost", srcColor: "Barva", srcIcon: "Ikona", srcRadius: "Poloměr", lblRot: "Rotace", tipSrcDefault: "Vrátit výchozí režimy zdrojů", btnTxtDefault: "Obnovit nastavení datového souboru", tipTxtDefault: "Vrátit výchozí nastavení datového souboru fotografií (.TXT)", btnSingleDefault: "Obnovit nastavení samostatné fotografie", tipSingleDefault: "Vrátit výchozí nastavení samostatné fotografie (.JPG, .JPEG, .PNG)", btnSrcAllDefault: "Obnovit nastavení zdrojů", btnGisDefault: "Obnovit nastavení GIS", tipGisDefault: "Vrátit výchozí nastavení GIS souborů (.GPX, .KML, .KMZ, .GEOJSON, .JSON)", toastSrcReset: "Výchozí režimy zdrojů obnoveny.", lblBaseLayer: "Mapový podklad", btnMapDefault: "Obnovit obecná nastavení mapy", tipMapDefault: "Vrátit obecná nastavení mapy", btnMapAllDefault: "Obnovit nastavení mapy a filtrů", tipMapAllDefault: "Vrátit výchozí nastavení mapy a filtrů", toastMapAllReset: "Nastavení mapy a filtrů obnoveno.", toastMapReset: "Nastavení mapy obnoveno.", lblMapZoom: "Přiblížení", lblMapCenter: "Střed mapy", btnMapCenterUse: "Použít aktuální", tipMapCenterPick: "Vybrat střed mapy kliknutím do mapy (Esc zruší)", btnMapCenterPick: "Zvolit na mapě", mapCenterPickHint: "Klikněte na mapu pro nastavení středu mapy (Esc zruší).", lblMeasure: "Panel měření", measAuto: "Automatické spuštění", lblGridSt: "Mřížka", gridOff: "Vypnuta", gridOn: "Mřížka", gridLabels: "Mřížka s popisky", lblDynInput: "Zadávání z klávesnice", lblShowCoords: "Zobrazení souřadnic", setProfilesDesc: "Uložení profilu zapíše všechno nastavení včetně kořene archivu do GeoJSON. Načtení profilu nastavení přepíše a aplikaci restartuje.",
                 profileSaveBtn: "Uložit profil",
-            setStatsTitle: "Nastavení statistiky", setCorrTitle: "Korekce a výpočty", setCorrDesc: "Výška v EXIF je nad elipsoidem WGS84 a od nadmořské se podle místa liší zhruba o −107 až +85 m. Korekce ji podle geoidu EGM2008 převede na nadmořskou; výšky z GPX/KML se nekorigují. Podrobně v Informacích (bod 11).", setGeoidLbl: "Korigovat výšky na geoid (EGM2008)", setGeoidErr: "Geoidová data EGM2008 se v tomto prohlížeči nepodařilo dekódovat – korekce není dostupná.", mfElevTipGeo: "Nadmořská výška (geoid EGM2008)", mfElevTipEll: "Elipsoidická výška WGS84 (korekce na geoid vypnuta)", setGeoidTip: "Převede výšku nad elipsoidem WGS84 na nadmořskou výšku podle geoidu EGM2008. Platí pro zobrazení výšky, statistiky i detekci fotek z letadla; výšky z GPX/KML se nekorigují.", setStatsRefShort: "RB", setStatsDesc: "<strong>Referenční bod (RB)</strong> a co se má ve statistice počítat. Změny se propíší i do okna Statistika. Volíte také, který se z nich otevře jako první.", setStatsStates: "Co se započítá", setStatsChart: "Výchozí graf", btnStatsDefault: "Obnovit nastavení statistiky", tipStatsDefault: "Vrátit všechna nastavení statistiky na výchozí hodnoty", toastStatsReset: "Nastavení statistiky obnoveno.",
+            mfGeoTitle: "Mapa geoidu – opravy výšek (EGM2008)", mfGeoBtn: "Zobrazit mapu geoidu", mfGeoPrevTip: "Zvětšit mapu geoidu", mfGeoHover: "Najeďte kurzorem nebo klepněte do mapy – zobrazí se geoidová výška N a oprava výšky.", mfGeoRead: "N = {N} m · oprava výšky {C} m", mfGeoOff: "korekce je vypnutá, výšky se neopravují", mfGeoLoading: "Data geoidu se načítají…", mfGeoNoData: "Data geoidu nejsou k dispozici", mfGeoPhotosChk: "Vyznačit moje fotky s výškou", mfGeoPhotoLegend: "Fotka s výškou", mfGeoStat: "Korekce na vašem archivu: od {a} do {b} m", mfGeoStatMed: "medián {m} m", mfGeoStatAvg: "Ø {c} m", mfGeoStatN: "({n} fotek)", mfGeoStatNone: "Korekce na vašem archivu: žádné fotky s polohou a výškou", mfGeoLegRed: "červená: výška se po korekci sníží", mfGeoLegBlue: "modrá: výška se po korekci zvýší", mfGeoNote: "N je výška geoidu (hladiny moře) nad elipsoidem WGS84. Nadmořská výška = elipsoidická výška − N. Model EGM2008 v mřížce 30′; aproximační odchylka vůči mřížce 2,5′ je nejvýše asi 6,7 m, typicky do 1 m.", mfZoneTitle: "Mapa zón – detekce fotek z letadla", mfZoneOpenBtn: "Zobrazit mapu zón", mfZonePrevTip: "Zvětšit mapu zón", mfZoneClose: "Zavřít (Esc)", mfZoneSave: "Uložit obrázek (PNG)", mfZoneArea_world: "Svět", mfZoneArea_alps: "Alpy", mfZoneArea_wmed: "Západní Středomoří", mfZoneArea_turkey_iran: "Turecko, Írán a Kavkaz", mfZoneArea_centralasia: "Střední Asie a Himálaj", mfZoneArea_africa: "Afrika", mfZoneArea_seasia: "JV Asie", mfZoneArea_japan: "Japonsko a Kamčatka", mfZoneArea_newguinea: "Nová Guinea", mfZoneArea_hawaii: "Havaj", mfZoneArea_newzealand: "Nový Zéland", mfZoneArea_alaska: "Aljaška a Kordillery", mfZoneArea_greenland: "Grónsko", mfZoneArea_andes: "Andy", mfZoneArea_mexico: "Mexiko a Střední Amerika", mfZoneArea_antarctica: "Antarktida", mfZoneAreaLbl: "Oblast", mfZoneAirChk: "Vyznačit fotky z letadla", mfZoneAirNone: "žádné", mfZoneAirLegend: "Fotka z letadla", mfZoneOpenTable: "Zobrazit fotky z letadla v tabulce", mfZoneOutside: "Mimo zóny", mfZoneZoneN: "Zóna {T} km", mfZoneUpTo: "do {H} m", mfZoneAllowed: "povolená výška", mfZoneHover: "Najeďte kurzorem nebo klepněte do mapy – zobrazí se zóna a povolená výška.", mfZoneNoData: "Data horských zón nejsou k dispozici", mfZoneNote: "Zóna T je území do 25 km od terénu s výškou alespoň T. Zdroj výšek: Copernicus DEM GLO-90. Výška fotky se před porovnáním koriguje na nadmořskou (EGM2008), pokud je korekce zapnutá.", setStatsTitle: "Nastavení statistiky", setCorrTitle: "Korekce a výpočty", setCorrDesc: "Výška v EXIF je nad elipsoidem WGS84 a od nadmořské se podle místa liší zhruba o −107 až +85 m. Korekce ji podle geoidu EGM2008 převede na nadmořskou; výšky z GPX/KML se nekorigují. Podrobně v Informacích (bod 11).", setGeoidLbl: "Korigovat výšky na geoid (EGM2008)", setGeoidErr: "Geoidová data EGM2008 se v tomto prohlížeči nepodařilo dekódovat – korekce není dostupná.", mfElevTipGeo: "Nadmořská výška (geoid EGM2008)", mfElevTipEll: "Elipsoidická výška WGS84 (korekce na geoid vypnuta)", setGeoidTip: "Převede výšku nad elipsoidem WGS84 na nadmořskou výšku podle geoidu EGM2008. Platí pro zobrazení výšky, statistiky i detekci fotek z letadla; výšky z GPX/KML se nekorigují.", setStatsRefShort: "RB", setStatsDesc: "<strong>Referenční bod (RB)</strong> a co se má ve statistice počítat. Změny se propíší i do okna Statistika. Volíte také, který se z nich otevře jako první.", setStatsStates: "Co se započítá", setStatsChart: "Výchozí graf", btnStatsDefault: "Obnovit nastavení statistiky", tipStatsDefault: "Vrátit všechna nastavení statistiky na výchozí hodnoty", toastStatsReset: "Nastavení statistiky obnoveno.",
                 profileLoadBtn: "Načíst profil",
                 profileSaved: "Profil nastavení uložen.",
                 profileLoaded: "Profil načten, aplikace se restartuje.",
@@ -3882,7 +3884,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3'/></svg> Přiblížit na fotky <kbd class=\"guide-kbd\">F</kbd></strong><br>Tlačítko vpravo od oblastního filtru zazoomuje mapu na obálku fotek – bez filtrů na všechny fotky (jen fotky, ne trasy), s filtrem na jeho výsledek (zohledňuje časový filtr, filtr složek i oblastní filtr; počítá jen G – fotky s polohou; D a S se nezoomují). Bez načtené fotky je neaktivní.",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z'/><path d='m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65'/><path d='m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65'/></svg> Mapové podklady (vpravo) <kbd class=\"guide-kbd\">L</kbd></strong><br>Výběr ze 8 mapových vrstev:<div class=\"step-sub\"><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg width='13' height='18' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 92.3 132.3'><path fill='currentColor' d='M60.2 2.2C55.8.8 51 0 46.1 0 32 0 19.3 6.4 10.8 16.5l21.8 18.3L60.2 2.2z'/><path fill='currentColor' d='M10.8 16.5C4.1 24.5 0 34.9 0 46.1c0 8.7 1.7 15.7 4.6 22l28-33.3-21.8-18.3z'/><path fill='currentColor' d='M46.2 28.5c9.8 0 17.7 7.9 17.7 17.7 0 4.3-1.6 8.3-4.2 11.4 0 0 13.9-16.6 27.5-32.7-5.6-10.8-15.3-19-27-22.7L32.6 34.8c3.3-3.8 8.1-6.3 13.6-6.3'/><path fill='currentColor' d='M46.2 63.8c-9.8 0-17.7-7.9-17.7-17.7 0-4.3 1.5-8.3 4.1-11.3l-28 33.3c4.8 10.6 12.8 19.2 21 29.9l34.1-40.5c-3.3 3.9-8.1 6.3-13.5 6.3'/><path fill='currentColor' d='M59.1 109.2c15.4-24.1 33.3-35 33.3-63 0-7.7-1.9-14.9-5.2-21.3L25.6 98c2.6 3.4 5.3 7.3 7.9 11.3 9.4 14.5 6.8 23.1 12.8 23.1s3.4-8.7 12.8-23.2'/></svg></span> <strong>Google <span class='lyr-sub lyr-base'>(Klasická)</span></strong> – přehledná silniční a městská mapa</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg width='13' height='18' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 92.3 132.3'><path fill='currentColor' d='M60.2 2.2C55.8.8 51 0 46.1 0 32 0 19.3 6.4 10.8 16.5l21.8 18.3L60.2 2.2z'/><path fill='currentColor' d='M10.8 16.5C4.1 24.5 0 34.9 0 46.1c0 8.7 1.7 15.7 4.6 22l28-33.3-21.8-18.3z'/><path fill='currentColor' d='M46.2 28.5c9.8 0 17.7 7.9 17.7 17.7 0 4.3-1.6 8.3-4.2 11.4 0 0 13.9-16.6 27.5-32.7-5.6-10.8-15.3-19-27-22.7L32.6 34.8c3.3-3.8 8.1-6.3 13.6-6.3'/><path fill='currentColor' d='M46.2 63.8c-9.8 0-17.7-7.9-17.7-17.7 0-4.3 1.5-8.3 4.1-11.3l-28 33.3c4.8 10.6 12.8 19.2 21 29.9l34.1-40.5c-3.3 3.9-8.1 6.3-13.5 6.3'/><path fill='currentColor' d='M59.1 109.2c15.4-24.1 33.3-35 33.3-63 0-7.7-1.9-14.9-5.2-21.3L25.6 98c2.6 3.4 5.3 7.3 7.9 11.3 9.4 14.5 6.8 23.1 12.8 23.1s3.4-8.7 12.8-23.2'/></svg></span> <strong>Google <span class='lyr-sub lyr-terr'>(Terénní)</span></strong> – plastický 3D reliéf pohoří a údolí</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg width='13' height='18' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 92.3 132.3'><path fill='currentColor' d='M60.2 2.2C55.8.8 51 0 46.1 0 32 0 19.3 6.4 10.8 16.5l21.8 18.3L60.2 2.2z'/><path fill='currentColor' d='M10.8 16.5C4.1 24.5 0 34.9 0 46.1c0 8.7 1.7 15.7 4.6 22l28-33.3-21.8-18.3z'/><path fill='currentColor' d='M46.2 28.5c9.8 0 17.7 7.9 17.7 17.7 0 4.3-1.6 8.3-4.2 11.4 0 0 13.9-16.6 27.5-32.7-5.6-10.8-15.3-19-27-22.7L32.6 34.8c3.3-3.8 8.1-6.3 13.6-6.3'/><path fill='currentColor' d='M46.2 63.8c-9.8 0-17.7-7.9-17.7-17.7 0-4.3 1.5-8.3 4.1-11.3l-28 33.3c4.8 10.6 12.8 19.2 21 29.9l34.1-40.5c-3.3 3.9-8.1 6.3-13.5 6.3'/><path fill='currentColor' d='M59.1 109.2c15.4-24.1 33.3-35 33.3-63 0-7.7-1.9-14.9-5.2-21.3L25.6 98c2.6 3.4 5.3 7.3 7.9 11.3 9.4 14.5 6.8 23.1 12.8 23.1s3.4-8.7 12.8-23.2'/></svg></span> <strong>Google <span class='lyr-sub lyr-sat'>(Satelitní)</span></strong> – letecké a družicové snímky s popisky</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><img src='data:image/png;base64,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' alt='' width='18' height='18'></span> <strong>Mapy.com <span class='lyr-sub lyr-terr'>(Turistická)</span></strong> – značené turistické i cyklistické trasy, vrstevnice</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><img src='data:image/png;base64,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' alt='' width='18' height='18'></span> <strong>Mapy.com <span class='lyr-sub lyr-base'>(Základní)</span></strong> – detailní česká kartografická mapa</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><img src='data:image/png;base64,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' alt='' width='18' height='18'></span> <strong>Mapy.com <span class='lyr-sub lyr-sat'>(Letecká)</span></strong> – detailní ortofotomapa</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg class='esri-ico' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='currentColor' d='M11.63907.00273c-1.58143.03682-3.04264.4449-4.5349 1.06205-2.07095.87293-4.70641 2.88139-6.3117 6.6711-.37592 1.05578-1.8789 6.09024.79149 10.4125 2.16748 3.50692 4.95741 5.1768 8.37118 5.65348 3.407.47497 5.25533.06419 7.4101-.89245 5.03853-2.2369 8.88662-10.6343 5.03765-16.72016-1.51892-2.81012-5.49826-5.27459-9.85522-5.0841v.00203c-1.0304-.032-1.63648.10168-2.24524.22008-.18288-.04736-.52568.0027-.54516.39978 0 .21344.06847.37913.20393.4765.13463.09665 1.26407.93091 2.0938 1.81316-.39793.04416-.83039.11644-1.27404.20796-.4953-1.07017-2.08625-.09707-3.14374-.0545-.12362.0064-.24269.02388-.36546.03028-.116-.89409-.19886-1.82146-.17768-2.4734C8.46399.95065 11.11512.37795 12.91514.35002l.31498-.00807c.26416-.00253.28524-.21242.03635-.24634-.55902-.0764-1.10025-.10515-1.6274-.09288zm-.19181 1.53048c3.91137-.0172 7.3504 1.64094 8.92442 3.56977-.55965-.2912-1.76629-.7065-2.25735-.81572-.26503-.27008-.59885-.49013-.8884-.6764-.22862-.1456-.51429-.0915-.39575.16355.04487.0992.21919.26655.36142.4341-.83482-.2304-3.05425-.4063-4.11089-.30892-.69003-.77552-1.47719-1.71613-2.42292-2.34013.26453-.01646.5287-.0251.78947-.02625zm-4.85594.42603c-.01343.33869.07398 1.32823.18576 2.28158-.4826.04832-.96112.1076-1.43356.17768a10.2312 10.2312 0 0 0-2.63694 3.46074c-.09908-.89239-.15119-1.63544-.11307-2.09179 1.11167-1.55617 2.62028-3.07211 3.99781-3.82821Zm8.41763 2.64906c.48821.01708.98834.052 1.46587.10095-.85852.3072-1.23689 1.06143-1.65768 1.66172-.0086.0128-.02414.0228-.03432.03433a19.52175 19.52175 0 0 0-1.16503-1.7869c.4263-.02577.90295-.02717 1.39116-.0101zm-2.37446.12114a13.32749 13.32749 0 0 1 1.48 2.15236c-.68157.33021-1.59055.58218-1.96055 1.1105-.15324.22017-.1908.51855-.19585.84197a19.97303 19.97303 0 0 0-3.28305 1.0883c-.38355-1.12775-.71901-2.252-.951-3.25277 1.09728-1.04734 2.38035-1.21677 2.90952-1.6274a15.03184 15.03184 0 0 1 2.00093-.31296zm6.88917.634c.45127.17088 1.02885.40728 1.48606.6562.34713.43687 1.34084 1.41794 1.8717 4.16541.47752 2.47396-.05031 4.35392-.212 4.89834l-.16355.64005c-.116.43603-.50231 1.46609-.70467 1.8818.07706-.56134.14464-2.01894.12519-2.31187.13545.0416.4242-.12255.47246-.28671.04827-.16512-.4765-.41997-.4765-.41997a17.5617 17.5617 0 0 0-.14538-2.28562c.12023-.19489.24217-.38338.36748-.55526a10.22951 10.22951 0 0 0-.1575-1.3326c.10583.03456.20231.06196.27259.06259.23962.0032.23974-.1612.16354-.25239-.04912-.0592-.27844-.20134-.54515-.35536a10.17702 10.17702 0 0 0-2.35427-4.50461ZM1.86865 7.00497s.0517.8962.0949 1.55067c0 0-.66164.75067-.99946 1.34674.13463-1.22175.4228-1.85091.90456-2.89741Zm5.35263.2322c.19812 1.00074.4353 1.8284.7511 2.97817-1.18702.52323-3.28675 1.81816-4.21385 2.5158-.16765-.42503-.34209-1.02781-.49872-1.6476.21082-.62396.64191-1.06046 1.24982-1.1206 1.03971-.104 1.92998-1.65176 2.6632-2.6652.016-.0224.03322-.03914.04845-.06058zm-5.15274 2.2412.01413.11105c-.19472.7366-.31465 1.50207-.3392 2.2937.31328.3302.68222.87924 1.09031 1.44567-.26246.19488-.76785.54326-.88638.62794-.34714.24736-.34214.6363-.0949.85812.13632.12192.41646.07068.5189-.01013.30311-.24129.5554-.43255.90254-.65016.12701.33277.2466.63252.36344.9187-.14816.15904-.25318.3699-.28873.6764-.1143.99228.82833 1.76997 1.62336 1.99688.02976.0096.04997.01378.07874.0202.04233.06431.08029.1245.12519.18979-.41234.32006-.69452.64618-.8884.8985-.11179.1456-.23689.36469-.13529.40786.10413.04224.45398.0005.60977-.02826.39455-.07616.69856-.51352.97119-.67438.32766.45213.86082 1.03223 1.41539 1.59105.02463.10176.04676.20986.0747.29883.10583.34118.24894.67966.41998 1.01156.39877.18625.8147.33987 1.23972.4745a7.06464 7.06464 0 0 0-.52698.60979c-3.42563-1.07271-5.96304-3.96041-6.86898-6.9881a14.79562 14.79562 0 0 1-.55121-5.47984c.04742.0096.15677.06126.32103.01616.1143-.07872.52297-.3635.81168-.61583zm9.89157.18171c-.0066.28193-.03747.5502-.15345.76524-.16595.30976-.09014 1.20842.11307 1.50221.63923.9305 1.70123.41263 2.49964.74707.36661.15328.60998.40762.81572.71072-1.67133.10496-3.31108.49595-4.8317 1.19531C9.6219 12.92116 8.9476 10.7504 8.9476 10.7504v-.0021c.94828-.44874 1.9457-.81904 3.0125-1.0883ZM8.20257 11.0775c.42333 1.2624 1.02859 2.94991 1.44769 3.85244-.05927.0288-.12278.06248-.18374.09287a34.54682 34.54682 0 0 0-2.75607-.66023c-.84244-.1728-.87296-.1278-1.82123.14739-.13545.03904-.26553.075-.3917.11307a30.62419 30.62419 0 0 1-.37555-1.01763c1.21582-.93642 2.4406-1.72272 4.0806-2.5279Zm13.13626 1.9767c.05165.46314.08702.91557.10903 1.32453a7.83681 7.83681 0 0 0-.6562-.24835c.16594-.34458.3499-.71211.54717-1.07618zm-5.61108 1.17512c.16087.27936.34.55903.58554.80966.64093.6553-.372 1.59527-.08077 3.44862h-.0021c-.29971.032-.59767.06936-.86014.10903-.65194.1024-1.49203.32254-2.2735.6138-.44874-.71373-1.6503-2.44857-2.25736-3.75754 1.2209-.6003 2.92566-1.10421 4.88824-1.22357zm4.75498.55525c.35391.09984.68651.20722.97522.32507.03641.52157.03498 2.31123-.06663 3.18412-.1016.21409-.3635.58273-.53708.75717-.26416-.10657-.66046-.22014-1.07618-.31902.06605-.07968.13875-.15432.20393-.23624.22692-1.5206-.28641-2.0062.35536-3.39814zm-9.66947 2.3785c.48175.8111 1.05687 1.69252 1.50221 2.38254-.69342.33613-1.49939.85598-2.26139 1.4275.05248-.87802.07056-1.7466.24835-2.2089.24807-.64768.43971-1.12786.51083-1.60114zm8.54483 2.05342c.46313.05345.92549.13087 1.20742.20191-.62653.79249-1.49164 1.45313-2.41282 2.02718.01952-.34461.0334-.77986.04442-1.18117.41232-.32004.802-.66862 1.16098-1.04792zm-2.95192.01013c.09229.2896.21333.59656.37757.92677.16086.32343.34768.55909.5492.72082.07195-.0448.13884-.09663.20998-.14336-.0051.35559-.0153.71607-.03635 1.06407-.24215.16-1.41046.68857-1.86767.8359a19.83756 19.83756 0 0 1-2.06553-2.70962c.71459-.29985 1.81425-.56757 2.8328-.69458zm-3.62832 1.00148c.34036.5334 1.46049 2.1227 1.91006 2.63492-.81534.14208-1.95564.24903-2.85904.20999 0 0-1.35718-.89952-1.70008-1.24579.67987-.56474 1.78037-1.23506 2.64905-1.59912zM9.62198 22.2815c.39624.2624.81913.56327 1.15695.75716-.5207-.0592-1.13118-.07328-1.585-.22816.13124-.17183.26465-.38337.42805-.529Z'/></svg></span> <strong>Esri Topo</strong> – celosvětová topografická mapa s vrstevnicemi</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z'/><path d='M15 5.764v15'/><path d='M9 3.236v15'/></svg></span> <strong>Offline vektor</strong> – plně offline vektorová mapa světa s hranicemi států (bez internetu). Data: Natural Earth 1:10 000 000 (soubor <span style='white-space:nowrap'>countries-10m.json</span> z balíčku world-atlas). Přesnost je přibližně 1–2 km, místy i více (body čar jsou od sebe typicky 1–5 km): drobné zálivy, ústí řek a malé ostrovy jsou zjednodušené, takže při velkém přiblížení se hranice a pobřeží mohou lišit od podrobných map. Barvu hranic států (nebo jejich skrytí) a barvu pevniny a moří lze změnit v Nastavení → Nastavení mapy → Obecná nastavení mapy.</span></div>",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> Zoom [<kbd class=\"guide-kbd\">+</kbd> / <kbd class=\"guide-kbd\">−</kbd>] (vpravo, na mobilu dole)</strong><br>Tlačítka pro přiblížení a oddálení. Na počítači lze zoomovat i kolečkem myši, na mobilu gestem roztažení dvou prstů.",
-                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.7 6.3a4.5 4.5 0 0 0-6.4 6.4l-6 6 3.2 3.2 6-6a4.5 4.5 0 0 0 6.4-6.4l-3.5 3.5-3.2-3.2 3.5-3.5z'/></svg> Korekce a výpočty</strong><br>Výška fotek – odkud je, proč neodpovídá nadmořské výšce a proč ji lze korigovat v <a href=\"#\" class=\"guide-jump\" onclick=\"event.stopPropagation();gotoSettings();return false;\">nastavení</a> (bod 7 – Korekce a výpočty).<div class=\"step-sub\"><br>• <strong>Výška v datech:</strong> fotky mají výšku v EXIF (a datový soubor v 8. sloupci <code>NADMORSKA_VYSKA</code>). Aplikace u zdrojových dat předpokládá výšku nad <strong>elipsoidem WGS84</strong>. Ta se od skutečné nadmořské výšky liší o výšku geoidu N – podle místa zhruba od −107 m (Indický oceán jižně od Srí Lanky) do +85 m (Nová Guinea); např. v Alpách je elipsoidická výška asi o 50–54 m vyšší, na jihu Indie naopak asi o 85–98 m nižší než nadmořská.<br>• <strong>Co korekce dělá:</strong> zapnutá korekce podle modelu geoidu <strong>EGM2008</strong> převede výškový odkaz na nadmořskou výšku (nad hladinu moře) – odečte geoidovou vzdálenost N; neopravuje měřenou přesnost výšek. Má smysl jen u elipsoidické vstupní výšky – zapisuje-li fotoaparát už nadmořskou výšku, korekci vypněte.<br>• <strong>Přesnost modelu:</strong> aproximační odchylka 30′ mřížky vůči referenční 2,5′ mřížce EGM2008: max přibližně 6,7 m, typicky do 1 m.<br>• <strong>Kde se projeví:</strong> zobrazení výšky, statistiky (nejvyšší/nejníže položená fotka, Top 10 výšek) i detekce fotek z letadla (vzdušný prostor).<br>• <strong>Výjimky:</strong> výšky z GPX/KML zůstávají bez korekce; fotky bez polohy výšku nemají.<br>• <strong>Přepínač:</strong> Nastavení → bod 7 „Korekce a výpočty“ → <strong>Korigovat výšky na geoid (EGM2008)</strong>; nepodaří-li se geoidová data EGM2008 rozbalit (starší prohlížeč bez podpory DecompressionStream nebo poškozený soubor), je korekce nedostupná a přepínač se deaktivuje.</div>",
+                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.7 6.3a4.5 4.5 0 0 0-6.4 6.4l-6 6 3.2 3.2 6-6a4.5 4.5 0 0 0 6.4-6.4l-3.5 3.5-3.2-3.2 3.5-3.5z'/></svg> Korekce a výpočty</strong><br>Výška fotek – odkud je, proč neodpovídá nadmořské výšce a proč ji lze korigovat v <a href=\"#\" class=\"guide-jump\" onclick=\"event.stopPropagation();gotoSettings();return false;\">nastavení</a> (bod 7 – Korekce a výpočty).<div class=\"step-sub\"><br>• <strong>Výška v datech:</strong> fotky mají výšku v EXIF (a datový soubor v 8. sloupci <code>NADMORSKA_VYSKA</code>). Aplikace u zdrojových dat předpokládá výšku nad <strong>elipsoidem WGS84</strong>. Ta se od skutečné nadmořské výšky liší o výšku geoidu N – podle místa zhruba od −107 m (Indický oceán jižně od Srí Lanky) do +85 m (Nová Guinea); např. v Alpách je elipsoidická výška asi o 50–54 m vyšší, na jihu Indie naopak asi o 85–98 m nižší než nadmořská.<br>• <strong>Co korekce dělá:</strong> zapnutá korekce podle modelu geoidu <strong>EGM2008</strong> převede výškový odkaz na nadmořskou výšku (nad hladinu moře) – odečte geoidovou vzdálenost N; neopravuje měřenou přesnost výšek. Má smysl jen u elipsoidické vstupní výšky – zapisuje-li fotoaparát už nadmořskou výšku, korekci vypněte. Velikost opravy v každém místě světa ukazuje mapa geoidu – tlačítko <button type=\"button\" class=\"mf-zone-btn\" data-mf-geoid-btn=\"1\" onclick=\"event.stopPropagation();mfGeoidMapOpen(this);return false;\">Zobrazit mapu geoidu</button>.<span class=\"mf-zone-prev\" data-mf-geoid-prev=\"1\"></span><br>• <strong>Přesnost modelu:</strong> aproximační odchylka 30′ mřížky vůči referenční 2,5′ mřížce EGM2008: max přibližně 6,7 m, typicky do 1 m.<br>• <strong>Kde se projeví:</strong> zobrazení výšky, statistiky (nejvyšší/nejníže položená fotka, Top 10 výšek) i detekce fotek z letadla (vzdušný prostor).<br>• <strong>Detekce fotek z letadla (vzdušný prostor):</strong> fotka se počítá jako pořízená ve vzduchu, když má známou výšku nad povolenou mezí pro dané místo. Mimo horské zóny je mez <strong>3 100 m</strong>. Horská zóna <strong>T</strong> je území do 25 km od terénu vysokého alespoň T (3, 4, 5, 6, 7 a 8 km) a v ní je mez <strong>T + 1 100 m</strong>, tedy 4 100 až 9 100 m. Fotka vyhodnocená jako z letadla se nepřiřadí žádnému státu ani světadílu. Mapu zón zobrazíte tlačítkem <button type=\"button\" class=\"mf-zone-btn\" onclick=\"event.stopPropagation();mfZoneMapOpen(this);return false;\">Zobrazit mapu zón</button>.<span class=\"mf-zone-prev\" data-mf-zone-prev=\"1\"></span><br>• <strong>Výjimky:</strong> výšky z GPX/KML zůstávají bez korekce; fotky bez polohy výšku nemají.<br>• <strong>Přepínač:</strong> Nastavení → bod 7 „Korekce a výpočty“ → <strong>Korigovat výšky na geoid (EGM2008)</strong>; nepodaří-li se geoidová data EGM2008 rozbalit (starší prohlížeč bez podpory DecompressionStream nebo poškozený soubor), je korekce nedostupná a přepínač se deaktivuje.</div>",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='6' width='20' height='12' rx='2'/><line x1='6' y1='10' x2='6.01' y2='10'/><line x1='10' y1='10' x2='10.01' y2='10'/><line x1='14' y1='10' x2='14.01' y2='10'/><line x1='18' y1='10' x2='18.01' y2='10'/><line x1='7' y1='14' x2='17' y2='14'/></svg> Klávesové zkratky <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">Z</kbd></strong><br>Přehled zkratek (mimo textová pole a měření; J funguje vždy; S otevírá statistiky jen v mapě (mimo prohlížečku a split; jinde Shift+S); I, N, Shift+S, Shift+K a Shift+Z se přepínají mezi informacemi, nastavením a statistikami – otevřené okno se vždy nahradí, nikdy se neotevřou dvě):<div class=\"guide-table-wrap\"><table class=\"guide-table\"><thead><tr><th scope=\"col\">{guideKeysTh1}</th><th scope=\"col\">{guideKeysTh2}</th></tr></thead><tbody><tr><th colspan=\"2\" scope=\"row\">Všude</th></tr><tr><td><kbd class=\"guide-kbd\">V</kbd></td><td>cyklus: mapa → prohlížečka → split → mapa</td></tr><tr><td><kbd class=\"guide-kbd\">J</kbd></td><td>přepínač jazyka (funguje i při otevřeném okně)</td></tr><tr><td><kbd class=\"guide-kbd\">I</kbd></td><td>informace / přepnout na informace (z nastavení)</td></tr><tr><td><kbd class=\"guide-kbd\">N</kbd></td><td>nastavení</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">S</kbd></td><td>statistiky dat</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd></td><td>kořen archivu (otevře nastavení)</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">Z</kbd></td><td>seznam zkratek (otevře informace)</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">G</kbd></td><td>export PDF</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">H</kbd></td><td>export PNG</td></tr><tr><td><kbd class=\"guide-kbd\">Ctrl</kbd>+<kbd class=\"guide-kbd\">Z</kbd></td><td>zpět: vrátí poslední akci (zdroje; při měření krok měření)</td></tr><tr><td><kbd class=\"guide-kbd\">Ctrl</kbd>+<kbd class=\"guide-kbd\">Y</kbd> / <kbd class=\"guide-kbd\">Ctrl</kbd>+<kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">Z</kbd></td><td>vpřed: vrátí zrušenou akci (zdroje; při měření krok měření)</td></tr><tr><td><kbd class=\"guide-kbd\">Esc</kbd></td><td>stop slideshow / zpět z mřížky / zavřít (dle kontextu)</td></tr><tr><td><kbd class=\"guide-kbd\">Space</kbd></td><td>slideshow start / pauza (z mapy otevře prohlížečku; přechod a záběr mapy se volí v nastavení slideshow)</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">Space</kbd></td><td>export trasy z vyfiltrovaných fotek (body + spojnice, styl dle stopy; uloží soubor Trasa_… a zařadí do zdrojů). Chová se jako GeoJSON (body, trasa), body s fotkami mají proklik do prohlížečky s listováním; styl čáry je zapsán v souboru, po načtení platí barva zdroje</td></tr><tr><th colspan=\"2\" scope=\"row\">Jen mapa</th></tr><tr><td><kbd class=\"guide-kbd\">P</kbd></td><td>přidat soubor (mapa, split)</td></tr><tr><td><kbd class=\"guide-kbd\">T</kbd></td><td>panel měření (mapa, split)</td></tr><tr><td><kbd class=\"guide-kbd\">F</kbd></td><td>přiblížit na fotky (mapa, split)</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">F</kbd></td><td>vymazat všechny filtry (mapa, split)</td></tr><tr><td><kbd class=\"guide-kbd\">L</kbd></td><td>změnit mapový podklad (mapa, split)</td></tr><tr><td><kbd class=\"guide-kbd\">G</kbd></td><td>mřížka souřadnic (mapa, split)</td></tr><tr><td><kbd class=\"guide-kbd\">+</kbd>/<kbd class=\"guide-kbd\">−</kbd></td><td>přiblížení / oddálení mapy (mapa, split)</td></tr><tr><td><kbd class=\"guide-kbd\">S</kbd></td><td>statistiky fotek (pouze mapa – mimo prohlížečku a split; jinde Shift+S)</td></tr><tr><th colspan=\"2\" scope=\"row\">Jen prohlížečka</th></tr><tr><td><kbd class=\"guide-kbd\">Enter</kbd></td><td>otevřít vybrané (mřížka)</td></tr><tr><td><kbd class=\"guide-kbd\">M</kbd></td><td>přiblížit mapu na aktuální fotku</td></tr><tr><td><kbd class=\"guide-kbd\">R</kbd></td><td>znovu načíst fotky</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">R</kbd></td><td>dočasně otočí zobrazenou fotku o 90° (jen v prohlížečce)</td></tr><tr><td><kbd class=\"guide-kbd\">H</kbd></td><td>cyklus zobrazení: vše → jen s polohou (G+D) → jen unikáty (G); aktuální filtr ukazují proužky v pilulce stavu</td></tr><tr><td><kbd class=\"guide-kbd\" aria-label=\"←\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 12H5\"/><path d=\"m12 19-7-7 7-7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"→\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></kbd></td><td>předchozí / další fotka; <kbd class=\"guide-kbd\" aria-label=\"↑\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 19V5\"/><path d=\"m5 12 7-7 7 7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"↓\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14\"/><path d=\"m19 12-7 7-7-7\"/></svg></kbd> – skok o 5 (dle pásu)</td></tr><tr><td><kbd class=\"guide-kbd\" aria-label=\"←\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 12H5\"/><path d=\"m12 19-7-7 7-7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"→\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"↑\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 19V5\"/><path d=\"m5 12 7-7 7 7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"↓\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14\"/><path d=\"m19 12-7 7-7-7\"/></svg></kbd></td><td>pohyb výběrem v mřížce (Enter/Space otevře)</td></tr><tr><td><kbd class=\"guide-kbd\">Home</kbd>/<kbd class=\"guide-kbd\">End</kbd></td><td>první/poslední fotka; <kbd class=\"guide-kbd\">PgUp</kbd>/<kbd class=\"guide-kbd\">PgDn</kbd> – listování stránek v mřížce</td></tr><tr><td><kbd class=\"guide-kbd\"><svg class='kbd-arr' viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M6 5v14'/><path d='M19 5l-8 7 8 7'/></svg></kbd> <kbd class=\"guide-kbd\"><svg class='kbd-arr' viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M18 5v14'/><path d='M5 5l8 7-8 7'/></svg></kbd></td><td>skok na první / poslední fotku (rohy dole)</td></tr><tr><td><kbd class=\"guide-kbd\">W</kbd><kbd class=\"guide-kbd\">A</kbd><kbd class=\"guide-kbd\">S</kbd><kbd class=\"guide-kbd\">D</kbd></td><td>pohyb ve složkách (A ven, D otevřít výběr, W/S výběr v seznamu; ve fotce skok na sourozence)</td></tr><tr><td>kolečko myši</td><td>listování fotkami; podržení = lupa 1:1; klik = přiblížení na celou obrazovku</td></tr><tr><td>swipe doleva / doprava</td><td>předchozí / další fotka (dotykové displeje)</td></tr><tr><th colspan=\"2\" scope=\"row\">Jen split</th></tr><tr><td><kbd class=\"guide-kbd\">O</kbd></td><td>jen fotky v okně mapy (zap./vyp.; okno se mění ručním posunem a zoomem mapy; zobrazená fotka, která z okna vypadne, se nahradí fotkou nejblíže středu okna)</td></tr></tbody></table></div><br><strong>Hlášky (toast vespod)</strong><div class=\"guide-table-wrap\"><table style=\"width:100%;border-collapse:collapse;font-size:11px;line-height:1.5;margin-top:4px;\"><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;font-weight:700;background:#f8f9fa;\">Hláška</td><td style=\"border:1px solid #dadce0;padding:3px 6px;font-weight:700;background:#f8f9fa;\">Kdy</td><td style=\"border:1px solid #dadce0;padding:3px 6px;font-weight:700;background:#f8f9fa;\">Co dělat</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Načteno … (G · D · S)</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">po načtení TXT</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">kontrola rozpadu</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Fotka nemá v EXIF GNSS údaje o poloze</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">přetažení fotky bez polohy</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">přidat přes TXT z BAT (PY)</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Nedostatek místa v úložišti</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">zaplněné úložiště prohlížeče (výjimečné, zdroje jsou v IndexedDB)</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">uvolnit místo v prohlížeči</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Zdroj zůstane jen do obnovení stránky</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">prohlížeč bez trvalého úložiště</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">nic (funkční do reloadu)</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Žádné fotky k zobrazení</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">prázdný výběr po filtrech</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">zapnout zdroj, povolit filtr</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Složitý polygon zjednodušen</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">po vyhledání oblasti s hranicí</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">nic (obvyklé u velkých hranic)</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">PDF/PNG uloženo / se nezdařil</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">po exportu</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">– / zkusit znovu</td></tr></table></div>"
                 ]
             },
@@ -4228,7 +4230,7 @@ statsFarthestPair: "Farthest pair",
                 srcPal: "Palette", srcSize: "Size", srcColor: "Color", srcIcon: "Icon", srcRadius: "Radius", lblRot: "Rotation", tipSrcDefault: "Reset source default modes", btnTxtDefault: "Reset data file settings", tipTxtDefault: "Reset photo data file (.TXT) defaults", btnSingleDefault: "Reset single photo settings", tipSingleDefault: "Reset single photo (.JPG, .JPEG, .PNG) defaults", btnSrcAllDefault: "Reset source settings", btnGisDefault: "Reset GIS settings", tipGisDefault: "Reset GIS files (.GPX, .KML, .KMZ, .GEOJSON, .JSON) defaults", toastSrcReset: "Source default modes restored.", lblBaseLayer: "Base layer", btnMapDefault: "Reset general map settings", tipMapDefault: "Reset general map settings", btnMapAllDefault: "Reset map and filter settings", tipMapAllDefault: "Reset map and filter settings to defaults", toastMapAllReset: "Map and filter settings restored.", toastMapReset: "Map settings restored.", lblMapZoom: "Zoom", lblMapCenter: "Map center", btnMapCenterUse: "Use current", tipMapCenterPick: "Pick the map center by clicking the map (Esc cancels)", btnMapCenterPick: "Pick on map", mapCenterPickHint: "Click the map to set the map center (Esc cancels).", lblMeasure: "Measure panel", measAuto: "Autostart", lblGridSt: "Grid", gridOff: "Off", gridOn: "Grid", gridLabels: "Grid with labels", lblDynInput: "Keyboard input", lblShowCoords: "Coordinate display",
                 setProfilesDesc: "Saving a profile writes all settings including the archive root to GeoJSON. Loading a profile overwrites settings and restarts the app.",
                 profileSaveBtn: "Save profile",
-            setStatsTitle: "Statistics settings", setCorrTitle: "Corrections and calculations", setCorrDesc: "EXIF height is above the WGS84 ellipsoid and differs from elevation by roughly −107 to +85 m depending on location. The correction converts it to elevation using the EGM2008 geoid; GPX/KML heights are not corrected. Details in Information (item 11).", setGeoidLbl: "Correct heights to the geoid (EGM2008)", setGeoidErr: "EGM2008 geoid data could not be decoded in this browser – correction unavailable.", mfElevTipGeo: "Elevation above sea level (EGM2008 geoid)", mfElevTipEll: "Ellipsoidal WGS84 height (geoid correction off)", setGeoidTip: "Converts the WGS84 ellipsoidal height to elevation above sea level using the EGM2008 geoid. Applies to displayed heights, statistics and in-flight photo detection; GPX/KML heights are not corrected.", setStatsRefShort: "RP", setStatsDesc: "<strong>Reference point (RP)</strong> and what the statistics count. Changes apply to the Photo (video) statistics window too. You also choose which chart it opens with.", setStatsStates: "What is included", setStatsChart: "Default chart", btnStatsDefault: "Restore statistics settings", tipStatsDefault: "Reset all statistics settings to their defaults", toastStatsReset: "Statistics settings restored.",
+            mfGeoTitle: "Geoid map – height corrections (EGM2008)", mfGeoBtn: "Show geoid map", mfGeoPrevTip: "Enlarge geoid map", mfGeoHover: "Hover or tap the map to see the geoid height N and the height correction.", mfGeoRead: "N = {N} m · height correction {C} m", mfGeoOff: "correction is off, heights are not corrected", mfGeoLoading: "Geoid data are loading…", mfGeoNoData: "Geoid data are not available", mfGeoPhotosChk: "Mark my photos with height", mfGeoPhotoLegend: "Photo with height", mfGeoStat: "Correction on your archive: from {a} to {b} m", mfGeoStatMed: "median {m} m", mfGeoStatAvg: "avg {c} m", mfGeoStatN: "({n} photos)", mfGeoStatNone: "Correction on your archive: no photos with location and height", mfGeoLegRed: "red: the height is lowered by the correction", mfGeoLegBlue: "blue: the height is raised by the correction", mfGeoNote: "N is the height of the geoid (sea level) above the WGS84 ellipsoid. Orthometric height = ellipsoidal height − N. EGM2008 on a 30′ grid; the approximation error versus the 2.5′ grid is at most about 6.7 m, typically within 1 m.", mfZoneTitle: "Zone map – in-flight photo detection", mfZoneOpenBtn: "Show zone map", mfZonePrevTip: "Enlarge the zone map", mfZoneClose: "Close (Esc)", mfZoneSave: "Save image (PNG)", mfZoneArea_world: "World", mfZoneArea_alps: "Alps", mfZoneArea_wmed: "Western Mediterranean", mfZoneArea_turkey_iran: "Turkey, Iran and Caucasus", mfZoneArea_centralasia: "Central Asia and Himalaya", mfZoneArea_africa: "Africa", mfZoneArea_seasia: "Southeast Asia", mfZoneArea_japan: "Japan and Kamchatka", mfZoneArea_newguinea: "New Guinea", mfZoneArea_hawaii: "Hawaii", mfZoneArea_newzealand: "New Zealand", mfZoneArea_alaska: "Alaska and Cordillera", mfZoneArea_greenland: "Greenland", mfZoneArea_andes: "Andes", mfZoneArea_mexico: "Mexico and Central America", mfZoneArea_antarctica: "Antarctica", mfZoneAreaLbl: "Area", mfZoneAirChk: "Highlight in-flight photos", mfZoneAirNone: "none", mfZoneAirLegend: "In-flight photo", mfZoneOpenTable: "Show in-flight photos in a table", mfZoneOutside: "Outside zones", mfZoneZoneN: "Zone {T} km", mfZoneUpTo: "up to {H} m", mfZoneAllowed: "allowed height", mfZoneHover: "Hover over the map or tap it to see the zone and the allowed height.", mfZoneNoData: "Mountain zone data is not available", mfZoneNote: "Zone T is the area within 25 km of terrain at least T high. Elevation source: Copernicus DEM GLO-90. Before comparison the photo height is corrected to elevation above sea level (EGM2008) if the correction is on.", setStatsTitle: "Statistics settings", setCorrTitle: "Corrections and calculations", setCorrDesc: "EXIF height is above the WGS84 ellipsoid and differs from elevation by roughly −107 to +85 m depending on location. The correction converts it to elevation using the EGM2008 geoid; GPX/KML heights are not corrected. Details in Information (item 11).", setGeoidLbl: "Correct heights to the geoid (EGM2008)", setGeoidErr: "EGM2008 geoid data could not be decoded in this browser – correction unavailable.", mfElevTipGeo: "Elevation above sea level (EGM2008 geoid)", mfElevTipEll: "Ellipsoidal WGS84 height (geoid correction off)", setGeoidTip: "Converts the WGS84 ellipsoidal height to elevation above sea level using the EGM2008 geoid. Applies to displayed heights, statistics and in-flight photo detection; GPX/KML heights are not corrected.", setStatsRefShort: "RP", setStatsDesc: "<strong>Reference point (RP)</strong> and what the statistics count. Changes apply to the Photo (video) statistics window too. You also choose which chart it opens with.", setStatsStates: "What is included", setStatsChart: "Default chart", btnStatsDefault: "Restore statistics settings", tipStatsDefault: "Reset all statistics settings to their defaults", toastStatsReset: "Statistics settings restored.",
                 profileLoadBtn: "Load profile",
                 profileSaved: "Settings profile saved.",
                 profileLoaded: "Profile loaded, restarting app.",
@@ -4273,7 +4275,7 @@ statsFarthestPair: "Farthest pair",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3'/></svg> Zoom to photos <kbd class=\"guide-kbd\">F</kbd></strong><br>The button right of the area filter zooms the map to the photo bounds – all photos without filters (photos only, no tracks), the filter result otherwise (respects the time, folder and area filters; counts only G – located photos; D and S are not zoomed). Inactive with no photo loaded.",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z'/><path d='m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65'/><path d='m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65'/></svg> Map layers (right) <kbd class=\"guide-kbd\">L</kbd></strong><br>Choose from 8 map layers:<div class=\"step-sub\"><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg width='13' height='18' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 92.3 132.3'><path fill='currentColor' d='M60.2 2.2C55.8.8 51 0 46.1 0 32 0 19.3 6.4 10.8 16.5l21.8 18.3L60.2 2.2z'/><path fill='currentColor' d='M10.8 16.5C4.1 24.5 0 34.9 0 46.1c0 8.7 1.7 15.7 4.6 22l28-33.3-21.8-18.3z'/><path fill='currentColor' d='M46.2 28.5c9.8 0 17.7 7.9 17.7 17.7 0 4.3-1.6 8.3-4.2 11.4 0 0 13.9-16.6 27.5-32.7-5.6-10.8-15.3-19-27-22.7L32.6 34.8c3.3-3.8 8.1-6.3 13.6-6.3'/><path fill='currentColor' d='M46.2 63.8c-9.8 0-17.7-7.9-17.7-17.7 0-4.3 1.5-8.3 4.1-11.3l-28 33.3c4.8 10.6 12.8 19.2 21 29.9l34.1-40.5c-3.3 3.9-8.1 6.3-13.5 6.3'/><path fill='currentColor' d='M59.1 109.2c15.4-24.1 33.3-35 33.3-63 0-7.7-1.9-14.9-5.2-21.3L25.6 98c2.6 3.4 5.3 7.3 7.9 11.3 9.4 14.5 6.8 23.1 12.8 23.1s3.4-8.7 12.8-23.2'/></svg></span> <strong>Google <span class='lyr-sub lyr-base'>(Standard)</span></strong> – clean urban and street map</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg width='13' height='18' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 92.3 132.3'><path fill='currentColor' d='M60.2 2.2C55.8.8 51 0 46.1 0 32 0 19.3 6.4 10.8 16.5l21.8 18.3L60.2 2.2z'/><path fill='currentColor' d='M10.8 16.5C4.1 24.5 0 34.9 0 46.1c0 8.7 1.7 15.7 4.6 22l28-33.3-21.8-18.3z'/><path fill='currentColor' d='M46.2 28.5c9.8 0 17.7 7.9 17.7 17.7 0 4.3-1.6 8.3-4.2 11.4 0 0 13.9-16.6 27.5-32.7-5.6-10.8-15.3-19-27-22.7L32.6 34.8c3.3-3.8 8.1-6.3 13.6-6.3'/><path fill='currentColor' d='M46.2 63.8c-9.8 0-17.7-7.9-17.7-17.7 0-4.3 1.5-8.3 4.1-11.3l-28 33.3c4.8 10.6 12.8 19.2 21 29.9l34.1-40.5c-3.3 3.9-8.1 6.3-13.5 6.3'/><path fill='currentColor' d='M59.1 109.2c15.4-24.1 33.3-35 33.3-63 0-7.7-1.9-14.9-5.2-21.3L25.6 98c2.6 3.4 5.3 7.3 7.9 11.3 9.4 14.5 6.8 23.1 12.8 23.1s3.4-8.7 12.8-23.2'/></svg></span> <strong>Google <span class='lyr-sub lyr-terr'>(Terrain)</span></strong> – 3D elevation relief</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg width='13' height='18' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 92.3 132.3'><path fill='currentColor' d='M60.2 2.2C55.8.8 51 0 46.1 0 32 0 19.3 6.4 10.8 16.5l21.8 18.3L60.2 2.2z'/><path fill='currentColor' d='M10.8 16.5C4.1 24.5 0 34.9 0 46.1c0 8.7 1.7 15.7 4.6 22l28-33.3-21.8-18.3z'/><path fill='currentColor' d='M46.2 28.5c9.8 0 17.7 7.9 17.7 17.7 0 4.3-1.6 8.3-4.2 11.4 0 0 13.9-16.6 27.5-32.7-5.6-10.8-15.3-19-27-22.7L32.6 34.8c3.3-3.8 8.1-6.3 13.6-6.3'/><path fill='currentColor' d='M46.2 63.8c-9.8 0-17.7-7.9-17.7-17.7 0-4.3 1.5-8.3 4.1-11.3l-28 33.3c4.8 10.6 12.8 19.2 21 29.9l34.1-40.5c-3.3 3.9-8.1 6.3-13.5 6.3'/><path fill='currentColor' d='M59.1 109.2c15.4-24.1 33.3-35 33.3-63 0-7.7-1.9-14.9-5.2-21.3L25.6 98c2.6 3.4 5.3 7.3 7.9 11.3 9.4 14.5 6.8 23.1 12.8 23.1s3.4-8.7 12.8-23.2'/></svg></span> <strong>Google <span class='lyr-sub lyr-sat'>(Satellite)</span></strong> – aerial and satellite imagery</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><img src='data:image/png;base64,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' alt='' width='18' height='18'></span> <strong>Mapy.com <span class='lyr-sub lyr-terr'>(Outdoor &amp; Trails)</span></strong> – hiking and cycling trails, contours</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><img src='data:image/png;base64,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' alt='' width='18' height='18'></span> <strong>Mapy.com <span class='lyr-sub lyr-base'>(Basic)</span></strong> – detailed Czech cartographic map</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><img src='data:image/png;base64,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' alt='' width='18' height='18'></span> <strong>Mapy.com <span class='lyr-sub lyr-sat'>(Aerial / Satellite)</span></strong> – high-resolution aerial orthoimagery</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg class='esri-ico' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='currentColor' d='M11.63907.00273c-1.58143.03682-3.04264.4449-4.5349 1.06205-2.07095.87293-4.70641 2.88139-6.3117 6.6711-.37592 1.05578-1.8789 6.09024.79149 10.4125 2.16748 3.50692 4.95741 5.1768 8.37118 5.65348 3.407.47497 5.25533.06419 7.4101-.89245 5.03853-2.2369 8.88662-10.6343 5.03765-16.72016-1.51892-2.81012-5.49826-5.27459-9.85522-5.0841v.00203c-1.0304-.032-1.63648.10168-2.24524.22008-.18288-.04736-.52568.0027-.54516.39978 0 .21344.06847.37913.20393.4765.13463.09665 1.26407.93091 2.0938 1.81316-.39793.04416-.83039.11644-1.27404.20796-.4953-1.07017-2.08625-.09707-3.14374-.0545-.12362.0064-.24269.02388-.36546.03028-.116-.89409-.19886-1.82146-.17768-2.4734C8.46399.95065 11.11512.37795 12.91514.35002l.31498-.00807c.26416-.00253.28524-.21242.03635-.24634-.55902-.0764-1.10025-.10515-1.6274-.09288zm-.19181 1.53048c3.91137-.0172 7.3504 1.64094 8.92442 3.56977-.55965-.2912-1.76629-.7065-2.25735-.81572-.26503-.27008-.59885-.49013-.8884-.6764-.22862-.1456-.51429-.0915-.39575.16355.04487.0992.21919.26655.36142.4341-.83482-.2304-3.05425-.4063-4.11089-.30892-.69003-.77552-1.47719-1.71613-2.42292-2.34013.26453-.01646.5287-.0251.78947-.02625zm-4.85594.42603c-.01343.33869.07398 1.32823.18576 2.28158-.4826.04832-.96112.1076-1.43356.17768a10.2312 10.2312 0 0 0-2.63694 3.46074c-.09908-.89239-.15119-1.63544-.11307-2.09179 1.11167-1.55617 2.62028-3.07211 3.99781-3.82821Zm8.41763 2.64906c.48821.01708.98834.052 1.46587.10095-.85852.3072-1.23689 1.06143-1.65768 1.66172-.0086.0128-.02414.0228-.03432.03433a19.52175 19.52175 0 0 0-1.16503-1.7869c.4263-.02577.90295-.02717 1.39116-.0101zm-2.37446.12114a13.32749 13.32749 0 0 1 1.48 2.15236c-.68157.33021-1.59055.58218-1.96055 1.1105-.15324.22017-.1908.51855-.19585.84197a19.97303 19.97303 0 0 0-3.28305 1.0883c-.38355-1.12775-.71901-2.252-.951-3.25277 1.09728-1.04734 2.38035-1.21677 2.90952-1.6274a15.03184 15.03184 0 0 1 2.00093-.31296zm6.88917.634c.45127.17088 1.02885.40728 1.48606.6562.34713.43687 1.34084 1.41794 1.8717 4.16541.47752 2.47396-.05031 4.35392-.212 4.89834l-.16355.64005c-.116.43603-.50231 1.46609-.70467 1.8818.07706-.56134.14464-2.01894.12519-2.31187.13545.0416.4242-.12255.47246-.28671.04827-.16512-.4765-.41997-.4765-.41997a17.5617 17.5617 0 0 0-.14538-2.28562c.12023-.19489.24217-.38338.36748-.55526a10.22951 10.22951 0 0 0-.1575-1.3326c.10583.03456.20231.06196.27259.06259.23962.0032.23974-.1612.16354-.25239-.04912-.0592-.27844-.20134-.54515-.35536a10.17702 10.17702 0 0 0-2.35427-4.50461ZM1.86865 7.00497s.0517.8962.0949 1.55067c0 0-.66164.75067-.99946 1.34674.13463-1.22175.4228-1.85091.90456-2.89741Zm5.35263.2322c.19812 1.00074.4353 1.8284.7511 2.97817-1.18702.52323-3.28675 1.81816-4.21385 2.5158-.16765-.42503-.34209-1.02781-.49872-1.6476.21082-.62396.64191-1.06046 1.24982-1.1206 1.03971-.104 1.92998-1.65176 2.6632-2.6652.016-.0224.03322-.03914.04845-.06058zm-5.15274 2.2412.01413.11105c-.19472.7366-.31465 1.50207-.3392 2.2937.31328.3302.68222.87924 1.09031 1.44567-.26246.19488-.76785.54326-.88638.62794-.34714.24736-.34214.6363-.0949.85812.13632.12192.41646.07068.5189-.01013.30311-.24129.5554-.43255.90254-.65016.12701.33277.2466.63252.36344.9187-.14816.15904-.25318.3699-.28873.6764-.1143.99228.82833 1.76997 1.62336 1.99688.02976.0096.04997.01378.07874.0202.04233.06431.08029.1245.12519.18979-.41234.32006-.69452.64618-.8884.8985-.11179.1456-.23689.36469-.13529.40786.10413.04224.45398.0005.60977-.02826.39455-.07616.69856-.51352.97119-.67438.32766.45213.86082 1.03223 1.41539 1.59105.02463.10176.04676.20986.0747.29883.10583.34118.24894.67966.41998 1.01156.39877.18625.8147.33987 1.23972.4745a7.06464 7.06464 0 0 0-.52698.60979c-3.42563-1.07271-5.96304-3.96041-6.86898-6.9881a14.79562 14.79562 0 0 1-.55121-5.47984c.04742.0096.15677.06126.32103.01616.1143-.07872.52297-.3635.81168-.61583zm9.89157.18171c-.0066.28193-.03747.5502-.15345.76524-.16595.30976-.09014 1.20842.11307 1.50221.63923.9305 1.70123.41263 2.49964.74707.36661.15328.60998.40762.81572.71072-1.67133.10496-3.31108.49595-4.8317 1.19531C9.6219 12.92116 8.9476 10.7504 8.9476 10.7504v-.0021c.94828-.44874 1.9457-.81904 3.0125-1.0883ZM8.20257 11.0775c.42333 1.2624 1.02859 2.94991 1.44769 3.85244-.05927.0288-.12278.06248-.18374.09287a34.54682 34.54682 0 0 0-2.75607-.66023c-.84244-.1728-.87296-.1278-1.82123.14739-.13545.03904-.26553.075-.3917.11307a30.62419 30.62419 0 0 1-.37555-1.01763c1.21582-.93642 2.4406-1.72272 4.0806-2.5279Zm13.13626 1.9767c.05165.46314.08702.91557.10903 1.32453a7.83681 7.83681 0 0 0-.6562-.24835c.16594-.34458.3499-.71211.54717-1.07618zm-5.61108 1.17512c.16087.27936.34.55903.58554.80966.64093.6553-.372 1.59527-.08077 3.44862h-.0021c-.29971.032-.59767.06936-.86014.10903-.65194.1024-1.49203.32254-2.2735.6138-.44874-.71373-1.6503-2.44857-2.25736-3.75754 1.2209-.6003 2.92566-1.10421 4.88824-1.22357zm4.75498.55525c.35391.09984.68651.20722.97522.32507.03641.52157.03498 2.31123-.06663 3.18412-.1016.21409-.3635.58273-.53708.75717-.26416-.10657-.66046-.22014-1.07618-.31902.06605-.07968.13875-.15432.20393-.23624.22692-1.5206-.28641-2.0062.35536-3.39814zm-9.66947 2.3785c.48175.8111 1.05687 1.69252 1.50221 2.38254-.69342.33613-1.49939.85598-2.26139 1.4275.05248-.87802.07056-1.7466.24835-2.2089.24807-.64768.43971-1.12786.51083-1.60114zm8.54483 2.05342c.46313.05345.92549.13087 1.20742.20191-.62653.79249-1.49164 1.45313-2.41282 2.02718.01952-.34461.0334-.77986.04442-1.18117.41232-.32004.802-.66862 1.16098-1.04792zm-2.95192.01013c.09229.2896.21333.59656.37757.92677.16086.32343.34768.55909.5492.72082.07195-.0448.13884-.09663.20998-.14336-.0051.35559-.0153.71607-.03635 1.06407-.24215.16-1.41046.68857-1.86767.8359a19.83756 19.83756 0 0 1-2.06553-2.70962c.71459-.29985 1.81425-.56757 2.8328-.69458zm-3.62832 1.00148c.34036.5334 1.46049 2.1227 1.91006 2.63492-.81534.14208-1.95564.24903-2.85904.20999 0 0-1.35718-.89952-1.70008-1.24579.67987-.56474 1.78037-1.23506 2.64905-1.59912zM9.62198 22.2815c.39624.2624.81913.56327 1.15695.75716-.5207-.0592-1.13118-.07328-1.585-.22816.13124-.17183.26465-.38337.42805-.529Z'/></svg></span> <strong>Esri Topo</strong> – worldwide topographic map</span><br><span class='hang'>• <span class='layer-ico' aria-hidden='true'><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z'/><path d='M15 5.764v15'/><path d='M9 3.236v15'/></svg></span> <strong>Offline vector</strong> – fully offline world vector map with country borders (no internet). Data: Natural Earth 1:10,000,000 (<span style='white-space:nowrap'>countries-10m.json</span> file from the world-atlas package). Accuracy is roughly 1–2 km, locally more (line points are typically 1–5 km apart): small bays, river mouths and small islands are simplified, so at high zoom the borders and coastlines may differ from detailed maps. The country border color (or hiding them) and the land and sea colors can be changed in Settings → Map settings → General map settings.</span></div>",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg> Zoom [<kbd class=\"guide-kbd\">+</kbd> / <kbd class=\"guide-kbd\">−</kbd>] (right, bottom on mobile)</strong><br>Smooth map zooming. On desktop use mouse scroll wheel, on touch devices use pinch gesture.",
-                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.7 6.3a4.5 4.5 0 0 0-6.4 6.4l-6 6 3.2 3.2 6-6a4.5 4.5 0 0 0 6.4-6.4l-3.5 3.5-3.2-3.2 3.5-3.5z'/></svg> Corrections and calculations</strong><br>Photo elevation – where it comes from, why it does not match the true elevation above sea level, and why it can be corrected in the <a href=\"#\" class=\"guide-jump\" onclick=\"event.stopPropagation();gotoSettings();return false;\">settings</a> (item 7 – Corrections and calculations).<div class=\"step-sub\"><br>• <strong>Height in the data:</strong> photos carry the height in EXIF (and the data file in its 8th column <code>NADMORSKA_VYSKA</code>). For source data the app assumes a height above the <strong>WGS84 ellipsoid</strong>. It differs from the true elevation above sea level by the geoid height N – by location from about −107 m (Indian Ocean south of Sri Lanka) to +85 m (New Guinea); e.g. in the Alps the ellipsoidal height is about 50–54 m higher, in southern India about 85–98 m lower than the elevation.<br>• <strong>What the correction does:</strong> when enabled, the <strong>EGM2008</strong> geoid model converts the height reference to elevation above sea level by subtracting the geoid undulation N; it does not fix measurement accuracy. It only makes sense for ellipsoidal input heights – if the camera already records height above sea level, turn the correction off.<br>• <strong>Model accuracy:</strong> approximation error of the 30' grid vs the 2.5' EGM2008 reference grid: up to about 6.7 m, typically under 1 m.<br>• <strong>Where it applies:</strong> displayed heights, statistics (highest/lowest photo, Top 10 elevations) and in-flight photo detection (airspace).<br>• <strong>Exceptions:</strong> GPX/KML heights are left unchanged; photos without a location have no height.<br>• <strong>The toggle:</strong> Settings → item 7 \"Corrections and calculations\" → <strong>Correct heights to the geoid (EGM2008)</strong>; if the EGM2008 geoid data cannot be unpacked (an older browser without DecompressionStream support or a damaged file), the correction is unavailable and the toggle is disabled.</div>",
+                    "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14.7 6.3a4.5 4.5 0 0 0-6.4 6.4l-6 6 3.2 3.2 6-6a4.5 4.5 0 0 0 6.4-6.4l-3.5 3.5-3.2-3.2 3.5-3.5z'/></svg> Corrections and calculations</strong><br>Photo elevation – where it comes from, why it does not match the true elevation above sea level, and why it can be corrected in the <a href=\"#\" class=\"guide-jump\" onclick=\"event.stopPropagation();gotoSettings();return false;\">settings</a> (item 7 – Corrections and calculations).<div class=\"step-sub\"><br>• <strong>Height in the data:</strong> photos carry the height in EXIF (and the data file in its 8th column <code>NADMORSKA_VYSKA</code>). For source data the app assumes a height above the <strong>WGS84 ellipsoid</strong>. It differs from the true elevation above sea level by the geoid height N – by location from about −107 m (Indian Ocean south of Sri Lanka) to +85 m (New Guinea); e.g. in the Alps the ellipsoidal height is about 50–54 m higher, in southern India about 85–98 m lower than the elevation.<br>• <strong>What the correction does:</strong> when enabled, the <strong>EGM2008</strong> geoid model converts the height reference to elevation above sea level by subtracting the geoid undulation N; it does not fix measurement accuracy. It only makes sense for ellipsoidal input heights – if the camera already records height above sea level, turn the correction off. The size of the correction anywhere in the world is shown by the geoid map – the <button type=\"button\" class=\"mf-zone-btn\" data-mf-geoid-btn=\"1\" onclick=\"event.stopPropagation();mfGeoidMapOpen(this);return false;\">Show geoid map</button> button.<span class=\"mf-zone-prev\" data-mf-geoid-prev=\"1\"></span><br>• <strong>Model accuracy:</strong> approximation error of the 30' grid vs the 2.5' EGM2008 reference grid: up to about 6.7 m, typically under 1 m.<br>• <strong>Where it applies:</strong> displayed heights, statistics (highest/lowest photo, Top 10 elevations) and in-flight photo detection (airspace).<br>• <strong>In-flight photo detection (airspace):</strong> a photo is counted as taken in the air when it has a known height above the limit allowed for its location. Outside mountain zones the limit is <strong>3,100 m</strong>. Mountain zone <strong>T</strong> is the area within 25 km of terrain at least T high (3, 4, 5, 6, 7 and 8 km) and its limit is <strong>T + 1,100 m</strong>, i.e. 4,100 to 9,100 m. A photo detected as taken in the air is not assigned to any country or continent. Show the zone map with the <button type=\"button\" class=\"mf-zone-btn\" onclick=\"event.stopPropagation();mfZoneMapOpen(this);return false;\">Show zone map</button> button.<span class=\"mf-zone-prev\" data-mf-zone-prev=\"1\"></span><br>• <strong>Exceptions:</strong> GPX/KML heights are left unchanged; photos without a location have no height.<br>• <strong>The toggle:</strong> Settings → item 7 \"Corrections and calculations\" → <strong>Correct heights to the geoid (EGM2008)</strong>; if the EGM2008 geoid data cannot be unpacked (an older browser without DecompressionStream support or a damaged file), the correction is unavailable and the toggle is disabled.</div>",
                     "<strong><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='6' width='20' height='12' rx='2'/><line x1='6' y1='10' x2='6.01' y2='10'/><line x1='10' y1='10' x2='10.01' y2='10'/><line x1='14' y1='10' x2='14.01' y2='10'/><line x1='18' y1='10' x2='18.01' y2='10'/><line x1='7' y1='14' x2='17' y2='14'/></svg> Keyboard shortcuts <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">Z</kbd></strong><br>Shortcut overview (outside text fields and measuring; J works always; S opens statistics on the map only (outside viewer and split; elsewhere Shift+S); I, N, Shift+S, Shift+K and Shift+Z switch between the guide, settings and statistics – the open window is always replaced, two windows never open at once):<div class=\"guide-table-wrap\"><table class=\"guide-table\"><thead><tr><th scope=\"col\">{guideKeysTh1}</th><th scope=\"col\">{guideKeysTh2}</th></tr></thead><tbody><tr><th colspan=\"2\" scope=\"row\">Everywhere</th></tr><tr><td><kbd class=\"guide-kbd\">V</kbd></td><td>cycle: map → viewer → split → map</td></tr><tr><td><kbd class=\"guide-kbd\">J</kbd></td><td>language switch (works even in open windows)</td></tr><tr><td><kbd class=\"guide-kbd\">I</kbd></td><td>info / switch to info (from settings)</td></tr><tr><td><kbd class=\"guide-kbd\">N</kbd></td><td>settings</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">S</kbd></td><td>data statistics</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd></td><td>archive root (opens settings)</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">Z</kbd></td><td>shortcut list (opens info)</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">G</kbd></td><td>export PDF</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">H</kbd></td><td>export PNG</td></tr><tr><td><kbd class=\"guide-kbd\">Ctrl</kbd>+<kbd class=\"guide-kbd\">Z</kbd></td><td>undo: reverts the last action (sources; while measuring a measure step)</td></tr><tr><td><kbd class=\"guide-kbd\">Ctrl</kbd>+<kbd class=\"guide-kbd\">Y</kbd> / <kbd class=\"guide-kbd\">Ctrl</kbd>+<kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">Z</kbd></td><td>redo: reapplies it (sources; while measuring a measure step)</td></tr><tr><td><kbd class=\"guide-kbd\">Esc</kbd></td><td>stop slideshow / back from grid / close (context)</td></tr><tr><td><kbd class=\"guide-kbd\">Space</kbd></td><td>slideshow play / pause (opens the viewer from the map; transition and map framing are set in slideshow settings)</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">Space</kbd></td><td>export route from filtered photos (points + connector, trail styling; saves a Trasa_… file and registers it as a source). Behaves as GeoJSON (points, route), points with photos click through to the viewer with browsing; line style is stored in the file, after loading the source color applies</td></tr><tr><th colspan=\"2\" scope=\"row\">Map only</th></tr><tr><td><kbd class=\"guide-kbd\">P</kbd></td><td>add file (map, split)</td></tr><tr><td><kbd class=\"guide-kbd\">T</kbd></td><td>measurement toolbox (map, split)</td></tr><tr><td><kbd class=\"guide-kbd\">F</kbd></td><td>zoom to photos (map, split)</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">F</kbd></td><td>clear all filters (map, split)</td></tr><tr><td><kbd class=\"guide-kbd\">L</kbd></td><td>cycle map layers (map, split)</td></tr><tr><td><kbd class=\"guide-kbd\">G</kbd></td><td>coordinate grid (map, split)</td></tr><tr><td><kbd class=\"guide-kbd\">+</kbd>/<kbd class=\"guide-kbd\">−</kbd></td><td>zoom map in / out (map, split)</td></tr><tr><td><kbd class=\"guide-kbd\">S</kbd></td><td>data statistics (map only – outside viewer and split; elsewhere Shift+S)</td></tr><tr><th colspan=\"2\" scope=\"row\">Viewer only</th></tr><tr><td><kbd class=\"guide-kbd\">Enter</kbd></td><td>open selection (grid)</td></tr><tr><td><kbd class=\"guide-kbd\">M</kbd></td><td>zoom map to current photo</td></tr><tr><td><kbd class=\"guide-kbd\">R</kbd></td><td>reload photos</td></tr><tr><td><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">R</kbd></td><td>temporarily rotate the displayed photo 90° (viewer only)</td></tr><tr><td><kbd class=\"guide-kbd\">H</kbd></td><td>view cycle: all → located only (G+D) → uniques only (G); the current filter is shown by the bars in the state pill</td></tr><tr><td><kbd class=\"guide-kbd\" aria-label=\"←\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 12H5\"/><path d=\"m12 19-7-7 7-7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"→\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></kbd></td><td>previous / next photo; <kbd class=\"guide-kbd\" aria-label=\"↑\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 19V5\"/><path d=\"m5 12 7-7 7 7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"↓\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14\"/><path d=\"m19 12-7 7-7-7\"/></svg></kbd> – jump by 5 (filmstrip range)</td></tr><tr><td><kbd class=\"guide-kbd\" aria-label=\"←\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M19 12H5\"/><path d=\"m12 19-7-7 7-7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"→\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"↑\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 19V5\"/><path d=\"m5 12 7-7 7 7\"/></svg></kbd> <kbd class=\"guide-kbd\" aria-label=\"↓\"><svg class=\"kbd-arr\" viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14\"/><path d=\"m19 12-7 7-7-7\"/></svg></kbd></td><td>move selection in grid (Enter/Space opens)</td></tr><tr><td><kbd class=\"guide-kbd\">Home</kbd>/<kbd class=\"guide-kbd\">End</kbd></td><td>first/last photo; <kbd class=\"guide-kbd\">PgUp</kbd>/<kbd class=\"guide-kbd\">PgDn</kbd> – flip grid pages</td></tr><tr><td><kbd class=\"guide-kbd\"><svg class='kbd-arr' viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M6 5v14'/><path d='M19 5l-8 7 8 7'/></svg></kbd> <kbd class=\"guide-kbd\"><svg class='kbd-arr' viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M18 5v14'/><path d='M5 5l8 7-8 7'/></svg></kbd></td><td>jump to first / last photo (bottom corners)</td></tr><tr><td><kbd class=\"guide-kbd\">W</kbd><kbd class=\"guide-kbd\">A</kbd><kbd class=\"guide-kbd\">S</kbd><kbd class=\"guide-kbd\">D</kbd></td><td>move in folders (A out, D open selection, W/S select in list; in photo jump to sibling)</td></tr><tr><td>mouse wheel</td><td>browse photos; hold = 1:1 loupe; click = fullscreen zoom</td></tr><tr><td>swipe left / right</td><td>previous / next photo (touch screens)</td></tr><tr><th colspan=\"2\" scope=\"row\">Split only</th></tr><tr><td><kbd class=\"guide-kbd\">O</kbd></td><td>only photos in the map window (on/off; the window changes when you pan or zoom the map by hand; a displayed photo that drops out of the window is replaced by the photo nearest to the window centre)</td></tr></tbody></table></div><br><strong>Toasts (bottom popups)</strong><div class=\"guide-table-wrap\"><table style=\"width:100%;border-collapse:collapse;font-size:11px;line-height:1.5;margin-top:4px;\"><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;font-weight:700;background:#f8f9fa;\">Toast</td><td style=\"border:1px solid #dadce0;padding:3px 6px;font-weight:700;background:#f8f9fa;\">When</td><td style=\"border:1px solid #dadce0;padding:3px 6px;font-weight:700;background:#f8f9fa;\">What to do</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Loaded … (G · D · S)</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">after TXT load</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">check breakdown</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Photo has no EXIF GNSS location</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">dragged photo w/o location</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">add via BAT (PY) TXT</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Browser storage full</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">browser storage full (rare, sources live in IndexedDB)</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">free browser storage space</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Source lasts until page reload</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">browser without persistent storage</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">nothing (works until reload)</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">No photos to show</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">empty selection after filters</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">enable source, relax filter</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">Complex polygon simplified</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">after searching a bordered area</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">nothing (usual for large borders)</td></tr><tr><td style=\"border:1px solid #dadce0;padding:3px 6px;\">PDF/PNG saved / failed</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">after export</td><td style=\"border:1px solid #dadce0;padding:3px 6px;\">– / retry</td></tr></table></div>"
                 ]
             }
@@ -37507,7 +37509,12 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
             return 0;
         }
         function maxElevAt(lat, lon) { var L = levelAt(lat, lon); return L ? (L + ZONE_EXTRA) : BASE_MAX; }
-        return { levelAt: levelAt, maxElevAt: maxElevAt, BASE_MAX: BASE_MAX };
+        /* Dekódované prstence zón pro kreslení mapy: { ll: { T: [{xs, ys, b}] } (lon/lat, stupně), ps: { T: [...] } (polární stereografická projekce, km) } */
+        function rings() {
+            if (!Z) Z = { ll: decodeSet(RAW.ll, 1000), ps: decodeSet(RAW.ps, 10) };
+            return Z;
+        }
+        return { levelAt: levelAt, maxElevAt: maxElevAt, BASE_MAX: BASE_MAX, ZONE_EXTRA: ZONE_EXTRA, POLAR_LAT: POLAR_LAT, PS_R: PS_R, PS_K0: PS_K0, LEVELS: LEVELS.slice().reverse(), rings: rings };
     })();
     </script>
     <script>
@@ -37647,6 +37654,963 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
         return { at: at, fromResult: fromResult, name: name, configure: configure, CFG: CFG, CODES: ['EU', 'AS', 'AF', 'NA', 'SA', 'OC', 'AN', 'SEA'] };
     })();
 
+    </script>
+
+    <script>
+    /* ===== MF_ZONEMAP: mapa horských zón pro detekci fotek z letadla (okno + náhled v Informacích + export PNG) =====
+       Zdroje (bez nových dat): pevniny getStatsGeoLandPolys(), zóny MF_ELEV_ZONES.rings() (lon/lat pro lat >= -60,
+       polární stereografická projekce pro Antarktidu – zde převedená zpět na lon/lat), povolená výška MF_ELEV_ZONES.maxElevAt(),
+       fotky z letadla statsIsAir(). Kreslí se SVG v pixelových souřadnicích (osa x = délka * cos(střední šířka)).
+       Veřejné: mfZoneMapOpen(openerEl) – otevře okno; MF_ZONEMAP.fillPreviews(root) – vyplní náhledy v Informacích. */
+    var MF_ZONEMAP = (function () {
+        var COLORS = { 3000: "#f7d27a", 4000: "#f3a949", 5000: "#e8772e", 6000: "#d0492b", 7000: "#a82a2f", 8000: "#6e1736" };
+        var LAND = "#d6d9de", SEA = "#eef3f8", AIRC = "#0AA94C"; /* = --green aplikace (v SVG/PNG exportu nelze použít proměnnou) */
+        /* průhlednost vrstvy zón (celé skupiny najednou – vnořené zóny se tak neskládají a barvy odpovídají legendě) */
+        var ZONE_ALPHA = 0.75;
+        function hex2rgb(h) { return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
+        function rgb2hex(a) { return "#" + a.map(function (v) { v = Math.max(0, Math.min(255, Math.round(v))); return (v < 16 ? "0" : "") + v.toString(16); }).join(""); }
+        function blendHex(c, base, a) { var x = hex2rgb(c), y = hex2rgb(base); return rgb2hex([0, 1, 2].map(function (i) { return x[i] * a + y[i] * (1 - a); })); }
+        function darkHex(c, k) { return rgb2hex(hex2rgb(c).map(function (v) { return v * k; })); }
+        /* oblasti: [lonMin, lonMax, latMin, latMax] */
+        var AREAS = [
+            { k: "world", b: [-180, 180, -90, 90] },
+            { k: "alps", b: [4, 17, 43, 49] },
+            { k: "wmed", b: [-4, 17, 36, 44] },
+            { k: "turkey_iran", b: [27, 61.7, 27.5, 45] },
+            { k: "centralasia", b: [62.3, 114.5, 22, 53.5] },
+            { k: "africa", b: [-18, 55.9, -36, 34.5] },
+            { k: "seasia", b: [93, 130.2, -9.5, 25] },
+            { k: "japan", b: [128, 164, 30, 58] },
+            { k: "newguinea", b: [130, 152, -11, -1] },
+            { k: "hawaii", b: [-160, -154.5, 18.5, 21.5] },
+            { k: "newzealand", b: [165, 175, -47, -40] },
+            { k: "alaska", b: [-170, -100, 30, 72] },
+            { k: "greenland", b: [-55, -20, 60, 80] },
+            { k: "andes", b: [-85, -55, -56, 12] },
+            { k: "mexico", b: [-108.5, -70.5, 13.5, 30.5] },
+            { k: "antarctica", b: [-180, 180, -90, -60] }
+        ];
+        var AREA_DEF = { world: "Svět", alps: "Alpy", wmed: "Západní Středomoří", turkey_iran: "Turecko, Írán a Kavkaz", centralasia: "Střední Asie a Himálaj", africa: "Afrika", seasia: "JV Asie", japan: "Japonsko a Kamčatka", newguinea: "Nová Guinea", hawaii: "Havaj", newzealand: "Nový Zéland", alaska: "Aljaška a Kordillery", greenland: "Grónsko", andes: "Andy", mexico: "Mexiko a Střední Amerika", antarctica: "Antarktida" };
+        var st = null, polarCache = null, uid = 0;
+
+        function isCs() { return typeof currentLang === "undefined" || currentLang === "cs"; }
+        function T_(k, d) { try { return (typeof statsL_ === "function") ? statsL_(k, d) : d; } catch (e) { return d; } }
+        function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+        function fmtInt(n) { try { return Number(n).toLocaleString(isCs() ? "cs-CZ" : "en-US"); } catch (e) { return String(n); } }
+        function fmtDeg(v) { var s = (Math.round(v * 100) / 100).toFixed(2); return isCs() ? s.replace(".", ",") : s; }
+        function ok() { return typeof MF_ELEV_ZONES !== "undefined" && MF_ELEV_ZONES && typeof MF_ELEV_ZONES.rings === "function"; }
+
+        /* ---------- data: zóny pod 60° j. š. převedené z polární stereografické projekce na lon/lat ---------- */
+        function polarRings() {
+            if (polarCache) return polarCache;
+            var Zs = MF_ELEV_ZONES.rings(), out = {}, D = 180 / Math.PI;
+            var A = 2 * MF_ELEV_ZONES.PS_R * MF_ELEV_ZONES.PS_K0;
+            MF_ELEV_ZONES.LEVELS.forEach(function (T) {
+                var src = (Zs.ps && Zs.ps[T]) || [], list = [];
+                for (var r = 0; r < src.length; r++) {
+                    var ring = src[r], n = ring.xs.length;
+                    if (n < 3) continue;
+                    var lons = [], lats = [], prev = null;
+                    for (var i = 0; i < n; i++) {
+                        var x = ring.xs[i], y = ring.ys[i], rho = Math.hypot(x, y);
+                        var lon = Math.atan2(x, y) * D, lat = -(90 - 2 * Math.atan(rho / A) * D);
+                        if (prev !== null) { while (lon - prev > 180) lon -= 360; while (lon - prev < -180) lon += 360; }
+                        prev = lon; lons.push(lon); lats.push(lat);
+                    }
+                    /* prstenec obepínající pól: uzavřít body na -90° */
+                    if (Math.abs(lons[n - 1] - lons[0]) > 180) { lons.push(lons[n - 1], lons[0]); lats.push(-90, -90); }
+                    var b = [Infinity, Infinity, -Infinity, -Infinity];
+                    for (var k = 0; k < lons.length; k++) {
+                        if (lons[k] < b[0]) b[0] = lons[k]; if (lons[k] > b[2]) b[2] = lons[k];
+                        if (lats[k] < b[1]) b[1] = lats[k]; if (lats[k] > b[3]) b[3] = lats[k];
+                    }
+                    list.push({ xs: lons, ys: lats, b: b });
+                }
+                out[T] = list;
+            });
+            polarCache = out;
+            return out;
+        }
+
+        /* ---------- geometrie pohledu ---------- */
+        function geom(view, Wc, maxH, M) {
+            var midLat = (view[2] + view[3]) / 2;
+            var kx = Math.max(0.05, Math.cos(midLat * Math.PI / 180));
+            var vw = (view[1] - view[0]) * kx, vh = view[3] - view[2];
+            var pw = Math.max(50, Wc - M.l - M.r);
+            var s = Math.min(pw / vw, maxH / vh);
+            var pxW = vw * s, pxH = vh * s;
+            return { x0: view[0], x1: view[1], yMin: view[2], yMax: view[3], kx: kx, s: s, pxW: pxW, pxH: pxH,
+                     mL: M.l, mT: M.t, simp: M.simp || 0.8, W: pxW + M.l + M.r, H: pxH + M.t + M.b, M: M };
+        }
+        function X(g, lon) { return g.mL + (lon - g.x0) * g.kx * g.s; }
+        function Y(g, lat) { return g.mT + (g.yMax - lat) * g.s; }
+        function f1(v) { return (Math.round(v * 10) / 10).toString(); }
+
+        /* cesta z prstence [xs, ys] se zahazováním bodů bližších než 0,5 px */
+        function pathXY(g, xs, ys, sh) {
+            var d = "", lx = 1e9, ly = 1e9, n = xs.length, kept = 0;
+            for (var i = 0; i < n; i++) {
+                var px = X(g, xs[i] + sh), py = Y(g, ys[i]);
+                if (kept && i < n - 1 && Math.abs(px - lx) < g.simp && Math.abs(py - ly) < g.simp) continue;
+                d += (kept ? "L" : "M") + f1(px) + " " + f1(py); lx = px; ly = py; kept++;
+            }
+            return kept >= 3 ? d + "Z" : "";
+        }
+        function pathPts(g, ring) {
+            var d = "", lx = 1e9, ly = 1e9, n = ring.length, kept = 0;
+            for (var i = 0; i < n; i++) {
+                var px = X(g, ring[i][0]), py = Y(g, ring[i][1]);
+                if (kept && i < n - 1 && Math.abs(px - lx) < g.simp && Math.abs(py - ly) < g.simp) continue;
+                d += (kept ? "L" : "M") + f1(px) + " " + f1(py); lx = px; ly = py; kept++;
+            }
+            return kept >= 3 ? d + "Z" : "";
+        }
+
+        function landPath(g) {
+            var list = null;
+            try { list = (typeof getStatsGeoLandPolys === "function") ? getStatsGeoLandPolys() : null; } catch (e) { list = null; }
+            if (!list) return "";
+            var d = "";
+            for (var i = 0; i < list.length; i++) {
+                var it = list[i], bb = it.bbox;
+                if (bb[2] < g.x0 || bb[0] > g.x1 || bb[3] < g.yMin || bb[1] > g.yMax) continue;
+                for (var r = 0; r < it.poly.length; r++) d += pathPts(g, it.poly[r]);
+            }
+            return d ? "<path d=\"" + d + "\" fill=\"" + LAND + "\" fill-rule=\"evenodd\" stroke=\"#b9bdc4\" stroke-width=\".4\"/>" : "";
+        }
+        /* jen obrys pevniny a hranic států – kreslí se NAD zónami, aby pobřeží a hranice zůstaly vidět */
+        function landEdge(g) {
+            var list = null;
+            try { list = (typeof getStatsGeoLandPolys === "function") ? getStatsGeoLandPolys() : null; } catch (e) { list = null; }
+            if (!list) return "";
+            var d = "";
+            for (var i = 0; i < list.length; i++) {
+                var it = list[i], bb = it.bbox;
+                if (bb[2] < g.x0 || bb[0] > g.x1 || bb[3] < g.yMin || bb[1] > g.yMax) continue;
+                for (var r = 0; r < it.poly.length; r++) d += pathPts(g, it.poly[r]);
+            }
+            return d ? "<path d=\"" + d + "\" fill=\"none\" stroke=\"#5f6368\" stroke-opacity=\".85\" stroke-width=\".5\" stroke-linejoin=\"round\"/>" : "";
+        }
+
+        function zonePaths(g, layer, clipId) {
+            var Zs = MF_ELEV_ZONES.rings(), pol = (layer === "ps") ? polarRings() : null, shifts = (layer === "ps") ? [-360, 0, 360] : [0];
+            var out = "", edges = "";
+            MF_ELEV_ZONES.LEVELS.forEach(function (T) {
+                var rings = (layer === "ps") ? pol[T] : (Zs.ll[T] || []), d = "";
+                for (var r = 0; r < rings.length; r++) {
+                    var R = rings[r];
+                    for (var s = 0; s < shifts.length; s++) {
+                        var sh = shifts[s];
+                        if (R.b[0] + sh > g.x1 || R.b[2] + sh < g.x0 || R.b[1] > g.yMax || R.b[3] < g.yMin) continue;
+                        d += pathXY(g, R.xs, R.ys, sh);
+                    }
+                }
+                if (d) {
+                    out += "<path d=\"" + d + "\" fill=\"" + COLORS[T] + "\"/>";
+                    edges += "<path d=\"" + d + "\" fill=\"none\" stroke=\"" + darkHex(COLORS[T], 0.6) + "\" stroke-width=\".7\" stroke-linejoin=\"round\"/>";
+                }
+            });
+            return out ? "<g clip-path=\"url(#" + clipId + ")\"><g opacity=\"" + ZONE_ALPHA + "\">" + out + "</g>" + edges + "</g>" : "";
+        }
+
+        function gridStep(g) {
+            var span = Math.max(g.x1 - g.x0, g.yMax - g.yMin), steps = [30, 15, 10, 5, 2, 1];
+            for (var i = 0; i < steps.length; i++) if (span / steps[i] >= 5) return steps[i];
+            return 1;
+        }
+        function degLbl(v, isLat) {
+            var a = Math.abs(v), cs = isCs(), s = String(a) + "°";
+            if (v === 0) return s;
+            if (isLat) return s + (cs ? (v > 0 ? " s. š." : " j. š.") : (v > 0 ? " N" : " S"));
+            return s + (cs ? (v > 0 ? " v. d." : " z. d.") : (v > 0 ? " E" : " W"));
+        }
+
+        /* vnitřek SVG mapy (bez kořenového prvku); o = { id, labels, grid, photos } */
+        function mapInner(g, o) {
+            var id = o.id, M = "";
+            var yS = Y(g, -60), pTop = g.mT, pBot = g.mT + g.pxH, pL = g.mL, pW = g.pxW;
+            var llH = Math.min(pBot, Math.max(pTop, yS)) - pTop, psTop = Math.min(pBot, Math.max(pTop, yS));
+            M += "<defs><clipPath id=\"mfzP" + id + "\"><rect x=\"" + f1(pL) + "\" y=\"" + f1(pTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(g.pxH) + "\"/></clipPath>"
+               + "<clipPath id=\"mfzL" + id + "\"><rect x=\"" + f1(pL) + "\" y=\"" + f1(pTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(llH) + "\"/></clipPath>"
+               + "<clipPath id=\"mfzS" + id + "\"><rect x=\"" + f1(pL) + "\" y=\"" + f1(psTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(pBot - psTop) + "\"/></clipPath></defs>";
+            M += "<rect x=\"" + f1(pL) + "\" y=\"" + f1(pTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(g.pxH) + "\" fill=\"" + SEA + "\"/>";
+            var inner = "", labels = "";
+            if (o.grid) {
+                var step = gridStep(g), v, px, py, lastX = -1e9, lastY = 1e9;
+                for (v = Math.ceil(g.x0 / step) * step; v <= g.x1 + 1e-9; v += step) {
+                    px = X(g, v);
+                    inner += "<line x1=\"" + f1(px) + "\" y1=\"" + f1(pTop) + "\" x2=\"" + f1(px) + "\" y2=\"" + f1(pBot) + "\" stroke=\"#ffffff\" stroke-opacity=\".8\" stroke-width=\".8\"/>";
+                    if (o.labels && px - lastX >= 52) { lastX = px; var anc = px > pL + pW - 24 ? "end" : (px < pL + 24 ? "start" : "middle"); labels += "<text x=\"" + f1(px) + "\" y=\"" + f1(pBot + 14) + "\" text-anchor=\"" + anc + "\">" + esc(degLbl(v, false)) + "</text>"; }
+                }
+                for (v = Math.ceil(g.yMin / step) * step; v <= g.yMax + 1e-9; v += step) {
+                    py = Y(g, v);
+                    inner += "<line x1=\"" + f1(pL) + "\" y1=\"" + f1(py) + "\" x2=\"" + f1(pL + pW) + "\" y2=\"" + f1(py) + "\" stroke=\"#ffffff\" stroke-opacity=\".8\" stroke-width=\".8\"/>";
+                    if (o.labels && lastY - py >= 18) { lastY = py; var ty = py > pBot - 6 ? py - 3 : (py < pTop + 6 ? py + 10 : py + 3.5); labels += "<text x=\"" + f1(pL - 5) + "\" y=\"" + f1(ty) + "\" text-anchor=\"end\">" + esc(degLbl(v, true)) + "</text>"; }
+                }
+            }
+            M += "<g clip-path=\"url(#mfzP" + id + ")\">" + inner + landPath(g) + "</g>";
+            if (ok()) { M += zonePaths(g, "ll", "mfzL" + id) + zonePaths(g, "ps", "mfzS" + id); M += "<g clip-path=\"url(#mfzP" + id + ")\">" + landEdge(g) + "</g>"; }
+            if (o.photos && o.photos.length) {
+                var seen = {}, dots = "";
+                for (var i = 0; i < o.photos.length; i++) {
+                    var la = o.photos[i][0], lo = o.photos[i][1];
+                    if (lo < g.x0 || lo > g.x1 || la < g.yMin || la > g.yMax) continue;
+                    var cx = X(g, lo), cy = Y(g, la), key = Math.round(cx / 3) + "," + Math.round(cy / 3);
+                    if (seen[key]) continue; seen[key] = 1;
+                    dots += "<circle cx=\"" + f1(cx) + "\" cy=\"" + f1(cy) + "\" r=\"3.4\"/>";
+                }
+                M += "<g clip-path=\"url(#mfzP" + id + ")\" fill=\"" + AIRC + "\" stroke=\"#ffffff\" stroke-width=\"1\">" + dots + "</g>";
+            }
+            M += "<rect x=\"" + f1(pL) + "\" y=\"" + f1(pTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(g.pxH) + "\" fill=\"none\" stroke=\"#9aa0a6\" stroke-width=\"1\"/>";
+            if (labels) M += "<g font-size=\"11\" fill=\"#5f6368\" font-family=\"inherit\">" + labels + "</g>";
+            return M;
+        }
+
+        function mapSvg(g, o, extraAttr) {
+            return "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + f1(g.W) + " " + f1(g.H) + "\" width=\"" + f1(g.W) + "\" height=\"" + f1(g.H) + "\" "
+                + (extraAttr || "") + ">" + mapInner(g, o) + "</svg>";
+        }
+
+        /* ---------- fotky z letadla ---------- */
+        function photoRows() {
+            var R = (typeof window !== "undefined" && window.statsTableRows) || [];
+            if (R.length) return R;
+            var out = [];
+            try {
+                if (typeof datasets !== "undefined" && datasets) {
+                    Object.keys(datasets).forEach(function (k) {
+                        var d = datasets[k]; if (!d || !d.active) return;
+                        var pts = (typeof photoItemsOf === "function") ? photoItemsOf(k) : (d.items || []);
+                        for (var i = 0; i < pts.length; i++) out.push(pts[i]);
+                    });
+                }
+            } catch (e) { out = []; }
+            return out;
+        }
+        function airPoints() {
+            var R = photoRows(), out = [];
+            if (typeof statsIsAir !== "function" || typeof statsLL !== "function") return out;
+            for (var i = 0; i < R.length; i++) {
+                try { var p = R[i]; if (statsLL(p) && statsIsAir(p)) out.push([Number(p[0]), Number(p[1])]); } catch (e) { }
+            }
+            return out;
+        }
+
+        /* ---------- legenda / texty ---------- */
+        function legendItems() {
+            var cs = isCs(), items = [{ c: LAND, t: T_("mfZoneOutside", "Mimo zóny") + " – " + T_("mfZoneUpTo", "do {H} m").replace("{H}", fmtInt(3100)), edge: true }];
+            MF_ELEV_ZONES.LEVELS.forEach(function (T) {
+                items.push({ c: blendHex(COLORS[T], LAND, ZONE_ALPHA), t: T_("mfZoneZoneN", "Zóna {T} km").replace("{T}", T / 1000) + " – " + T_("mfZoneUpTo", "do {H} m").replace("{H}", fmtInt(T + 1100)) });
+            });
+            return items;
+        }
+        function noteText() {
+            return T_("mfZoneNote", "Zóna T je území do 25 km od terénu s výškou alespoň T. Zdroj výšek: Copernicus DEM GLO-90. Výška fotky se před porovnáním koriguje na nadmořskou (EGM2008), pokud je korekce zapnutá.");
+        }
+        function areaName(k) { return T_("mfZoneArea_" + k, AREA_DEF[k]); }
+
+        /* ---------- náhled v Informacích ---------- */
+        function fillPreviews(root) {
+            try {
+                if (!ok()) return;
+                var els = (root || document).querySelectorAll("[data-mf-zone-prev]");
+                for (var i = 0; i < els.length; i++) {
+                    var el = els[i];
+                    if (el.getAttribute("data-filled") === "1") continue;
+                    var g = geom(AREAS[0].b, 420, 400, { l: 1, r: 1, t: 1, b: 1, simp: 1.4 });
+                    el.innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + f1(g.W) + " " + f1(g.H) + "\" style=\"display:block;width:100%;height:auto\" role=\"img\" aria-label=\"" + esc(T_("mfZoneTitle", "Mapa zón – detekce fotek z letadla")) + "\">" + mapInner(g, { id: "pv" + (uid++), labels: false, grid: false }) + "</svg>";
+                    el.setAttribute("data-filled", "1");
+                    el.setAttribute("title", T_("mfZonePrevTip", "Zvětšit mapu zón"));
+                    el.setAttribute("role", "button");
+                    el.setAttribute("aria-label", T_("mfZonePrevTip", "Zvětšit mapu zón"));
+                    el.tabIndex = 0;
+                    el.onclick = function (e) { e.stopPropagation(); open(this); };
+                    el.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); open(this); } };
+                }
+            } catch (e) { try { AppLog.soft("MF_ZONEMAP.fillPreviews", e); } catch (e2) { } }
+        }
+        document.addEventListener("toggle", function (e) {
+            try { var d = e.target; if (d && d.tagName === "DETAILS" && d.open && d.querySelector("[data-mf-zone-prev]")) fillPreviews(d); } catch (er) { }
+        }, true);
+
+        /* ---------- okno ---------- */
+        function injectCss() {
+            if (document.getElementById("mfZoneCss")) return;
+            var s = document.createElement("style"); s.id = "mfZoneCss";
+            s.textContent = ".mfz-chip{border:1px solid #dadce0;background:#fff;color:#3c4043;border-radius:14px;padding:4px 11px;font-size:12px;cursor:pointer;font-family:inherit}"
+                + ".mfz-chip:hover{border-color:var(--green);color:var(--green)}"
+                + ".mfz-chip[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#fff}"
+                + ".mfz-chip:focus-visible,.mf-zone-btn:focus-visible,.mf-zone-prev:focus-visible{outline:2px solid var(--green);outline-offset:2px}"
+                + ".mf-zone-btn{border:1px solid var(--green);background:var(--green-bg);color:var(--green-logo);border-radius:6px;padding:2px 9px;font-size:12px;cursor:pointer;font-family:inherit}"
+                + ".mf-zone-btn:hover{background:var(--green);color:#fff}"
+                + ".mf-zone-prev{display:block;max-width:420px;margin:6px 0 4px;border:1px solid #dadce0;border-radius:6px;overflow:hidden;cursor:pointer;background:" + SEA + ";aspect-ratio:2/1}"
+                + "#mfzAir{width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;margin:0}"
+                + "#mfzAir:disabled{cursor:default}"
+                + ".mfz-leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:#3c4043;margin-top:8px}"
+                + ".mfz-leg span.i{display:inline-flex;align-items:center;gap:6px}"
+                + ".mfz-sw{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.35);flex-shrink:0}";
+            document.head.appendChild(s);
+        }
+
+        function close(noFocus) {
+            try {
+                if (!st) return;
+                document.removeEventListener("keydown", st.onKey, true);
+                window.removeEventListener("resize", st.onResize);
+                if (st.ov && st.ov.parentNode) st.ov.parentNode.removeChild(st.ov);
+                var ret = st.ret; st = null;
+                if (!noFocus && ret && ret.isConnected) ret.focus();
+            } catch (e) { try { AppLog.soft("MF_ZONEMAP.close", e); } catch (e2) { } st = null; }
+        }
+
+        function open(opener) {
+            try {
+                if (st) return;
+                if (!ok()) { try { showToast(T_("mfZoneNoData", "Data horských zón nejsou k dispozici")); } catch (e) { } return; }
+                injectCss();
+                var S = st = { area: "world", air: false, pts: [], ret: opener || null, ov: null, host: null, g: null, id: "ov" + (uid++) };
+                var ov = document.createElement("div");
+                S.ov = ov; ov.id = "mfZoneOverlay";
+                ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true");
+                ov.setAttribute("aria-label", T_("mfZoneTitle", "Mapa zón – detekce fotek z letadla"));
+                ov.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:10060;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;";
+                var box = document.createElement("div");
+                box.style.cssText = "background:#ffffff;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.3);width:min(1100px,96vw);max-height:94vh;overflow:auto;padding:14px 18px 18px;position:relative;box-sizing:border-box;";
+                var saveT = T_("mfZoneSave", "Uložit obrázek (PNG)"), closeT = T_("mfZoneClose", "Zavřít (Esc)");
+                box.innerHTML =
+                    "<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;\">"
+                    + "<span style=\"font-size:13px;font-weight:700;color:var(--green);\">" + esc(T_("mfZoneTitle", "Mapa zón – detekce fotek z letadla")) + "</span>"
+                    + "<span style=\"display:inline-flex;gap:5px;\">"
+                    + "<button type=\"button\" class=\"st-chart-expand\" id=\"mfzSave\" style=\"width:28px;height:28px;\" title=\"" + esc(saveT) + "\" aria-label=\"" + esc(saveT) + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>"
+                    + "<button type=\"button\" class=\"st-chart-expand\" id=\"mfzClose\" style=\"width:28px;height:28px;\" title=\"" + esc(closeT) + "\" aria-label=\"" + esc(closeT) + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M6 6l12 12M18 6L6 18\"/></svg></button>"
+                    + "</span></div>"
+                    + "<div id=\"mfzChips\" role=\"group\" aria-label=\"" + esc(T_("mfZoneAreaLbl", "Oblast")) + "\" style=\"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;\"></div>"
+                    + "<div id=\"mfzHost\" style=\"touch-action:pan-y;\"></div>"
+                    + "<div id=\"mfzRead\" aria-live=\"polite\" style=\"min-height:20px;margin-top:6px;font-size:12.5px;color:#202124;\"></div>"
+                    + "<div style=\"display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:6px;font-size:12.5px;color:#3c4043;\">"
+                    + "<label style=\"display:inline-flex;align-items:center;gap:6px;cursor:pointer;\"><input type=\"checkbox\" id=\"mfzAir\"><span id=\"mfzAirTxt\"></span></label>"
+                    + "<span class=\"mfz-leg\" id=\"mfzAirLeg\" style=\"display:none;margin:0;\"></span>"
+                    + "<button type=\"button\" class=\"mf-zone-btn\" id=\"mfzTbl\" style=\"display:none;\"></button></div>"
+                    + "<div class=\"mfz-leg\" id=\"mfzLeg\"></div>"
+                    + "<div style=\"margin-top:8px;font-size:11.5px;color:#5f6368;line-height:1.45;\">" + esc(noteText()) + "</div>";
+                ov.appendChild(box); document.body.appendChild(ov);
+                S.host = box.querySelector("#mfzHost");
+
+                /* chipy oblastí */
+                var chips = box.querySelector("#mfzChips");
+                AREAS.forEach(function (a) {
+                    var b = document.createElement("button"); b.type = "button"; b.className = "mfz-chip"; b.setAttribute("data-area", a.k);
+                    b.textContent = areaName(a.k); b.setAttribute("aria-pressed", a.k === S.area ? "true" : "false");
+                    b.onclick = function () { S.area = a.k; var all = chips.children; for (var i = 0; i < all.length; i++) all[i].setAttribute("aria-pressed", all[i] === b ? "true" : "false"); draw(); };
+                    chips.appendChild(b);
+                });
+
+                /* fotky z letadla */
+                var airChk = box.querySelector("#mfzAir"), airTxt = box.querySelector("#mfzAirTxt"), tblBtn = box.querySelector("#mfzTbl");
+                function refreshAir() {
+                    S.pts = airPoints();
+                    airTxt.textContent = T_("mfZoneAirChk", "Vyznačit fotky z letadla") + " (" + (S.pts.length ? fmtInt(S.pts.length) : T_("mfZoneAirNone", "žádné")) + ")";
+                    airChk.disabled = !S.pts.length;
+                    if (!S.pts.length) { airChk.checked = false; S.air = false; }
+                    var canTbl = S.pts.length && window.statsTableRows && window.statsTableRows.length && typeof statsTableOpenGrid === "function";
+                    tblBtn.style.display = canTbl ? "" : "none";
+                    tblBtn.textContent = T_("mfZoneOpenTable", "Zobrazit fotky z letadla v tabulce");
+                }
+                refreshAir();
+                airChk.onchange = function () { S.air = airChk.checked; draw(); };
+                tblBtn.onclick = function () {
+                    var lbl = T_("statsCountriesAir", "Fotek ve vzdušném prostoru");
+                    close(true);
+                    try { statsTableOpenGrid("air", "", lbl); } catch (e) { try { AppLog.soft("MF_ZONEMAP.table", e); } catch (e2) { } }
+                };
+
+                /* legenda */
+                var leg = box.querySelector("#mfzLeg"), lh = "";
+                legendItems().forEach(function (it) { lh += "<span class=\"i\"><span class=\"mfz-sw\" style=\"background:" + it.c + "\"></span>" + esc(it.t) + "</span>"; });
+                S.legAir = "<span class=\"i\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" aria-hidden=\"true\"><circle cx=\"7\" cy=\"7\" r=\"4.5\" fill=\"" + AIRC + "\" stroke=\"#fff\" stroke-width=\"1.2\"/></svg>" + esc(T_("mfZoneAirLegend", "Fotka z letadla")) + "</span>";
+                S.legBase = lh; S.leg = leg; leg.innerHTML = lh;
+
+                /* čtení polohy */
+                var read = box.querySelector("#mfzRead");
+                var hint = T_("mfZoneHover", "Najeďte kurzorem nebo klepněte do mapy – zobrazí se zóna a povolená výška.");
+                read.textContent = hint;
+                function onPtr(e) {
+                    var svg = S.host.querySelector("svg"), g = S.g; if (!svg || !g) return;
+                    var r = svg.getBoundingClientRect(); if (!r.width) return;
+                    var k = g.W / r.width, fx = (e.clientX - r.left) * k, fy = (e.clientY - r.top) * k;
+                    var cr = svg.querySelector("#mfzCross");
+                    if (fx < g.mL || fx > g.mL + g.pxW || fy < g.mT || fy > g.mT + g.pxH) { read.textContent = hint; if (cr) cr.setAttribute("visibility", "hidden"); return; }
+                    var lon = g.x0 + (fx - g.mL) / (g.kx * g.s), lat = g.yMax - (fy - g.mT) / g.s;
+                    lon = ((lon + 540) % 360) - 180;
+                    var L = MF_ELEV_ZONES.levelAt(lat, lon), H = MF_ELEV_ZONES.maxElevAt(lat, lon);
+                    var pos = fmtDeg(Math.abs(lat)) + "° " + (isCs() ? (lat >= 0 ? "s. š." : "j. š.") : (lat >= 0 ? "N" : "S")) + ", "
+                            + fmtDeg(Math.abs(lon)) + "° " + (isCs() ? (lon >= 0 ? "v. d." : "z. d.") : (lon >= 0 ? "E" : "W"));
+                    var zone = L ? T_("mfZoneZoneN", "Zóna {T} km").replace("{T}", L / 1000) : T_("mfZoneOutside", "Mimo zóny");
+                    read.textContent = pos + " · " + zone + " · " + T_("mfZoneAllowed", "povolená výška") + " " + fmtInt(H) + " m";
+                    if (cr) { cr.setAttribute("cx", f1(fx)); cr.setAttribute("cy", f1(fy)); cr.setAttribute("visibility", "visible"); }
+                }
+                S.host.addEventListener("pointermove", onPtr);
+                S.host.addEventListener("pointerdown", onPtr);
+                S.host.addEventListener("pointerleave", function (e) { if (e && e.pointerType && e.pointerType !== "mouse") return; read.textContent = hint; var cr = S.host.querySelector("#mfzCross"); if (cr) cr.setAttribute("visibility", "hidden"); });
+
+                function draw() {
+                    var a = AREAS.filter(function (x) { return x.k === S.area; })[0] || AREAS[0];
+                    var Wc = Math.max(280, S.host.clientWidth || 600);
+                    var maxH = Math.max(260, Math.min((window.innerHeight || 800) * 0.58, 760));
+                    var g = S.g = geom(a.b, Wc, maxH, { l: Wc < 500 ? 54 : 64, r: 10, t: 8, b: 22 });
+                    var svg = mapSvg(g, { id: S.id, labels: true, grid: true, photos: S.air ? S.pts : null },
+                        "style=\"display:block;max-width:100%;height:auto;margin:0 auto;\" role=\"img\" aria-label=\"" + esc(T_("mfZoneTitle", "Mapa zón – detekce fotek z letadla") + " – " + areaName(S.area)) + "\" font-family=\"inherit\"");
+                    svg = svg.replace("</svg>", "<circle id=\"mfzCross\" r=\"5\" fill=\"none\" stroke=\"#202124\" stroke-width=\"1.6\" visibility=\"hidden\" pointer-events=\"none\"/></svg>");
+                    S.host.innerHTML = svg;
+                    S.leg.innerHTML = S.legBase;
+                    /* legenda fotky z letadla je na stejném řádku jako zaškrtávátko, ne na konci legendy */
+                    var al = S.ov.querySelector("#mfzAirLeg");
+                    if (al) { var showAir = !!(S.air && S.pts.length); al.innerHTML = showAir ? S.legAir : ""; al.style.display = showAir ? "" : "none"; }
+                }
+                draw();
+
+                /* zavírání, klávesy, změna velikosti */
+                box.querySelector("#mfzClose").onclick = function () { close(); };
+                ov.onclick = function (e) { if (e.target === ov) close(); };
+                box.querySelector("#mfzSave").onclick = function () { exportPng(); };
+                S.onKey = function (e) {
+                    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
+                    if (e.key === "Tab") {
+                        var f = box.querySelectorAll("button:not([disabled]),input:not([disabled])");
+                        if (!f.length) return;
+                        var first = f[0], last = f[f.length - 1];
+                        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+                    }
+                };
+                document.addEventListener("keydown", S.onKey, true);
+                var rt = null;
+                S.onResize = function () { clearTimeout(rt); rt = setTimeout(function () { if (st === S) draw(); }, 150); };
+                window.addEventListener("resize", S.onResize);
+                try { box.querySelector("#mfzClose").focus(); } catch (e) { }
+            } catch (e) { try { AppLog.soft("MF_ZONEMAP.open", e); } catch (e2) { } }
+        }
+
+        /* ---------- export PNG: samostatné SVG (titulek + mapa + legenda + poznámka) -> canvas ---------- */
+        function exportPng() {
+            var S = st;
+            try {
+                if (!S) return;
+                var W = 1400, pad = 16, FF = "Arial, Helvetica, sans-serif";
+                var a = AREAS.filter(function (x) { return x.k === S.area; })[0] || AREAS[0];
+                var g = geom(a.b, W - 2 * pad, 900, { l: 64, r: 10, t: 8, b: 22, simp: 0.4 });
+                var items = legendItems(); if (S.air && S.pts.length) items.push({ air: true, t: T_("mfZoneAirLegend", "Fotka z letadla") });
+                var y = pad, out = "";
+                out += "<text x=\"" + pad + "\" y=\"" + (y + 16) + "\" font-size=\"18\" font-weight=\"700\" fill=\"#202124\">" + esc(T_("mfZoneTitle", "Mapa zón – detekce fotek z letadla") + " – " + areaName(S.area)) + "</text>";
+                y += 30;
+                out += "<g transform=\"translate(" + pad + "," + y + ")\" font-family=\"" + FF + "\">" + mapInner(g, { id: "ex", labels: true, grid: true, photos: S.air ? S.pts : null }) + "</g>";
+                y += g.H + 12;
+                var colW = 330, perRow = Math.max(1, Math.floor((W - 2 * pad) / colW));
+                items.forEach(function (it, i) {
+                    var cx = pad + (i % perRow) * colW, cy = y + Math.floor(i / perRow) * 22;
+                    out += it.air ? "<circle cx=\"" + (cx + 7) + "\" cy=\"" + (cy + 8) + "\" r=\"4.5\" fill=\"" + AIRC + "\" stroke=\"#fff\" stroke-width=\"1.2\"/>"
+                                  : "<rect x=\"" + cx + "\" y=\"" + (cy + 1) + "\" width=\"14\" height=\"14\" rx=\"3\" fill=\"" + it.c + "\" stroke=\"rgba(0,0,0,.35)\"/>";
+                    out += "<text x=\"" + (cx + 22) + "\" y=\"" + (cy + 12.5) + "\" font-size=\"13\" fill=\"#3c4043\">" + esc(it.t) + "</text>";
+                });
+                y += Math.ceil(items.length / perRow) * 22 + 8;
+                /* poznámka zalomená po slovech (~7 px na znak při 12 px písmu) */
+                var words = noteText().split(" "), line = "", lines = [], maxCh = Math.floor((W - 2 * pad) / 6.4);
+                words.forEach(function (w) { if ((line + " " + w).length > maxCh && line) { lines.push(line); line = w; } else line = line ? line + " " + w : w; });
+                if (line) lines.push(line);
+                lines.forEach(function (ln, i) { out += "<text x=\"" + pad + "\" y=\"" + (y + 12 + i * 17) + "\" font-size=\"12\" fill=\"#5f6368\">" + esc(ln) + "</text>"; });
+                y += lines.length * 17 + pad;
+                var H = Math.ceil(y);
+                var svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + W + "\" height=\"" + H + "\" viewBox=\"0 0 " + W + " " + H + "\" font-family=\"" + FF + "\"><rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>" + out + "</svg>";
+                var sc = (typeof statsPngScale === "function") ? Math.min(2, statsPngScale(W, H)) : 1.5;
+                var img = new Image();
+                var fail = function () { try { showToast(((typeof i18n !== "undefined" && i18n[currentLang] && i18n[currentLang].toastExportErr) || "Chyba při exportu")); } catch (e) { } };
+                img.onload = function () {
+                    try {
+                        var c = document.createElement("canvas"); c.width = Math.round(W * sc); c.height = Math.round(H * sc);
+                        var ctx = c.getContext("2d"); ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, c.width, c.height);
+                        ctx.drawImage(img, 0, 0, c.width, c.height);
+                        c.toBlob(function (blob) {
+                            if (!blob) { fail(); return; }
+                            downloadBlob(blob, stamp() + "_mapa-zon.png");
+                            try { showToast((typeof i18n !== "undefined" && i18n[currentLang] && i18n[currentLang].toastPngDone) || "PNG uloženo"); } catch (e) { }
+                        }, "image/png");
+                    } catch (e) { fail(); }
+                };
+                img.onerror = fail;
+                img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+            } catch (e) { try { AppLog.soft("MF_ZONEMAP.exportPng", e); } catch (e2) { } try { showToast("Chyba při exportu"); } catch (e3) { } }
+        }
+
+        try { injectCss(); } catch (eCss) { }
+        return { open: open, close: close, fillPreviews: fillPreviews, _geom: geom, _mapInner: mapInner, _polarRings: polarRings,
+                 /* sdílené pomocné funkce pro MF_GEOIDMAP (jen zpřístupnění, chování mapy zón se nemění) */
+                 util: { geom: geom, X: X, Y: Y, f1: f1, esc: esc, fmtInt: fmtInt, fmtDeg: fmtDeg, degLbl: degLbl, gridStep: gridStep, landEdge: landEdge, isCs: isCs, T_: T_, photoRows: photoRows, injectCss: injectCss } };
+    })();
+    function mfZoneMapOpen(openerEl) { MF_ZONEMAP.open(openerEl || null); }
+    </script>
+
+    <script>
+    /* ===== MF_GEOIDMAP: mapa geoidu – opravy výšek EGM2008 (okno + náhled v Informacích + export PNG) =====
+       Zdroje (bez nových dat): mřížka MF_EGM_GRID (0,5°, 361 × 720, desetiny metru) – stejná, jakou používá korekce
+       (mfEgmN), obrys pevniny a hranic a pomocné funkce z MF_ZONEMAP.util, fotky photoRows().
+       Rastr se počítá přímo z mřížky po řádcích a sloupcích (stejná bilineární interpolace jako mfEgmN, bez volání funkce na pixel).
+       Stupnice je pevná −110 … +100 m (minimum mřížky −106,7 m, maximum +85,2 m – nic se neořízne).
+       Veřejné: mfGeoidMapOpen(openerEl) – otevře okno; MF_GEOIDMAP.fillPreviews(root) – vyplní náhledy v Informacích;
+       MF_GEOIDMAP.refresh() – volá mfGeoidRefresh() po dekódování mřížky a po změně přepínače korekce. */
+    var MF_GEOIDMAP = (function () {
+        var U = (typeof MF_ZONEMAP !== "undefined" && MF_ZONEMAP && MF_ZONEMAP.util) || null;
+        var PHC = "#0AA94C"; /* = --green aplikace (v SVG/PNG exportu nelze použít proměnnou) */
+        var VMIN = -110, VMAX = 100;
+        /* uzly stupnice [N v m, barva]; mezi uzly lineárně v RGB */
+        var STOPS = [[-110, "#2a4d9b"], [-50, "#7aa6dc"], [0, "#f4f4f4"], [50, "#f0a07a"], [100, "#b3262c"]];
+        var TICKS = [-110, -50, 0, 50, 100];
+        var WORLD = [-180, 180, -90, 90];
+        var st = null, uid = 0, LUT = null;
+
+        function isCs() { return U ? U.isCs() : (typeof currentLang === "undefined" || currentLang === "cs"); }
+        function esc(s) { return U ? U.esc(s) : String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+        function T(k, d) { try { return (typeof statsL_ === "function") ? statsL_(k, d) : d; } catch (e) { return d; } }
+        function ready() { return typeof MF_EGM_GRID !== "undefined" && !!MF_EGM_GRID; }
+        function failed() { return typeof MF_EGM_FAIL !== "undefined" && !!MF_EGM_FAIL; }
+        function corrOn() { try { return typeof mfGeoidOn === "function" && mfGeoidOn(); } catch (e) { return false; } }
+        function log(w, e) { try { AppLog.soft("MF_GEOIDMAP." + w, e); } catch (e2) { } }
+
+        /* ---------- čísla ---------- */
+        /* znaménko vždy (+/−), skutečné mínus U+2212, desetinná čárka v češtině */
+        function sgn(v, dec) {
+            if (!isFinite(v)) return "–";
+            var r = Math.round(v * Math.pow(10, dec)) / Math.pow(10, dec);
+            if (r === 0) r = 0; /* bez −0 */
+            var s = Math.abs(r).toFixed(dec);
+            if (isCs()) s = s.replace(".", ",");
+            return (r > 0 ? "+" : (r < 0 ? "\u2212" : "")) + s;
+        }
+        function fmtInt(n) { return U ? U.fmtInt(n) : String(n); }
+
+        /* ---------- barevná stupnice ---------- */
+        function hex2rgb(h) { return [parseInt(h.substr(1, 2), 16), parseInt(h.substr(3, 2), 16), parseInt(h.substr(5, 2), 16)]; }
+        function colorAt(v) {
+            if (v <= STOPS[0][0]) return hex2rgb(STOPS[0][1]);
+            for (var i = 1; i < STOPS.length; i++) {
+                if (v <= STOPS[i][0]) {
+                    var a = STOPS[i - 1], b = STOPS[i], t = (v - a[0]) / (b[0] - a[0]), ca = hex2rgb(a[1]), cb = hex2rgb(b[1]);
+                    return [0, 1, 2].map(function (k) { return Math.round(ca[k] + (cb[k] - ca[k]) * t); });
+                }
+            }
+            return hex2rgb(STOPS[STOPS.length - 1][1]);
+        }
+        /* tabulka barev po decimetrech: index = dm − VMIN·10 */
+        function lut() {
+            if (LUT) return LUT;
+            var n = (VMAX - VMIN) * 10 + 1, L = new Uint8Array(n * 3);
+            for (var i = 0; i < n; i++) { var c = colorAt(VMIN + i / 10); L[i * 3] = c[0]; L[i * 3 + 1] = c[1]; L[i * 3 + 2] = c[2]; }
+            return (LUT = L);
+        }
+        function pct(v) { return (v - VMIN) / (VMAX - VMIN) * 100; }
+
+        /* ---------- rastr geoidu (celý svět, rovnoúhelníková projekce) ---------- */
+        /* vrací data URL PNG o rozměru w × h; null, když mřížka není připravená */
+        function rasterUrl(w, h) {
+            var G = ready() ? MF_EGM_GRID : null;
+            if (!G) return null;
+            w = Math.max(2, Math.round(w)); h = Math.max(2, Math.round(h));
+            var ROWS = MF_EGM_ROWS, COLS = MF_EGM_COLS, L = lut(), off = -VMIN * 10, top = (VMAX - VMIN) * 10;
+            var cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+            var ctx = cv.getContext("2d"), img = ctx.createImageData(w, h), D = img.data;
+            /* sloupce: stejný výpočet indexů jako mfEgmN (lon -180..180 -> 0..360, krok 0,5°) */
+            var X0 = new Int32Array(w), X1 = new Int32Array(w), FX = new Float32Array(w), i, j;
+            for (i = 0; i < w; i++) {
+                var lon = -180 + (i + 0.5) * 360 / w, ln = ((lon + 180) % 360 + 360) % 360, x = ln / 0.5, x0 = Math.floor(x);
+                if (x0 >= COLS) { x0 = 0; x -= COLS; }
+                X0[i] = x0; X1[i] = (x0 + 1) % COLS; FX[i] = Math.min(Math.max(x - x0, 0), 1);
+            }
+            for (j = 0; j < h; j++) {
+                var lat = 90 - (j + 0.5) * 180 / h, y = (90 - lat) / 0.5;
+                var y0 = Math.min(Math.max(Math.floor(y), 0), ROWS - 2), fy = Math.min(Math.max(y - y0, 0), 1);
+                var r0 = y0 * COLS, r1 = r0 + COLS, p = j * w * 4;
+                for (i = 0; i < w; i++, p += 4) {
+                    var fx = FX[i], a = X0[i], b = X1[i];
+                    var v = (G[r0 + a] * (1 - fx) + G[r0 + b] * fx) * (1 - fy) + (G[r1 + a] * (1 - fx) + G[r1 + b] * fx) * fy; /* dm */
+                    var k = Math.round(v) + off; if (k < 0) k = 0; else if (k > top) k = top; k *= 3;
+                    D[p] = L[k]; D[p + 1] = L[k + 1]; D[p + 2] = L[k + 2]; D[p + 3] = 255;
+                }
+            }
+            ctx.putImageData(img, 0, 0);
+            try { return cv.toDataURL("image/png"); } catch (e) { log("raster", e); return null; }
+        }
+
+        /* ---------- fotky s výškou (stejná pravidla jako mfEffElev: stav S a GPX/KML body nevstupují) ---------- */
+        function photoPts() {
+            var R = (U && typeof U.photoRows === "function") ? U.photoRows() : ((typeof window !== "undefined" && window.statsTableRows) || []);
+            var out = [];
+            for (var i = 0; i < R.length; i++) {
+                try {
+                    var p = R[i];
+                    if (!p || p.length < 8 || p[6] === "S") continue;
+                    if (p[7] === null || p[7] === undefined || p[7] === "") continue;
+                    var el = Number(p[7]), la = Number(p[0]), lo = Number(p[1]);
+                    if (!isFinite(el) || !isFinite(la) || !isFinite(lo) || Math.abs(la) > 90 || Math.abs(lo) > 180) continue;
+                    out.push([la, lo]);
+                } catch (e) { }
+            }
+            return out;
+        }
+        /* statistika opravy −N na archivu; null, když nejsou fotky nebo mřížka */
+        function corrStat(pts) {
+            if (!ready() || !pts.length || typeof mfEgmN !== "function") return null;
+            var mn = Infinity, mx = -Infinity, sum = 0, n = 0, all = [];
+            for (var i = 0; i < pts.length; i++) {
+                var N = mfEgmN(pts[i][0], pts[i][1]); if (!isFinite(N)) continue;
+                var c = -N; if (c < mn) mn = c; if (c > mx) mx = c; sum += c; n++; all.push(c);
+            }
+            if (!n) return null;
+            all.sort(function (x, y) { return x - y; });
+            var h = n >> 1, med = (n % 2) ? all[h] : (all[h - 1] + all[h]) / 2;
+            return { a: mn, b: mx, c: sum / n, m: med, n: n };
+        }
+        /* barvy značek mediánu (modrá plná) a průměru (červená čárkovaná) – stejné jako v grafech Statistiky (.efh-side .ln) */
+        var MEDC = "#1a73e8", AVGC = "#d93025";
+        /* řádek statistiky jako segmenty [{ t, ico, sep }]; ico = "med" | "avg" */
+        function statParts(S) {
+            if (!ready()) return [{ t: T("mfGeoLoading", "Data geoidu se načítají…") }];
+            if (!S.stat) return [{ t: T("mfGeoStatNone", "Korekce na vašem archivu: žádné fotky s polohou a výškou") }];
+            var z = S.stat, P = [
+                { t: T("mfGeoStat", "Korekce na vašem archivu: od {a} do {b} m").replace("{a}", sgn(z.a, 0)).replace("{b}", sgn(z.b, 0)) },
+                { sep: true, ico: "med", tip: T("statsElevHistMed", "medián"), t: T("mfGeoStatMed", "medián {m} m").replace("{m}", sgn(z.m, 0)) },
+                { sep: true, ico: "avg", tip: T("statsElevHistAvg", "průměr"), t: T("mfGeoStatAvg", "Ø {c} m").replace("{c}", sgn(z.c, 0)) },
+                { t: " " + T("mfGeoStatN", "({n} fotek)").replace("{n}", fmtInt(z.n)) }
+            ];
+            if (!corrOn()) P.push({ sep: true, t: T("mfGeoOff", "korekce je vypnutá, výšky se neopravují") });
+            return P;
+        }
+        function statHtml(S) {
+            return statParts(S).map(function (p) {
+                var ic = p.ico ? "<span title=\"" + esc(p.tip || "") + "\" style=\"display:inline-block;width:0;height:11px;margin:0 5px 0 1px;vertical-align:-1px;border-left:2px " + (p.ico === "avg" ? "dashed " + AVGC : "solid " + MEDC) + ";\"></span>" : "";
+                return (p.sep ? " · " : "") + ic + esc(p.t);
+            }).join("");
+        }
+        /* totéž do SVG exportu; šířky textu se měří na canvasu stejným písmem */
+        function statSvg(S, x, y, FF) {
+            var cv = document.createElement("canvas").getContext("2d"), out = "";
+            cv.font = "13px " + FF;
+            statParts(S).forEach(function (p) {
+                var t = (p.sep ? " · " : "");
+                if (t) { out += "<text x=\"" + x.toFixed(1) + "\" y=\"" + y + "\" font-size=\"13\" fill=\"#202124\" xml:space=\"preserve\">" + esc(t) + "</text>"; x += cv.measureText(t).width; }
+                if (p.ico) {
+                    out += "<line x1=\"" + (x + 3).toFixed(1) + "\" y1=\"" + (y - 10) + "\" x2=\"" + (x + 3).toFixed(1) + "\" y2=\"" + (y + 1) + "\" stroke=\"" + (p.ico === "avg" ? AVGC : MEDC) + "\" stroke-width=\"2\"" + (p.ico === "avg" ? " stroke-dasharray=\"3 2\"" : "") + "/>";
+                    x += 11;
+                }
+                out += "<text x=\"" + x.toFixed(1) + "\" y=\"" + y + "\" font-size=\"13\" fill=\"#202124\" xml:space=\"preserve\">" + esc(p.t) + "</text>";
+                x += cv.measureText(p.t).width;
+            });
+            return out;
+        }
+
+        /* ---------- SVG mapy ---------- */
+        /* o = { id, raster (data URL), labels, grid, photos } */
+        function mapInner(g, o) {
+            var f1 = U.f1, X = U.X, Y = U.Y, M = "", pL = g.mL, pTop = g.mT, pW = g.pxW, pH = g.pxH, pBot = pTop + pH;
+            M += "<defs><clipPath id=\"mfgP" + o.id + "\"><rect x=\"" + f1(pL) + "\" y=\"" + f1(pTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(pH) + "\"/></clipPath></defs>";
+            M += "<rect x=\"" + f1(pL) + "\" y=\"" + f1(pTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(pH) + "\" fill=\"#f4f4f4\"/>";
+            if (o.raster) M += "<image href=\"" + o.raster + "\" x=\"" + f1(pL) + "\" y=\"" + f1(pTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(pH) + "\" preserveAspectRatio=\"none\"/>";
+            var inner = "", labels = "";
+            if (o.grid) {
+                var step = 30, v, px, py, lastX = -1e9, lastY = 1e9;
+                for (v = -180; v <= 180 + 1e-9; v += step) {
+                    px = X(g, v);
+                    inner += "<line x1=\"" + f1(px) + "\" y1=\"" + f1(pTop) + "\" x2=\"" + f1(px) + "\" y2=\"" + f1(pBot) + "\" stroke=\"#80868b\" stroke-opacity=\".6\" stroke-width=\".5\"/>";
+                    if (o.labels && px - lastX >= 52) { lastX = px; var anc = px > pL + pW - 24 ? "end" : (px < pL + 24 ? "start" : "middle"); labels += "<text x=\"" + f1(px) + "\" y=\"" + f1(pBot + 14) + "\" text-anchor=\"" + anc + "\">" + esc(U.degLbl(v, false)) + "</text>"; }
+                }
+                for (v = -90; v <= 90 + 1e-9; v += step) {
+                    py = Y(g, v);
+                    inner += "<line x1=\"" + f1(pL) + "\" y1=\"" + f1(py) + "\" x2=\"" + f1(pL + pW) + "\" y2=\"" + f1(py) + "\" stroke=\"#80868b\" stroke-opacity=\".6\" stroke-width=\".5\"/>";
+                    if (o.labels && lastY - py >= 18) { lastY = py; var ty = py > pBot - 6 ? py - 3 : (py < pTop + 6 ? py + 10 : py + 3.5); labels += "<text x=\"" + f1(pL - 5) + "\" y=\"" + f1(ty) + "\" text-anchor=\"end\">" + esc(U.degLbl(v, true)) + "</text>"; }
+                }
+            }
+            M += "<g clip-path=\"url(#mfgP" + o.id + ")\">" + inner + U.landEdge(g) + "</g>";
+            if (o.photos && o.photos.length) {
+                var seen = {}, dots = "";
+                for (var i = 0; i < o.photos.length; i++) {
+                    var la = o.photos[i][0], lo = o.photos[i][1];
+                    var cx = X(g, lo), cy = Y(g, la), key = Math.round(cx / 3) + "," + Math.round(cy / 3);
+                    if (seen[key]) continue; seen[key] = 1;
+                    dots += "<circle cx=\"" + f1(cx) + "\" cy=\"" + f1(cy) + "\" r=\"3.4\"/>";
+                }
+                M += "<g clip-path=\"url(#mfgP" + o.id + ")\" fill=\"" + PHC + "\" stroke=\"#ffffff\" stroke-width=\"1\">" + dots + "</g>";
+            }
+            M += "<rect x=\"" + f1(pL) + "\" y=\"" + f1(pTop) + "\" width=\"" + f1(pW) + "\" height=\"" + f1(pH) + "\" fill=\"none\" stroke=\"#9aa0a6\" stroke-width=\"1\"/>";
+            if (labels) M += "<g font-size=\"11\" fill=\"#5f6368\" font-family=\"inherit\">" + labels + "</g>";
+            return M;
+        }
+
+        /* ---------- texty ---------- */
+        function titleText() { return T("mfGeoTitle", "Mapa geoidu – opravy výšek (EGM2008)"); }
+        function noteText() { return T("mfGeoNote", "N je výška geoidu (hladiny moře) nad elipsoidem WGS84. Nadmořská výška = elipsoidická výška − N. Model EGM2008 v mřížce 30′; aproximační odchylka vůči mřížce 2,5′ je nejvýše asi 6,7 m, typicky do 1 m."); }
+        function tickLbl(v) { return (v > 0 ? "+" : (v < 0 ? "\u2212" : "")) + Math.abs(v) + (v === VMAX ? " m" : ""); }
+        function posText(lat, lon) {
+            var cs = isCs();
+            return U.fmtDeg(Math.abs(lat)) + "° " + (cs ? (lat >= 0 ? "s. š." : "j. š.") : (lat >= 0 ? "N" : "S")) + ", "
+                 + U.fmtDeg(Math.abs(lon)) + "° " + (cs ? (lon >= 0 ? "v. d." : "z. d.") : (lon >= 0 ? "E" : "W"));
+        }
+        function readText(lat, lon) {
+            if (!ready()) return T("mfGeoLoading", "Data geoidu se načítají…");
+            var N = mfEgmN(lat, lon);
+            var s = posText(lat, lon) + " · " + T("mfGeoRead", "N = {N} m · oprava výšky {C} m").replace("{N}", sgn(N, 1)).replace("{C}", sgn(-N, 1));
+            if (!corrOn()) s += " · " + T("mfGeoOff", "korekce je vypnutá, výšky se neopravují");
+            return s;
+        }
+
+        /* ---------- náhled v Informacích ---------- */
+        function syncBtns(root) {
+            try {
+                var bs = (root || document).querySelectorAll("[data-mf-geoid-btn]");
+                for (var i = 0; i < bs.length; i++) {
+                    var b = bs[i], f = failed();
+                    b.textContent = T("mfGeoBtn", "Zobrazit mapu geoidu");
+                    if (f) { b.setAttribute("aria-disabled", "true"); b.style.opacity = ".5"; b.style.cursor = "not-allowed"; b.title = T("mfGeoNoData", "Data geoidu nejsou k dispozici"); }
+                    else { b.removeAttribute("aria-disabled"); b.style.opacity = ""; b.style.cursor = ""; b.removeAttribute("title"); }
+                }
+            } catch (e) { log("syncBtns", e); }
+        }
+        function fillPreviews(root) {
+            try {
+                syncBtns(root);
+                if (!U) return;
+                var els = (root || document).querySelectorAll("[data-mf-geoid-prev]");
+                for (var i = 0; i < els.length; i++) {
+                    var el = els[i];
+                    if (failed()) { el.style.display = "none"; continue; }
+                    if (el.getAttribute("data-filled") === "1" || !ready()) continue;
+                    var g = U.geom(WORLD, 420, 400, { l: 1, r: 1, t: 1, b: 1, simp: 1.4 });
+                    el.innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + U.f1(g.W) + " " + U.f1(g.H) + "\" style=\"display:block;width:100%;height:auto\" role=\"img\" aria-label=\"" + esc(titleText()) + "\">"
+                        + mapInner(g, { id: "pv" + (uid++), raster: rasterUrl(g.pxW, g.pxH), labels: false, grid: false }) + "</svg>";
+                    el.setAttribute("data-filled", "1");
+                    el.setAttribute("title", T("mfGeoPrevTip", "Zvětšit mapu geoidu"));
+                    el.setAttribute("role", "button");
+                    el.setAttribute("aria-label", T("mfGeoPrevTip", "Zvětšit mapu geoidu"));
+                    el.tabIndex = 0;
+                    el.onclick = function (e) { e.stopPropagation(); open(this); };
+                    el.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); open(this); } };
+                }
+            } catch (e) { log("fillPreviews", e); }
+        }
+        document.addEventListener("toggle", function (e) {
+            try { var d = e.target; if (d && d.tagName === "DETAILS" && d.open && (d.querySelector("[data-mf-geoid-prev]") || d.querySelector("[data-mf-geoid-btn]"))) fillPreviews(d); } catch (er) { }
+        }, true);
+
+        /* ---------- okno ---------- */
+        function injectCss() {
+            try { if (typeof MF_ZONEMAP !== "undefined" && MF_ZONEMAP.util && MF_ZONEMAP.util.injectCss) MF_ZONEMAP.util.injectCss(); } catch (e) { }
+            if (document.getElementById("mfGeoidCss")) return;
+            var s = document.createElement("style"); s.id = "mfGeoidCss";
+            s.textContent = "#mfgPh{width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;margin:0}"
+                + "#mfgPh:disabled{cursor:default}"
+                + ".mfg-scale{position:relative;margin:10px 4px 0;max-width:520px}"
+                + ".mfg-bar{height:12px;border-radius:3px;border:1px solid rgba(0,0,0,.35)}"
+                + ".mfg-ticks{position:relative;height:16px;font-size:11px;color:#5f6368}"
+                + ".mfg-ticks span{position:absolute;top:2px;transform:translateX(-50%);white-space:nowrap}"
+                + ".mfg-ticks span.l{transform:none}.mfg-ticks span.r{transform:translateX(-100%)}";
+            document.head.appendChild(s);
+        }
+        function gradCss() {
+            return "linear-gradient(to right," + STOPS.map(function (s) { return s[1] + " " + pct(s[0]).toFixed(2) + "%"; }).join(",") + ")";
+        }
+        function scaleHtml() {
+            var t = "";
+            TICKS.forEach(function (v, i) { t += "<span class=\"" + (i === 0 ? "l" : (i === TICKS.length - 1 ? "r" : "")) + "\" style=\"left:" + pct(v).toFixed(2) + "%\">" + esc(tickLbl(v)) + "</span>"; });
+            return "<div class=\"mfg-scale\"><div class=\"mfg-bar\" style=\"background:" + gradCss() + "\"></div><div class=\"mfg-ticks\">" + t + "</div></div>"
+                + "<div class=\"mfz-leg\" style=\"margin-top:4px;\">"
+                + "<span class=\"i\"><span class=\"mfz-sw\" style=\"background:" + STOPS[4][1] + "\"></span>" + esc(T("mfGeoLegRed", "červená: výška se po korekci sníží")) + "</span>"
+                + "<span class=\"i\"><span class=\"mfz-sw\" style=\"background:" + STOPS[0][1] + "\"></span>" + esc(T("mfGeoLegBlue", "modrá: výška se po korekci zvýší")) + "</span></div>";
+        }
+
+        function close(noFocus) {
+            try {
+                if (!st) return;
+                document.removeEventListener("keydown", st.onKey, true);
+                window.removeEventListener("resize", st.onResize);
+                if (st.ov && st.ov.parentNode) st.ov.parentNode.removeChild(st.ov);
+                var ret = st.ret; st = null; /* rastr se zahodí s oknem */
+                if (!noFocus && ret && ret.isConnected) ret.focus();
+            } catch (e) { log("close", e); st = null; }
+        }
+
+        function open(opener) {
+            try {
+                if (st) return;
+                if (failed() || !U) { try { showToast(T("mfGeoNoData", "Data geoidu nejsou k dispozici")); } catch (e) { } return; }
+                injectCss();
+                var S = st = { ph: false, pts: [], stat: null, ret: opener || null, ov: null, host: null, g: null, id: "ov" + (uid++), last: null };
+                var ov = document.createElement("div");
+                S.ov = ov; ov.id = "mfGeoidOverlay";
+                ov.setAttribute("role", "dialog"); ov.setAttribute("aria-modal", "true");
+                ov.setAttribute("aria-label", titleText());
+                ov.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;z-index:10060;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;";
+                var box = document.createElement("div");
+                box.style.cssText = "background:#ffffff;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.3);width:min(1100px,96vw);max-height:94vh;overflow:auto;padding:14px 18px 18px;position:relative;box-sizing:border-box;";
+                var saveT = T("mfZoneSave", "Uložit obrázek (PNG)"), closeT = T("mfZoneClose", "Zavřít (Esc)");
+                box.innerHTML =
+                    "<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;\">"
+                    + "<span style=\"font-size:13px;font-weight:700;color:var(--green);\">" + esc(titleText()) + "</span>"
+                    + "<span style=\"display:inline-flex;gap:5px;\">"
+                    + "<button type=\"button\" class=\"st-chart-expand\" id=\"mfgSave\" style=\"width:28px;height:28px;\" title=\"" + esc(saveT) + "\" aria-label=\"" + esc(saveT) + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\"><use href=\"#ico-save\"/></svg></button>"
+                    + "<button type=\"button\" class=\"st-chart-expand\" id=\"mfgClose\" style=\"width:28px;height:28px;\" title=\"" + esc(closeT) + "\" aria-label=\"" + esc(closeT) + "\"><svg viewBox=\"0 0 24 24\" width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M6 6l12 12M18 6L6 18\"/></svg></button>"
+                    + "</span></div>"
+                    + "<div id=\"mfgHost\" style=\"touch-action:pan-y;\"></div>"
+                    + "<div id=\"mfgRead\" aria-live=\"polite\" style=\"min-height:20px;margin-top:6px;font-size:12.5px;color:#202124;\"></div>"
+                    + "<div style=\"display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:6px;font-size:12.5px;color:#3c4043;\">"
+                    + "<label style=\"display:inline-flex;align-items:center;gap:6px;cursor:pointer;\"><input type=\"checkbox\" id=\"mfgPh\"><span id=\"mfgPhTxt\"></span></label>"
+                    + "<span class=\"mfz-leg\" id=\"mfgPhLeg\" style=\"display:none;margin:0;\"><span class=\"i\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" aria-hidden=\"true\"><circle cx=\"7\" cy=\"7\" r=\"4.5\" fill=\"" + PHC + "\" stroke=\"#fff\" stroke-width=\"1.2\"/></svg>" + esc(T("mfGeoPhotoLegend", "Fotka s výškou")) + "</span></span></div>"
+                    + "<div id=\"mfgStat\" style=\"margin-top:6px;font-size:12.5px;color:#202124;\"></div>"
+                    + scaleHtml()
+                    + "<div style=\"margin-top:8px;font-size:11.5px;color:#5f6368;line-height:1.45;\">" + esc(noteText()) + "</div>";
+                ov.appendChild(box); document.body.appendChild(ov);
+                S.host = box.querySelector("#mfgHost"); S.box = box;
+
+                var chk = box.querySelector("#mfgPh");
+                chk.onchange = function () { S.ph = chk.checked; draw(); };
+
+                /* čtení hodnoty */
+                var read = box.querySelector("#mfgRead"), hint = T("mfGeoHover", "Najeďte kurzorem nebo klepněte do mapy – zobrazí se geoidová výška N a oprava výšky.");
+                S.read = read; S.hint = hint;
+                function onPtr(e) {
+                    var svg = S.host.querySelector("svg"), g = S.g; if (!svg || !g) return;
+                    var r = svg.getBoundingClientRect(); if (!r.width) return;
+                    var k = g.W / r.width, fx = (e.clientX - r.left) * k, fy = (e.clientY - r.top) * k;
+                    var cr = svg.querySelector("#mfgCross");
+                    if (fx < g.mL || fx > g.mL + g.pxW || fy < g.mT || fy > g.mT + g.pxH) { S.last = null; read.textContent = ready() ? hint : T("mfGeoLoading", "Data geoidu se načítají…"); if (cr) cr.setAttribute("visibility", "hidden"); return; }
+                    var lon = g.x0 + (fx - g.mL) / (g.kx * g.s), lat = g.yMax - (fy - g.mT) / g.s;
+                    lon = Math.max(-180, Math.min(180, lon)); lat = Math.max(-90, Math.min(90, lat));
+                    S.last = [lat, lon];
+                    read.textContent = readText(lat, lon);
+                    if (cr) { cr.setAttribute("cx", U.f1(fx)); cr.setAttribute("cy", U.f1(fy)); cr.setAttribute("visibility", "visible"); }
+                }
+                S.host.addEventListener("pointermove", onPtr);
+                S.host.addEventListener("pointerdown", onPtr);
+                S.host.addEventListener("pointerleave", function (e) { if (e && e.pointerType && e.pointerType !== "mouse") return; S.last = null; read.textContent = ready() ? hint : T("mfGeoLoading", "Data geoidu se načítají…"); var cr = S.host.querySelector("#mfgCross"); if (cr) cr.setAttribute("visibility", "hidden"); });
+
+                function draw() {
+                    var Wc = Math.max(280, S.host.clientWidth || 600);
+                    var maxH = Math.max(260, Math.min((window.innerHeight || 800) * 0.58, 760));
+                    var g = S.g = U.geom(WORLD, Wc, maxH, { l: Wc < 500 ? 54 : 64, r: 10, t: 8, b: 22 });
+                    var svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 " + U.f1(g.W) + " " + U.f1(g.H) + "\" width=\"" + U.f1(g.W) + "\" height=\"" + U.f1(g.H) + "\" style=\"display:block;max-width:100%;height:auto;margin:0 auto;\" role=\"img\" aria-label=\"" + esc(titleText()) + "\" font-family=\"inherit\">"
+                        + mapInner(g, { id: S.id, raster: rasterUrl(g.pxW, g.pxH), labels: true, grid: true, photos: S.ph ? S.pts : null })
+                        + "<circle id=\"mfgCross\" r=\"5\" fill=\"none\" stroke=\"#202124\" stroke-width=\"1.6\" visibility=\"hidden\" pointer-events=\"none\"/></svg>";
+                    S.host.innerHTML = svg;
+                    var pl = S.box.querySelector("#mfgPhLeg"); if (pl) pl.style.display = (S.ph && S.pts.length) ? "" : "none";
+                }
+                S.draw = draw;
+                S.refreshInfo = function () {
+                    S.pts = photoPts(); S.stat = corrStat(S.pts);
+                    box.querySelector("#mfgPhTxt").textContent = T("mfGeoPhotosChk", "Vyznačit moje fotky s výškou") + " (" + (S.pts.length ? fmtInt(S.pts.length) : T("mfZoneAirNone", "žádné")) + ")";
+                    chk.disabled = !S.pts.length; if (!S.pts.length) { chk.checked = false; S.ph = false; }
+                    box.querySelector("#mfgStat").innerHTML = statHtml(S);
+                    read.textContent = S.last ? readText(S.last[0], S.last[1]) : (ready() ? hint : T("mfGeoLoading", "Data geoidu se načítají…"));
+                };
+                S.refreshInfo();
+                draw();
+
+                box.querySelector("#mfgClose").onclick = function () { close(); };
+                ov.onclick = function (e) { if (e.target === ov) close(); };
+                box.querySelector("#mfgSave").onclick = function () { exportPng(); };
+                S.onKey = function (e) {
+                    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); return; }
+                    if (e.key === "Tab") {
+                        var f = box.querySelectorAll("button:not([disabled]),input:not([disabled])");
+                        if (!f.length) return;
+                        var first = f[0], last = f[f.length - 1];
+                        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+                        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+                    }
+                };
+                document.addEventListener("keydown", S.onKey, true);
+                var rt = null;
+                S.onResize = function () { clearTimeout(rt); rt = setTimeout(function () { if (st === S) draw(); }, 150); };
+                window.addEventListener("resize", S.onResize);
+                try { box.querySelector("#mfgClose").focus(); } catch (e) { }
+            } catch (e) { log("open", e); }
+        }
+
+        /* po dekódování mřížky a po změně přepínače korekce (volá mfGeoidRefresh) */
+        function refresh() {
+            try {
+                if (st) {
+                    if (failed()) { close(true); return; }
+                    var hadRaster = !!st.host.querySelector("image");
+                    st.refreshInfo();
+                    if (!hadRaster && ready()) st.draw();
+                }
+                fillPreviews(document);
+            } catch (e) { log("refresh", e); }
+        }
+
+        /* ---------- export PNG: samostatné SVG (titulek + mapa + stupnice + legenda + poznámka) -> canvas ---------- */
+        function exportPng() {
+            var S = st;
+            try {
+                if (!S || !ready()) return;
+                var W = 1400, pad = 16, FF = "Arial, Helvetica, sans-serif";
+                var g = U.geom(WORLD, W - 2 * pad, 900, { l: 64, r: 10, t: 8, b: 22, simp: 0.4 });
+                var y = pad, out = "";
+                out += "<text x=\"" + pad + "\" y=\"" + (y + 16) + "\" font-size=\"18\" font-weight=\"700\" fill=\"#202124\">" + esc(titleText()) + "</text>";
+                y += 30;
+                out += "<g transform=\"translate(" + pad + "," + y + ")\" font-family=\"" + FF + "\">" + mapInner(g, { id: "ex", raster: rasterUrl(g.pxW, g.pxH), labels: true, grid: true, photos: S.ph ? S.pts : null }) + "</g>";
+                y += g.H + 14;
+                /* stupnice (SVG gradient se stejnými uzly) */
+                var bx = pad + g.mL, bw = Math.min(560, g.pxW), gs = "";
+                STOPS.forEach(function (s) { gs += "<stop offset=\"" + pct(s[0]).toFixed(2) + "%\" stop-color=\"" + s[1] + "\"/>"; });
+                out += "<defs><linearGradient id=\"mfgGr\" x1=\"0\" x2=\"1\" y1=\"0\" y2=\"0\">" + gs + "</linearGradient></defs>";
+                out += "<rect x=\"" + bx + "\" y=\"" + y + "\" width=\"" + bw + "\" height=\"14\" rx=\"3\" fill=\"url(#mfgGr)\" stroke=\"rgba(0,0,0,.35)\"/>";
+                TICKS.forEach(function (v, i) {
+                    var tx = bx + bw * pct(v) / 100, anc = i === 0 ? "start" : (i === TICKS.length - 1 ? "end" : "middle");
+                    out += "<text x=\"" + tx.toFixed(1) + "\" y=\"" + (y + 30) + "\" font-size=\"12\" fill=\"#5f6368\" text-anchor=\"" + anc + "\">" + esc(tickLbl(v)) + "</text>";
+                });
+                y += 42;
+                var items = [{ c: STOPS[4][1], t: T("mfGeoLegRed", "červená: výška se po korekci sníží") }, { c: STOPS[0][1], t: T("mfGeoLegBlue", "modrá: výška se po korekci zvýší") }];
+                if (S.ph && S.pts.length) items.push({ ph: true, t: T("mfGeoPhotoLegend", "Fotka s výškou") });
+                var colW = 400, perRow = Math.max(1, Math.floor((W - 2 * pad) / colW));
+                items.forEach(function (it, i) {
+                    var cx = pad + (i % perRow) * colW, cy = y + Math.floor(i / perRow) * 22;
+                    out += it.ph ? "<circle cx=\"" + (cx + 7) + "\" cy=\"" + (cy + 8) + "\" r=\"4.5\" fill=\"" + PHC + "\" stroke=\"#fff\" stroke-width=\"1.2\"/>"
+                                 : "<rect x=\"" + cx + "\" y=\"" + (cy + 1) + "\" width=\"14\" height=\"14\" rx=\"3\" fill=\"" + it.c + "\" stroke=\"rgba(0,0,0,.35)\"/>";
+                    out += "<text x=\"" + (cx + 22) + "\" y=\"" + (cy + 12.5) + "\" font-size=\"13\" fill=\"#3c4043\">" + esc(it.t) + "</text>";
+                });
+                y += Math.ceil(items.length / perRow) * 22 + 4;
+                if (S.stat) { out += statSvg(S, pad, y + 13, FF); y += 24; }
+                var words = noteText().split(" "), line = "", lines = [], maxCh = Math.floor((W - 2 * pad) / 6.4);
+                words.forEach(function (w) { if ((line + " " + w).length > maxCh && line) { lines.push(line); line = w; } else line = line ? line + " " + w : w; });
+                if (line) lines.push(line);
+                lines.forEach(function (ln, i) { out += "<text x=\"" + pad + "\" y=\"" + (y + 12 + i * 17) + "\" font-size=\"12\" fill=\"#5f6368\">" + esc(ln) + "</text>"; });
+                y += lines.length * 17 + pad;
+                var H = Math.ceil(y);
+                var svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + W + "\" height=\"" + H + "\" viewBox=\"0 0 " + W + " " + H + "\" font-family=\"" + FF + "\"><rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>" + out + "</svg>";
+                var sc = (typeof statsPngScale === "function") ? Math.min(2, statsPngScale(W, H)) : 1.5;
+                var img = new Image();
+                var fail = function () { try { showToast(((typeof i18n !== "undefined" && i18n[currentLang] && i18n[currentLang].toastExportErr) || "Chyba při exportu")); } catch (e) { } };
+                img.onload = function () {
+                    try {
+                        var c = document.createElement("canvas"); c.width = Math.round(W * sc); c.height = Math.round(H * sc);
+                        var ctx = c.getContext("2d"); ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, c.width, c.height);
+                        ctx.drawImage(img, 0, 0, c.width, c.height);
+                        c.toBlob(function (blob) {
+                            if (!blob) { fail(); return; }
+                            downloadBlob(blob, stamp() + "_mapa-geoidu.png");
+                            try { showToast((typeof i18n !== "undefined" && i18n[currentLang] && i18n[currentLang].toastPngDone) || "PNG uloženo"); } catch (e) { }
+                        }, "image/png");
+                    } catch (e) { fail(); }
+                };
+                img.onerror = fail;
+                img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+            } catch (e) { log("exportPng", e); try { showToast("Chyba při exportu"); } catch (e3) { } }
+        }
+
+        return { open: open, close: close, fillPreviews: fillPreviews, refresh: refresh, _rasterUrl: rasterUrl, _corrStat: corrStat, _photoPts: photoPts };
+    })();
+    function mfGeoidMapOpen(openerEl) {
+        if (typeof MF_EGM_FAIL !== "undefined" && MF_EGM_FAIL) { try { showToast(statsL_("mfGeoNoData", "Data geoidu nejsou k dispozici")); } catch (e) { } return; }
+        MF_GEOIDMAP.open(openerEl || null);
+    }
     </script>
 
 <!-- 3. EXPORTNÍ KNIHOVNY (Base64 html2canvas a jsPDF) -->
