@@ -2017,9 +2017,9 @@ def save_data_txt(output_filepath, all_records):
         f"// {fname}",
         f"// Autor: Jan BARTUNEK | Verze: {SCRIPT_VERSION} ({SCRIPT_DATE})",
         f"// Vygenerovano: {today_dt}",
-        "// Sloupce: DATUM_CAS; \t NAZEV_SOUBORU; \t LATITUDE; \t LONGITUDE; \t VELIKOST_BAJTY; \t RELATIVNI_CESTA; \t STAV (G=GNSS unikat, S=bez GNSS, D=duplicita s GNSS); \t NADMORSKA_VYSKA",
+        "// Sloupce: DATUM_CAS; \t NAZEV_SOUBORU; \t LATITUDE; \t LONGITUDE; \t VELIKOST_BAJTY; \t RELATIVNI_CESTA; \t STAV (G=GNSS unikat, S=bez GNSS, D=duplicita s GNSS); \t VYSKA",
         "window.MAPA_FOTEK_DATA = `",
-        f"DATUM_CAS;{tab}NAZEV_SOUBORU;{tab}LATITUDE;{tab}LONGITUDE;{tab}VELIKOST_BAJTY;{tab}RELATIVNI_CESTA;{tab}STAV;{tab}NADMORSKA_VYSKA"
+        f"DATUM_CAS;{tab}NAZEV_SOUBORU;{tab}LATITUDE;{tab}LONGITUDE;{tab}VELIKOST_BAJTY;{tab}RELATIVNI_CESTA;{tab}STAV;{tab}VYSKA"
     ]
 
     for item in all_records:

@@ -679,7 +679,7 @@ public class UnifiedScanner
                                 }
                             }
 
-                            // NADMORSKA_VYSKA: GPS tag 6 (RATIONAL) + tag 5 (ref: 0=nad morem, 1=pod morem).
+                            // VYSKA: GPS tag 6 (RATIONAL) + tag 5 (ref: 0=nad morem, 1=pod morem).
                             // Zkousi se EXIF v JPEG i TIFF/RAW podobe a nakonec vlozeny XMP; vyska i ref
                             // se ctou vzdy ze stejneho zdroje. Nevalidni hodnota umozni zkuset dalsi zdroj.
                             double? altVal = null;
@@ -1006,7 +1006,7 @@ public class UnifiedScanner
                 dateQuality = 2;
             }
 
-            // NADMORSKA_VYSKA z XMP: GPSAltitude a GPSAltitudeRef
+            // VYSKA z XMP: GPSAltitude a GPSAltitudeRef
             double? xmpAltitude = null;
             var matchAlt = Regex.Match(content, @"GPSAltitude(?!Ref)\s*(?:>|=\s*""|=\s*')\s*([^<""']+)", RegexOptions.IgnoreCase);
             var matchAltRef = Regex.Match(content, @"GPSAltitudeRef\s*(?:>|=\s*""|=\s*')\s*([^<""']+)", RegexOptions.IgnoreCase);
@@ -1610,7 +1610,7 @@ public class UnifiedScanner
             var reLat  = new Regex(@"(?<![A-Za-z_])(?:latitude|lat)\s*[:=]\s*([+-]?\d+(?:\.\d+)?)", RegexOptions.IgnoreCase);
             var reLon  = new Regex(@"(?<![A-Za-z_])(?:longt?itude|lon|long|lng)\s*[:=]\s*([+-]?\d+(?:\.\d+)?)", RegexOptions.IgnoreCase);
             var reGps  = new Regex(@"GPS\s*[(:]\s*([+-]?\d+(?:\.\d+)?)\s*,\s*([+-]?\d+(?:\.\d+)?)");
-            // NADMORSKA_VYSKA: jen absolutni vyska nad morem (abs_alt / absoluteAltitude).
+            // VYSKA: jen absolutni vyska nad morem (abs_alt / absoluteAltitude).
             // Relativni udaje (rel_alt, height, relativeAltitude) ani 3. hodnota GPS(...) u starsich DJI
             // modelu se nepouzivaji - mohou byt vztazeny ke vzletisti, ne k hladine more.
             var reAlt  = new Regex(@"(?<![A-Za-z_])(?:abs_alt|absoluteAltitude)\s*[:=]\s*([+-]?\d+(?:\.\d+)?)", RegexOptions.IgnoreCase);
@@ -2511,7 +2511,7 @@ $isFirstRun = $true
             Write-Host "      - Obsahuje VSECHNY soubory: G=unikat s GNSS (mapa), S=bez GNSS, D=duplicita s GNSS."
             Write-Host "      - Vystupni soubor: " -NoNewline; Write-Host "Mapa_Fotek_data_YYYYMMDD.txt" -ForegroundColor Cyan
             Write-Host "      - Format vystupu : JavaScriptovy datovy soubor (window.MAPA_FOTEK_DATA)"
-            Write-Host "        Sloupce oddelene strednikem: DATUM_CAS; NAZEV; LAT; LON; BAJTY; CESTA; STAV; NADMORSKA_VYSKA"
+            Write-Host "        Sloupce oddelene strednikem: DATUM_CAS; NAZEV; LAT; LON; BAJTY; CESTA; STAV; VYSKA"
             Write-Host "        Tento soubor primo nacita a vizualizuje mapa '" -NoNewline
             Write-Host "Mapa_Fotek.html" -ForegroundColor Cyan -NoNewline
             Write-Host "'."
@@ -3035,9 +3035,9 @@ $isFirstRun = $true
     $sb.AppendLine("// $outFileName") | Out-Null
     $sb.AppendLine("// Autor: Jan BARTUNEK | Verze: $scriptVersion ($scriptDate)") | Out-Null
     $sb.AppendLine("// Vygenerovano: $timestampHeader") | Out-Null
-    $sb.AppendLine("// Sloupce: DATUM_CAS; `t NAZEV_SOUBORU; `t LATITUDE; `t LONGITUDE; `t VELIKOST_BAJTY; `t RELATIVNI_CESTA; `t STAV (G=GNSS unikat, S=bez GNSS, D=duplicita s GNSS); `t NADMORSKA_VYSKA") | Out-Null
+    $sb.AppendLine("// Sloupce: DATUM_CAS; `t NAZEV_SOUBORU; `t LATITUDE; `t LONGITUDE; `t VELIKOST_BAJTY; `t RELATIVNI_CESTA; `t STAV (G=GNSS unikat, S=bez GNSS, D=duplicita s GNSS); `t VYSKA") | Out-Null
     $sb.AppendLine("window.MAPA_FOTEK_DATA = " + $bt) | Out-Null
-    $sb.AppendLine("DATUM_CAS;" + $tab + "NAZEV_SOUBORU;" + $tab + "LATITUDE;" + $tab + "LONGITUDE;" + $tab + "VELIKOST_BAJTY;" + $tab + "RELATIVNI_CESTA;" + $tab + "STAV;" + $tab + "NADMORSKA_VYSKA") | Out-Null
+    $sb.AppendLine("DATUM_CAS;" + $tab + "NAZEV_SOUBORU;" + $tab + "LATITUDE;" + $tab + "LONGITUDE;" + $tab + "VELIKOST_BAJTY;" + $tab + "RELATIVNI_CESTA;" + $tab + "STAV;" + $tab + "VYSKA") | Out-Null
 
     foreach ($item in $allRecords) {
         $st = $item.Status
