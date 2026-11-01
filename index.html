@@ -1018,7 +1018,7 @@ var AppLog = (function () {
         .st-tbl-ov-body .st-table-wrap { overflow: visible; }
         .st-tbl-ov-body .st-table { font-size: 13px; min-width: 600px; } /* uzky displej: vodorovne posouvani misto orezu */
         .st-tbl-ov-body .st-table thead th { position: sticky; top: 0; z-index: 2; box-shadow: inset 0 -1px 0 #e8eaed; }
-        .st-table { width: 100%; min-width: 550px; table-layout: fixed; border-collapse: collapse; font-size: 11.5px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; } /* min-width = sirka na desktopu; na uzkem displeji se tabulka posouva misto orezu; text-size-adjust = mobilni prohlizece jinak text v tabulce zvetuji a datumy se oriznou */
+        .st-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 11.5px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; } /* desktop: 100 % sirky, zadny vodorovny posuvnik (min-width by preplaval pres svisly posuvnik modalu); na uzkem displeji se tabulka posouva misto orezu; text-size-adjust = mobilni prohlizece jinak text v tabulce zvetuji a datumy se oriznou */
         @media (max-width: 620px) { .st-table { min-width: 575px; } } /* mobil: o neco sirsi kvuli vykreslovani textu, stale posuvitelne */
         .st-table th { background: #f8f9fa; color: #5f6368; font-weight: 700; text-align: left; padding: 5px 8px; border: 1px solid #e8eaed; cursor: pointer; white-space: nowrap; overflow: hidden; user-select: none; transition: background .15s, color .15s; }
         .st-table th:hover { background: var(--green-bg); color: var(--green); }
@@ -1115,12 +1115,30 @@ var AppLog = (function () {
             /* Nastavení (mobil): ikony zmenšené na 30 px, aby se všech 8 vešlo do jednoho řádku */
             #settingsStepsList .icon-style-btn { width: 30px; height: 30px; }
             .slider-input-group input[type="text"], .slider-input-group input[type="number"] { min-height: 32px; }
-            /* Mobil: pilulkové řádky – pilulky vyplní řádek rovnoměrně, aby žádná (např. „Bez preference“) nepadla sama */
+            /* Mobil: pilulkové řádky – pilulky vyplní řádek rovnoměrně, aby žádná (např. „Bez preference“) nepadla sama
+               (výraz flex-wrap: wrap má mezeru za dvojtečkou – musí se brát i ta varianta) */
             .info-modal div[style*="flex-wrap:wrap"] .source-pill-btn,
-            .style-popover div[style*="flex-wrap:wrap"] .source-pill-btn { flex: 1 1 auto; min-width: 0; }
+            .info-modal div[style*="flex-wrap: wrap"] .source-pill-btn,
+            .style-popover div[style*="flex-wrap:wrap"] .source-pill-btn,
+            .style-popover div[style*="flex-wrap: wrap"] .source-pill-btn { flex: 1 1 auto; min-width: 0; }
             .info-modal .source-controls-row .source-pill-btn { flex: 1 1 auto; min-width: 0; }
             .info-modal div[style*="flex-wrap:wrap"] > span[id],
-            .style-popover div[style*="flex-wrap:wrap"] > span[id] { flex: 1 1 auto; }
+            .info-modal div[style*="flex-wrap: wrap"] > span[id],
+            .style-popover div[style*="flex-wrap:wrap"] > span[id],
+            .style-popover div[style*="flex-wrap: wrap"] > span[id] { flex: 1 1 auto; }
+            /* Mobil: řady 10 barev (Barva stopy / Ukazovátko fotky) – mřížka 5+5 místo zalomení 7+3 */
+            #trailColors, #ptrColors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; justify-items: start; }
+            /* Mobil: široké pilulkové řádky (podklady mapy, viditelnost fotek, mřížka) – mřížka 2 sloupce,
+               aby se pilulky nechápaly 3+1 s jedinou nataženou přes celou šířku */
+            .pill-grid2 { display: grid !important; grid-template-columns: 1fr 1fr; gap: 4px; align-items: center; }
+            .pill-grid2 > span { grid-column: 1 / -1; }
+            .pill-grid2 .source-pill-btn { width: auto !important; }
+            /* Mobil: pilulkové řádky se 3+ pilulkami – popisek na vlastní řádek,
+               aby pilulky (Zapnuto/Vypnuto/Bez preference…) zůstaly pohromadě a roztáhly se rovnoměrně */
+            .info-modal div[style*="flex-wrap:wrap"]:has(> .source-pill-btn + .source-pill-btn + .source-pill-btn) > span,
+            .info-modal div[style*="flex-wrap: wrap"]:has(> .source-pill-btn + .source-pill-btn + .source-pill-btn) > span,
+            .style-popover div[style*="flex-wrap:wrap"]:has(> .source-pill-btn + .source-pill-btn + .source-pill-btn) > span,
+            .style-popover div[style*="flex-wrap: wrap"]:has(> .source-pill-btn + .source-pill-btn + .source-pill-btn) > span { flex: 1 1 100%; min-width: 0; }
             /* Mobil: posuvníky – popisek s polem nahoře, pod nimi posuvník s min vlevo a max vpravo
                (prohlížeče bez :has zůstávají u původního zalomeného rozložení výše) */
             .info-modal .slider-input-group:has(> input[type="range"]),
@@ -1146,6 +1164,14 @@ var AppLog = (function () {
             .style-popover .slider-input-group > input[type="text"] + span { grid-area: unit; }
             #settingsStepsList select[id^="setStats"] { width: auto; min-width: 132px; max-width: 100%; }
             .info-modal .archive-path-input { min-width: 0; }
+        }
+        /* Úzké mobilní displeje (≤350 px): zbylé pilulkové řádky (Automatické spuštění,
+           Zadávání z klávesnice, Zobrazení souřadnic, Výšky) jako mřížka 2 sloupce,
+           aby „Bez preference“ nepadla sama natáhlá přes celou šířku */
+        @media (max-width: 350px) {
+            .pill-grid2s { display: grid !important; grid-template-columns: 1fr 1fr; gap: 4px; align-items: center; }
+            .pill-grid2s > span { grid-column: 1 / -1; }
+            .pill-grid2s .source-pill-btn { width: auto !important; }
         }
         .guide-search:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(var(--green-rgb),0.15); }
         button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
@@ -2960,7 +2986,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.13</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-11-01" title="Datum poslední aktualizace">1. 11. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.15</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-11-01" title="Datum poslední aktualizace">1. 11. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -5134,6 +5160,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     for (var g = 0; g < groups.length; g++) {
                         if (!groups[g].length) continue;
                         var rdiv = document.createElement("div");
+                        rdiv.className = "pill-grid2";
                         rdiv.style.cssText = "display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;";
                         for (var gi = 0; gi < groups[g].length; gi++) {
                             (function(key, nm) {
@@ -18920,7 +18947,7 @@ H += "</div>";
                         "<li><details class=\"step\"><summary><svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/><circle cx='12' cy='13' r='4'/></svg> " + (t.setViewerTitle || "") + "</summary><div class=\"step-body\">" +
                         "<details class=\"step\"><summary>3.1 <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='3'/><path d='M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1'/></svg> <span style='font-weight:400'>" + (t.setGeneralTitle || "") + "</span></summary><div class=\"step-body\">" +
                         "<p style=\"margin:0 0 10px 0;font-size:12px;color:#5f6368;\">" + (t.setViewerDesc || "") + "</p>" +
-                        "<div style=\"display:flex;align-items:center;gap:4px;margin-top:2px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblPhotoVis || "") + "</span>" +
+                        "<div class=\"pill-grid2\" style=\"display:flex;align-items:center;gap:4px;margin-top:2px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblPhotoVis || "") + "</span>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-vis\" data-m=\"0\" style=\"width:64px;justify-content:center;\" title=\"" + (t.visAllTip || "") + "\" onclick=\"event.stopPropagation();setLBPhotoVis(0)\">" + (t.visAll || "") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-vis\" data-m=\"1\" style=\"width:64px;justify-content:center;\" title=\"" + (t.visGDTip || "") + "\" onclick=\"event.stopPropagation();setLBPhotoVis(1)\">" + (t.visGD || "") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-vis\" data-m=\"2\" style=\"width:64px;justify-content:center;\" title=\"" + (t.visGTip || "") + "\" onclick=\"event.stopPropagation();setLBPhotoVis(2)\">" + (t.visG || "") + "</button>" +
@@ -19075,29 +19102,29 @@ H += "</div>";
                         "</div>" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span style=\"min-width:92px;\">" + (t.lblOffLand || "") + "</span><span id=\"offLandSw\" class=\"color-palette-grid\" style=\"grid-template-columns:repeat(7,22px);\"></span></div>" +
                         "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span style=\"min-width:92px;\">" + (t.lblOffSea || "") + "</span><span id=\"offSeaSw\" class=\"color-palette-grid\" style=\"grid-template-columns:repeat(7,22px);\"></span></div>" +
-                        "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span style=\"min-width:92px;\" title=\"" + (t.offZonesTip || "") + "\">" + (t.lblOffZones || "Výšky") + "</span>" +
+                        "<div class=\"pill-grid2s\" style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span style=\"min-width:92px;\" title=\"" + (t.offZonesTip || "") + "\">" + (t.lblOffZones || "Výšky") + "</span>" +
                         "<button type=\"button\" id=\"offZonesOn\" class=\"source-pill-btn\" style=\"width:64px;justify-content:center;\" onclick=\"event.stopPropagation();setOffZones(true)\">" + (t.offZonesOn || "Zapnuto") + "</button>" +
                         "<button type=\"button\" id=\"offZonesOff\" class=\"source-pill-btn\" style=\"width:64px;justify-content:center;\" onclick=\"event.stopPropagation();setOffZones(false)\">" + (t.offZonesOff || "Vypnuto") + "</button>" +
                         "</div>" +
                         "<div style=\"display:flex;justify-content:flex-end;margin-top:6px;\"><button type=\"button\" class=\"source-pill-btn\" title=\"" + (t.tipOffDefault || "") + "\" onclick=\"event.stopPropagation();resetOffDefaults();\">" + PILL_RESET_SVG + " " + (t.btnOffDefault || "") + "</button></div>" +
                         "<div style=\"margin-top:10px;padding-top:8px;border-top:1px solid #000000;font-size:11px;font-weight:700;color:#3c4043;\">" + (t.lblMeasure || "") + "</div>" +
-                        "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.measAuto || "") + "</span>" +
+                        "<div class=\"pill-grid2s\" style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.measAuto || "") + "</span>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-mauto\" data-m=\"1\" style=\"width:64px;justify-content:center;\" onclick=\"event.stopPropagation();setMeasAutoStart(1)\">" + (t.measAutoOn || "Zapnuto") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-mauto\" data-m=\"0\" style=\"width:64px;justify-content:center;\" onclick=\"event.stopPropagation();setMeasAutoStart(0)\">" + (t.measAutoOff || "Vypnuto") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-mauto mf-none\" data-m=\"none\" title=\"" + (t.measAutoNoneTip || "") + "\" onclick=\"event.stopPropagation();setMeasAutoStart('none')\">" + (t.visNone || "Bez preference") + "</button>" +
                         "</div>" +
-                        "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblGridSt || "") + "</span>" +
+                        "<div class=\"pill-grid2\" style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblGridSt || "") + "</span>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-gridst\" data-m=\"0\" onclick=\"event.stopPropagation();setMeasGridSt(0)\">" + (t.gridOff || "") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-gridst\" data-m=\"1\" onclick=\"event.stopPropagation();setMeasGridSt(1)\">" + (t.gridOn || "") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-gridst\" data-m=\"2\" onclick=\"event.stopPropagation();setMeasGridSt(2)\">" + (t.gridLabels || "") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-gridst mf-none\" data-m=\"none\" title=\"" + (t.noPrefTip || "") + "\" onclick=\"event.stopPropagation();setMeasGridSt('none')\">" + (t.visNone || "Bez preference") + "</button>" +
                         "</div>" +
-                        "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblDynInput || "") + "</span>" +
+                        "<div class=\"pill-grid2s\" style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblDynInput || "") + "</span>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-dyn\" data-m=\"1\" style=\"width:64px;justify-content:center;\" onclick=\"event.stopPropagation();setMeasDynInput(1)\">" + (t.measAutoOn || "Zapnuto") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-dyn\" data-m=\"0\" style=\"width:64px;justify-content:center;\" onclick=\"event.stopPropagation();setMeasDynInput(0)\">" + (t.measAutoOff || "Vypnuto") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-dyn mf-none\" data-m=\"none\" title=\"" + (t.noPrefTip || "") + "\" onclick=\"event.stopPropagation();setMeasDynInput('none')\">" + (t.visNone || "Bez preference") + "</button>" +
                         "</div>" +
-                        "<div style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblShowCoords || "") + "</span>" +
+                        "<div class=\"pill-grid2s\" style=\"display:flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;color:#3c4043;flex-wrap:wrap;\"><span>" + (t.lblShowCoords || "") + "</span>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-coords\" data-m=\"1\" style=\"width:64px;justify-content:center;\" onclick=\"event.stopPropagation();setMeasShowCoords(1)\">" + (t.measAutoOn || "Zapnuto") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-coords\" data-m=\"0\" style=\"width:64px;justify-content:center;\" onclick=\"event.stopPropagation();setMeasShowCoords(0)\">" + (t.measAutoOff || "Vypnuto") + "</button>" +
                         "<button type=\"button\" class=\"source-pill-btn mf-coords mf-none\" data-m=\"none\" title=\"" + (t.noPrefTip || "") + "\" onclick=\"event.stopPropagation();setMeasShowCoords('none')\">" + (t.visNone || "Bez preference") + "</button>" +
@@ -20021,12 +20048,17 @@ H += "</div>";
                             var poly = d.polygons[pg];
                             if (!poly.outer || poly.outer.length < 3) continue;
                             var rings = [];
+                            /* GeoJSON (RFC 7946): linearni prstenec MUSI byt uzavreny (prvni bod = posledni) */
+                            var _ringClose = function(coords) {
+                                if (coords.length >= 1 && JSON.stringify(coords[0]) !== JSON.stringify(coords[coords.length - 1])) coords.push(coords[0].slice());
+                                return coords;
+                            };
                             var outerCoords = [];
                             for (var o = 0; o < poly.outer.length; o++) {
                                 var op = poly.outer[o];
                                 outerCoords.push(Array.isArray(op) ? (op.length > 2 && !isNaN(op[2]) ? [op[1], op[0], op[2]] : [op[1], op[0]]) : [op.lng || op[1], op.lat || op[0]]);
                             }
-                            rings.push(outerCoords);
+                            rings.push(_ringClose(outerCoords));
                             if (poly.holes) {
                                 for (var h = 0; h < poly.holes.length; h++) {
                                     var holeCoords = [];
@@ -20034,7 +20066,7 @@ H += "</div>";
                                         var hp = poly.holes[h][hi];
                                         holeCoords.push(Array.isArray(hp) ? (hp.length > 2 && !isNaN(hp[2]) ? [hp[1], hp[0], hp[2]] : [hp[1], hp[0]]) : [hp.lng || hp[1], hp.lat || hp[0]]);
                                     }
-                                    rings.push(holeCoords);
+                                    rings.push(_ringClose(holeCoords));
                                 }
                             }
                             features.push({
@@ -20514,7 +20546,22 @@ return (typeof pt.photoSt === "string" && typeof mfElevLbl === "function") ? mfE
             currentLBPhotos = getFilteredPhotosList();
             var t = i18n[currentLang] || {};
             try {
-                var hiddenCount = oldList.length - currentLBPhotos.length;
+                var hiddenCount;
+                if (oldList.length > 0) hiddenCount = oldList.length - currentLBPhotos.length;
+                else {
+                    /* starý seznam je prázdný (prohlížečka otevřená s prázdným výsledkem
+                       a filtry mezitím uvolněné): skryté spočti proti režimu bez skrývání stavů,
+                       aby počet v toastu nevyšel záporný */
+                    hiddenCount = 0;
+                    try {
+                        var _pm = lbHideMode;
+                        lbHideMode = 0;
+                        var _all = getFilteredPhotosList();
+                        lbHideMode = _pm;
+                        var _c = countSTAV(_all);
+                        hiddenCount = (lbHideMode === 1) ? _c.S : _c.D;
+                    } catch(eHc) { AppLog.soft("cycleLBShow>hidden", eHc); hiddenCount = 0; }
+                }
                 if (lbHideMode === 1) showToast((t.toastHideS || "S fotky skryty ({count})").replace("{count}", hiddenCount));
                 else if (lbHideMode === 2) showToast((t.toastHideDS || "D a S fotky skryty ({count})").replace("{count}", hiddenCount));
                 else showToast((t.toastShowAll || "Zobrazeny všechny fotky ({count})").replace("{count}", currentLBPhotos.length));
@@ -30008,8 +30055,8 @@ if(measureDistanceState.active) stopMeasureDistance();
             // Vlastní neblokující dialog pro zadání šířky obalové zóny (nahrazuje window.prompt())
             (function() {
                 var _t3 = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {};
-                var promptMsg = _t3.bufZonePrompt || (currentLang === "cs" ? "Zadej šířku obalové zóny v km:" : "Enter buffer zone width in km:");
-                var invalidMsg = _t3.bufZoneInvalidWidth || (currentLang === "cs" ? "Neplatná šířka obalové zóny." : "Invalid buffer zone width.");
+                var promptMsg = _t3.bufZonePrompt || (currentLang === "cs" ? "Zadej odsazení obalové zóny v km:" : "Enter buffer zone offset in km:");
+                var invalidMsg = _t3.bufZoneInvalidWidth || (currentLang === "cs" ? "Neplatné odsazení obalové zóny." : "Invalid buffer zone offset.");
                 var ov = document.createElement("div");
                 ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:99999;display:flex;align-items:center;justify-content:center;";
                 var dlg = document.createElement("div");
@@ -33205,17 +33252,19 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
         function searchFolders(q, page, pageSize) {
             if (page === undefined) page = 0;
             if (pageSize === undefined) pageSize = MAX_FOLDER_FILES;
+            /* hledání bez ohledu na diakritiku (stejně jako v návodu, nastavení a statistikách) */
+            var ql = normDiacFolderSearch(String(q || ""));
             var map = {}, order = [];
             for (var i = 0; i < rawData.length; i++) {
                 var dt = String(rawData[i][2]).replace("_", "");
                 if (!timePass(dt)) continue;
                 var norm = normFolderPath(rawData[i][5]);
-                if (norm === "" || norm.toLowerCase().indexOf(q) === -1) continue;
+                if (norm === "" || normDiacFolderSearch(norm).indexOf(ql) === -1) continue;
                 var segs = norm.split("/");
                 var acc = "";
                 for (var sgi = 0; sgi < segs.length - 1; sgi++) {
                     acc = acc ? acc + "/" + segs[sgi] : segs[sgi];
-                    if (acc.toLowerCase().indexOf(q) === -1) continue;
+                    if (normDiacFolderSearch(acc).indexOf(ql) === -1) continue;
                     if (!map[acc]) { map[acc] = { full: acc, t: { G: 0, D: 0, S: 0 } }; order.push(acc); }
                     if (areaElevPass(rawData[i])) map[acc].t[stOf(rawData[i])]++;
                 }
@@ -34971,7 +35020,9 @@ if (q) {
             var label = (!hasMultiT && timePrefix === "all" && !timeInvertedOn())
                 ? (t.timeWord || (currentLang === "cs" ? "Čas" : "Time"))
                 : fmtTimePrefix(timePrefix, t);
-            if (!hasMultiT && (timePrefix === "all" || timePrefix.length < 10)) {
+            /* počet fotek do popisku: bez filtru, s jediným vybraným obdobím i u invertace;
+               u vicevýběru (>1) nechává fmtTimePrefix vlastní formát "Čas (počet období)" */
+            if ((!hasMultiT || timePrefixes.length === 1) && (timePrefix === "all" || timePrefix.length < 10)) {
                 var cnt = timeInvertedOn() ? tallyFiltered().G : tallyForPrefix(timePrefix).G;
                 label += " (" + cnt.toLocaleString(loc) + ")";
             }
