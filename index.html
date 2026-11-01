@@ -1582,6 +1582,9 @@ var AppLog = (function () {
         .no-thumb-txt { color: #80868b; font-size: 11px; font-weight: 500; text-align: center; }
         .card-body { padding: 9px 11px 11px 11px; }
         .card-title { font-size: 12px; font-weight: 700; color: #202124; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+        .card-title-row { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
+        .card-title-row .card-title { margin-bottom: 0; flex: 1 1 auto; min-width: 0; }
+        .c-fold-mini { flex: 0 0 auto; color: #5f6368; cursor: default; display: inline-flex; }
         .card-meta { font-size: 11px; color: #5f6368; margin-bottom: 3px; display: flex; justify-content: space-between; gap: 4px; }
         .card-size { font-size: 10px; color: #80868b; margin-bottom: 7px; }
         /* Radek velikost (vlevo) + nadmorska vyska (vpravo, stejne pismo jako souradnice v .card-meta) */
@@ -3840,6 +3843,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 btnExportGj: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg>",
                 btnSyncStyles: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg>",
                 titleSyncStyles: "Sjednotit všechny parametry podle posledního upravovaného souboru",
+                tipExportGj: "Exportovat viditelná data do GeoJSON",
                 btnToggleAll: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg>",
                 titleToggleAll: "Zapnout / vypnout všechny vrstvy",
                 titleZoneSlider: "jemné 0–1 km (po 0,1) | hlavní 1–100 km (po 0,5) | 100–500 km (po 50) | 500–1000 km (po 100) | zbytek. Hodnoty pod 1 km zadejte do číselného pole.",
@@ -4232,6 +4236,7 @@ statsFarthestPair: "Farthest pair",
                 btnExportGj: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z'/><polyline points='17 21 17 13 7 13 7 21'/><polyline points='7 3 7 8 15 8'/></svg>",
                 btnSyncStyles: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8'/><path d='m16 16 6-6'/><path d='m8 8 6-6'/><path d='m9 7 8 8'/><path d='m21 11-8-8'/></svg>",
                 titleSyncStyles: "Unify all parameters to match the last edited file",
+                tipExportGj: "Export visible data as GeoJSON",
                 btnToggleAll: "<svg viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z'/><circle cx='12' cy='12' r='3'/></svg>",
                 titleToggleAll: "Show or hide all datasets",
                 titleZoneSlider: "fine 0-1 km (by 0.1) | main 1-100 km (by 0.5) | 100-500 km (by 50) | 500-1000 km (by 100) | rest. Values below 1 km: type into the number field.",
@@ -8165,16 +8170,12 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (bInfoClose) bInfoClose.title = t.tipInfoClose;
             var bLbClose = document.getElementById("btnLightboxClose");
             if (bLbClose) bLbClose.title = t.tipLightboxClose;
-            // Aria-labels mirror titles (screen readers follow language switch)
-            ["btnMeasureGrid","btnMeasureDist","btnShowCoords","btnParallel","btnMeridian","btnSaveMeasure","btnClearMeasure","btnUndoMeasure","btnRedoMeasure","btnBufferZone","btnBufCircleCenter","btnBufCircle3p","btnBufZone","btnMeasurePanelClose","btnSyncStyles","btnToggleAll","btnResetStyles","btnUndo","btnRedo","btnLayers","btnZoomIn","btnZoomOut","btnAddFile","btnInfoClose","btnLightboxClose","measurePanel","btnYearSelect","btnFolderSelect","btnAreaSelect","btnZoomFiltered"].forEach(function(id){
-                var el = document.getElementById(id);
-                if (el && el.title) el.setAttribute("aria-label", el.title);
-            });
             var btnCloseAllAria = document.getElementById("txtBtnCloseAll");
             if (btnCloseAllAria) btnCloseAllAria.setAttribute("aria-label", t.closeAll);
             setH("txtBtnAddMini", t.btnAddMini);
             var btnGj = document.getElementById("txtBtnExportGj");
             if (btnGj) btnGj.innerHTML = t.btnExportGj;
+            if (btnGj) btnGj.title = t.tipExportGj;
             var btnCloseAll = document.getElementById("txtBtnCloseAll");
             if (btnCloseAll) { btnCloseAll.textContent = "✕ " + (t.allWord || t.closeAll); btnCloseAll.title = t.confirmCloseAll; }
             var btnSync = document.getElementById("btnSyncStyles");
@@ -8300,6 +8301,18 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 try { if (typeof probeHtmlDownload === "function") probeHtmlDownload(); } catch(e) { AppLog.soft("setLanguage", e); }
             if (typeof renderLBEmpty === "function") { try { renderLBEmpty(); } catch(e) { AppLog.soft("setLanguage", e); } }
             if (typeof lbSlideBadgeSync === "function") { try { lbSlideBadgeSync(); } catch(e) { AppLog.soft("setLanguage", e); } }
+            /* Aria-labels mirror titles (screen readers follow language switch).
+               Musí běžet až na konci setLanguage: titulky řady tlačítek (btnLayers,
+               btnFolderSelect, btnZoomFiltered, btnUndo, btnRedo, btnSyncStyles,
+               btnToggleAll, btnResetStyles, txtBtnExportGj…) se překládají výše;
+               při dřívějším spuštění by zrcadlení zkopírovalo starý český titulek
+               a aria-label by zůstal nepřeložený. */
+            try {
+                ["btnMeasureGrid","btnMeasureDist","btnShowCoords","btnParallel","btnMeridian","btnSaveMeasure","btnClearMeasure","btnUndoMeasure","btnRedoMeasure","btnBufferZone","btnBufCircleCenter","btnBufCircle3p","btnBufZone","btnMeasurePanelClose","btnSyncStyles","btnToggleAll","btnResetStyles","btnUndo","btnRedo","btnLayers","btnZoomIn","btnZoomOut","btnAddFile","btnInfoClose","btnLightboxClose","measurePanel","btnYearSelect","btnFolderSelect","btnAreaSelect","btnZoomFiltered","txtBtnExportGj"].forEach(function(id){
+                    var el = document.getElementById(id);
+                    if (el && el.title) el.setAttribute("aria-label", el.title);
+                });
+            } catch(eAria) { AppLog.soft("setLanguage", eAria); }
         }
 
         var toastTimer = null;
@@ -26152,12 +26165,26 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
         function undoLastAction() {
             if (_undoStack.length === 0) return;
             _undoSkipSave = true;
-            // Uložit stávající stav do Redo zásobníku
             var currentSnap = snapshotDatasetState();
+            var currentStr = JSON.stringify(currentSnap);
+            // Přeskočit snapshoty shodné s aktuálním stavem (např. snapshot uložený před otevřením
+            // popoveru stylů) — jinak by první Ctrl+Z jen aplikoval stav shodný se současným a nic neudělalo
+            var targetState = null;
+            while (_undoStack.length > 0) {
+                var cand = _undoStack.pop();
+                if (JSON.stringify(cand) === currentStr) continue;
+                targetState = cand;
+                break;
+            }
+            if (!targetState) {
+                _undoSkipSave = false;
+                updateUndoRedoBtnState();
+                return;
+            }
+            // Uložit stávající stav do Redo zásobníku
             _redoStack.push(currentSnap);
             if (_redoStack.length > _MAX_UNDO_STEPS) _redoStack.shift();
 
-            var targetState = _undoStack.pop();
             _undoSaved = false;
             applyDatasetSnapshot(targetState);
             updateUndoRedoBtnState();
@@ -26170,12 +26197,25 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
         function redoLastAction() {
             if (_redoStack.length === 0) return;
             _undoSkipSave = true;
-            // Uložit stávající stav do Undo zásobníku
             var currentSnap = snapshotDatasetState();
+            var currentStr = JSON.stringify(currentSnap);
+            // Symetricky k undo: přeskočit snapshoty shodné s aktuálním stavem (bezviditelný krok)
+            var targetState = null;
+            while (_redoStack.length > 0) {
+                var cand = _redoStack.pop();
+                if (JSON.stringify(cand) === currentStr) continue;
+                targetState = cand;
+                break;
+            }
+            if (!targetState) {
+                _undoSkipSave = false;
+                updateUndoRedoBtnState();
+                return;
+            }
+            // Uložit stávající stav do Undo zásobníku
             _undoStack.push(currentSnap);
             if (_undoStack.length > _MAX_UNDO_STEPS) _undoStack.shift();
 
-            var targetState = _redoStack.pop();
             _undoSaved = false;
             applyDatasetSnapshot(targetState);
             updateUndoRedoBtnState();
@@ -35036,6 +35076,7 @@ if (q) {
         var POPUP_MAPYIMG = "<img src=\"data:image/png;base64,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\" width=\"15\" height=\"15\" style=\"border-radius:2px; filter: grayscale(100%);\" alt=\"Mapy.com\">";
         var POPUP_PLACESVG = "<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8.5\" stroke-dasharray=\"3 2.4\" opacity=\"0.65\"/><circle cx=\"12\" cy=\"12\" r=\"2.6\" fill=\"currentColor\" stroke=\"none\"/></svg>";
         var POPUP_EXTSVG = "<svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/><polyline points=\"15 3 21 3 21 9\"/><line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"/></svg>";
+        var POPUP_FOLDERSVG = "<svg viewBox=\"0 0 24 24\" width=\"13\" height=\"13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\"/></svg>";
         // --- Tlacitko "Misto" v popupu: docasny kruhovy oblastni filtr ---
         // Predchozi stav oblasti pro navrat pri zavreni prohlizecky.
         var prevPlaceArea = null;
@@ -35123,6 +35164,8 @@ if (q) {
             var isSingle = !!(dsk && typeof datasets !== "undefined" && datasets[dsk] && datasets[dsk].fromImage);
             var jsFn = rawFn.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
             var df = fmtDate(dt), _rr = resolvePhotoUrl(rp, dsk), fu = _rr ? (_rr.indexOf("data:") === 0 ? _rr : encodeURI(_rr)) : "", gm = "https://www.google.com/maps?q="+lat+","+lon, my = "https://mapy.cz/zakladni?q="+lat+"%2C"+lon, sz = fmtBytes(fs); var _el = (p.length > 7 && (p[6] !== "S")) ? ((typeof mfElevLbl === "function") ? mfElevLbl((typeof mfEffElev === "function") ? mfEffElev(p) : p[7]) : fmtElev((typeof mfEffElev === "function") ? mfEffElev(p) : p[7])) : ""; var _elIco = "<svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m8 3 4 8 5-5 5 15H2L8 3z\"/></svg>"; var _dtip = statsDayTipTitle(dt, df);
+            var _fld = "";
+            try { _fld = (typeof getPhotoFolder === "function") ? getPhotoFolder(rp, rawFn) : ""; } catch(eF) { AppLog.soft("createPopupContent", eF); }
             var isVid = false, isPlayVid = false;
             try {
                 isVid = (typeof isVideoFn === "function") && isVideoFn(rawFn);
@@ -35140,7 +35183,7 @@ if (q) {
             } else {
                 th = renderNoThumbHtml(t.noThumb);
             }
-            return th + "<div class=\"card-body\"><div class=\"card-title\" title=\""+fn+"\">"+fn+"</div><div class=\"card-meta\"><span"+(_dtip?" title=\""+escapeHtml(_dtip)+"\"": "")+">"+df+"</span><span title=\""+escapeHtml("GNSS: "+lat.toFixed(6)+", "+lon.toFixed(6)+(_el ? " · "+_el : ""))+"\">"+lat.toFixed(4)+", "+lon.toFixed(4)+"</span></div>"+((sz || _el) ? "<div class=\"card-size card-size-row\"><span"+(fs ? " title=\""+escapeHtml((t.tipFileSize || "Velikost souboru")+": "+statsBytesTitle(fs))+"\"" : "")+">"+escapeHtml(sz)+"</span>"+(_el ? "<span class=\"card-elev\" title=\""+escapeHtml((typeof mfElevTip === "function") ? mfElevTip() : (currentLang === "cs" ? "Nadmořská výška" : "Elevation"))+"\">"+_elIco+escapeHtml(_el)+"</span>" : "")+"</div>" : "") + "<div class=\"card-actions card-actions-ico\"><a href=\""+gm+"\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"c-btn c-btn-ico c-btn-gm\" title=\""+escapeHtml(t.tipOpenGoogle || "Otevřít v Google Maps")+"\" aria-label=\""+escapeHtml(t.tipOpenGoogle || "Otevřít v Google Maps")+"\">"+POPUP_GPIN+"</a><a href=\""+my+"\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"c-btn c-btn-ico c-btn-my\" title=\""+escapeHtml(t.tipOpenMapy || "Otevřít v Mapy.com")+"\" aria-label=\""+escapeHtml(t.tipOpenMapy || "Otevřít v Mapy.com")+"\">"+POPUP_MAPYIMG+"</a>"+photoPlaceBtn(lat, lon, p, fu, dsk)+((fu && !isSingle) ? "<a href=\""+fu+"\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"c-btn c-btn-ico c-btn-go\" title=\""+escapeHtml(t.tipFullSize || "Plná velikost")+"\" aria-label=\""+escapeHtml(t.tipFullSize || "Plná velikost")+"\">"+POPUP_EXTSVG+"</a>" : "")+"</div></div>";
+            return th + "<div class=\"card-body\"><div class=\"card-title-row\"><span class=\"card-title\" title=\""+fn+"\">"+fn+"</span>"+(_fld ? "<span class=\"c-fold-mini\" title=\""+escapeHtml(_fld)+"\" aria-label=\""+escapeHtml(_fld)+"\">"+POPUP_FOLDERSVG+"</span>" : "")+"</div><div class=\"card-meta\"><span"+(_dtip?" title=\""+escapeHtml(_dtip)+"\"": "")+">"+df+"</span><span title=\""+escapeHtml("GNSS: "+lat.toFixed(6)+", "+lon.toFixed(6)+(_el ? " · "+_el : ""))+"\">"+lat.toFixed(4)+", "+lon.toFixed(4)+"</span></div>"+((sz || _el) ? "<div class=\"card-size card-size-row\"><span"+(fs ? " title=\""+escapeHtml((t.tipFileSize || "Velikost souboru")+": "+statsBytesTitle(fs))+"\"" : "")+">"+escapeHtml(sz)+"</span>"+(_el ? "<span class=\"card-elev\" title=\""+escapeHtml((typeof mfElevTip === "function") ? mfElevTip() : (currentLang === "cs" ? "Nadmořská výška" : "Elevation"))+"\">"+_elIco+escapeHtml(_el)+"</span>" : "")+"</div>" : "") + "<div class=\"card-actions card-actions-ico\"><a href=\""+gm+"\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"c-btn c-btn-ico c-btn-gm\" title=\""+escapeHtml(t.tipOpenGoogle || "Otevřít v Google Maps")+"\" aria-label=\""+escapeHtml(t.tipOpenGoogle || "Otevřít v Google Maps")+"\">"+POPUP_GPIN+"</a><a href=\""+my+"\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"c-btn c-btn-ico c-btn-my\" title=\""+escapeHtml(t.tipOpenMapy || "Otevřít v Mapy.com")+"\" aria-label=\""+escapeHtml(t.tipOpenMapy || "Otevřít v Mapy.com")+"\">"+POPUP_MAPYIMG+"</a>"+photoPlaceBtn(lat, lon, p, fu, dsk)+((fu && !isSingle) ? "<a href=\""+fu+"\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"c-btn c-btn-ico c-btn-go\" title=\""+escapeHtml(t.tipFullSize || "Plná velikost")+"\" aria-label=\""+escapeHtml(t.tipFullSize || "Plná velikost")+"\">"+POPUP_EXTSVG+"</a>" : "")+"</div></div>";
         }
 
         function scheduleHeatZoomRefresh() {
@@ -39077,7 +39120,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
                 };
                 img.onerror = fail;
                 img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-            } catch (e) { try { AppLog.soft("MF_ZONEMAP.exportPng", e); } catch (e2) { } try { showToast("Chyba při exportu"); } catch (e3) { } }
+            } catch (e) { try { AppLog.soft("MF_ZONEMAP.exportPng", e); } catch (e2) { } try { showToast(((typeof i18n !== "undefined" && i18n[currentLang] && i18n[currentLang].toastExportErr) || "Chyba při exportu")); } catch (e3) { } }
         }
 
         try { injectCss(); } catch (eCss) { }
@@ -39540,7 +39583,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
                 };
                 img.onerror = fail;
                 img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-            } catch (e) { log("exportPng", e); try { showToast("Chyba při exportu"); } catch (e3) { } }
+            } catch (e) { log("exportPng", e); try { showToast(((typeof i18n !== "undefined" && i18n[currentLang] && i18n[currentLang].toastExportErr) || "Chyba při exportu")); } catch (e3) { } }
         }
 
         return { open: open, close: close, fillPreviews: fillPreviews, refresh: refresh, _rasterUrl: rasterUrl, _corrStat: corrStat, _photoPts: photoPts };
