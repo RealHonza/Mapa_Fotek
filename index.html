@@ -2989,7 +2989,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.17</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-11-01" title="Datum poslední aktualizace">1. 11. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.18</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-11-01" title="Datum poslední aktualizace">1. 11. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -6321,6 +6321,18 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
         var folderPrefix = null, folderPrefixes = [], folderNav = null;
         var areaFilter = null, areaFilters = []; // {kind:'place'|'sources'|'measure', rings:[{outer,holes}], circles:[{lat,lon,rKm}], label}
         var areaSearchedPlaces = []; // [{kind:'place', rings, circles, label}]
+        /* Platná poloha: obě souřadnice konečná čísla. Jediná vyřazená kombinace je přesně 0, 0 („Null Island“ = chybné GNSS);
+           nula jen v jedné souřadnici (rovník, nultý poledník) i hodnoty blízko nuly (0,0001) jsou platné. */
+        function mfHasLL(la, lo) {
+            if (la === null || lo === null || la === undefined || lo === undefined || la === "" || lo === "") return false;
+            la = Number(la); lo = Number(lo);
+            if (!isFinite(la) || !isFinite(lo)) return false;
+            return !(la === 0 && lo === 0);
+        }
+        /* Platná poloha a zároveň v rozsahu WGS84 (−90…90, −180…180) – pro import */
+        function mfLLValid(la, lo) {
+            return mfHasLL(la, lo) && Math.abs(Number(la)) <= 90 && Math.abs(Number(lo)) <= 180;
+        }
         function ptInPolyLL(lat, lon, ring) {
             try {
                 var ins = false;
@@ -6332,15 +6344,106 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                 return ins;
             } catch(e) { return false; }
         }
+        /* ===== Filtr oblasti přes antimeridián (±180°) a kolem pólu =====
+           Hrany prstence se berou nejkratší cestou (stejně jako geodesicPoints, closeRingForMap a měření), takže sousední
+           vrcholy 179,9° a −179,9° jsou 0,2° od sebe, ne 359,8°. Běžný prstenec (žádný skok > 180°, délky v −180…180)
+           zůstává na původní rychlé cestě ptInPolyLL. Zvláštní prstenec (přechod přes 180°, délky mimo ±180° po odvinutí
+           z měření, prstenec obepínající pól) se testuje paprskem po poledníku k severnímu pólu s cyklickou délkou. */
+        function areaRingPrepOne(ring) {
+            var n = ring ? ring.length : 0, i, special = false;
+            for (i = 0; i < n && !special; i++) {
+                var lo = ring[i][1], lo2 = ring[(i + 1) % n][1];
+                if (lo < -180 || lo > 180 || Math.abs(lo2 - lo) > 180) special = true;
+            }
+            if (!special) return { special: false };
+            var net = 0, cur = ring[0][1], mnU = cur, mxU = cur, mnLa = 90, mxLa = -90, sLa = 0;
+            for (i = 0; i < n; i++) {
+                var la = ring[i][0];
+                if (la < mnLa) mnLa = la;
+                if (la > mxLa) mxLa = la;
+                sLa += la;
+                var d = shortestDLng(ring[i][1], ring[(i + 1) % n][1]);
+                net += d;
+                if (i < n - 1) { cur += d; if (cur < mnU) mnU = cur; if (cur > mxU) mxU = cur; }
+            }
+            var polar = Math.abs(net) > 180;
+            var northIn = polar && (sLa / n) >= 0;    /* stejné pravidlo jako closeRingForMap: pól podle průměrné šířky */
+            var bb = polar ? { mnLa: northIn ? mnLa : -90, mxLa: northIn ? 90 : mxLa, mnLo: null, mxLo: null }
+                           : { mnLa: mnLa, mxLa: mxLa, mnLo: mnU, mxLo: mxU };
+            return { special: true, polar: polar, northIn: northIn, bb: bb };
+        }
+        function areaRingPrep(r) {
+            var o = r.outer || [], hs = r.holes || [];
+            var c = r._u;
+            if (c && c.src === o && c.n === o.length && c.hsSrc === hs && c.hn === hs.length) return c;
+            var res = { src: o, n: o.length, hsSrc: hs, hn: hs.length, o: areaRingPrepOne(o), h: [] };
+            for (var i = 0; i < hs.length; i++) res.h.push(areaRingPrepOne(hs[i] || []));
+            /* neenumerovatelné: neukládá se do localStorage s filtrem a nemění JSON */
+            try { Object.defineProperty(r, "_u", { value: res, writable: true, configurable: true, enumerable: false }); } catch(e) { AppLog.soft("areaRingPrep", e); }
+            return res;
+        }
+        /* Paprsek z bodu po poledníku k severnímu pólu; hrana a->b vede nejkratší cestou (Δλ v (−180, 180]).
+           Polootevřený interval [0, Δλ) zabrání dvojímu započtení vrcholu. */
+        function ptInPolyCyc(lat, lon, ring) {
+            var cnt = 0, n = ring.length;
+            for (var i = 0; i < n; i++) {
+                var a = ring[i], b = ring[(i + 1) % n];
+                var da = shortestDLng(a[1], b[1]);
+                if (da === 0) continue;
+                var xp = shortestDLng(a[1], lon);
+                if ((xp >= 0) !== (xp >= da)) {
+                    var lc = a[0] + (xp / da) * (b[0] - a[0]);
+                    if (lc > lat) cnt++;
+                }
+            }
+            return (cnt % 2) === 1;
+        }
+        function areaRingInsideCyc(lat, lon, ring, pr) {
+            var bb = pr.bb;
+            if (lat < bb.mnLa || lat > bb.mxLa) return false;
+            if (!pr.polar) {
+                var xs = bb.mnLo + ((((lon - bb.mnLo) % 360) + 360) % 360);
+                if (xs > bb.mxLo) return false;
+            }
+            return ptInPolyCyc(lat, lon, ring) !== pr.northIn;
+        }
         function areaRingMatch(lat, lon, r) {
             try {
-                var bb = r.bbox || areaRingBBox(r.outer || []);
-                if (bb && (lat < bb.mnLa || lat > bb.mxLa || lon < bb.mnLo || lon > bb.mxLo)) return false;
-                if (!ptInPolyLL(lat, lon, r.outer || [])) return false;
+                var u = areaRingPrep(r);
+                if (!u.o.special) {
+                    var bb = r.bbox || areaRingBBox(r.outer || []);
+                    if (bb && (lat < bb.mnLa || lat > bb.mxLa || lon < bb.mnLo || lon > bb.mxLo)) return false;
+                    if (!ptInPolyLL(lat, lon, r.outer || [])) return false;
+                } else if (!areaRingInsideCyc(lat, lon, r.outer || [], u.o)) return false;
                 var hs = r.holes || [];
-                for (var i = 0; i < hs.length; i++) { if (ptInPolyLL(lat, lon, hs[i] || [])) return false; }
+                for (var i = 0; i < hs.length; i++) {
+                    var hp = u.h[i];
+                    if (hp && hp.special ? areaRingInsideCyc(lat, lon, hs[i] || [], hp) : ptInPolyLL(lat, lon, hs[i] || [])) return false;
+                }
                 return true;
             } catch(e) { return false; }
+        }
+        /* Zjednodušení prstence pro filtr: u prstence přes ±180° se DP počítá na odvinutých délkách (jinak by skok
+           o 360° zkreslil vzdálenosti), výsledek se vrátí do −180…180. Běžný prstenec = beze změny areaSimplifyDP. */
+        function areaSimplifyRing(pts, tol) {
+            try {
+                if (!pts || pts.length < 4 || !areaRingPrepOne(pts).special) return areaSimplifyDP(pts, tol);
+                var u = unwrapLngs(pts);
+                var out = areaSimplifyDP(u, tol);
+                if (!out) return out;
+                return out.map(function(q) { return [q[0], normLng(q[1])]; });
+            } catch(e) { return areaSimplifyDP(pts, tol); }
+        }
+        /* Prstence filtru pro vykreslení zvýraznění: zvláštní prstenec stejně jako měření (closeRingForMap). */
+        function areaRingForMap(r) {
+            try {
+                var u = areaRingPrep(r);
+                var any = u.o.special;
+                for (var i = 0; i < u.h.length && !any; i++) any = u.h[i] && u.h[i].special;
+                if (!any) return null;
+                var hs = (r.holes || []).filter(function(h) { return h && h.length >= 3; });
+                return prepareBufferRingsForMap([r.outer].concat(hs));
+            } catch(e) { AppLog.soft("areaRingForMap", e); return null; }
         }
         function areaRingBBox(outer) {
             try {
@@ -6391,7 +6494,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
                     if (!r || !r.outer) continue;
                     if (r.outer.length > MAXP) {
                         var tol = 0.0005, out = r.outer, guard = 0;
-                        while (out.length > MAXP && guard < 14) { out = areaSimplifyDP(r.outer, tol); tol *= 2; guard++; }
+                        while (out.length > MAXP && guard < 14) { out = areaSimplifyRing(r.outer, tol); tol *= 2; guard++; }
                         if (out && out.length >= 3 && out.length < r.outer.length) { r.outer = out; changed = true; }
                     }
                     try { r.bbox = areaRingBBox(r.outer); } catch(e) { AppLog.soft("areaNormalizeFilter", e); }
@@ -6411,7 +6514,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try {
                 if (!f) return true;
                 var la = p ? p[0] : NaN, lo = p ? p[1] : NaN;
-                if (!la || !lo || isNaN(la) || isNaN(lo)) return false;
+                if (!mfHasLL(la, lo)) return false;
                 var rings = f.rings || [], circles = f.circles || [], i;
                 for (i = 0; i < rings.length; i++) { if (areaRingMatch(la, lo, rings[i])) return true; }
                 for (i = 0; i < circles.length; i++) {
@@ -11387,8 +11490,8 @@ function statsSetFilters(on) {
             for (var i = 0; i < pts.length; i++) {
                 var p1 = pts[i];
                 var p2 = pts[(i + 1) % pts.length];
-                var lat1 = p1.lat || p1[0], lon1 = p1.lng || p1[1];
-                var lat2 = p2.lat || p2[0], lon2 = p2.lng || p2[1];
+                var lat1 = (p1.lat !== undefined) ? p1.lat : p1[0], lon1 = (p1.lng !== undefined) ? p1.lng : p1[1];
+                var lat2 = (p2.lat !== undefined) ? p2.lat : p2[0], lon2 = (p2.lng !== undefined) ? p2.lng : p2[1];
                 a += (lon1 * lat2 - lon2 * lat1);
             }
             return Math.abs(a / 2);
@@ -19983,188 +20086,144 @@ H += "</div>";
             } catch(e) { try { var _tE = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {}; showToast(_tE.toastExportErr || "Chyba při exportu"); } catch(e2) { AppLog.soft("exportStatsFolderCsv", e2); } }
         }
 
-                function exportGeoJSON() {
-            var t = i18n[currentLang];
-            var features = [];
-            var ks = Object.keys(datasets);
-            var hasHeatmap = false;
-            for (var i = 0; i < ks.length; i++) {
-                var d = datasets[ks[i]];
-                if (!d.active) continue;
-                if (d.type === "photos" && (d.mode || "dots") === "heat") hasHeatmap = true;
-
-                if (d.type === "photos") {
-                    var items = d.items || [];
-                    for (var j = 0; j < items.length; j++) {
-                        var it = items[j];
-                        var lat = it[0], lon = it[1], date = it[2], fname = it[3];
-                        if (isNaN(lat) || isNaN(lon)) continue;
-                        /* Nadmorska vyska [m] z pozice [7] – stejne jako jednotlivy export a export trasy */
-                        var itEl = (it.length > 7 && it[7] !== null && it[7] !== "") ? Number(it[7]) : NaN;
-                        var hasItEl = isFinite(itEl);
-                        var mode = d.mode || "dots";
-                        var props = {
-                            dataset: d.name,
-                            name: fname || null,
-                            description: date || null,
-                            DATUM_CAS: String(date || ""),
-                            NAZEV_SOUBORU: String(fname || ""),
-                            LATITUDE: lat,
-                            LONGITUDE: lon,
-                            VELIKOST_BAJTY: String(it[4] === undefined || it[4] === null ? "" : it[4]),
-                            RELATIVNI_CESTA: String(mfExportRp(it[5], fname) || ""),
-                            STAV: (typeof stOf === "function") ? stOf(it) : "G",
-                            NADMORSKA_VYSKA: hasItEl ? itEl : "",
-                            mode: mode,
-                            pointColor: d.dotColor || null,
-                            opacity: (mode === "heat") ? (d.heatOpacity !== undefined ? d.heatOpacity : 70) / 100 : (mode === "age" ? (d.ageOpacity || 100) / 100 : (mode === "dots" ? (d.dotOpacity || 50) / 100 : (mode === "zone" ? (d.zoneOpacity || 50) / 100 : null))),
-                            zoneRadiusKm: mode === "zone" ? d.zoneKm : null
-                        };
-                        if (mode === "heat" || mode === "age") {
-                            props.heatPalette = mode === "age" ? "age" : (d.heatPalette || "google");
-                            props.heatBlur = mode === "age" ? (d.ageBlur || 25) : (d.heatBlur || 10);
-                            props.heatRadius = Math.max(5, Math.round((mode === "age" ? (d.ageBlur || 25) : (d.heatBlur || 10)) * 0.6) * (mode === "heat" ? (d.heatSize !== undefined ? d.heatSize : 1.7) : 1));
-                            // Weight for heatmap intensity (used by some renderers)
-                            props.weight = 1.0;
-                        }
-                        features.push({
-                            type: "Feature",
-                            geometry: { type: "Point", coordinates: hasItEl ? [lon, lat, itEl] : [lon, lat] },
-                            properties: props
-                        });
-                    }
-                } else if (d.type === "track") {
-                    var trackOp = d.trackOpacity !== undefined ? d.trackOpacity : 85;
-                    var lineColor = d.color || "#1a73e8";
-
-                    if (d.lines && d.lines.length > 0) {
-                        for (var l = 0; l < d.lines.length; l++) {
-                            var line = d.lines[l];
-                            if (!line.points || line.points.length === 0) continue;
-                            var coords = [];
-                            for (var p = 0; p < line.points.length; p++) {
-                                var pt = line.points[p];
-                                var c;
-                                if (Array.isArray(pt)) {
-                                    c = pt.length > 2 && !isNaN(pt[2]) ? [pt[1], pt[0], pt[2]] : [pt[1], pt[0]];
-                                } else {
-                                    c = (pt.alt !== undefined && !isNaN(pt.alt)) ? [pt.lng || pt[1], pt.lat || pt[0], pt.alt] : [pt.lng || pt[1], pt.lat || pt[0]];
-                                }
-                                coords.push(c);
-                            }
-                            features.push({
-                                type: "Feature",
-                                geometry: { type: "LineString", coordinates: coords },
-                                properties: {
-                                    dataset: d.name,
-                                    name: line.name || d.title || d.name || null,
-                                    distanceKm: line.distanceKm || null,
-                                    color: lineColor,
-                                    opacity: trackOp / 100,
-                                    lineWidth: d.lineWidth || 3
-                                }
-                            });
-                        }
-                    }
-
-                    if (d.polygons && d.polygons.length > 0) {
-                        for (var pg = 0; pg < d.polygons.length; pg++) {
-                            var poly = d.polygons[pg];
-                            if (!poly.outer || poly.outer.length < 3) continue;
-                            var rings = [];
-                            /* GeoJSON (RFC 7946): linearni prstenec MUSI byt uzavreny (prvni bod = posledni) */
-                            var _ringClose = function(coords) {
-                                if (coords.length >= 1 && JSON.stringify(coords[0]) !== JSON.stringify(coords[coords.length - 1])) coords.push(coords[0].slice());
-                                return coords;
-                            };
-                            var outerCoords = [];
-                            for (var o = 0; o < poly.outer.length; o++) {
-                                var op = poly.outer[o];
-                                outerCoords.push(Array.isArray(op) ? (op.length > 2 && !isNaN(op[2]) ? [op[1], op[0], op[2]] : [op[1], op[0]]) : [op.lng || op[1], op.lat || op[0]]);
-                            }
-                            rings.push(_ringClose(outerCoords));
-                            if (poly.holes) {
-                                for (var h = 0; h < poly.holes.length; h++) {
-                                    var holeCoords = [];
-                                    for (var hi = 0; hi < poly.holes[h].length; hi++) {
-                                        var hp = poly.holes[h][hi];
-                                        holeCoords.push(Array.isArray(hp) ? (hp.length > 2 && !isNaN(hp[2]) ? [hp[1], hp[0], hp[2]] : [hp[1], hp[0]]) : [hp.lng || hp[1], hp.lat || hp[0]]);
-                                    }
-                                    rings.push(_ringClose(holeCoords));
-                                }
-                            }
-                            features.push({
-                                type: "Feature",
-                                geometry: { type: "Polygon", coordinates: rings },
-                                properties: {
-                                    dataset: d.name,
-                                    name: poly.name || d.title || d.name || null,
-                                    color: lineColor,
-                                    opacity: trackOp / 100,
-                                    lineWidth: d.lineWidth || 3,
-                                    fillColor: d.fillColor || poly.fillColor || null,
-                                    fillOpacity: d.fillOpacity !== undefined ? d.fillOpacity : (poly.fillOpacity || 0)
-                                }
-                            });
-                        }
-                    }
-
-                    if (d.points && d.points.length > 0) {
-                        for (var wp = 0; wp < d.points.length; wp++) {
-                            var wpt = d.points[wp];
-                            var wcoords = (wpt.elev !== undefined && !isNaN(wpt.elev)) ? [wpt.lon, wpt.lat, wpt.elev] : [wpt.lon, wpt.lat];
-                            features.push({
-                                type: "Feature",
-                                geometry: { type: "Point", coordinates: wcoords },
-                                properties: {
-                                    dataset: d.name,
-                                    name: wpt.name || null,
-                                    description: wpt.desc || null,
-                                    color: d.pointColor || d.color || "#1a73e8",
-                                    pointSize: d.pointSize || 14,
-                                    pointIcon: d.pointIcon || "pin"
-                                }
-                            });
-                        }
-                    }
+        /* ---------------------------------------------------------------------------
+           Export GeoJSON streamovaně po dávkách (velké archivy, 1M+ fotek):
+           - každá feature se stringifikuje zvlášť – nikdy nevzniká jeden obří string
+             ani obří pole objektů (dříví JSON.stringify celé kolekce spadl na paměti),
+           - nahromaděné části se po dávkách balí do dílčích Blobů (prohlížeč je
+             drží mimo JS heap), výsledný Blob se složí z nich,
+           - zpracování běží po časových slicech (~40 ms) s průběhem v loading-overlay,
+             stejně jako filtr oblasti (areaBuildMatchAsync).
+           --------------------------------------------------------------------------- */
+        function mfGjWriter() {
+            var parts = [], chunks = [], n = 0, started = false;
+            function flush() { if (parts.length) { chunks.push(new Blob(parts, { type: "text/plain" })); parts = []; } }
+            return {
+                add: function (f) {
+                    if (f === undefined || f === null) return;
+                    if (!started) { parts.push('{"type":"FeatureCollection","features":[\n'); started = true; }
+                    else parts.push(",\n");
+                    parts.push(JSON.stringify(f));
+                    n++;
+                    if (parts.length >= 40000) flush();
+                },
+                count: function () { return n; },
+                blob: function () {
+                    if (!started) return new Blob([], { type: "application/geo+json" });
+                    parts.push("\n]}");
+                    flush();
+                    return new Blob(chunks, { type: "application/geo+json" });
+                }
+            };
+        }
+        function mfGjStreamExport(fileName, totalEst, tasks) {
+            var t = (typeof i18n !== "undefined" && i18n[currentLang]) ? i18n[currentLang] : {};
+            var w = mfGjWriter();
+            var ov = document.getElementById("loading-overlay");
+            var ovT = document.getElementById("loadingText");
+            var ovTxt = "";
+            try { if (ovT) ovTxt = ovT.textContent; } catch (e0) { AppLog.soft("mfGjStreamExport", e0); }
+            var ovShown = false;
+            if (ov && totalEst > 20000) { try { ov.style.display = "flex"; ovShown = true; } catch (e1) { AppLog.soft("mfGjStreamExport", e1); } }
+            var ti = 0;
+            function uiCleanup() {
+                if (ovShown) {
+                    try { ov.style.display = "none"; } catch (e2) { AppLog.soft("mfGjStreamExport", e2); }
+                    try { ovT.textContent = ovTxt; } catch (e3) { AppLog.soft("mfGjStreamExport", e3); }
                 }
             }
-
-            if (features.length === 0) {
-                showToast(t.toastNoData || (currentLang === "cs" ? "Žádná data k exportu" : "No data to export"));
-                return;
+            function step() {
+                try {
+                    var t0 = Date.now();
+                    while (ti < tasks.length && Date.now() - t0 < 40) {
+                        var fin = tasks[ti].next(w.add, t0);
+                        if (fin) ti++;
+                        else break; /* úkol potřebuje další časový slice */
+                    }
+                    if (ovShown && ovT) {
+                        try { ovT.textContent = (currentLang === "cs" ? "Exportuji GeoJSON… " : "Exporting GeoJSON… ") + w.count().toLocaleString() + " / " + totalEst.toLocaleString(); } catch (e4) { AppLog.soft("mfGjStreamExport", e4); }
+                    }
+                    if (ti < tasks.length) { setTimeout(step, 0); return; }
+                    uiCleanup();
+                    if (w.count() === 0) {
+                        showToast(t.toastNoData || (currentLang === "cs" ? "Žádná data k exportu" : "No data to export"));
+                        return;
+                    }
+                    downloadBlob(w.blob(), fileName);
+                    showToast(t.toastGeoJsonExported || (currentLang === "cs" ? "GeoJSON export dokončen" : "GeoJSON export finished"));
+                } catch (e5) {
+                    uiCleanup();
+                    AppLog.error("mfGjStreamExport", e5);
+                    try { showToast(t.toastExportErr || "Chyba při exportu"); } catch (e6) { AppLog.soft("mfGjStreamExport", e6); }
+                }
             }
-
-            var geojson = { type: "FeatureCollection", features: features };
-            var blob = new Blob([JSON.stringify(geojson, null, 2)], { type: "application/geo+json" });
-            var ts = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-            downloadBlob(blob, "mapa_fotek_export_" + ts + ".geojson");
-            showToast(t.toastGeoJsonExported || "GeoJSON export dokončen");
+            step();
         }
-
-        function exportSingleGeoJSON(key) {
-            var t = i18n[currentLang];
-            var d = datasets[key];
-            if (!d) return;
-            var features = [];
-
-            if (d.type === "photos") {
-                // Jednotlivý export – parametry fotek přesně odpovídají exportu přes Shift+Space
-                var items = d.items || [];
-                var suf = function(n) { var s = ""; do { n--; s = String.fromCharCode(97 + (n % 26)) + s; n = Math.floor(n / 26); } while (n > 0); return s; };
-                var seen = {};
-                for (var j = 0; j < items.length; j++) {
-                    var p = items[j];
+        /* Dávkový úkol: fotky datasetu – hlavní export (všechny aktivní zdroje).
+           Parametry feature přesně jako dříve (props dle režimu bodů/heatmapy/zón). */
+        function mfGjPhotoTaskAll(d) {
+            var items = d.items || [], j = 0;
+            var mode = d.mode || "dots";
+            return { next: function (add, t0) {
+                while (j < items.length && Date.now() - t0 < 40) {
+                    var it = items[j++];
+                    var lat = it[0], lon = it[1], date = it[2], fname = it[3];
+                    if (isNaN(lat) || isNaN(lon)) continue;
+                    /* Nadmorska vyska [m] z pozice [7] – stejne jako jednotlivy export a export trasy */
+                    var itEl = (it.length > 7 && it[7] !== null && it[7] !== "") ? Number(it[7]) : NaN;
+                    var hasItEl = isFinite(itEl);
+                    var props = {
+                        dataset: d.name,
+                        name: fname || null,
+                        description: date || null,
+                        DATUM_CAS: String(date || ""),
+                        NAZEV_SOUBORU: String(fname || ""),
+                        LATITUDE: lat,
+                        LONGITUDE: lon,
+                        VELIKOST_BAJTY: String(it[4] === undefined || it[4] === null ? "" : it[4]),
+                        RELATIVNI_CESTA: String(mfExportRp(it[5], fname) || ""),
+                        STAV: (typeof stOf === "function") ? stOf(it) : "G",
+                        NADMORSKA_VYSKA: hasItEl ? itEl : "",
+                        mode: mode,
+                        pointColor: d.dotColor || null,
+                        opacity: (mode === "heat") ? (d.heatOpacity !== undefined ? d.heatOpacity : 70) / 100 : (mode === "age" ? (d.ageOpacity || 100) / 100 : (mode === "dots" ? (d.dotOpacity || 50) / 100 : (mode === "zone" ? (d.zoneOpacity || 50) / 100 : null))),
+                        zoneRadiusKm: mode === "zone" ? d.zoneKm : null
+                    };
+                    if (mode === "heat" || mode === "age") {
+                        props.heatPalette = mode === "age" ? "age" : (d.heatPalette || "google");
+                        props.heatBlur = mode === "age" ? (d.ageBlur || 25) : (d.heatBlur || 10);
+                        props.heatRadius = Math.max(5, Math.round((mode === "age" ? (d.ageBlur || 25) : (d.heatBlur || 10)) * 0.6) * (mode === "heat" ? (d.heatSize !== undefined ? d.heatSize : 1.7) : 1));
+                        // Weight for heatmap intensity (used by some renderers)
+                        props.weight = 1.0;
+                    }
+                    add({
+                        type: "Feature",
+                        geometry: { type: "Point", coordinates: hasItEl ? [lon, lat, itEl] : [lon, lat] },
+                        properties: props
+                    });
+                }
+                return j >= items.length;
+            }};
+        }
+        /* Dávkový úkol: fotky datasetu – jednotlivý export (název s odvozením přípon,
+           bod bez polohy (stav S) jako geometry null). */
+        function mfGjPhotoTaskSingle(d) {
+            var items = d.items || [], j = 0;
+            var suf = function (n) { var s = ""; do { n--; s = String.fromCharCode(97 + (n % 26)) + s; n = Math.floor(n / 26); } while (n > 0); return s; };
+            var seen = {};
+            return { next: function (add, t0) {
+                while (j < items.length && Date.now() - t0 < 40) {
+                    var p = items[j++];
                     var lat = parseFloat(p[0]), lon = parseFloat(p[1]);
                     var dt = String(p[2] || "");
                     var fname = String(p[3] || "Photo");
                     var rawDt = dt.replace(/[^0-9]/g, "");
-                    var stamp = rawDt.length >= 14 ? (rawDt.substring(0, 8) + "_" + rawDt.substring(8, 14)) : (rawDt || (fname || ("FOTO" + (j + 1))));
+                    var stamp = rawDt.length >= 14 ? (rawDt.substring(0, 8) + "_" + rawDt.substring(8, 14)) : (rawDt || (fname || ("FOTO" + (j))));
                     var nm = stamp, kk = 0;
                     while (seen[nm]) { kk++; nm = stamp + suf(kk); }
                     seen[nm] = true;
                     var qst = "G";
-                    try { qst = (typeof stOf === "function") ? stOf(p) : "G"; } catch(e7) { AppLog.soft("exportSingleGeoJSON", e7); }
+                    try { qst = (typeof stOf === "function") ? stOf(p) : "G"; } catch (e7) { AppLog.soft("exportSingleGeoJSON", e7); }
                     var hasCoords = isFinite(lat) && isFinite(lon);
                     /* Nadmorska vyska [m] z 8. sloupce TXT (pozice [7]); fotka stavu S vysku nema */
                     var el = (qst !== "S" && p.length > 7) ? parseFloat(p[7]) : NaN;
@@ -20181,121 +20240,247 @@ H += "</div>";
                         NADMORSKA_VYSKA: hasEl ? el : ""
                     };
                     if (hasCoords) {
-                        features.push({
-                            type: "Feature",
-                            geometry: { type: "Point", coordinates: hasEl ? [lon, lat, el] : [lon, lat] },
-                            properties: props
-                        });
+                        add({ type: "Feature", geometry: { type: "Point", coordinates: hasEl ? [lon, lat, el] : [lon, lat] }, properties: props });
                     } else if (qst === "S") {
-                        features.push({
-                            type: "Feature",
-                            geometry: null,
-                            properties: props
-                        });
+                        add({ type: "Feature", geometry: null, properties: props });
                     }
                 }
-            } else if (d.type === "track") {
-                var trackOp = d.trackOpacity !== undefined ? d.trackOpacity : 85;
-                var lineColor = d.color || "#1a73e8";
-
-                if (d.lines && d.lines.length > 0) {
-                    for (var l = 0; l < d.lines.length; l++) {
-                        var line = d.lines[l];
-                        if (!line.points || line.points.length === 0) continue;
-                        var coords = [];
-                        for (var p = 0; p < line.points.length; p++) {
-                            var pt = line.points[p];
-                            var c;
-                            if (Array.isArray(pt)) {
-                                c = pt.length > 2 && !isNaN(pt[2]) ? [pt[1], pt[0], pt[2]] : [pt[1], pt[0]];
-                            } else {
-                                c = (pt.alt !== undefined && !isNaN(pt.alt)) ? [pt.lng || pt[1], pt.lat || pt[0], pt.alt] : [pt.lng || pt[1], pt.lat || pt[0]];
-                            }
-                            coords.push(c);
+                return j >= items.length;
+            }};
+        }
+        /* Features trasy/polygony/body – hlavní export (se stylsty); vrací pole,
+           u stop jich bývá málo, takže se jen rozdávají po dávkách. */
+        function mfGjTrackFeatsAll(d) {
+            var feats = [];
+            var trackOp = d.trackOpacity !== undefined ? d.trackOpacity : 85;
+            var lineColor = d.color || "#1a73e8";
+            if (d.lines && d.lines.length > 0) {
+                for (var l = 0; l < d.lines.length; l++) {
+                    var line = d.lines[l];
+                    if (!line.points || line.points.length === 0) continue;
+                    var coords = [];
+                    for (var p = 0; p < line.points.length; p++) {
+                        var pt = line.points[p];
+                        var c;
+                        if (Array.isArray(pt)) {
+                            c = pt.length > 2 && !isNaN(pt[2]) ? [pt[1], pt[0], pt[2]] : [pt[1], pt[0]];
+                        } else {
+                            c = (pt.alt !== undefined && !isNaN(pt.alt)) ? [(pt.lng !== undefined ? pt.lng : pt[1]), (pt.lat !== undefined ? pt.lat : pt[0]), pt.alt] : [(pt.lng !== undefined ? pt.lng : pt[1]), (pt.lat !== undefined ? pt.lat : pt[0])];
                         }
-                        features.push({
-                            type: "Feature",
-                            geometry: { type: "LineString", coordinates: coords },
-                            properties: {
-                                dataset: d.name,
-                                name: line.name || d.title || d.name || null,
-                                distanceKm: line.distanceKm || null
-                            }
-                        });
+                        coords.push(c);
                     }
-                }
-
-                if (d.polygons && d.polygons.length > 0) {
-                    for (var pg = 0; pg < d.polygons.length; pg++) {
-                        var poly = d.polygons[pg];
-                        if (!poly.outer || poly.outer.length < 3) continue;
-                        var rings = [];
-                        var outerCoords = [];
-                        for (var o = 0; o < poly.outer.length; o++) {
-                            var op = poly.outer[o];
-                            outerCoords.push(Array.isArray(op) ? (op.length > 2 && !isNaN(op[2]) ? [op[1], op[0], op[2]] : [op[1], op[0]]) : [op.lng || op[1], op.lat || op[0]]);
+                    feats.push({
+                        type: "Feature",
+                        geometry: { type: "LineString", coordinates: coords },
+                        properties: {
+                            dataset: d.name,
+                            name: line.name || d.title || d.name || null,
+                            distanceKm: line.distanceKm || null,
+                            color: lineColor,
+                            opacity: trackOp / 100,
+                            lineWidth: d.lineWidth || 3
                         }
-                        rings.push(outerCoords);
-                        if (poly.holes) {
-                            for (var h = 0; h < poly.holes.length; h++) {
-                                var holeCoords = [];
-                                for (var hi = 0; hi < poly.holes[h].length; hi++) {
-                                    var hp = poly.holes[h][hi];
-                                    holeCoords.push(Array.isArray(hp) ? (hp.length > 2 && !isNaN(hp[2]) ? [hp[1], hp[0], hp[2]] : [hp[1], hp[0]]) : [hp.lng || hp[1], hp.lat || hp[0]]);
-                                }
-                                rings.push(holeCoords);
-                            }
-                        }
-                        features.push({
-                            type: "Feature",
-                            geometry: { type: "Polygon", coordinates: rings },
-                            properties: {
-                                dataset: d.name,
-                                name: poly.name || d.title || d.name || null
-                            }
-                        });
-                    }
-                }
-
-                if (d.points && d.points.length > 0) {
-                    for (var wp = 0; wp < d.points.length; wp++) {
-                        var wpt = d.points[wp];
-                        var hasWCoords = isFinite(wpt.lat) && isFinite(wpt.lon);
-                        var wcoords = (hasWCoords && wpt.elev !== undefined && !isNaN(wpt.elev)) ? [wpt.lon, wpt.lat, wpt.elev] : (hasWCoords ? [wpt.lon, wpt.lat] : null);
-                        var props = {
-                            name: wpt.name || null,
-                            description: wpt.desc || null
-                        };
-                        if (wpt.photoFn && wpt.photoDt) {
-                            props.name = wpt.name || String(wpt.photoFn);
-                            props.DATUM_CAS = String(wpt.photoDt);
-                            props.NAZEV_SOUBORU = String(wpt.photoFn);
-                            props.LATITUDE = hasWCoords ? wpt.lat : "";
-                            props.LONGITUDE = hasWCoords ? wpt.lon : "";
-                            props.VELIKOST_BAJTY = String(wpt.photoFs !== undefined && wpt.photoFs !== null ? wpt.photoFs : "");
-                            props.RELATIVNI_CESTA = String(wpt.photoRp || "");
-                            props.STAV = String(wpt.photoSt || "G");
-                            props.NADMORSKA_VYSKA = (props.STAV !== "S" && hasWCoords && wpt.elev !== undefined && isFinite(wpt.elev)) ? wpt.elev : "";
-                        }
-                        features.push({
-                            type: "Feature",
-                            geometry: wcoords ? { type: "Point", coordinates: wcoords } : null,
-                            properties: props
-                        });
-                    }
+                    });
                 }
             }
+            if (d.polygons && d.polygons.length > 0) {
+                for (var pg = 0; pg < d.polygons.length; pg++) {
+                    var poly = d.polygons[pg];
+                    if (!poly.outer || poly.outer.length < 3) continue;
+                    var rings = [];
+                    /* GeoJSON (RFC 7946): linearni prstenec MUSI byt uzavreny (prvni bod = posledni) */
+                    var _ringClose = function (coords) {
+                        if (coords.length >= 1 && JSON.stringify(coords[0]) !== JSON.stringify(coords[coords.length - 1])) coords.push(coords[0].slice());
+                        return coords;
+                    };
+                    var outerCoords = [];
+                    for (var o = 0; o < poly.outer.length; o++) {
+                        var op = poly.outer[o];
+                        outerCoords.push(Array.isArray(op) ? (op.length > 2 && !isNaN(op[2]) ? [op[1], op[0], op[2]] : [op[1], op[0]]) : [(op.lng !== undefined ? op.lng : op[1]), (op.lat !== undefined ? op.lat : op[0])]);
+                    }
+                    rings.push(_ringClose(outerCoords));
+                    if (poly.holes) {
+                        for (var h = 0; h < poly.holes.length; h++) {
+                            var holeCoords = [];
+                            for (var hi = 0; hi < poly.holes[h].length; hi++) {
+                                var hp = poly.holes[h][hi];
+                                holeCoords.push(Array.isArray(hp) ? (hp.length > 2 && !isNaN(hp[2]) ? [hp[1], hp[0], hp[2]] : [hp[1], hp[0]]) : [(hp.lng !== undefined ? hp.lng : hp[1]), (hp.lat !== undefined ? hp.lat : hp[0])]);
+                            }
+                            rings.push(_ringClose(holeCoords));
+                        }
+                    }
+                    feats.push({
+                        type: "Feature",
+                        geometry: { type: "Polygon", coordinates: rings },
+                        properties: {
+                            dataset: d.name,
+                            name: poly.name || d.title || d.name || null,
+                            color: lineColor,
+                            opacity: trackOp / 100,
+                            lineWidth: d.lineWidth || 3,
+                            fillColor: d.fillColor || poly.fillColor || null,
+                            fillOpacity: d.fillOpacity !== undefined ? d.fillOpacity : (poly.fillOpacity || 0)
+                        }
+                    });
+                }
+            }
+            if (d.points && d.points.length > 0) {
+                for (var wp = 0; wp < d.points.length; wp++) {
+                    var wpt = d.points[wp];
+                    /* bod bez polohy (fotka stavu S z GIS zdroje) -> geometry null jako v exportSingleGeoJSON; [NaN, NaN] by se zapsal jako [null, null] = neplatný GeoJSON */
+                    var wHas = mfHasLL(wpt.lat, wpt.lon);
+                    var wcoords = !wHas ? null : ((wpt.elev !== undefined && !isNaN(wpt.elev)) ? [wpt.lon, wpt.lat, wpt.elev] : [wpt.lon, wpt.lat]);
+                    feats.push({
+                        type: "Feature",
+                        geometry: wcoords ? { type: "Point", coordinates: wcoords } : null,
+                        properties: {
+                            dataset: d.name,
+                            name: wpt.name || null,
+                            description: wpt.desc || null,
+                            color: d.pointColor || d.color || "#1a73e8",
+                            pointSize: d.pointSize || 14,
+                            pointIcon: d.pointIcon || "pin"
+                        }
+                    });
+                }
+            }
+            return feats;
+        }
+        /* Features trasy – jednotlivý export (bez stylů). */
+        function mfGjTrackFeatsSingle(d) {
+            var feats = [];
+            if (d.lines && d.lines.length > 0) {
+                for (var l = 0; l < d.lines.length; l++) {
+                    var line = d.lines[l];
+                    if (!line.points || line.points.length === 0) continue;
+                    var coords = [];
+                    for (var p = 0; p < line.points.length; p++) {
+                        var pt = line.points[p];
+                        var c;
+                        if (Array.isArray(pt)) {
+                            c = pt.length > 2 && !isNaN(pt[2]) ? [pt[1], pt[0], pt[2]] : [pt[1], pt[0]];
+                        } else {
+                            c = (pt.alt !== undefined && !isNaN(pt.alt)) ? [(pt.lng !== undefined ? pt.lng : pt[1]), (pt.lat !== undefined ? pt.lat : pt[0]), pt.alt] : [(pt.lng !== undefined ? pt.lng : pt[1]), (pt.lat !== undefined ? pt.lat : pt[0])];
+                        }
+                        coords.push(c);
+                    }
+                    feats.push({
+                        type: "Feature",
+                        geometry: { type: "LineString", coordinates: coords },
+                        properties: {
+                            dataset: d.name,
+                            name: line.name || d.title || d.name || null,
+                            distanceKm: line.distanceKm || null
+                        }
+                    });
+                }
+            }
+            if (d.polygons && d.polygons.length > 0) {
+                for (var pg = 0; pg < d.polygons.length; pg++) {
+                    var poly = d.polygons[pg];
+                    if (!poly.outer || poly.outer.length < 3) continue;
+                    var rings = [];
+                    var outerCoords = [];
+                    for (var o = 0; o < poly.outer.length; o++) {
+                        var op = poly.outer[o];
+                        outerCoords.push(Array.isArray(op) ? (op.length > 2 && !isNaN(op[2]) ? [op[1], op[0], op[2]] : [op[1], op[0]]) : [(op.lng !== undefined ? op.lng : op[1]), (op.lat !== undefined ? op.lat : op[0])]);
+                    }
+                    rings.push(outerCoords);
+                    if (poly.holes) {
+                        for (var h = 0; h < poly.holes.length; h++) {
+                            var holeCoords = [];
+                            for (var hi = 0; hi < poly.holes[h].length; hi++) {
+                                var hp = poly.holes[h][hi];
+                                holeCoords.push(Array.isArray(hp) ? (hp.length > 2 && !isNaN(hp[2]) ? [hp[1], hp[0], hp[2]] : [hp[1], hp[0]]) : [(hp.lng !== undefined ? hp.lng : hp[1]), (hp.lat !== undefined ? hp.lat : hp[0])]);
+                            }
+                            rings.push(holeCoords);
+                        }
+                    }
+                    feats.push({
+                        type: "Feature",
+                        geometry: { type: "Polygon", coordinates: rings },
+                        properties: {
+                            dataset: d.name,
+                            name: poly.name || d.title || d.name || null
+                        }
+                    });
+                }
+            }
+            if (d.points && d.points.length > 0) {
+                for (var wp = 0; wp < d.points.length; wp++) {
+                    var wpt = d.points[wp];
+                    var hasWCoords = isFinite(wpt.lat) && isFinite(wpt.lon);
+                    var wcoords = (hasWCoords && wpt.elev !== undefined && !isNaN(wpt.elev)) ? [wpt.lon, wpt.lat, wpt.elev] : (hasWCoords ? [wpt.lon, wpt.lat] : null);
+                    var props = {
+                        name: wpt.name || null,
+                        description: wpt.desc || null
+                    };
+                    if (wpt.photoFn && wpt.photoDt) {
+                        props.name = wpt.name || String(wpt.photoFn);
+                        props.DATUM_CAS = String(wpt.photoDt);
+                        props.NAZEV_SOUBORU = String(wpt.photoFn);
+                        props.LATITUDE = hasWCoords ? wpt.lat : "";
+                        props.LONGITUDE = hasWCoords ? wpt.lon : "";
+                        props.VELIKOST_BAJTY = String(wpt.photoFs !== undefined && wpt.photoFs !== null ? wpt.photoFs : "");
+                        props.RELATIVNI_CESTA = String(wpt.photoRp || "");
+                        props.STAV = String(wpt.photoSt || "G");
+                        props.NADMORSKA_VYSKA = (props.STAV !== "S" && hasWCoords && wpt.elev !== undefined && isFinite(wpt.elev)) ? wpt.elev : "";
+                    }
+                    feats.push({
+                        type: "Feature",
+                        geometry: wcoords ? { type: "Point", coordinates: wcoords } : null,
+                        properties: props
+                    });
+                }
+            }
+            return feats;
+        }
+        /* Obalující dávkový úkol nad předem připraveným polem features (stopy). */
+        function mfGjFeatsTask(build) {
+            var feats = null, fi = 0;
+            return { next: function (add, t0) {
+                if (!feats) feats = build();
+                while (fi < feats.length && Date.now() - t0 < 40) add(feats[fi++]);
+                return fi >= feats.length;
+            }};
+        }
+        function exportGeoJSON() {
+            var tasks = [], est = 0;
+            Object.keys(datasets).forEach(function (k) {
+                var d = datasets[k];
+                if (!d || !d.active) return;
+                if (d.type === "photos") {
+                    var n = (d.items || []).length;
+                    est += n;
+                    if (n) tasks.push(mfGjPhotoTaskAll(d));
+                } else if (d.type === "track") {
+                    var tc = ((d.lines && d.lines.length) || 0) + ((d.polygons && d.polygons.length) || 0) + ((d.points && d.points.length) || 0);
+                    est += tc;
+                    tasks.push(mfGjFeatsTask(function () { return mfGjTrackFeatsAll(d); }));
+                }
+            });
+            var ts = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+            mfGjStreamExport("mapa_fotek_export_" + ts + ".geojson", est, tasks);
+        }
 
-            if (features.length === 0) {
+        function exportSingleGeoJSON(key) {
+            var t = i18n[currentLang];
+            var d = datasets[key];
+            if (!d) return;
+            var tasks = [], est = 0;
+            if (d.type === "photos") {
+                est = (d.items || []).length;
+                if (est) tasks.push(mfGjPhotoTaskSingle(d));
+            } else if (d.type === "track") {
+                est = ((d.lines && d.lines.length) || 0) + ((d.polygons && d.polygons.length) || 0) + ((d.points && d.points.length) || 0);
+                if (est) tasks.push(mfGjFeatsTask(function () { return mfGjTrackFeatsSingle(d); }));
+            }
+            if (!tasks.length) {
                 showToast(t.toastNoData || (currentLang === "cs" ? "Žádná data k exportu" : "No data to export"));
                 return;
             }
-
-            var geojson = { type: "FeatureCollection", features: features };
-            var blob = new Blob([JSON.stringify(geojson, null, 2)], { type: "application/geo+json" });
             var safeName = key.replace(/[^a-zA-Z0-9_\-\.]/g, "_").replace(/\.[^.]+$/, "");
-            downloadBlob(blob, safeName + ".geojson");
-            showToast(t.toastGeoJsonExported || "GeoJSON export dokončen");
+            mfGjStreamExport(safeName + ".geojson", est, tasks);
         }
 
         function closeOtherDropdowns(keep) {
@@ -22199,7 +22384,7 @@ window.addEventListener('resize', function() {
         try { applyLBPointer(); } catch(e) { AppLog.soft("(top)", e); }
         try { document.documentElement.style.setProperty("--lb-pointer-scale", String(lbPointerScale)); } catch(e) { AppLog.soft("(top)", e); }
         function flashPhotoPointer(lat, lon) {
-            if (typeof map === 'undefined' || !map || !lat || !lon || typeof L === 'undefined') return;
+            if (typeof map === 'undefined' || !map || !mfHasLL(lat, lon) || typeof L === 'undefined') return;
             if (window._lbPhotoPointerMarker) {
                 try { map.removeLayer(window._lbPhotoPointerMarker); } catch(e) { AppLog.soft("flashPhotoPointer", e); }
                 window._lbPhotoPointerMarker = null;
@@ -22236,7 +22421,7 @@ window.addEventListener('resize', function() {
             if (!isSplit) {
                 closeLightbox();
             }
-            if (typeof map !== 'undefined' && map && lat && lon) {
+            if (typeof map !== 'undefined' && map && mfHasLL(lat, lon)) {
                 var targetZoom = Math.max(map.getZoom(), 16);
                 try { lbWinMuteUntil = Date.now() + Math.round(dur * 1000) + 900; } catch(eWM) { AppLog.soft("lbZoomToPhoto", eWM); }
                 map.flyTo([lat, lon], targetZoom, { duration: dur });
@@ -22251,7 +22436,7 @@ window.addEventListener('resize', function() {
             if (!currentLBPhotos || currentLBIndex < 0 || currentLBIndex >= currentLBPhotos.length) return;
             var p = currentLBPhotos[currentLBIndex];
             var lat = p[0], lon = p[1];
-            if (!lat || !lon || isNaN(lat) || isNaN(lon)) return;
+            if (!mfHasLL(lat, lon)) return;
             if (typeof map !== 'undefined' && map) {
                 try {
                     try { lbWinMuteUntil = Date.now() + 1900; } catch(eWM2) { AppLog.soft("lbFlyToCurrent", eWM2); }
@@ -22294,7 +22479,7 @@ window.addEventListener('resize', function() {
             var b = lbWinB;
             if (!b) return true;
             var la = Number(p[0]), lo = Number(p[1]);
-            if (!p[0] || !p[1] || isNaN(la) || isNaN(lo)) return false;
+            if (!mfHasLL(p[0], p[1])) return false;
             if (la < b.s || la > b.n) return false;
             if (b.e - b.w >= 360) return true;
             lo = lo - 360 * Math.floor((lo - b.w) / 360);
@@ -22514,7 +22699,7 @@ window.addEventListener('resize', function() {
         }
 
         function syncMapToLBPhoto(lat, lon, force) {
-            if (typeof map === 'undefined' || !map || !lat || !lon || isNaN(lat) || isNaN(lon)) return;
+            if (typeof map === 'undefined' || !map || !mfHasLL(lat, lon)) return;
             try {
                 if (force) {
                     map.panTo([lat, lon], { animate: false });
@@ -22587,7 +22772,7 @@ window.addEventListener('resize', function() {
                         if (lbSplitMode && currentLBPhotos && currentLBIndex >= 0 && currentLBIndex < currentLBPhotos.length) {
                             var p = currentLBPhotos[currentLBIndex];
                             var lat = p[0], lon = p[1];
-                            if (lat && lon && !isNaN(lat) && !isNaN(lon)) {
+                            if (mfHasLL(lat, lon)) {
                                 syncMapToLBPhoto(lat, lon, true);
                             }
                         }
@@ -23136,7 +23321,7 @@ window.addEventListener('resize', function() {
                 try { if (typeof stOf === "function") _st = stOf(p) || "G"; } catch(e) { AppLog.soft("lbTrailAddCurrent", e); }
                 if (_st === "S") return;
                 var la = p[0], lo = p[1];
-                if (!la || !lo || isNaN(la) || isNaN(lo)) return;
+                if (!mfHasLL(la, lo)) return;
                 if (typeof map === "undefined" || !map) return;
                 if (!lbTrailLayer) {
                     lbTrailLayer = L.layerGroup();
@@ -23323,7 +23508,7 @@ window.addEventListener('resize', function() {
                 }
                 if (typeof lbSplitMode !== "undefined" && lbSplitMode && typeof flashPhotoPointer === "function") {
                     var p = currentLBPhotos[currentLBIndex];
-                    if (p && p[0] && p[1] && !isNaN(p[0]) && !isNaN(p[1])) flashPhotoPointer(p[0], p[1]);
+                    if (p && mfHasLL(p[0], p[1])) flashPhotoPointer(p[0], p[1]);
                 }
                 try { if (typeof lbSlideFrameStep === "function") lbSlideFrameStep(); } catch(eFF) { AppLog.soft("lbSlideStep", eFF); }
                 if (typeof lbTrailAddCurrent === "function") lbTrailAddCurrent();
@@ -23975,7 +24160,7 @@ window.addEventListener('resize', function() {
 
                 // 5. pozice: Souřadnice + 3 akční ikonky (jen pokud má fotka GNSS)
                 var lat = p[0], lon = p[1];
-                if (lat && lon && !isNaN(lat) && !isNaN(lon)) {
+                if (mfHasLL(lat, lon)) {
                     var coordText = lat.toFixed(6) + ', ' + lon.toFixed(6);
                     var gmUrl = 'https://www.google.com/maps?q=' + lat + ',' + lon;
                     var myUrl = 'https://mapy.cz/zakladni?q=' + lat + '%2C' + lon;
@@ -26249,6 +26434,7 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
                         if (st !== "G" && st !== "D" && st !== "S") st = "G";
                         var el = p.length > 7 ? parseFloat(p[7].trim().replace(",", ".")) : NaN;
                         if (!isFinite(el)) el = NaN;
+                        if (st !== "S" && la === 0 && lo === 0) st = "S"; /* přesně 0, 0 = chybné GNSS -> bez polohy */
                         if (st === "S") { it.push([NaN, NaN, dt, fn, sz, rp, "S", el]); }
                         else if (!isNaN(la) && !isNaN(lo) && Math.abs(la) <= 90 && Math.abs(lo) <= 180) it.push([la, lo, dt, fn, sz, rp, st, el]);
                     }
@@ -33778,8 +33964,8 @@ if (q) {
                     for (i = 0; i < rings.length; i++) {
                         var r = rings[i];
                         if (!r || !r.outer || r.outer.length < 3) continue;
-                        var lls = [r.outer];
-                        (r.holes || []).forEach(function(h) { if (h && h.length >= 3) lls.push(h); });
+                        var lls = areaRingForMap(r);   /* přes ±180° / kolem pólu jako měření, jinak null */
+                        if (!lls) { lls = [r.outer]; (r.holes || []).forEach(function(h) { if (h && h.length >= 3) lls.push(h); }); }
                         g.addLayer(L.polygon(lls, ahOpts()));
                     }
                     for (i = 0; i < circles.length; i++) {
@@ -34137,14 +34323,14 @@ if (q) {
                         if (!r || !r.outer) continue;
                         if (r.outer.length > 2000 && typeof areaSimplifyDP === "function") {
                             var tol = 0.0001, out = r.outer, g = 0;
-                            while (out.length > 2000 && g < 14) { out = areaSimplifyDP(r.outer, tol); tol *= 1.5; g++; }
+                            while (out.length > 2000 && g < 14) { out = areaSimplifyRing(r.outer, tol); tol *= 1.5; g++; }
                             if (out && out.length >= 3 && out.length < r.outer.length) r.outer = out;
                         }
                         if (r.holes && r.holes.length > 0 && typeof areaSimplifyDP === "function") {
                             for (var hk = 0; hk < r.holes.length; hk++) {
                                 if (r.holes[hk] && r.holes[hk].length > 2000) {
                                     var hTol = 0.0001, hOut = r.holes[hk], hg = 0;
-                                    while (hOut.length > 2000 && hg < 14) { hOut = areaSimplifyDP(r.holes[hk], hTol); hTol *= 1.5; hg++; }
+                                    while (hOut.length > 2000 && hg < 14) { hOut = areaSimplifyRing(r.holes[hk], hTol); hTol *= 1.5; hg++; }
                                     if (hOut && hOut.length >= 3 && hOut.length < r.holes[hk].length) r.holes[hk] = hOut;
                                 }
                             }
@@ -34167,7 +34353,7 @@ if (q) {
                     if (!folderPass(normFolderPath(p[5]), p[3])) continue;
                     if (stOf(p) !== "G") continue;
                     var la = p[0], lo = p[1];
-                    if (!la || !lo || isNaN(la) || isNaN(lo)) continue;
+                    if (!mfHasLL(la, lo)) continue;
                     var ok = false, k;
                     for (k = 0; k < rings.length && !ok; k++) ok = areaRingMatch(la, lo, rings[k]);
                     for (k = 0; k < circles.length && !ok; k++) { var cc = circles[k]; if (cc && cc.rKm > 0 && calcDistKmLL([la, lo], [cc.lat, cc.lon]) <= cc.rKm) ok = true; }
@@ -34265,18 +34451,21 @@ if (q) {
         }
         function areaRingsCenter(rings) {
             try {
-                var mnLa = 90, mxLa = -90, mnLo = 180, mxLo = -180, n = 0;
+                /* délka cyklicky vůči prvnímu bodu: místo přes ±180° (Fidži, Čukotka) nemá střed na 0° */
+                var mnLa = 90, mxLa = -90, mnLo = Infinity, mxLo = -Infinity, n = 0, ref = null;
                 (rings || []).forEach(function(r) {
                     (r.outer || []).forEach(function(pt) {
+                        if (ref === null) ref = pt[1];
+                        var lo = ref + shortestDLng(ref, pt[1]);
                         if (pt[0] < mnLa) mnLa = pt[0];
                         if (pt[0] > mxLa) mxLa = pt[0];
-                        if (pt[1] < mnLo) mnLo = pt[1];
-                        if (pt[1] > mxLo) mxLo = pt[1];
+                        if (lo < mnLo) mnLo = lo;
+                        if (lo > mxLo) mxLo = lo;
                         n++;
                     });
                 });
                 if (!n) return null;
-                return { lat: (mnLa + mxLa) / 2, lon: (mnLo + mxLo) / 2 };
+                return { lat: (mnLa + mxLa) / 2, lon: normLng((mnLo + mxLo) / 2) };
             } catch(e) { return null; }
         }
         function areaLonLatToLatLon(coords) {
@@ -34319,7 +34508,9 @@ if (q) {
             try {
                 if (typeof map !== "undefined" && map && typeof L !== "undefined") {
                     var _bb = null;
-                    (af.rings || []).forEach(function(r) { (r.outer || []).forEach(function(pt) { if (_bb) _bb.extend([pt[0], pt[1]]); else _bb = L.latLngBounds([[pt[0], pt[1]], [pt[0], pt[1]]]); }); });
+                    /* délky cyklicky vůči prvnímu bodu (oblast přes ±180° se nepřiblíží na celý svět) */
+                    var _ref = null;
+                    (af.rings || []).forEach(function(r) { (r.outer || []).forEach(function(pt) { if (_ref === null) _ref = pt[1]; var _lo = _ref + shortestDLng(_ref, pt[1]); if (_bb) _bb.extend([pt[0], _lo]); else _bb = L.latLngBounds([[pt[0], _lo], [pt[0], _lo]]); }); });
                     (af.circles || []).forEach(function(cc) { if (_bb) _bb.extend([cc.lat, cc.lon]); else _bb = L.latLngBounds([[cc.lat, cc.lon], [cc.lat, cc.lon]]); });
                     if (_bb && _bb.isValid && _bb.isValid()) map.flyToBounds(_bb, { padding: [40, 40], maxZoom: 14 });
                 }
@@ -35664,7 +35855,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                             var lon = parseFloat(trkpts[i].getAttribute("lon"));
                             var eleNode = trkpts[i].querySelector("ele");
                             var ele = eleNode ? parseFloat(eleNode.textContent) : NaN;
-                            if (!isNaN(lat) && !isNaN(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
+                            if (mfLLValid(lat, lon)) {
                                 if (pts.length > 0) {
                                     dKm += calcDistKm(pts[pts.length - 1][0], pts[pts.length - 1][1], lat, lon);
                                 }
@@ -35693,7 +35884,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                         var lon = parseFloat(rtepts[i].getAttribute("lon"));
                         var eleNode = rtepts[i].querySelector("ele");
                         var ele = eleNode ? parseFloat(eleNode.textContent) : NaN;
-                        if (!isNaN(lat) && !isNaN(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
+                        if (mfLLValid(lat, lon)) {
                             if (pts.length > 0) {
                                 dKm += calcDistKm(pts[pts.length - 1][0], pts[pts.length - 1][1], lat, lon);
                             }
@@ -35712,7 +35903,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                     var wpt = wpts[w];
                     var lat = parseFloat(wpt.getAttribute("lat"));
                     var lon = parseFloat(wpt.getAttribute("lon"));
-                    if (!isNaN(lat) && !isNaN(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
+                    if (mfLLValid(lat, lon)) {
                         var wName = "";
                         var wn = wpt.querySelector("name");
                         if (wn) wName = wn.textContent.trim();
@@ -35768,7 +35959,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                         if (parts.length >= 2) {
                             var lon = parseFloat(parts[0]);
                             var lat = parseFloat(parts[1]);
-                            if (!isNaN(lat) && !isNaN(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
+                            if (mfLLValid(lat, lon)) {
                                 var alt = parseFloat(parts[2]);
                                 arr.push(isNaN(alt) ? [lat, lon] : [lat, lon, alt]);
                             }
@@ -35929,7 +36120,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                         var c = coords[i];
                         if (!c || c.length < 2) continue;
                         var lon = parseFloat(c[0]), lat = parseFloat(c[1]);
-                        if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) continue;
+                        if (!mfLLValid(lat, lon)) continue;
                         if (pts.length > 0) dKm += calcDistKm(pts[pts.length - 1][0], pts[pts.length - 1][1], lat, lon);
                         var elev = parseFloat(c[2]);
                         pts.push(isNaN(elev) ? [lat, lon] : [lat, lon, elev]);
@@ -35948,7 +36139,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                             var c = coords[r][i];
                             if (!c || c.length < 2) continue;
                             var lon = parseFloat(c[0]), lat = parseFloat(c[1]);
-                            if (isNaN(lat) || isNaN(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) continue;
+                            if (!mfLLValid(lat, lon)) continue;
                             var elev = parseFloat(c[2]);
                             ring.push(isNaN(elev) ? [lat, lon] : [lat, lon, elev]);
                         }
@@ -36012,6 +36203,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
 
                     var hasLa = isFinite(parsedLat) && Math.abs(parsedLat) <= 90;
                     var hasLo = isFinite(parsedLon) && Math.abs(parsedLon) <= 180;
+                    if (hasLa && hasLo && parsedLat === 0 && parsedLon === 0) { hasLa = false; hasLo = false; } /* přesně 0, 0 = bez polohy */
 
                     var st = (stVal !== undefined && stVal !== null) ? String(stVal).trim().toUpperCase() : "G";
                     if (st !== "D" && st !== "S" && st !== "G") st = "G";
@@ -36386,6 +36578,7 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
                             /* 8. sloupec: nadmorska vyska [m]; prazdna/neplatna hodnota = NaN */
                             var el = p.length > 7 ? parseFloat(p[7].trim().replace(",", ".")) : NaN;
                             if (!isFinite(el)) el = NaN;
+                            if (st !== "S" && la === 0 && lo === 0) st = "S"; /* přesně 0, 0 = chybné GNSS -> bez polohy */
                             if (st === "S") { it.push([NaN, NaN, dt, fn, sz, rp, "S", el]); }
                             else if (!isNaN(la) && !isNaN(lo) && Math.abs(la) <= 90 && Math.abs(lo) <= 180) it.push([la, lo, dt, fn, sz, rp, st, el]);
                             else skipped++;
@@ -37045,7 +37238,7 @@ dotColor: initialDot,
                     }
                     p = be;
                 }
-                if (lat === null || lon === null) return null;
+                if (lat === null || lon === null || (lat === 0 && lon === 0)) return null;
                 return { lat: lat, lon: lon, orientation: null, dateTime: dateTime, alt: alt };
             } catch(e) { AppLog.soft("parseMp4Gps", e); }
             return null;
