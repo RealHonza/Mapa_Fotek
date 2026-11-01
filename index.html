@@ -2859,8 +2859,8 @@ var AppLog = (function () {
                     <button class="lang-half" id="langBtnEn" onclick="setLanguage('en')">English</button>
                 </div>
                 <div class="lang-split" id="saveSplit">
-                    <button class="lang-half" id="btnExportPdf" onclick="menuExportPdf()"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> PDF<br><span class="sub">rastr HD</span></button>
-                    <button class="lang-half" id="btnExportPng" onclick="menuExportPng()"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg> PNG<br><span class="sub">rastr HD</span></button>
+                    <button class="lang-half" id="btnExportPdf" onclick="menuExportPdf()"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> PDF<br><span class="sub" id="subExportPdf">rastr HD</span></button>
+                    <button class="lang-half" id="btnExportPng" onclick="menuExportPng()"><svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg> PNG<br><span class="sub" id="subExportPng">rastr HD</span></button>
                     
                 </div>
                 <div class="dropdown-item menu-has-ico" id="menuInfoBtn" title="Otevřít nápovědu a informace o aplikaci (I)" onclick="menuOpenInfo()"><span class="layer-ico m-letter" aria-hidden="true">i</span><span id="menuInfoItem">Informace o aplikaci</span></div>
@@ -2989,7 +2989,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.16</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-11-01" title="Datum poslední aktualizace">1. 11. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.17</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-11-01" title="Datum poslední aktualizace">1. 11. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -3702,6 +3702,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 menuMeasureItem: "Panel měření",
                 menuSettingsItem: "Nastavení",
                 menuSettingsTip: "Otevřít nastavení (N)",
+                menuRastrHD: "rastr HD",
             menuStatsItem: "Statistika",
             menuStatsTip: "Otevřít statistiku fotek (S v mapě, Shift+S všude)",
             statsTitle: "Statistika fotek (videí)",
@@ -4095,6 +4096,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 menuMeasureItem: "Measurement toolbox",
                 menuSettingsItem: "Settings",
                 menuSettingsTip: "Open settings (N)",
+                menuRastrHD: "raster HD",
             menuStatsItem: "Statistics",
             menuStatsTip: "Open photo (video) statistics (S on the map, Shift+S anywhere)",
             statsTitle: "Photo and video statistics",
@@ -8128,6 +8130,13 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (msBtn && t.menuSettingsTip) { msBtn.title = t.menuSettingsTip; msBtn.setAttribute("aria-label", t.menuSettingsTip); }
             var miInfo = document.getElementById("menuInfoItem");
             if (miInfo) miInfo.textContent = t.menuInfoItem;
+            try {
+                var sePdf = document.getElementById("subExportPdf");
+                var sePng = document.getElementById("subExportPng");
+                var rastrT = t.menuRastrHD || (currentLang === "cs" ? "rastr HD" : "raster HD");
+                if (sePdf) sePdf.textContent = rastrT;
+                if (sePng) sePng.textContent = rastrT;
+            } catch (eRa) { AppLog.soft("setLanguage", eRa); }
             var miMeasure = document.getElementById("menuMeasureItem");
             if (miMeasure) miMeasure.textContent = t.menuMeasureItem;
             var miStats = document.getElementById("menuStatsItem");
@@ -15926,12 +15935,12 @@ statsFocusList = []; statsCountryZoomList = []; statsCountryZoomIdx = {}; if (st
             H += "<div class=\"st-rows\">";
             if (sized) {
                 H += stRow([{ label: L_("statsTotalSize", "Celkový objem dat"), val: fmtStatsBytes(totalBytes),
-                    sub: nmb(sized) + " " + statsFilesWord(sized), valTitle: statsBytesTitle(totalBytes) }]);
+                    sub: nmb(sized) + " " + statsFilesWord(sized), subTip: nmb(sized) + " " + statsFilesWord(sized), valTitle: statsBytesTitle(totalBytes) }]);
             }
             H += stRow([{ label: L_("statsAvgSize", "Průměrná velikost souboru"), val: fmtStatsBytes(sized ? totalBytes / sized : NaN),
-                sub: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), valTitle: statsBytesTitle(sized ? totalBytes / sized : NaN) }]);
+                sub: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), subTip: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), valTitle: statsBytesTitle(sized ? totalBytes / sized : NaN) }]);
             H += stRow([{ label: L_("statsMedianTitle", "Medián velikosti souboru"), val: fmtStatsBytes(statsMedian(sizeArr)),
-                sub: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), valTitle: statsBytesTitle(statsMedian(sizeArr)) }]);
+                sub: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), subTip: nmb(sized) + " " + L_("statsSized", "se známou velikostí"), valTitle: statsBytesTitle(statsMedian(sizeArr)) }]);
             if (sizeArr.length) {
                 var sMax = -1, sMin = -1, sMaxP = null, sMinP = null;
                 for (i = 0; i < rows.length; i++) {
@@ -15973,13 +15982,13 @@ statsFocusList = []; statsCountryZoomList = []; statsCountryZoomIdx = {}; if (st
                     var spCls = function(p) { return stNameCls(stOf(p)); };
                     var spIdxO = statsFocusPush(tOld);
                     var spIdxN = statsFocusPush(tNew);
-                    var spanSub = "<span class=\"st-row-sub\">"
+                    var spanSub = "<span class=\"st-row-sub\" title=\"" + spanFull + "\">"
                         + "<span class=\"st-pick " + spCls(tOld) + "\" onclick=\"statsFocusIdx(" + spIdxO + ")\" title=\"" + spOld + "\">" + spOld + "</span>"
                         + "<span class=\"st-picksep\"> \u21c4 </span>"
                         + "<span class=\"st-pick " + spCls(tNew) + "\" onclick=\"statsFocusIdx(" + spIdxN + ")\" title=\"" + spNew + "\">" + spNew + "</span>"
                         + "</span>";
                     H += stRow([{ label: L_("statsTimeSpan", "Časový rozptyl"), val: statsTableLinkHtml("ya", "", L_("statsTimeSpan", "Časový rozptyl"), spanTxt, spanFull + " \u2013 " + L_("statsTableShowPhotos", "Zobrazit fotky v prohlížečce")),
-                        sub: spOld + " \u21c4 " + spNew, subHtml: spanSub, valTitle: spanFull }]);
+                        sub: spOld + " \u21c4 " + spNew, subTip: spOld + " \u21c4 " + spNew, subHtml: spanSub, valTitle: spanFull }]);
                 }
             }
             /* --- Dny s focením: počet různých kalendářních dnů s aspoň jednou fotkou (4. řádek sekce Čas).
@@ -15995,7 +16004,7 @@ statsFocusList = []; statsCountryZoomList = []; statsCountryZoomIdx = {}; if (st
                 H += stRow([{ label: L_("statsPhotoDays", "Dny s focením"), lblWrap: false,
                     labelTitle: L_("statsPhotoDaysTip", "Dny s focením – počet různých kalendářních dnů, kdy vznikla aspoň jedna fotka; procenta = podíl z dnů mezi první a poslední fotkou (včetně)"),
                     val: statsTableLinkHtml("ya", "", L_("statsPhotoDays", "Dny s focením"), nmb(pd.n) + " " + statsDayWord(pd.n), pdTip + " \u2013 " + L_("statsTableShowPhotos", "Zobrazit fotky v prohlížečce")),
-                    sub: pdSub, valTitle: pdTip }]);
+                    sub: pdSub, subTip: pdSub, valTitle: pdTip }]);
             }
             /* --- Nejvíce fotek za 1..30 dní: grid (3 sloupce) volí délku okna, vpravo počet, uprostřed rozpětí --- */
             var busy = statsBusiestDay(times, statsBusyDays);
@@ -16013,7 +16022,7 @@ statsFocusList = []; statsCountryZoomList = []; statsCountryZoomIdx = {}; if (st
                 // jedno vygenerovani st-pick, at zustalo jedine vygenerovane v teto sekci
                 var bSub = "";
                 if (bFirst !== "") {
-                    bSub = "<span class=\"st-row-sub\"><span class=\"st-pick " + stNameCls(stOf(busy.p)) + "\" onclick=\"statsFocusIdx("
+                    bSub = "<span class=\"st-row-sub\" title=\"" + bRange + "\"><span class=\"st-pick " + stNameCls(stOf(busy.p)) + "\" onclick=\"statsFocusIdx("
                         + statsFocusPush(busy.p) + ")\" title=\"" + statsDayTipTitle(busy.first, bFirst) + "\">" + bFirst + "</span>"
                         + ((bLast !== "" && bLast !== bFirst) ? "<span class=\"st-picksep\"> \u21c4 </span>"
                         + (busy.pl ? "<span class=\"st-pick " + stNameCls(stOf(busy.pl)) + "\" onclick=\"statsFocusIdx("
@@ -16025,26 +16034,26 @@ statsFocusList = []; statsCountryZoomList = []; statsCountryZoomIdx = {}; if (st
                 H += stRow([{ label: L_("statsBusiestDay", "Nejvíce fotek za") + " " + statsBusyDaysSelect(), lblWrap: true,
                     labelTitle: L_("statsBusiestDay", "Nejvíce fotek za") + " " + statsBusyDays + " " + statsDayWord(statsBusyDays),
                     val: statsTableLinkHtml("w", busy.first + "-" + busy.last, bLbl, nmb(busy.n), fmtStatsPhotos(busy.n) + " \u00b7 " + bRange + " \u2013 " + L_("statsTableShowPhotos", "Zobrazit fotky v prohlížečce")),
-                    sub: bRange, subHtml: bSub, valTitle: fmtStatsPhotos(busy.n) + " \u00b7 " + bRange }]);
+                    sub: bRange, subTip: bRange, subHtml: bSub, valTitle: fmtStatsPhotos(busy.n) + " \u00b7 " + bRange }]);
             }
             /* --- Nejdelší fotosérie: nejdelší souvislá řada dnů, kdy je alespoň jedna fotka --- */
             var ser = statsLongestSeries(times);
             if (ser) {
                 var serDays = statsDayWord(ser.n);
                 var sFirst = fmtStatsDay(ser.first), sLast = fmtStatsDay(ser.last);
+                var sRangeTxt = (sFirst === sLast) ? sFirst : (sFirst + " \u21c4 " + sLast);
                 var sSub = "";
                 if (sFirst !== "" && sLast !== "") {
-                    sSub = "<span class=\"st-row-sub\">"
+                    sSub = "<span class=\"st-row-sub\" title=\"" + sRangeTxt + "\">"
                         + "<span class=\"st-pick " + stNameCls(stOf(ser.fr)) + "\" onclick=\"statsFocusIdx(" + statsFocusPush(ser.fr) + ")\" title=\"" + statsDayTipTitle(ser.first, sFirst) + "\">" + sFirst + "</span>"
                         + "<span class=\"st-picksep\"> \u21c4 </span>"
                         + "<span class=\"st-pick " + stNameCls(stOf(ser.lr)) + "\" onclick=\"statsFocusIdx(" + statsFocusPush(ser.lr) + ")\" title=\"" + statsDayTipTitle(ser.last, sLast) + "\">" + sLast + "</span>"
                         + "</span>";
                 }
-                var sRangeTxt = (sFirst === sLast) ? sFirst : (sFirst + " \u21c4 " + sLast);
                 var sLbl = L_("statsLongestSeries", "Nejdelší fotosérie") + " (" + sRangeTxt + ")";
                 H += stRow([{ label: L_("statsLongestSeries", "Nejdelší fotosérie"),
                     val: statsTableLinkHtml("w", ser.first + "-" + ser.last, sLbl, nmb(ser.n) + " " + serDays, fmtStatsPhotos(ser.photos) + " \u00b7 " + sRangeTxt + " \u2013 " + L_("statsTableShowPhotos", "Zobrazit fotky v prohlížečce")),
-                    sub: sRangeTxt, subHtml: sSub, valTitle: fmtStatsPhotos(ser.photos) + " \u00b7 " + sRangeTxt }]);
+                    sub: sRangeTxt, subTip: sRangeTxt, subHtml: sSub, valTitle: fmtStatsPhotos(ser.photos) + " \u00b7 " + sRangeTxt }]);
             }
             /* --- Nejčastější místo: kružnice R (žebříček 1-2-5-10-20-50 km jako Nejhustší okruh, první platný = aspoň 2 různé dny),
                    vpravo počet RŮZNÝCH DNŮ (ne fotek), uprostřed souřadnice středu, klik na hodnotu kreslí kružnici.
@@ -16064,7 +16073,7 @@ statsFocusList = []; statsCountryZoomList = []; statsCountryZoomIdx = {}; if (st
                     var mvRTxt = (mvR >= 1) ? (mvR + " km") : (Math.round(mvR * 1000) + " m");
                     var mvDays = nmb(mvV.n) + " " + statsDayWord(mvV.n);
                     return stRow([{ label: L_("statsMostVisited", "Nej\u010dast\u011bj\u0161\u00ed m\u00edsto") + " (" + mvRTxt + ")", val: mvDays,
-                        sub: mvTxt, subHtml: mvSub,
+                        sub: mvTxt, subTip: mvTxt, subHtml: mvSub,
                         valClick: "statsFocusCircle(" + (statsCircleList.push([mvV.ll, mvR]) - 1) + ")",
                         valTitle: mvDays + " \u00b7 " + mvRTxt }]);
                 };
@@ -16253,9 +16262,9 @@ H += "<div class=\"st-sec-box\" data-stsec=\"distances\"><h3 class=\"info-sectio
             /* kružnice jen s platným středem a kladným konečným poloměrem – jinak řádek není klikatelný (dřív i pro 0/NaN) */
             var circ = function(c, km) { if (!statsCircleOk(c, km)) return {}; return { valClick: "statsFocusCircle(" + (statsCircleList.push([c, km]) - 1) + ")", valTitle: ciHint }; };
             H += stRow([Object.assign({ label: L_("statsAvgRef", "Průměrná vzd. od RB"), val: fmtStatsKm(avgRefKm),
-                sub: refTxt, subHtml: refCell }, circ(refC, avgRefKm))]);
+                sub: refTxt, subTip: refTxt, subHtml: refCell }, circ(refC, avgRefKm))]);
             H += stRow([Object.assign({ label: L_("statsMedianRef", "Medián vzd. od RB"), val: fmtStatsKm(medRefKm),
-                sub: refTxt, subHtml: refCell }, circ(refC, medRefKm))]);
+                sub: refTxt, subTip: refTxt, subHtml: refCell }, circ(refC, medRefKm))]);
             if (farRefP) {
                 var frName = statsFileName(farRefP.p);
                 var frIdx = statsFocusPush(farRefP.ll);
@@ -16425,7 +16434,7 @@ H += stRow([Object.assign({ label: L_("statsFarthestCenter", "Nejvzdálenější
                     label: L_("statsCoverageArea", "Obalová plocha") + " " + statsCoverageInput(),
                     lblWrap: true,
                     labelTitle: L_("statsCoverageArea", "Obalová plocha") + " (" + statsCoverageR + " km)",
-                    sub: covSubTxt,
+                    sub: covSubTxt, subTip: covSubTxt,
                     subHtml: covSubHtml,
                     val: fmtStatsArea(covArea),
                     valTitle: covValTip,
@@ -38924,6 +38933,8 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
             s.textContent = ".mfz-chip{border:1px solid #dadce0;background:#fff;color:#3c4043;border-radius:14px;padding:4px 11px;font-size:12px;cursor:pointer;font-family:inherit}"
                 + ".mfz-chip:hover{border-color:var(--green);color:var(--green)}"
                 + ".mfz-chip[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#fff}"
+                /* úzké displeje: oblasti na jedné rolovatelné řadě (jinak v EN zabraly přes 350 px výšky) */
+                + "@media (max-width:560px){#mfzChips{flex-wrap:nowrap !important;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}#mfzChips .mfz-chip{flex:0 0 auto;white-space:nowrap}}"
                 + ".mfz-chip:focus-visible,.mf-zone-btn:focus-visible,.mf-zone-prev:focus-visible{outline:2px solid var(--green);outline-offset:2px}"
                 + ".mf-zone-btn{border:1px solid var(--green);background:var(--green-bg);color:var(--green-logo);border-radius:6px;padding:2px 9px;font-size:12px;cursor:pointer;font-family:inherit}"
                 + ".mf-zone-btn:hover{background:var(--green);color:#fff}"
@@ -38985,7 +38996,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
                 AREAS.forEach(function (a) {
                     var b = document.createElement("button"); b.type = "button"; b.className = "mfz-chip"; b.setAttribute("data-area", a.k);
                     b.textContent = areaName(a.k); b.setAttribute("aria-pressed", a.k === S.area ? "true" : "false");
-                    b.onclick = function () { S.area = a.k; var all = chips.children; for (var i = 0; i < all.length; i++) all[i].setAttribute("aria-pressed", all[i] === b ? "true" : "false"); draw(); };
+                    b.onclick = function () { S.area = a.k; var all = chips.children; for (var i = 0; i < all.length; i++) all[i].setAttribute("aria-pressed", all[i] === b ? "true" : "false"); S.shrink = 0; draw(); fitBox(); };
                     chips.appendChild(b);
                 });
 
@@ -39040,7 +39051,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
                 function draw() {
                     var a = AREAS.filter(function (x) { return x.k === S.area; })[0] || AREAS[0];
                     var Wc = Math.max(280, S.host.clientWidth || 600);
-                    var maxH = Math.max(260, Math.min((window.innerHeight || 800) * 0.58, 760));
+                    var maxH = Math.max(220, Math.min((window.innerHeight || 800) * 0.58, 760) - (S.shrink || 0));
                     var g = S.g = geom(a.b, Wc, maxH, { l: Wc < 500 ? 54 : 64, r: 10, t: 8, b: 22 });
                     var svg = mapSvg(g, { id: S.id, labels: true, grid: true, photos: S.air ? S.pts : null },
                         "style=\"display:block;max-width:100%;height:auto;margin:0 auto;\" role=\"img\" aria-label=\"" + esc(T_("mfZoneTitle", "Mapa zón – detekce fotek z letadla") + " – " + areaName(S.area)) + "\" font-family=\"inherit\"");
@@ -39051,9 +39062,20 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
                     var al = S.ov.querySelector("#mfzAirLeg");
                     if (al) { var showAir = !!(S.air && S.pts.length); al.innerHTML = showAir ? S.legAir : ""; al.style.display = showAir ? "" : "none"; }
                 }
+                /* přizpůsobení výšky mapy obsahu dialogu: delší texty (EN) přetékaly max-height 94vh –
+                   mapa se zmenší přesně o míru přetečení, aby byla poznámka a legenda celé viditelné */
+                function fitBox() {
+                    try {
+                        for (var i = 0; i < 5; i++) {
+                            var over = box.scrollHeight - box.clientHeight;
+                            if (over <= 1) break;
+                            S.shrink = (S.shrink || 0) + over + 6;
+                            draw();
+                        }
+                    } catch (eFit) { try { AppLog.soft("MF_ZONEMAP.fitBox", eFit); } catch (e2) { } }
+                }
                 draw();
-
-                /* zavírání, klávesy, změna velikosti */
+                fitBox();
                 box.querySelector("#mfzClose").onclick = function () { close(); };
                 ov.onclick = function (e) { if (e.target === ov) close(); };
                 box.querySelector("#mfzSave").onclick = function () { exportPng(); };
@@ -39069,7 +39091,7 @@ var OFFLINE_LAND = {"type":"Topology","objects":{"countries":{"type":"GeometryCo
                 };
                 document.addEventListener("keydown", S.onKey, true);
                 var rt = null;
-                S.onResize = function () { clearTimeout(rt); rt = setTimeout(function () { if (st === S) draw(); }, 150); };
+                S.onResize = function () { clearTimeout(rt); rt = setTimeout(function () { if (st === S) { S.shrink = 0; draw(); fitBox(); } }, 150); };
                 window.addEventListener("resize", S.onResize);
                 try { box.querySelector("#mfzClose").focus(); } catch (e) { }
             } catch (e) { try { AppLog.soft("MF_ZONEMAP.open", e); } catch (e2) { } }
