@@ -917,6 +917,9 @@ var AppLog = (function () {
         .ef-count-main { display: flex; align-items: center; justify-content: flex-end; gap: 5px; }
         .ef-map-btn { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; padding: 0; border: none; border-radius: 50%; background: transparent; color: var(--green); cursor: pointer; flex-shrink: 0; }
         .ef-map-btn:hover { background: var(--green-bg); }
+        .st-country-map-btn { width: 22px; height: 22px; margin-left: 5px; vertical-align: middle; }
+        .st-country-map-btn svg { width: 18px; height: 18px; }
+        .st-country-map-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         @media (max-width: 620px) { .ef-row { flex-wrap: wrap; } .ef-slider-col { order: 3; flex-basis: 100%; } .ef-count { margin-left: auto; } }
         /* --- Histogram „Rozložení výšek“ pod Filtrem výšek: kreslicí plocha sdílí osu X s posuvníkem (zarovnání v statsElevHistAlign) --- */
         .ef-hist { margin-top: 0; padding-top: 9px; border-top: 1px solid #eef0f2; }
@@ -2673,6 +2676,8 @@ var AppLog = (function () {
            takže ji zkracování popisku na mobilu neschová; barvy jako odznak na mapě (tmavé pozadí, zelený okraj). */
         .elev-area-mark { position: absolute; top: -6px; right: -5px; width: 17px; height: 17px; border-radius: 50%; background: rgba(0,0,0,0.72); border: 1.5px solid rgba(10,169,76,0.95); color: #ffffff; display: none; align-items: center; justify-content: center; box-sizing: border-box; z-index: 6; cursor: pointer; }
         .elev-area-mark.on { display: flex; }
+        .country-area-mark { padding: 0; }
+        .country-area-mark:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
         /* řádek výškového omezení v nabídce Oblast (s tlačítkem Zrušit) */
         .elev-area-row { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; padding: 7px 9px; border-radius: 9px; background: rgba(0,0,0,0.72); border: 1px solid rgba(10,169,76,0.9); color: #ffffff; font-size: 11.5px; font-weight: 400; line-height: 1.3; }
         .elev-area-row .ear-ico { flex-shrink: 0; display: flex; }
@@ -2990,7 +2995,7 @@ var AppLog = (function () {
                 </h2>
                 <button class="modal-close-btn" onclick="closeInfoModal()" id="btnInfoClose" aria-label="Zavřít dialog nápovědy"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
-            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.19</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-11-02" title="Datum poslední aktualizace">1. 11. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
+            <div class="info-meta-row"><span class="info-head-meta ihm-link" onclick="gotoGuideSub('about-app')"><!-- PRAVIDLO (viz pokyny na začátku souboru): Při změně verze VŽDY zároveň nastav data-date u #valUpdated na dnešní datum. Verzi níže měnit JEN na výslovný pokyn. Datum aktualizace je PEVNÉ a jediným zdrojem je atribut data-date (RRRR-MM-DD) u #valUpdated – při KAŽDÉ skutečné úpravě kódu ho přepsat na dnešní datum (text uvnitř se přeformátuje sám podle jazyka). Kopírování, přejmenování ani stažení souboru datum nemění. --><span class="ihm-g"><button type="button" id="btnHeadInfo" class="ihm-i" title="Informace o aplikaci" aria-label="Informace o aplikaci">i</button><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valVersion" title="Verze aplikace"><span id="valVersionLbl">verze</span> <span id="valVersionNum">4.20</span></span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valUpdated" data-date="2026-11-15" title="Datum poslední aktualizace">1. 11. 2026</span><span class="ihm-dot" aria-hidden="true">•</span></span><span class="ihm-g"><span id="valAuthor" title="Autor aplikace">Jan <span class="ihm-sc">Bartůněk</span></span></span></span></div>
 
             <div class="guide-header"><h3 class="info-section-title" id="txtGuideTitle"><svg class="m-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Návod k použití</h3><span class="guide-search-wrap"><input class="guide-search" id="guideSearch" type="text" placeholder="Hledat v návodu…" aria-label="Hledat v návodu…" title="Hledat v návodu…" oninput="filterGuideSteps(this.value);document.getElementById('guideClear').style.display=this.value?'inline-flex':'none';" onkeydown="if(event.key==='Tab'&&!event.isComposing){if(mfSearchInputTab(event,'infoStepsList',this))return;}if(event.key==='Escape'&&this.value&&!event.isComposing){event.preventDefault();event.stopPropagation();this.value='';filterGuideSteps('');document.getElementById('guideClear').style.display='none';}"><span class="guide-count" id="guideCount" aria-live="polite"></span></span><button class="guide-clear" id="guideClear" title="Zrušit hledání" aria-label="Zrušit hledání" onclick="var el=document.getElementById('guideSearch');el.value='';filterGuideSteps('');el.focus();this.style.display='none';"><svg aria-hidden="true" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button type="button" class="st-chart-expand" id="guideExpandBtn" onclick="guideExpandAll(true)" title="Rozbalit vše" aria-label="Rozbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><button type="button" class="st-chart-expand" id="guideCollapseBtn" onclick="guideExpandAll(false)" title="Sbalit vše" aria-label="Sbalit vše"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button></div>
             <ol class="info-steps" id="infoStepsList"></ol>
@@ -3226,7 +3231,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             try { if (typeof updView === "function") updView(); } catch (eU) { mfEgmLog(eU); }
             /* pri aktivnim vyskovem omezeni mapy se meni i pocty v liste filtru (Cas/Slozky/Oblast) a odznak */
             try {
-                if (typeof elevMapFilter !== "undefined" && elevMapFilter) {
+                if ((typeof elevMapFilter !== "undefined" && elevMapFilter) || (typeof countryMapFilter !== "undefined" && countryMapFilter)) {
                     if (typeof renderYearDropdown === "function") renderYearDropdown();
                     if (typeof renderFolderDropdown === "function") renderFolderDropdown();
                     if (typeof updateAreaLabel === "function") updateAreaLabel();
@@ -3950,7 +3955,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 tipAuthor: "Autor aplikace",
                 tipUpdated: "Datum poslední aktualizace",
                 tipHeadInfo: "Informace o aplikaci",
-                valUpdated: "2. 11. 2026",
+                valUpdated: "15. 11. 2026",
                 guideTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px' aria-hidden='true'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg> Návod",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Cesta k archivu fotografií (kořenová složka) <span style=\"white-space:nowrap\"><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd></span>",
                 setArchiveBody: "Relativní cesty z datových TXT (<code>RELATIVNI_CESTA</code>) se spojí se zadaným kořenem archivu a náhledy se pak načítají z plné cesty.<div class=\"step-sub\"><br>• Do pole vložte kořen archivu, např. <code>C:\\Fotky\\Archiv</code> nebo <code>/Users/jan/Photos</code> (rychle přes <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>)<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg> (nebo Enter) cestu uloží do prohlížeče a překreslí náhledy<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M18 6 6 18'/><path d='m6 6 12 12'/></svg> cestu smaže – platí opět čisté relativní cesty jako dosud<br>• Každý datový TXT si v seznamu zdrojů (<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> vpravo od ikonky foťáku) volí, zda brát plnou cestu s kořenem, nebo čistou relativní cestu<br>• Bez vyplnění se nic nemění.<br>Pozn.: prohlížeč může blokovat <code>file:///</code> při otevření přes <code>http://</code> – pak otevřete mapu ze stejného disku.</div>",
@@ -4344,7 +4349,7 @@ statsFarthestPair: "Farthest pair",
                 tipAuthor: "App author",
                 tipUpdated: "Date of last update",
                 tipHeadInfo: "App information",
-                valUpdated: "Nov 2, 2026",
+                valUpdated: "Nov 15, 2026",
                 guideTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-3px' aria-hidden='true'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z'/><path d='M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg> User Guide",
                 setArchiveTitle: "<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> Photo archive path (root folder) <span style=\"white-space:nowrap\"><kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd></span>",
                 setArchiveBody: "Relative paths from data TXT files (<code>RELATIVNI_CESTA</code>) are joined with the archive root, previews then load from the full path.<div class=\"step-sub\"><br>• Enter the archive root, e.g. <code>C:\\Photos\\Archive</code> or <code>/Users/jan/Photos</code> (quickly via <kbd class=\"guide-kbd\">Shift</kbd>+<kbd class=\"guide-kbd\">K</kbd>)<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 6 9 17l-5-5'/></svg> (or Enter) saves it in the browser and refreshes previews<br>• <svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M18 6 6 18'/><path d='m6 6 12 12'/></svg> clears it – plain relative paths apply again, as before<br>• Each data TXT chooses in the sources list (<svg class='m-ico' viewBox='0 0 24 24' width='14' height='14' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z'/></svg> right of the photo icon) whether to use the full path with root or the plain relative path<br>• Empty = no change.<br>Note: browsers may block <code>file:///</code> when opened via <code>http://</code> – then open the map from the same drive.</div>",
@@ -6221,6 +6226,7 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             try { areaFilter = null; areaFilters = []; } catch(e4) { AppLog.soft("clearAllFilters", e4); }
             try { areaInvertAutoReset(); } catch(e4b) { AppLog.soft("clearAllFilters", e4b); }
             /* výškový filtr mapy se ruší spolu se všemi ostatními (Shift+F); stav se neukládá mezi načteními stránky */
+            try { countryMapFilter = null; } catch(e4e) { AppLog.soft("clearAllFilters", e4e); }
             try { elevMapFilter = null; } catch(e4c) { AppLog.soft("clearAllFilters", e4c); }
             try { if (typeof elevMapBadgeUpdate === "function") elevMapBadgeUpdate(); } catch(e4d) { AppLog.soft("clearAllFilters", e4d); }
             try { if (typeof renderYearDropdown === "function") renderYearDropdown(); } catch(e5) { AppLog.soft("clearAllFilters", e5); }
@@ -6670,14 +6676,28 @@ var mapyApiKey = "kQcmDx1gKVI4n6NB5nKqF70IudtCGrtKu_LRZelmtgo";
             if (elevMapFilter.noAir) { try { if (typeof statsIsAir === "function" && statsIsAir(p)) return false; } catch(eA) { } }
             return true;
         }
+        /* Filtr ze souhrnu Navštívených států. Neomezuje podklady statistiky, stejně jako filtr výšek.
+           ca = přiřazené ke státu, s = bez státu na zemi/moři, air = vzdušný prostor.
+           Nová volba nahrazuje předchozí; s ostatními filtry mapy platí průnikem. */
+        var countryMapFilter = null;
+        function statsCountryPhotoMatches(p, kind) {
+            if (!statsLL(p)) return false;
+            if (kind === "air") return !!statsIsAir(p);
+            if (statsIsAir(p)) return false;
+            var key = (typeof MF_COUNTRY !== "undefined" && MF_COUNTRY) ? MF_COUNTRY.groupKey(statsCountryOf(p), false) : "";
+            return kind === "ca" ? (!!key && key !== "SEA") : (kind === "s" && (!key || key === "SEA"));
+        }
+        function countryMapPass(p) {
+            return !countryMapFilter || statsCountryPhotoMatches(p, countryMapFilter);
+        }
         /* Oblast + výškové omezení mapy: pro počty v nabídkách Čas/Složky (aby seděly s mapou i s počtem u Oblasti) */
         function areaElevPass(p) {
-            return areaPass(p) && elevMapPass(p);
+            return areaPass(p) && elevMapPass(p) && countryMapPass(p);
         }
         function photoPassesFilters(p) {
             try {
                 if (!photoPassesFiltersCore(p)) return false;
-                return elevMapPass(p);
+                return elevMapPass(p) && countryMapPass(p);
             } catch(e) { return true; }
         }
         var folderSearch = "";
@@ -15374,6 +15394,7 @@ function stBar(label, value, max, text, pctText, chkHtml) {
         /* Odznak aktivního výškového filtru nad mapou – viditelný jen při aktivním omezení (vzor: „V okně: n“).
            Klik na odznak (i na křížek) zruší jen výškové omezení; ostatní filtry zůstávají. */
         function elevMapBadgeUpdate() {
+            try { countryMapBadgeUpdate(); } catch(eC) { AppLog.soft("elevMapBadgeUpdate.countries", eC); }
             try {
                 var el = document.getElementById("mfElevBadge");
                 if (!elevMapFilter) { if (el) el.style.display = "none"; return; }
@@ -15399,6 +15420,64 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 } catch(eW) { AppLog.soft("elevMapBadgeUpdate", eW); }
                 el.style.bottom = winOn ? "62px" : "34px";
             } catch(e) { AppLog.soft("elevMapBadgeUpdate", e); }
+        }
+        function statsCountryMapLabel(kind) {
+            if (kind === "ca") return statsL_("statsCountriesAllPhotos", "Fotky ze všech navštívených států");
+            if (kind === "s") return statsL_("statsCountriesNoState", "Fotek bez přiřazeného státu (moře apod.)");
+            return statsL_("statsCountriesAir", "Fotek ve vzdušném prostoru");
+        }
+        function statsCountryMapButtonHtml(kind) {
+            var tip = escapeHtml(statsL_("statsElevMapTip", "Filtrovat v mapě") + " – " + statsCountryMapLabel(kind));
+            return "<button type=\"button\" class=\"ef-map-btn st-country-map-btn\" data-country-map=\"" + kind + "\" onclick=\"event.stopPropagation();statsCountryMapApply('" + kind + "')\" title=\"" + tip + "\" aria-label=\"" + tip + "\"><svg viewBox=\"2 0 20 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z\"></path><circle cx=\"12\" cy=\"10\" r=\"3\"></circle></svg></button>";
+        }
+        function countryMapRefresh() {
+            updView();
+            renderYearDropdown();
+            renderFolderDropdown();
+            updateAreaLabel();
+            updateZoomFilteredBtn();
+            var dd = document.getElementById("areaDropdown");
+            if (dd && dd.classList.contains("open")) renderAreaDropdown();
+            else { elevAreaRowSync(dd); countryAreaRowSync(dd); }
+        }
+        function statsCountryMapApply(kind) {
+            if (kind !== "ca" && kind !== "s" && kind !== "air") return;
+            countryMapFilter = kind;
+            closeStatsModal();
+            var lb = document.getElementById("lightbox");
+            if (lb && lb.classList.contains("active")) closeLightbox();
+            countryMapRefresh();
+            zoomToFiltered();
+        }
+        function countryMapClear() {
+            if (!countryMapFilter) return;
+            countryMapFilter = null;
+            countryMapRefresh();
+            var lb = document.getElementById("lightbox");
+            if (lb && lb.classList.contains("active") && typeof lbRefreshPhotos === "function") lbRefreshPhotos();
+        }
+        function countryMapBadgeUpdate() {
+            var el = document.getElementById("mfCountryBadge");
+            if (!countryMapFilter) { if (el) el.style.display = "none"; return; }
+            if (typeof map === "undefined" || !map) return;
+            if (!el) {
+                el = document.createElement("div");
+                el.id = "mfCountryBadge";
+                el.className = "mf-elev-badge";
+                el.setAttribute("role", "button");
+                el.tabIndex = 0;
+                el.onclick = function(ev) { ev.stopPropagation(); countryMapClear(); };
+                el.onkeydown = function(ev) { if (stKbKey(ev)) { ev.stopPropagation(); countryMapClear(); } };
+                map.getContainer().appendChild(el);
+                L.DomEvent.disableClickPropagation(el);
+            }
+            el.textContent = statsCountryMapLabel(countryMapFilter) + " · " + fmtStatsPhotos(elevMapCount()) + " ×";
+            el.title = countryMapClearTip();
+            el.setAttribute("aria-label", el.title);
+            var wb = document.getElementById("lbWinBadge");
+            var winOn = typeof lbFollowWin !== "undefined" && lbFollowWin && typeof lbSplitMode !== "undefined" && lbSplitMode && wb && wb.style.display !== "none";
+            el.style.bottom = ((winOn ? 62 : 34) + (elevMapFilter ? 28 : 0)) + "px";
+            el.style.display = "block";
         }
         /* Text výškového omezení (sdílený řádkem v nabídce Oblast a tooltipem značky). */
         function elevMapDescHtml() {
@@ -15452,6 +15531,58 @@ function stBar(label, value, max, text, pctText, chkHtml) {
                 if (b) b.onclick = function(ev) { try { if (ev && ev.stopPropagation) ev.stopPropagation(); } catch(eS) { } elevMapClear(); };
                 if (dd.firstChild !== row) dd.insertBefore(row, dd.firstChild); /* přesouvá se jen řádek – pole hledání si drží focus */
             } catch(e) { AppLog.soft("elevAreaRowSync", e); }
+        }
+        var COUNTRY_MARK_SVG = "<svg viewBox=\"0 0 24 24\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"/></svg>";
+        function countryMapClearTip() {
+            return (currentLang === "cs") ? "Zrušit filtr států / vzdušného prostoru (ostatní filtry zůstávají)" : "Clear country / airspace filter (keep other filters)";
+        }
+        function countryMapDescHtml() {
+            if (!countryMapFilter) return "";
+            var label = currentLang === "cs" ? "Omezení států" : "Country filter";
+            return escapeHtml(label) + ": " + escapeHtml(statsCountryMapLabel(countryMapFilter))
+                + " · <span class=\"ear-nw\">" + escapeHtml(fmtStatsPhotos(elevMapCount())) + "</span>";
+        }
+        /* Značka u Oblasti je vedle výškové značky; obě mohou být aktivní současně. */
+        function countryAreaMarkSync() {
+            var btn = document.getElementById("btnAreaSelect");
+            var wrap = btn ? btn.parentNode : null;
+            if (!wrap) return;
+            var mk = document.getElementById("countryAreaMark");
+            if (!countryMapFilter) { if (mk) mk.classList.remove("on"); return; }
+            if (!mk) {
+                mk = document.createElement("button");
+                mk.type = "button";
+                mk.id = "countryAreaMark";
+                mk.className = "elev-area-mark country-area-mark";
+                mk.innerHTML = COUNTRY_MARK_SVG;
+                mk.setAttribute("aria-haspopup", "true");
+                mk.onclick = function(ev) { ev.stopPropagation(); toggleAreaDropdown(); };
+                wrap.appendChild(mk);
+            }
+            var tip = (currentLang === "cs" ? "Aktivní filtr ze statistiky států: " : "Active country statistics filter: ") + statsCountryMapLabel(countryMapFilter);
+            mk.title = tip;
+            mk.setAttribute("aria-label", tip);
+            mk.style.right = elevMapFilter ? "16px" : "-5px";
+            mk.classList.add("on");
+        }
+        /* Informační řádek v Oblasti ruší pouze filtr států, nikoli oblast nebo výšku. */
+        function countryAreaRowSync(dd) {
+            dd = dd || document.getElementById("areaDropdown");
+            if (!dd) return;
+            var row = document.getElementById("areaCountryRow");
+            if (!countryMapFilter) { if (row && row.parentNode) row.parentNode.removeChild(row); return; }
+            if (!row) {
+                row = document.createElement("div");
+                row.id = "areaCountryRow";
+                row.className = "elev-area-row country-area-row";
+            }
+            row.innerHTML = "<span class=\"ear-ico\">" + COUNTRY_MARK_SVG.replace("width=\"10\" height=\"10\"", "width=\"14\" height=\"14\"") + "</span><span class=\"ear-txt\">" + countryMapDescHtml() + "</span>"
+                + "<button type=\"button\" title=\"" + escapeHtml(countryMapClearTip()) + "\" aria-label=\"" + escapeHtml(countryMapClearTip()) + "\">" + escapeHtml(statsL_("elevAreaClear", "Zrušit")) + "</button>";
+            var b = row.querySelector("button");
+            if (b) b.onclick = function(ev) { ev.stopPropagation(); countryMapClear(); };
+            var elevRow = document.getElementById("areaElevRow");
+            var before = elevRow && elevRow.parentNode === dd ? elevRow.nextSibling : dd.firstChild;
+            if (before !== row) dd.insertBefore(row, before);
         }
         /* Při shodných mezích (Od = Do) se obě táhla překrývají a horní input by přebíral všechny zásahy –
            proto se v takovém stavu tah řeší směrem prvního pohybu myši/dotu: vlevo = Od, vpravo = Do. */
@@ -18378,14 +18509,14 @@ window.statsChartSave = statsChartSave;
                             }
                             if (cQL !== null && cMarkCount === 0) H += "<tr><td colspan=\"5\" style=\"text-align:center;color:#80868b;white-space:normal;\">" + escapeHtml(statsL_("statsCountriesNoMatch", "Žádný stát neodpovídá hledání")) + "</td></tr>";
                             try { window.statsCountriesData = { rows: cCsvRows, totN: cTotPh, sea: cSea, air: cAir }; } catch(eCD) { AppLog.soft("renderStats>countriesData", eCD); }
-                            H += "</tbody><tfoot><tr><td colspan=\"5\" style=\"font-weight:700;white-space:normal;\"><span style=\"display:inline-block;margin-right:16px;\">" + L_("statsCountriesTotal", "Celkem navštívených států") + ": " + statsTableLinkHtml("ca", "", L_("statsCountriesAllPhotos", "Fotky ze všech navštívených států"), nmb(cKeys.length), L_("statsCountriesTotalTip", "Zobrazit v prohlížečce fotky ze všech navštívených států (bez fotek z moře a ze vzdušného prostoru)")) + "</span>" + statsContFooterHtml(cBy) + "</td></tr></tfoot></table></div>";
+                            H += "</tbody><tfoot><tr><td colspan=\"5\" style=\"font-weight:700;white-space:normal;\"><span style=\"display:inline-block;margin-right:16px;\">" + L_("statsCountriesTotal", "Celkem navštívených států") + ": " + statsTableLinkHtml("ca", "", L_("statsCountriesAllPhotos", "Fotky ze všech navštívených států"), nmb(cKeys.length), L_("statsCountriesTotalTip", "Zobrazit v prohlížečce fotky ze všech navštívených států (bez fotek z moře a ze vzdušného prostoru)")) + statsCountryMapButtonHtml("ca") + "</span>" + statsContFooterHtml(cBy) + "</td></tr></tfoot></table></div>";
                         } else {
                             H += "<div class=\"st-sub-h first\">" + L_("statsCountriesEmpty", "Žádné státy") + "</div>";
                         }
                         var tNoState = L_("statsCountriesNoState", "Fotek bez přiřazeného státu (moře apod.)");
-                        if (cSea > 0) H += "<div class=\"st-sub-h\" style=\"margin-top:8px;\">" + tNoState + ": " + statsTableLinkHtml("s", "", tNoState, nmb(cSea), tShowC) + "</div>";
+                        if (cSea > 0) H += "<div class=\"st-sub-h\" style=\"margin-top:8px;\">" + tNoState + ": " + statsTableLinkHtml("s", "", tNoState, nmb(cSea), tShowC) + statsCountryMapButtonHtml("s") + "</div>";
                         var tAir = L_("statsCountriesAir", "Fotek ve vzdušném prostoru");
-                        if (cAir > 0) H += "<div class=\"st-sub-h\" style=\"margin-top:" + (cSea > 0 ? "2" : "8") + "px;\" title=\"" + L_("statsCountriesAirTip", "Fotky s výškou nad povolenou mezí pro dané místo (typicky z letadla): mimo hory nad 1 150 m, v horách podle nejvyšší okolní hory až 9 150 m. Do žádného státu ani světadílu se nepočítají.") + "\">" + tAir + ": " + statsTableLinkHtml("air", "", tAir, nmb(cAir), tShowC) + "</div>";
+                        if (cAir > 0) H += "<div class=\"st-sub-h\" style=\"margin-top:" + (cSea > 0 ? "2" : "8") + "px;\" title=\"" + L_("statsCountriesAirTip", "Fotky s výškou nad povolenou mezí pro dané místo (typicky z letadla): mimo hory nad 1 150 m, v horách podle nejvyšší okolní hory až 9 150 m. Do žádného státu ani světadílu se nepočítají.") + "\">" + tAir + ": " + statsTableLinkHtml("air", "", tAir, nmb(cAir), tShowC) + statsCountryMapButtonHtml("air") + "</div>";
                         H += "</div>";
                     }
                     return H;
@@ -18409,7 +18540,7 @@ try {
         if (d.polygons) { _gg = d.polygons.length; for (var _gi = 0; _gi < d.polygons.length; _gi++) { try { _gr++; if (d.polygons[_gi].holes) { _gr += d.polygons[_gi].holes.length; _gh += d.polygons[_gi].holes.length; } } catch(eH) { AppLog.soft("renderStats", eH); } } } if ((d.format === "KML" || d.format === "KMZ") && _gr > 0) { _gl = Math.max(0, _gl - _gr); }
     }
 } catch(eG) { AppLog.soft("renderStats", eG); }
-                    var _nvd = 0; try { for (var _vi = 0; _vi < its.length; _vi++) { try { if (isVideoFn(its[_vi][3])) _nvd++; } catch(eV) { AppLog.soft("renderStats", eV); } } } catch(eVC) { AppLog.soft("renderStats", eVC); } srcs.push({ name: sk[i], active: !!d.active, n: its.length, type: d.type, gp: _gp, gl: _gl, gg: _gg, gh: _gh, nVd: _nvd });
+                    var _nvd = 0; try { for (var _vi = 0; _vi < its.length; _vi++) { try { if (isVideoFn(its[_vi][3])) _nvd++; } catch(eV) { AppLog.soft("renderStats", eV); } } } catch(eVC) { AppLog.soft("renderStats", eVC); } srcs.push({ name: mfSourceDisplayName(d), active: !!d.active, n: its.length, type: d.type, gp: _gp, gl: _gl, gg: _gg, gh: _gh, nVd: _nvd });
                 }
             } catch(eS2) { AppLog.soft("renderStats", eS2); }
             if (srcs.length) {
@@ -22109,23 +22240,8 @@ window.addEventListener('resize', function() {
                     if (kind === "c") {
                         /* stát dle offline hranic (sekce Navštívené státy) */
                         try { ok = (typeof MF_COUNTRY !== "undefined" && MF_COUNTRY) ? (MF_COUNTRY.groupKey(statsCountryOf(p), false) === arg) : false; } catch(eC) { ok = false; }
-                    } else if (kind === "ca") {
-                        /* všechny fotky přiřazené ke státu (patička „Celkem navštívených států“) – stejná podmínka jako počítání tabulky:
-                           bez fotek na moři (SEA / bez státu) a ve vzdušném prostoru (statsCountryOf pro ně vrací null) */
-                        try {
-                            var gkA = (typeof MF_COUNTRY !== "undefined" && MF_COUNTRY) ? MF_COUNTRY.groupKey(statsCountryOf(p), false) : "";
-                            ok = !!statsLL(p) && !!gkA && gkA !== "SEA";
-                        } catch(eCA) { ok = false; }
-                    } else if (kind === "s") {
-                        /* fotky s polohou, ale bez přiřazeného státu (moře apod.) */
-                        try {
-                            var llS = statsLL(p);
-                            var gkS = (typeof MF_COUNTRY !== "undefined" && MF_COUNTRY) ? MF_COUNTRY.groupKey(statsCountryOf(p), false) : "SEA";
-                            ok = !!llS && (!gkS || gkS === "SEA") && !statsIsAir(p);
-                        } catch(eS) { ok = false; }
-                    } else if (kind === "air") {
-                        /* fotky ve vzdušném prostoru (výška nad povolenou mezí pro dané místo – typicky z letadla) */
-                        try { ok = statsIsAir(p); } catch(eA) { ok = false; }
+                    } else if (kind === "ca" || kind === "s" || kind === "air") {
+                        ok = statsCountryPhotoMatches(p, kind);
                     } else if (kind === "el") {
                         /* fotky se známou nadmořskou výškou (řádek "Fotek s výškou" v sekci Výška) */
                         try { ok = !!statsLL(p) && p.length > 7 && p[7] !== null && p[7] !== "" && isFinite(Number(p[7])); } catch(eEl) { ok = false; }
@@ -24454,6 +24570,15 @@ window.addEventListener('resize', function() {
         function openLB(u, c, dt, sk) {
             currentLBPhotos = getFilteredPhotosList();
             currentLBIndex = -1;
+            /* Stejné datum a název mohou mít různé originály. Nejdřív určit zdroj podle URL. */
+            if (!sk && u) {
+                for (var ui = 0; ui < currentLBPhotos.length; ui++) {
+                    var up = currentLBPhotos[ui], uk = currentLBKeys[ui];
+                    var ur = resolvePhotoUrl(up[5] || up[3], uk);
+                    var uu = ur ? (ur.indexOf("data:") === 0 ? ur : encodeURI(ur)) : "";
+                    if (uu === u) { sk = uk; break; }
+                }
+            }
             if (sk) {
                 try {
                     var gl = (typeof lbPhotosFromGisSource === "function") ? lbPhotosFromGisSource(sk, dt, c) : null;
@@ -24479,7 +24604,12 @@ window.addEventListener('resize', function() {
                 } catch(eS) { AppLog.soft("openLB", eS); }
             }
             if (currentLBPhotos.length > 0) {
-                for (var i = 0; i < currentLBPhotos.length; i++) {
+                for (var ux = 0; ux < currentLBPhotos.length; ux++) {
+                    var xp = currentLBPhotos[ux], xr = resolvePhotoUrl(xp[5] || xp[3], currentLBKeys[ux]);
+                    var xu = xr ? (xr.indexOf("data:") === 0 ? xr : encodeURI(xr)) : "";
+                    if (u && xu === u) { currentLBIndex = ux; break; }
+                }
+                for (var i = 0; currentLBIndex === -1 && i < currentLBPhotos.length; i++) {
                     var item = currentLBPhotos[i];
                     var itemDt = String(item[2] || "");
                     var itemFn = String(item[3] || "");
@@ -26268,7 +26398,7 @@ window.addEventListener('resize', function() {
                     heatBlur: d.heatBlur, heatSize: d.heatSize, agePalette: d.agePalette, ageOpacity: d.ageOpacity, ageBlur: d.ageBlur, ageSize: d.ageSize, dotColor: d.dotColor, dotOpacity: d.dotOpacity,
                     dotSize: d.dotSize, dotIcon: d.dotIcon, cardsOpacity: d.cardsOpacity, clustersColor: d.clustersColor, clustersOpacity: d.clustersOpacity, zoneColor: d.zoneColor, zoneOpacity: d.zoneOpacity,
                     zoneKm: d.zoneKm, color: d.color, pointColor: d.pointColor, pointMode: d.pointMode, pinsOpacity: d.pinsOpacity, zonePointOpacity: d.zonePointOpacity,
-trackOpacity: d.trackOpacity, lineWidth: d.lineWidth, pointSize: d.pointSize,
+trackOpacity: d.trackOpacity, trackLineOpacity: d.trackLineOpacity, trackPointOpacity: d.trackPointOpacity, lineWidth: d.lineWidth, pointSize: d.pointSize,
 pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useArchiveRoot: d.useArchiveRoot
 };
             });
@@ -26368,7 +26498,9 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
                 var s = targetState[k], d = datasets[k];
                 d.active = s.active;
                 d.mode = s.mode; d.heatPalette = s.heatPalette; d.heatOpacity = s.heatOpacity;
-                d.heatBlur = s.heatBlur; d.agePalette = s.agePalette; d.dotColor = s.dotColor; d.dotOpacity = s.dotOpacity;
+                d.heatBlur = s.heatBlur; d.heatSize = s.heatSize;
+                d.agePalette = s.agePalette; d.ageOpacity = s.ageOpacity; d.ageBlur = s.ageBlur; d.ageSize = s.ageSize;
+                d.dotColor = s.dotColor; d.dotOpacity = s.dotOpacity;
                 d.dotSize = s.dotSize; d.dotIcon = s.dotIcon; d.cardsOpacity = s.cardsOpacity; d.clustersColor = s.clustersColor; d.clustersOpacity = s.clustersOpacity; d.zoneColor = s.zoneColor; d.zoneOpacity = s.zoneOpacity;
                 d.zoneKm = s.zoneKm; d.color = s.color ? safeColor(s.color) : s.color; d.pointColor = s.pointColor ? safeColor(s.pointColor) : s.pointColor; d.pointMode = s.pointMode; d.pinsOpacity = s.pinsOpacity; d.zonePointOpacity = s.zonePointOpacity;
                 d.trackOpacity = s.trackOpacity; d.trackLineOpacity = s.trackLineOpacity;
@@ -26472,24 +26604,7 @@ pointIcon: d.pointIcon, fillColor: d.fillColor, fillOpacity: d.fillOpacity, useA
         }
 
         function parseRawForUndo(raw, name) {
-            var ls = raw.split("\n"), it = [];
-            for (var i = 0; i < ls.length; i++) {
-                try {
-                    var l = ls[i].trim();
-                    if (!l || l.indexOf("//") === 0 || l.indexOf("DATUM") === 0 || l.indexOf("window.") === 0 || l === "`;") continue;
-                    var p = l.split(";");
-                    if (p.length >= 4) {
-                        var dt = p[0].trim(), fn = p[1].trim(), la = parseFloat(p[2].trim().replace(",", ".")), lo = parseFloat(p[3].trim().replace(",", ".")), sz = p.length > 4 ? parseInt(p[4].trim()) || 0 : 0, rp = p.length > 5 ? p[5].trim() : "";
-                        var st = p.length > 6 ? p[6].trim().toUpperCase() : "G";
-                        if (st !== "G" && st !== "D" && st !== "S") st = "G";
-                        var el = p.length > 7 ? parseFloat(p[7].trim().replace(",", ".")) : NaN;
-                        if (!isFinite(el)) el = NaN;
-                        if (st !== "S" && la === 0 && lo === 0) st = "S"; /* přesně 0, 0 = chybné GNSS -> bez polohy */
-                        if (st === "S") { it.push([NaN, NaN, dt, fn, sz, rp, "S", el]); }
-                        else if (!isNaN(la) && !isNaN(lo) && Math.abs(la) <= 90 && Math.abs(lo) <= 180) it.push([la, lo, dt, fn, sz, rp, st, el]);
-                    }
-                } catch(lineErr) { AppLog.warn("parseRawForUndo", lineErr); }
-            }
+            var it = mfParseTxtRows(raw).items;
             if (it.length === 0) return null;
             var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "duha", "neon", "google", "lava", "mono"];
             var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark", "white", "brown"];
@@ -31585,8 +31700,8 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
 
                 var nm = document.createElement("span");
                 nm.className = "source-name" + (d.type === "photos" ? " source-name-photo" : (d.type === "track" ? " source-name-gis" : ""));
-                nm.textContent = d.name;
-                nm.title = d.name;
+                nm.textContent = mfSourceDisplayName(d);
+                nm.title = mfSourceDisplayName(d);
                 nm.style.cursor = "pointer";
                 nm.onclick = function(ev) {
                     ev.stopPropagation();
@@ -33347,6 +33462,8 @@ if(bufferZoneState.keyHandler) document.removeEventListener("keydown", bufferZon
                     if (!areaFilter.match) return null;
                     key += "s" + fsObjId(areaFilter) + "." + fsObjId(areaFilter.match) + "." + areaFilter.match.size;
                 }
+                key += "|country:" + (countryMapFilter || "0");
+                if (countryMapFilter) key += "|cg:" + ((typeof mfGeoidOn === "function" && mfGeoidOn()) ? 1 : 0) + ((typeof MF_EGM_GRID !== "undefined" && MF_EGM_GRID) ? 1 : 0);
                 if (withTime) key += "|" + (timeInvertedOn() ? 1 : 0) + "|" + String(timePrefix) + "|" + (timePrefixes ? timePrefixes.join("\u0001") : "");
                 /* i aktivní výškový filtr mapy – jinak by si počítadla (tallyFiltered atp.) pamatovala zastaralé memo výsledky */
                 try { key += "|elev:" + (elevMapFilter ? (String(elevMapFilter.from) + "-" + String(elevMapFilter.to) + (elevMapFilter.noAir ? "na" : "")
@@ -33977,6 +34094,7 @@ if (q) {
                 if (el) { el.textContent = label; el.removeAttribute("title"); }
                 if (btn) btn.classList.toggle("filter-active", !!areaFilter || hasMulti);
                 try { elevAreaMarkSync(); } catch(eM) { AppLog.soft("updateAreaLabel", eM); }
+                try { countryAreaMarkSync(); countryAreaRowSync(); } catch(eCM) { AppLog.soft("updateAreaLabel.countries", eCM); }
             } catch(e) { AppLog.soft("updateAreaLabel", e); }
         }
         var areaHighlightLayer = null;
@@ -34672,9 +34790,10 @@ if (q) {
                 srow.appendChild(sin);
             }
             var _ddFirst = dd.firstChild;
-            if (_ddFirst && _ddFirst.id === "areaElevRow") _ddFirst = _ddFirst.nextSibling;
+            while (_ddFirst && (_ddFirst.id === "areaElevRow" || _ddFirst.id === "areaCountryRow")) _ddFirst = _ddFirst.nextSibling;
             if (_ddFirst !== srow) { try { dd.insertBefore(srow, _ddFirst || null); } catch(e) { AppLog.soft("renderAreaDropdown", e); } }
             try { elevAreaRowSync(dd); } catch(eER) { AppLog.soft("renderAreaDropdown", eER); }
+            try { countryAreaRowSync(dd); } catch(eCR) { AppLog.soft("renderAreaDropdown.countries", eCR); }
             sin.placeholder = t.areaSearchPH || "";
             if (sin.value !== areaSearchText) sin.value = areaSearchText;
             // zbytek dropdownu (vysledky) se prekresluje ve vlastnim kontejneru
@@ -35429,12 +35548,12 @@ if (q) {
             var th;
             if (fu && isVid) {
                 var posterAttr = (rp && rp.indexOf("data:") === 0) ? (" poster=\"" + escapeHtml(rp) + "\"") : "";
-                th = "<div class=\"thumb-wrapper\" onclick=\"openLB("+jsArg(fu)+","+jsArg(rawFn)+","+jsArg(dt)+")\">" +
+                th = "<div class=\"thumb-wrapper\" onclick=\"openLB("+jsArg(fu)+","+jsArg(rawFn)+","+jsArg(dt)+","+jsArg(dsk || "")+")\">" +
                      "<video class=\"thumb-img\" src=\""+escapeHtml(fu)+"\""+posterAttr+" muted playsinline preload=\"none\"></video>" +
                      "<div class=\"lb-grid-vbadge" + (isPlayVid ? "" : " lb-grid-vbadge-no") + "\" aria-hidden=\"true\">▶</div>" +
                      "<div class=\"thumb-badge\">"+t.zoomBadge+"</div></div>";
             } else if (fu) {
-                th = "<div class=\"thumb-wrapper\" onclick=\"openLB("+jsArg(fu)+","+jsArg(rawFn)+","+jsArg(dt)+")\"><img src=\""+escapeHtml(fu)+"\" alt=\"\" class=\"thumb-img\" loading=\"lazy\" decoding=\"async\" onerror=\"popupThumbErr(this," + jsArg(t.noThumb) + ")\"><div class=\"thumb-badge\">"+t.zoomBadge+"</div></div>";
+                th = "<div class=\"thumb-wrapper\" onclick=\"openLB("+jsArg(fu)+","+jsArg(rawFn)+","+jsArg(dt)+","+jsArg(dsk || "")+")\"><img src=\""+escapeHtml(fu)+"\" alt=\"\" class=\"thumb-img\" loading=\"lazy\" decoding=\"async\" onerror=\"popupThumbErr(this," + jsArg(t.noThumb) + ")\"><div class=\"thumb-badge\">"+t.zoomBadge+"</div></div>";
             } else {
                 th = renderNoThumbHtml(t.noThumb);
             }
@@ -36606,40 +36725,49 @@ if (dotsAdded && canvasLayerGroup) map.addLayer(canvasLayerGroup);
             } catch(e) { return null; }
         }
 
+        /* Společné čtení řádků TXT pro import i obnovení přes Zpět.
+           Pravidla přijímání dat a normalizace času jsou převzata beze změny z importu. */
+        function mfParseTxtRows(s) {
+            var ls = s.split("\n"), it = [];
+            var skipped = 0;
+            var dateBad = 0, dateConv = 0;
+            var hdrOk = mfTxtHeaderOk(s);
+            for (var i = 0; i < ls.length; i++) {
+                try {
+                    var l = ls[i].trim();
+                    if (!l || l.indexOf("//") === 0 || l.indexOf("DATUM") === 0 || l.indexOf("window.") === 0 || l === "`;") continue;
+                    var p = l.split(";");
+                    if (p.length >= 4) {
+                        var dtRaw = p[0].trim(), fn = p[1].trim(), la = parseFloat(p[2].trim().replace(",", ".")), lo = parseFloat(p[3].trim().replace(",", ".")), sz = p.length > 4 ? parseInt(p[4].trim()) || 0 : 0, rp = p.length > 5 ? p[5].trim() : "";
+                        /* datum: normalizace na kanonický tvar; neplatné datum řádek odmítne */
+                        var dt = mfNormalizeDate(dtRaw);
+                        if (dt === null) { skipped++; dateBad++; continue; }
+                        if (dt !== dtRaw) dateConv++;
+                        var st = p.length > 6 ? p[6].trim().toUpperCase() : "G";
+                        if (st !== "G" && st !== "D" && st !== "S") st = "G";
+                        /* 8. sloupec: nadmorska vyska [m]; prazdna/neplatna hodnota = NaN */
+                        var el = p.length > 7 ? parseFloat(p[7].trim().replace(",", ".")) : NaN;
+                        if (!isFinite(el)) el = NaN;
+                        if (st !== "S" && la === 0 && lo === 0) st = "S"; /* přesně 0, 0 = chybné GNSS -> bez polohy */
+                        if (st === "S") { it.push([NaN, NaN, dt, fn, sz, rp, "S", el]); }
+                        else if (!isNaN(la) && !isNaN(lo) && Math.abs(la) <= 90 && Math.abs(lo) <= 180) it.push([la, lo, dt, fn, sz, rp, st, el]);
+                        else skipped++;
+                    } else {
+                        skipped++;
+                    }
+                } catch(lineErr) { skipped++; }
+            }
+            return { items: it, skipped: skipped, dateBad: dateBad, dateConv: dateConv, hdrOk: hdrOk };
+        }
+
         function addDS(s, n, skipSave) {
             try {
                 var t = i18n[currentLang];
                 if (datasets[n]) { showToast(t.toastDup.replace("{name}", n)); return false; }
                 if (!s || typeof s !== "string") return false;
-                var ls = s.split("\n"), it = [];
-                var skipped = 0;
-                var dateBad = 0, dateConv = 0;
-                var hdrOk = mfTxtHeaderOk(s);
-                for (var i = 0; i < ls.length; i++) {
-                    try {
-                        var l = ls[i].trim();
-                        if (!l || l.indexOf("//") === 0 || l.indexOf("DATUM") === 0 || l.indexOf("window.") === 0 || l === "`;") continue;
-                        var p = l.split(";");
-                        if (p.length >= 4) {
-                            var dtRaw = p[0].trim(), fn = p[1].trim(), la = parseFloat(p[2].trim().replace(",", ".")), lo = parseFloat(p[3].trim().replace(",", ".")), sz = p.length > 4 ? parseInt(p[4].trim()) || 0 : 0, rp = p.length > 5 ? p[5].trim() : "";
-                            /* datum: normalizace na kanonický tvar; neplatné datum řádek odmítne */
-                            var dt = mfNormalizeDate(dtRaw);
-                            if (dt === null) { skipped++; dateBad++; continue; }
-                            if (dt !== dtRaw) dateConv++;
-                            var st = p.length > 6 ? p[6].trim().toUpperCase() : "G";
-                            if (st !== "G" && st !== "D" && st !== "S") st = "G";
-                            /* 8. sloupec: nadmorska vyska [m]; prazdna/neplatna hodnota = NaN */
-                            var el = p.length > 7 ? parseFloat(p[7].trim().replace(",", ".")) : NaN;
-                            if (!isFinite(el)) el = NaN;
-                            if (st !== "S" && la === 0 && lo === 0) st = "S"; /* přesně 0, 0 = chybné GNSS -> bez polohy */
-                            if (st === "S") { it.push([NaN, NaN, dt, fn, sz, rp, "S", el]); }
-                            else if (!isNaN(la) && !isNaN(lo) && Math.abs(la) <= 90 && Math.abs(lo) <= 180) it.push([la, lo, dt, fn, sz, rp, st, el]);
-                            else skipped++;
-                        } else {
-                            skipped++;
-                        }
-                    } catch(lineErr) { skipped++; }
-                }
+                var parsed = mfParseTxtRows(s), it = parsed.items;
+                var skipped = parsed.skipped, dateBad = parsed.dateBad, dateConv = parsed.dateConv;
+                var hdrOk = parsed.hdrOk;
 
                 var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "duha", "neon", "google", "lava", "mono"];
                 var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark", "white", "brown"];
@@ -36841,7 +36969,7 @@ dotColor: initialDot,
                             var gVal = ge + 8;
                             if (gTag === 1) { gLatRef = String.fromCharCode(dv.getUint8(gVal)); continue; }
                             else if (gTag === 3) { gLonRef = String.fromCharCode(dv.getUint8(gVal)); continue; }
-                            /* GPSAltitudeRef (5): BYTE 0 = nad hladinou more, 1 = pod; GPSAltitude (6): RATIONAL [m] */
+                            /* GPSAltitudeRef (5): záporné znaménko pro 1 i 3; GPSAltitude (6): nezáporná velikost v metrech. */
                             else if (gTag === 5) { gAltRef = dv.getUint8(gVal); continue; }
                             else if (gTag === 6 && gType === 5) {
                                 var aBase = start + read32(gVal);
@@ -36866,7 +36994,7 @@ dotColor: initialDot,
                             if (lat === 0 && lon === 0) { /* neplatné – mobilní re-encodace */ }
                             else if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
                                 result.lat = lat; result.lon = lon;
-                                if (gAlt !== null && isFinite(gAlt)) { var av = (gAltRef === 1) ? -gAlt : gAlt; if (av > -1000 && av < 10000) result.alt = av; }
+                                if (gAlt !== null && isFinite(gAlt)) { var av = (gAltRef === 1 || gAltRef === 3) ? -gAlt : gAlt; if (av > -1000 && av < 10000) result.alt = av; }
                             }
                         }
                     }
@@ -37402,43 +37530,159 @@ dotColor: initialDot,
             }
         }
 
-        // ---- Přidání fotografie (JPG/JPEG/PNG) do mapy z EXIF GNSS ----
-        function handlePhotoFile(file) {
-            var t = i18n[currentLang];
-            var name = file.name;
-            var lower = name.toLowerCase();
-            var isPng = lower.endsWith(".png");
-            var isWebp = lower.endsWith(".webp");
-            var isHeif = lower.endsWith(".avif") || lower.endsWith(".heic") || lower.endsWith(".heif");
-            var isTiff = lower.endsWith(".tif") || lower.endsWith(".tiff");
-            var r = new FileReader();
-            r.onload = function(e) {
-                try {
-                    var ab = e.target.result;
-                    var gps = isPng ? parsePngGps(ab) : isWebp ? parseWebpExif(ab) : isHeif ? (parseHeifExif(ab) || parseJpegExif(ab)) : isTiff ? parseTiffGps(ab) : parseJpegExif(ab);
-                    if (!gps || gps.lat === null || gps.lon === null || (gps.lat === 0 && gps.lon === 0)) {
-                        showToast((currentLang === 'cs' ? "Fotka nemá v EXIF GNSS údaje o poloze: " : "Photo has no EXIF GNSS location: ") + name, "warn");
-                        return;
-                    }
-                    // Originál (File) do IndexedDB; v položce jen odkaz "mfo:<název>".
-                    // Zmenšeniny pro mapu/mřížku/pás se odvozují za běhu (MFThumb), prohlížečka ukáže originál.
-                    var objUrl = URL.createObjectURL(file);
-                    var img = new Image();
-                    img.onload = function() {
-                        mfOrigRegister(name, file, objUrl, false);
-                        addPhotoFromFile(name, gps.lat, gps.lon, file.lastModified, file.size, "mfo:" + name, gps.dateTime || null, gps.alt);
-                    };
-                    img.onerror = function() { URL.revokeObjectURL(objUrl); /* prohlížeč neumí dekódovat (např. HEIC bez dekodéru) – fotka bez náhledu, ale s GNSS */ addPhotoFromFile(name, gps.lat, gps.lon, file.lastModified, file.size, "", gps.dateTime || null, gps.alt); };
-                    img.src = objUrl;
-                } catch(err) {
-                    showToast((currentLang === 'cs' ? "Chyba při čtení fotky: " : "Error reading photo: ") + name, "warn");
-                }
+        /* Identita přetažené fotografie je SHA-256 celého souboru, nikoli název/velikost/čas.
+           Otisk je součástí uložené položky [8], přežije F5 i náhradní uložení malého náhledu.
+           Starší položky bez otisku se porovnají se zachovaným originálem. */
+        function mfPhotoHashSync(buffer) {
+            var bytes = new Uint8Array(buffer), len = bytes.length, total = Math.ceil((len + 9) / 64) * 64;
+            var K = [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+            var H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19], W = new Int32Array(64);
+            var rot = function(v,n) { return (v >>> n) | (v << (32-n)); };
+            var hi = Math.floor(len / 0x20000000), lo = (len * 8) >>> 0;
+            var byteAt = function(pos) {
+                if (pos < len) return bytes[pos];
+                if (pos === len) return 128;
+                if (pos >= total - 8) { var n = pos - (total - 8); return n < 4 ? ((hi >>> (24 - n * 8)) & 255) : ((lo >>> (56 - n * 8)) & 255); }
+                return 0;
             };
-            if (isPng) r.readAsArrayBuffer(file); else r.readAsArrayBuffer(file);
+            for (var off = 0; off < total; off += 64) {
+                for (var i = 0; i < 16; i++) { var q = off + i * 4; W[i] = (byteAt(q)<<24) | (byteAt(q+1)<<16) | (byteAt(q+2)<<8) | byteAt(q+3); }
+                for (i = 16; i < 64; i++) {
+                    var x = W[i-15], y = W[i-2];
+                    W[i] = (W[i-16] + (rot(x,7)^rot(x,18)^(x>>>3)) + W[i-7] + (rot(y,17)^rot(y,19)^(y>>>10))) | 0;
+                }
+                var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+                for (i = 0; i < 64; i++) {
+                    var t1=(h+(rot(e,6)^rot(e,11)^rot(e,25))+((e&f)^(~e&g))+K[i]+W[i])|0;
+                    var t2=((rot(a,2)^rot(a,13)^rot(a,22))+((a&b)^(a&c)^(b&c)))|0;
+                    h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0;
+                }
+                H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;
+                H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0;
+            }
+            return H.map(function(v) { return ("00000000" + (v>>>0).toString(16)).slice(-8); }).join("");
+        }
+        function mfPhotoHash(buffer) {
+            try {
+                if (typeof crypto !== "undefined" && crypto.subtle) {
+                    return crypto.subtle.digest("SHA-256", buffer).then(function(hash) {
+                        return Array.prototype.map.call(new Uint8Array(hash), function(v) { return ("0"+v.toString(16)).slice(-2); }).join("");
+                    }).catch(function() { return mfPhotoHashSync(buffer); });
+                }
+            } catch(e) { AppLog.soft("mfPhotoHash", e); }
+            return Promise.resolve(mfPhotoHashSync(buffer));
+        }
+        function mfPhotoReadBytes(blob) {
+            if (typeof blob.arrayBuffer === "function") return blob.arrayBuffer();
+            return new Promise(function(resolve, reject) {
+                var r = new FileReader(); r.onload = function(e) { resolve(e.target.result); };
+                r.onerror = function() { reject(r.error || new Error("read")); }; r.readAsArrayBuffer(blob);
+            });
+        }
+        async function mfPhotoDuplicateKey(file, hash) {
+            var keys = Object.keys(datasets);
+            for (var i = 0; i < keys.length; i++) {
+                var ds = datasets[keys[i]];
+                if (!ds || !ds.fromImage || !ds.items) continue;
+                for (var j = 0; j < ds.items.length; j++) {
+                    var p = ds.items[j], identity = p && p[8];
+                    if (!p || Number(p[4]) !== Number(file.size)) continue;
+                    if (identity && identity.kind === "photo-file" && identity.sha256) {
+                        if (identity.sha256 === hash) return keys[i];
+                        continue;
+                    }
+                    /* Migrace bez přepisování starých zdrojů: originál může být Blob z IndexedDB.
+                       Z náhledu ani shodného názvu není možné prokázat totožnost souboru. */
+                    var ref = mfIsOrigRef(p[5]) ? p[5].substring(4) : keys[i];
+                    var orig = mfOrig[ref];
+                    if (!orig || orig.video || !orig.blob || orig.blob.size !== file.size) continue;
+                    try {
+                        if (!orig.photoHash) orig.photoHash = await mfPhotoHash(await mfPhotoReadBytes(orig.blob));
+                        if (orig.photoHash === hash) return keys[i];
+                    } catch(e) { AppLog.soft("mfPhotoDuplicateKey", e); }
+                }
+            }
+            return null;
+        }
+        /* Klíč zdroje/originálu je jedinečný; původní název fotografie zůstává v položce [3].
+           Přípona zůstává na konci kvůli stávajícím rozpoznávačům typů a zpětné kompatibilitě. */
+        function mfSourceDisplayName(ds) {
+            if (ds && ds.fromImage && ds.items && ds.items[0] && ds.items[0][3]) return String(ds.items[0][3]);
+            return ds ? String(ds.name || "") : "";
+        }
+        function mfPhotoSourceKey(name) {
+            var key = String(name), dot = key.lastIndexOf("."), stem = dot > 0 ? key.slice(0,dot) : key, ext = dot > 0 ? key.slice(dot) : "";
+            var n = 2;
+            while (key in datasets || Object.prototype.hasOwnProperty.call(mfOrig, key) || Object.prototype.hasOwnProperty.call(_memPhoto, key) || Object.prototype.hasOwnProperty.call(_deletedSourceCache, key)) {
+                key = stem + " (" + (n++) + ")" + ext;
+            }
+            return key;
+        }
+        /* Importy fotek se dokončují postupně: opakovaný soubor ve stejné dávce tak nemůže
+           projít dvěma souběžnými kontrolami ještě před vytvořením prvního datasetu. */
+        var mfPhotoImportQueue = Promise.resolve();
+        function handlePhotoFile(file) {
+            var run = function() { return mfReadPhotoFile(file); };
+            mfPhotoImportQueue = mfPhotoImportQueue.then(run, run).catch(function(e) {
+                AppLog.warn("handlePhotoFile", e);
+                showToast((currentLang === "cs" ? "Chyba při čtení fotky: " : "Error reading photo: ") + file.name, "warn");
+            });
+            return mfPhotoImportQueue;
+        }
+        function mfReadPhotoFile(file) {
+            return new Promise(function(resolve, reject) {
+                var name = file.name, lower = name.toLowerCase();
+                var r = new FileReader();
+                r.onerror = function() { reject(r.error || new Error("read")); };
+                r.onabort = function() { reject(new Error("abort")); };
+                r.onload = async function(e) {
+                    var objUrl = null;
+                    try {
+                        var ab = e.target.result;
+                        var gps = lower.endsWith(".png") ? parsePngGps(ab) : lower.endsWith(".webp") ? parseWebpExif(ab)
+                            : /\.(avif|heic|heif)$/.test(lower) ? (parseHeifExif(ab) || parseJpegExif(ab))
+                            : /\.(tif|tiff)$/.test(lower) ? parseTiffGps(ab) : parseJpegExif(ab);
+                        if (!gps || gps.lat === null || gps.lon === null || (gps.lat === 0 && gps.lon === 0)) {
+                            showToast((currentLang === "cs" ? "Fotka nemá v EXIF GNSS údaje o poloze: " : "Photo has no EXIF GNSS location: ") + name, "warn");
+                            resolve(); return;
+                        }
+                        var hash = await mfPhotoHash(ab);
+                        var duplicate = await mfPhotoDuplicateKey(file, hash);
+                        if (duplicate !== null) {
+                            showToast((currentLang === "cs" ? "Stejná fotka je již načtená, soubor byl přeskočen: " : "Identical photo is already loaded; file skipped: ") + name, "warn");
+                            resolve(); return;
+                        }
+                        objUrl = URL.createObjectURL(file);
+                        var img = new Image(), done = false, timer = null;
+                        var finish = function() {
+                            if (done) return; done = true;
+                            if (timer !== null) clearTimeout(timer);
+                            try {
+                                var key = mfPhotoSourceKey(name);
+                                var identity = { kind: "photo-file", sha256: hash };
+                                mfOrigRegister(key, file, objUrl, false);
+                                mfOrig[key].photoHash = hash;
+                                addPhotoFromFile(name, gps.lat, gps.lon, file.lastModified, file.size, "mfo:" + key, gps.dateTime || null, gps.alt, key, identity);
+                                resolve();
+                            } catch(err) { reject(err); }
+                        };
+                        /* I nepodporovaný dekodér (HEIC apod.) musí zachovat originál a identitu. */
+                        img.onload = finish; img.onerror = finish;
+                        timer = setTimeout(finish, 15000);
+                        img.src = objUrl;
+                    } catch(err) {
+                        if (objUrl) URL.revokeObjectURL(objUrl);
+                        reject(err);
+                    }
+                };
+                r.readAsArrayBuffer(file);
+            });
         }
 
-        function addPhotoFromFile(name, lat, lon, lastModified, size, thumbUrl, exifDateTime, alt) {
+        function addPhotoFromFile(name, lat, lon, lastModified, size, thumbUrl, exifDateTime, alt, sourceKey, identity) {
             var t = i18n[currentLang];
+            var key = sourceKey || name;
+            if (sourceKey && Object.prototype.hasOwnProperty.call(datasets, key)) throw new Error("Photo source key is already in use");
             var dt = "";
             try {
                 // Pokud má fotka EXIF DateTimeOriginal "YYYY:MM:DD HH:MM:SS" → "YYYYMMDDHHmmss"
@@ -37453,16 +37697,20 @@ dotColor: initialDot,
             /* S vyskou z EXIF/videa plny format [.., STAV, VYSKA]; bez ni puvodni 6 polozek */
             var _alt = (alt !== undefined && alt !== null && isFinite(alt)) ? Number(alt) : NaN;
             var items = isFinite(_alt) ? [[lat, lon, dt, name, size || 0, thumbUrl, "G", _alt]] : [[lat, lon, dt, name, size || 0, thumbUrl]];
+            if (identity) {
+                if (items[0].length < 8) { items[0][6] = "G"; items[0][7] = null; }
+                items[0][8] = identity;
+            }
             var numPhotoSets = Object.keys(datasets).filter(function(k){ return datasets[k].type === "photos"; }).length;
             var palSequence = ["classic", "emerald", "inferno", "ocean", "sunset", "duha", "neon", "google", "lava", "mono"];
             var dotSequence = ["red", "blue", "green", "orange", "purple", "teal", "yellow", "dark", "white", "brown"];
             var zoneSequence = ["blue", "green", "teal", "purple", "red", "orange", "yellow", "dark", "white", "brown"];
-            var sd = getSavedDatasetStyle(name);
+            var sd = getSavedDatasetStyle(key);
             var apS = aprioriPhotoStyle(numPhotoSets, true);
-            datasets[name] = {
+            datasets[key] = {
                 type: "photos",
                 fromImage: true,
-                name: name,
+                name: key,
                 active: true,
                 items: items,
                 mode: (sd && sd.mode && validModes.indexOf(sd.mode) !== -1) ? sd.mode : apS.mode,
@@ -37485,7 +37733,7 @@ dotColor: initialDot,
                                 dotIcon: (sd && sd.dotIcon) ? sd.dotIcon : apS.dotIcon,
                                 zoneKm: parseZoneKm(sd ? sd.zoneKm : undefined, apS.zoneKm)
             };
-            savePhotoSource(name, JSON.stringify(items));
+            savePhotoSource(key, JSON.stringify(items));
             rebuild();
             saveSourcesOrder();
             var isVdToast = (typeof isVideoFn === "function") && isVideoFn(name);
